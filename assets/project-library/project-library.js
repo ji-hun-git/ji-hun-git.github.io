@@ -364,6 +364,8 @@
     if (stage && trigger) {
       const stageRect = stage.getBoundingClientRect();
       const triggerRect = trigger.getBoundingClientRect();
+      const objectRect = trigger.querySelector(".pl-volume__object")?.getBoundingClientRect();
+      const captionHeight = caption.getBoundingClientRect().height;
       const cardWidth = Math.min(470, Math.max(0, stageRect.width - 24));
       const halfCard = cardWidth / 2;
       const desired = triggerRect.left + (triggerRect.width / 2) - stageRect.left;
@@ -372,16 +374,17 @@
         stageRect.width - halfCard - inset,
         Math.max(halfCard + inset, desired)
       );
-      stage.style.setProperty("--pl-caption-x", `${position}px`);
-      stage.style.setProperty("--pl-caption-anchor-offset", `${desired - position}px`);
-      const objectRect = trigger.querySelector(".pl-volume__object")?.getBoundingClientRect();
-      const captionHeight = caption.getBoundingClientRect().height;
       const objectTop = objectRect ? objectRect.top - stageRect.top : captionHeight + 18;
       const captionTop = Math.max(
         0,
         Math.min(stageRect.height - captionHeight - 10, objectTop - captionHeight - 10)
       );
       const connector = Math.max(8, Math.min(180, objectTop - captionTop - captionHeight));
+      // Keep all geometry reads above and all style writes below. Hover used to
+      // invalidate layout midway through this block, forcing a second sync
+      // layout before every caption appeared.
+      stage.style.setProperty("--pl-caption-x", `${position}px`);
+      stage.style.setProperty("--pl-caption-anchor-offset", `${desired - position}px`);
       stage.style.setProperty("--pl-caption-y", `${captionTop}px`);
       stage.style.setProperty("--pl-caption-connector", `${connector}px`);
       stage.style.setProperty("--pl-caption-connector-bottom", `${-connector}px`);
@@ -1908,26 +1911,36 @@
       ? {
         compact: true,
         pull: 8,
-        extracting: 70,
-        arriving: 170,
-        hinge: 220,
+        extracting: 55,
+        arriving: 150,
+        hinge: 260,
         leaves: 2,
-        flickDuration: 120,
-        flickStagger: 28,
-        closing: 150,
-        returning: 160
+        flickDuration: 90,
+        flickStagger: 18,
+        closing: 130,
+        returning: 150,
+        extractingEasing: "cubic-bezier(0.32, 0.72, 0, 1)",
+        travelEasing: "cubic-bezier(0.32, 0.72, 0, 1)",
+        hingeEasing: "cubic-bezier(0.4, 0, 0.2, 1)",
+        flickEasing: "cubic-bezier(0.32, 0.02, 0.2, 1)",
+        returningEasing: "cubic-bezier(0.32, 0.72, 0, 1)"
       }
       : {
         compact: false,
         pull: 12,
-        extracting: 90,
-        arriving: 250,
-        hinge: 295,
-        leaves: 3,
-        flickDuration: 140,
-        flickStagger: 34,
-        closing: 235,
-        returning: 205
+        extracting: 65,
+        arriving: 190,
+        hinge: 300,
+        leaves: 2,
+        flickDuration: 105,
+        flickStagger: 22,
+        closing: 180,
+        returning: 190,
+        extractingEasing: "cubic-bezier(0.32, 0.72, 0, 1)",
+        travelEasing: "cubic-bezier(0.32, 0.72, 0, 1)",
+        hingeEasing: "cubic-bezier(0.4, 0, 0.2, 1)",
+        flickEasing: "cubic-bezier(0.32, 0.02, 0.2, 1)",
+        returningEasing: "cubic-bezier(0.32, 0.72, 0, 1)"
       };
   };
 
@@ -1962,9 +1975,12 @@
 
   const rigidHingeKeyframes = (closing = false) => {
     const poses = closing ? [...rigidHingePoses].reverse() : rigidHingePoses;
-    return poses.map((pose, index) => ({
+    return poses.map((pose) => ({
       offset: closing ? 1 - pose.offset : pose.offset,
-      opacity: (closing ? index === 0 : index === poses.length - 1) ? 0 : 1,
+      // A rigid board never loses mass at the hinge. Its real front and back
+      // faces already handle visibility, so fading near 180deg caused the
+      // opening/closing silhouette to break instead of reading as one object.
+      opacity: 1,
       "--pl-cover-print-opacity": pose.angle <= -90 ? "0" : "1",
       transform: rigidCoverTransform(0, 0, 0, 1, pose.angle)
     }));
@@ -2070,7 +2086,7 @@
         { opacity: 1, transform: geometry.lift }
       ], {
         duration: profile.extracting,
-        easing: "cubic-bezier(0.16, 0.84, 0.24, 1)"
+        easing: profile.extractingEasing
       }, token, profile.extracting + 32)) return false;
 
       root.classList.remove("is-extracting");
@@ -2085,7 +2101,7 @@
         { opacity: 1, transform: geometry.target }
       ], {
         duration: profile.arriving,
-        easing: "cubic-bezier(0.2, 0.72, 0.16, 1)"
+        easing: profile.travelEasing
       }, token, profile.arriving + 32)) return false;
       return transitionIsCurrent(token);
     } finally {
@@ -2105,7 +2121,7 @@
     pageTurn.style.opacity = "1";
     return runWaapi(pageTurn, rigidHingeKeyframes(false), {
       duration: profile.hinge,
-      easing: "cubic-bezier(0.45, 0, 0.55, 1)"
+      easing: profile.hingeEasing
     }, token, profile.hinge + 36);
   };
 
@@ -2147,7 +2163,7 @@
         ], {
           duration: profile.flickDuration,
           delay: index * profile.flickStagger,
-          easing: "cubic-bezier(0.32, 0.02, 0.2, 1)"
+          easing: profile.flickEasing
         }, token, profile.flickDuration + (index * profile.flickStagger) + 36);
       }));
       return results.every(Boolean) && transitionIsCurrent(token);
@@ -2194,11 +2210,11 @@
     pageTurn.style.setProperty("animation", "none", "important");
     pageTurn.style.transformOrigin = "left center";
     pageTurn.style.backfaceVisibility = "visible";
-    pageTurn.style.opacity = "0";
+    pageTurn.style.opacity = "1";
     setTransitionPhase("closing-cover");
     return runWaapi(pageTurn, rigidHingeKeyframes(true), {
       duration: profile.hinge,
-      easing: "cubic-bezier(0.45, 0, 0.55, 1)"
+      easing: profile.hingeEasing
     }, token, profile.hinge + 36);
   };
 
@@ -2243,7 +2259,7 @@
         { opacity: 0.96, transform: geometry.source }
       ], {
         duration: profile.returning,
-        easing: "cubic-bezier(0.24, 0.7, 0.18, 1)"
+        easing: profile.returningEasing
       }, token, profile.returning + 32, true)) return false;
       return transitionIsCurrent(token);
     } finally {

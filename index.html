@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="ui-v23">
+<html lang="en" class="ui-v23 ui-v24 ui-v25">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1626,7 +1626,7 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=23-20260812f" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=25-20260812c" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1659,45 +1659,18 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
 
-  <section class="work-library pl-embedded pl-library-v3 pl-library-v5 pl-library-v6 pl-library-v7 pl-library-v8 pl-library-v9 pl-library-v10 pl-library-v11 pl-library-v12 pl-library-v13 pl-library-v14 pl-library-v15 pl-library-v16 pl-library-v17 pl-library-v18 pl-library-v19 pl-library-v20 pl-library-v21 pl-library-v22 pl-library-v23" id="work-library" aria-labelledby="library-title">
+  <section class="work-library pl-embedded pl-library-v3 pl-library-v5 pl-library-v6 pl-library-v7 pl-library-v8 pl-library-v9 pl-library-v10 pl-library-v11 pl-library-v12 pl-library-v13 pl-library-v14 pl-library-v15 pl-library-v16 pl-library-v17 pl-library-v18 pl-library-v19 pl-library-v20 pl-library-v21 pl-library-v22 pl-library-v23 pl-library-v24 pl-library-v25" id="work-library" aria-labelledby="library-title">
     <header class="pl-site-header">
       <div class="pl-brand-lockup">
-        <svg class="pl-brand-mark" viewBox="0 0 34 34" aria-hidden="true" focusable="false">
-          <rect x="1" y="1" width="32" height="32" rx="2"></rect>
-          <path d="M8.5 9.5v9.25c0 4.25 2.1 6.25 5.75 6.25 3.5 0 5.5-2.1 5.5-5.65V9.5"></path>
-          <path d="M27 12.25c-1.25-1.85-3.05-2.75-5.15-2.75"></path>
-        </svg>
         <div class="pl-brand-copy">
-          <h1 class="pl-wordmark" id="site-title">Jihun Chae<span aria-hidden="true">.</span></h1>
-          <p class="pl-brand-role"><span lang="en">Human-Centered AI · Design &amp; Engineering</span><span lang="ko">인간 중심 AI · 디자인 &amp; 엔지니어링</span></p>
+          <a class="pl-wordmark-link" data-cv-jump href="?view=cv#cv-start">
+            <h1 class="pl-wordmark" id="site-title">Jihun Chae<span aria-hidden="true">.</span></h1>
+          </a>
         </div>
       </div>
-      <nav class="pl-site-nav" aria-label="Primary">
-        <a href="?view=cv#projects"><span lang="en">projects</span><span lang="ko">프로젝트</span></a>
-        <a href="?view=cv#publications"><span lang="en">publications</span><span lang="ko">출판물</span></a>
-        <a href="?view=cv#awards"><span lang="en">awards</span><span lang="ko">수상</span></a>
-        <a data-cv-jump href="?view=cv#cv-start"><span lang="en">full cv</span><span lang="ko">전체 이력서</span></a>
-      </nav>
     </header>
 
-    <div class="pl-corner-intro">
-      <div class="pl-corner-title-row">
-        <h2 id="library-title"><span lang="en">Work Library</span><span lang="ko">작업 라이브러리</span></h2>
-        <ul class="pl-taxonomy" aria-label="Library collections">
-          <li class="pl-taxonomy__item" data-type="project"><span class="pl-taxonomy__shape" aria-hidden="true"></span><span lang="en">Projects</span><span lang="ko">프로젝트</span><span class="pl-taxonomy__count">06</span></li>
-          <li class="pl-taxonomy__item" data-type="publication"><span class="pl-taxonomy__shape" aria-hidden="true"></span><span lang="en">Publications</span><span lang="ko">출판물</span><span class="pl-taxonomy__count">21</span></li>
-          <li class="pl-taxonomy__item" data-type="award"><span class="pl-taxonomy__shape" aria-hidden="true"></span><span lang="en">Awards</span><span lang="ko">수상</span><span class="pl-taxonomy__count">10</span></li>
-        </ul>
-      </div>
-      <p class="pl-corner-deck">
-        <span lang="en">An evolving collection of systems, publications, and recognition across human-centered AI, accessibility, games, and emerging technology.</span>
-        <span lang="ko">인간 중심 AI, 접근성, 게임, 신기술을 아우르는 시스템·출판물·수상 작업의 진화하는 컬렉션입니다.</span>
-      </p>
-      <p class="pl-corner-note">
-        <span lang="en">Select a volume to pull it from the shelf and read the work.</span>
-        <span lang="ko">책 한 권을 선택해 선반에서 꺼내고 작업을 읽어보세요.</span>
-      </p>
-    </div>
+    <h2 class="pl-sr-only" id="library-title"><span lang="en">Work Library</span><span lang="ko">작업 라이브러리</span></h2>
     <p class="pl-sr-only" id="plShelfHint">
       <span lang="en">All works are visible in one chronological bookcase. Use the arrow keys to browse, Enter to open a volume, and Escape to close it.</span>
       <span lang="ko">모든 작업이 하나의 연대기 책장에 표시됩니다. 방향키로 탐색하고 Enter로 열며 Escape로 닫습니다.</span>
@@ -1717,12 +1690,6 @@
       </noscript>
     </div>
   </section>
-
-  <a class="pl-cv-jump" data-cv-jump href="?view=cv#cv-start">
-    <span lang="en">See Full CV</span>
-    <span lang="ko">전체 이력서 보기</span>
-    <span class="pl-cv-jump__arrow" aria-hidden="true">↓</span>
-  </a>
 
   <div class="page" id="cv-start" tabindex="-1">
     <nav class="mobile-nav" aria-label="Sections">
@@ -2382,6 +2349,6 @@
   </script>
   <script defer src="assets/project-library/work-designs.js?v=23-20260812a"></script>
   <script defer src="assets/project-library/work-content.js?v=23-20260812a"></script>
-  <script defer src="assets/project-library/project-library.js?v=23-20260812a"></script>
+  <script defer src="assets/project-library/project-library.js?v=24-20260812b"></script>
 </body>
 </html>

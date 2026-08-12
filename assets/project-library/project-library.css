@@ -732,8 +732,6 @@
   }
 }
 
-
-
 @media (forced-colors: active) {
   .work-library.pl-embedded.pl-library-v6,
   .pl-cv-jump {
@@ -14258,4 +14256,511 @@ html.ui-v23 body.reader #cv-start :is(.item-desc, .cv-summary, .pub-summary, .pu
   font-size: 1rem !important;
   line-height: 1.72 !important;
 }
+}
+
+/* ================================================================
+   v24 product shelf
+   One calm hierarchy: identity, physical library, primary CV action.
+   Book-grid dimensions and the measured 3-D reader remain unchanged.
+   ================================================================ */
+
+@media screen {
+  html.ui-v24 {
+    --pl-v24-bg: #f5f5f7;
+    --pl-v24-surface: rgba(255, 255, 255, .82);
+    --pl-v24-ink: #161617;
+    --pl-v24-muted: #6e6e73;
+    --pl-v24-line: rgba(22, 22, 23, .12);
+    --pl-v24-ease: cubic-bezier(.22, 1, .36, 1);
+  }
+
+  html[data-view="library"].ui-v24 body,
+  #work-library.pl-library-v24 {
+    background:
+      radial-gradient(ellipse 72% 58% at 50% 27%, rgba(255, 255, 255, .98) 0%, rgba(250, 250, 252, .96) 56%, rgba(245, 245, 247, 1) 100%) !important;
+    color: var(--pl-v24-ink) !important;
+  }
+
+  #work-library.pl-library-v24 {
+    --pl-v19-project: #425b73;
+    --pl-v19-project-deep: #263a4e;
+    --pl-v19-project-ink: #f6f7f7;
+    --pl-v19-leather: #171719;
+    --pl-v19-leather-deep: #09090a;
+    --pl-v19-leather-ink: #f2eee5;
+    --pl-v19-album: #39322a;
+    --pl-v19-album-deep: #1e1a16;
+    --pl-v19-album-gold: #bca46f;
+    --pl-v19-certificate: #f3eee4;
+    --pl-v19-certificate-ink: #302a23;
+    grid-template-rows: auto minmax(min-content, 1fr) !important;
+  }
+
+  /* The visible collection counters are intentionally gone. Keep only the
+     zero-box H2 that names the library section for heading navigation. */
+  #work-library.pl-library-v24 #library-title {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  #work-library.pl-library-v24 :is(
+    #site-title,
+    .pl-volume__spine-mark,
+    .pl-volume__spine-meta,
+    .pl-book-caption,
+    .pl-detail__page--right,
+    .pl-detail__meta,
+    .pl-detail__subtitle,
+    .pl-detail__question,
+    .pl-editorial,
+    .pl-detail__partners,
+    .pl-detail__actions,
+    .pl-detail__nav,
+    .pl-detail__close
+  ) {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Pretendard Variable", Pretendard, sans-serif !important;
+  }
+
+  #work-library.pl-library-v24 #site-title {
+    color: var(--pl-v24-ink) !important;
+    font-size: clamp(3rem, 4.8vw, 3.75rem) !important;
+    font-weight: 640 !important;
+    line-height: .94 !important;
+    letter-spacing: -.058em !important;
+    text-rendering: geometricPrecision;
+  }
+
+  #work-library.pl-library-v24 .pl-shell {
+    margin-top: 6px !important;
+    align-self: start !important;
+  }
+
+  #work-library.pl-library-v24 .pl-stage {
+    isolation: isolate;
+  }
+
+  /* A satin ledge with a highlight, face, and underside replaces the flat
+     beige rule. The row period remains exactly 200px. */
+  @container (min-width: 1150px) {
+    #work-library.pl-library-v24 .pl-shelf {
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0 189px,
+          rgba(22, 22, 23, .24) 189px 190px,
+          rgba(255, 255, 255, .96) 190px 192px,
+          #d7d7da 192px 196px,
+          #b9b9be 196px 198px,
+          rgba(22, 22, 23, .16) 198px 200px
+        ) !important;
+      filter: drop-shadow(0 7px 9px rgba(22, 22, 23, .045));
+    }
+  }
+
+  #work-library.pl-library-v24 .pl-volume__object {
+    pointer-events: none !important;
+    transition:
+      transform 340ms var(--pl-v24-ease),
+      opacity 140ms linear !important;
+  }
+
+  #work-library.pl-library-v24 .pl-volume__trigger:hover .pl-volume__object,
+  #work-library.pl-library-v24 .pl-volume__trigger:focus-visible .pl-volume__object,
+  #work-library.pl-library-v24 .pl-volume.is-active .pl-volume__object,
+  #work-library.pl-library-v24 .pl-volume.is-open .pl-volume__object,
+  #work-library.pl-library-v24 .pl-volume.is-pending-selection .pl-volume__object {
+    transform: translateX(-50%) translateY(-4px) rotate(0deg) !important;
+  }
+
+  #work-library.pl-library-v24 .pl-volume__spine-mark {
+    font-size: 10.25px !important;
+    font-weight: 660 !important;
+    line-height: 1.08 !important;
+    letter-spacing: .018em !important;
+    text-rendering: geometricPrecision;
+  }
+
+  #work-library.pl-library-v24 .pl-volume__spine-meta {
+    font-size: 9.5px !important;
+    font-weight: 620 !important;
+    letter-spacing: .025em !important;
+  }
+
+  #work-library.pl-library-v24 .pl-volume--project .pl-volume__spine-mark {
+    background: rgba(247, 247, 245, .94) !important;
+    color: #24313d !important;
+    box-shadow: inset 0 0 0 1px rgba(36, 49, 61, .13) !important;
+  }
+
+  #work-library.pl-library-v24 .pl-volume--publication .pl-volume__spine-mark,
+  #work-library.pl-library-v24 .pl-volume--publication .pl-volume__spine-meta {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  #work-library.pl-library-v24 .pl-volume--award .pl-volume__spine-mark {
+    background: var(--pl-v19-certificate) !important;
+    color: var(--pl-v19-certificate-ink) !important;
+    box-shadow: inset 0 0 0 1px rgba(48, 42, 35, .18) !important;
+  }
+
+  /* A compact product tooltip; it is absent at rest and never prints a title
+     unless pointer hover or keyboard focus makes the caption visible. */
+  #work-library.pl-library-v24 .pl-book-caption {
+    width: min(360px, calc(100% - 24px)) !important;
+    max-height: none !important;
+    padding: 11px 15px 12px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255, 255, 255, .16) !important;
+    border-radius: 14px !important;
+    background: rgba(25, 25, 27, .94) !important;
+    color: #f5f5f7 !important;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, .16) !important;
+    font-size: .8125rem !important;
+    font-weight: 520 !important;
+    line-height: 1.35 !important;
+    letter-spacing: -.012em !important;
+    text-align: center !important;
+    text-wrap: balance;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transform: translate(-50%, 7px) scale(.985) !important;
+    transition:
+      opacity 110ms linear,
+      transform 200ms var(--pl-v24-ease),
+      visibility 0s linear 200ms !important;
+  }
+
+  #work-library.pl-library-v24 .pl-stage:has(.pl-volume__trigger:hover) .pl-book-caption.is-visible,
+  #work-library.pl-library-v24 .pl-stage:has(.pl-volume__trigger:focus-visible) .pl-book-caption.is-visible {
+    transform: translate(-50%, 0) scale(1) !important;
+    transition-delay: 0s !important;
+  }
+
+  #work-library.pl-library-v24 .pl-book-caption::after {
+    display: none !important;
+  }
+
+  @container (min-width: 1150px) {
+    #work-library.pl-library-v24 .pl-book-caption {
+      top: auto !important;
+      right: auto !important;
+      bottom: -112px !important;
+      left: 50% !important;
+    }
+  }
+
+  #work-library.pl-library-v24 .pl-detail[data-reader-layout="anchored"],
+  #work-library.pl-library-v24 .pl-reading-dock[data-reader-layout="anchored"] .pl-detail {
+    box-shadow:
+      0 30px 70px rgba(20, 20, 22, .13),
+      0 8px 24px rgba(20, 20, 22, .09) !important;
+  }
+
+  #work-library.pl-library-v24 .pl-detail__page--right {
+    background: rgba(255, 255, 255, .985) !important;
+  }
+
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump {
+    width: min(280px, calc(100% - 24px)) !important;
+    min-height: 62px !important;
+    padding: 0 11px 0 24px !important;
+    border: 1px solid rgba(255, 255, 255, .13) !important;
+    border-radius: 999px !important;
+    background: rgba(22, 22, 23, .97) !important;
+    color: #f5f5f7 !important;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, .1) inset,
+      0 12px 30px rgba(20, 20, 22, .12) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Pretendard Variable", Pretendard, sans-serif !important;
+    font-size: .875rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -.012em !important;
+    transition:
+      transform 320ms var(--pl-v24-ease),
+      background-color 180ms ease,
+      box-shadow 320ms var(--pl-v24-ease) !important;
+  }
+
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump:hover {
+    background: #242426 !important;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, .12) inset,
+      0 18px 38px rgba(20, 20, 22, .16) !important;
+    transform: translateY(-2px) !important;
+  }
+
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump:active {
+    transform: translateY(0) scale(.985) !important;
+    transition-duration: 90ms !important;
+  }
+
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump .pl-cv-jump__arrow {
+    width: 42px !important;
+    height: 42px !important;
+    flex: 0 0 42px !important;
+    border: 1px solid rgba(255, 255, 255, .2) !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, .1) !important;
+    color: #f5f5f7 !important;
+    box-shadow: none !important;
+    animation: none !important;
+    transition:
+      transform 320ms var(--pl-v24-ease),
+      background-color 180ms ease !important;
+  }
+
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump:hover .pl-cv-jump__arrow {
+    background: rgba(255, 255, 255, .17) !important;
+    transform: translateY(2px) !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  #work-library.pl-library-v24 #site-title {
+    font-size: clamp(2.55rem, 12vw, 2.9rem) !important;
+    letter-spacing: -.052em !important;
+  }
+
+  #work-library.pl-library-v24 .pl-shell {
+    margin-top: 8px !important;
+  }
+
+  #work-library.pl-library-v24 .pl-volume__spine-mark {
+    font-size: 10.5px !important;
+  }
+
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump {
+    width: min(264px, calc(100% - 24px)) !important;
+    min-height: 60px !important;
+  }
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  html.ui-v24 {
+    --pl-v24-bg: #0b0b0c;
+    --pl-v24-surface: rgba(28, 28, 30, .88);
+    --pl-v24-ink: #f5f5f7;
+    --pl-v24-muted: #a1a1a6;
+    --pl-v24-line: rgba(255, 255, 255, .13);
+  }
+
+  html[data-view="library"].ui-v24 body,
+  #work-library.pl-library-v24 {
+    background:
+      radial-gradient(ellipse 72% 58% at 50% 27%, #202023 0%, #111113 56%, #0b0b0c 100%) !important;
+  }
+
+  @container (min-width: 1150px) {
+    #work-library.pl-library-v24 .pl-shelf {
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0 189px,
+          rgba(255, 255, 255, .3) 189px 190px,
+          #4b4b50 190px 192px,
+          #303034 192px 196px,
+          #1d1d20 196px 198px,
+          rgba(0, 0, 0, .55) 198px 200px
+        ) !important;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #work-library.pl-library-v24 :is(.pl-volume__object, .pl-book-caption),
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump,
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump .pl-cv-jump__arrow {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  #work-library.pl-library-v24 :is(
+    .pl-volume__trigger:hover,
+    .pl-volume__trigger:focus-visible
+  ) .pl-volume__object {
+    transform: translateX(-50%) translateY(0) rotate(0deg) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-view="library"].ui-v24 body,
+  #work-library.pl-library-v24 {
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+
+  #work-library.pl-library-v24 .pl-shelf {
+    filter: none !important;
+  }
+
+  #work-library.pl-library-v24 :is(.pl-book-caption, .pl-volume__spine-mark, .pl-volume__spine-meta),
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump,
+  html[data-view="library"].ui-v24 #work-library.pl-library-v24 + .pl-cv-jump .pl-cv-jump__arrow {
+    border-color: CanvasText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ================================================================
+   v25 quiet library + balanced publication records
+   The library rests on two visible elements only: identity and books.
+   Publication records use the full card width without sacrificing a
+   linear mobile, reader-mode, or print reading order.
+   ================================================================ */
+
+@media screen {
+  #work-library.pl-library-v25 {
+    min-height: 100svh !important;
+    grid-template-rows: auto auto !important;
+    align-content: center !important;
+    row-gap: clamp(14px, 2.4svh, 24px) !important;
+    padding-block: clamp(28px, 5svh, 48px) !important;
+    overflow: visible !important;
+  }
+
+  #work-library.pl-library-v25 .pl-site-header,
+  #work-library.pl-library-v25 .pl-shell {
+    justify-self: center !important;
+  }
+
+  #work-library.pl-library-v25 .pl-shell {
+    margin-top: 0 !important;
+  }
+
+  #work-library.pl-library-v25 .pl-wordmark-link {
+    display: block !important;
+    width: max-content !important;
+    color: inherit !important;
+    text-decoration: none !important;
+    border-radius: 10px;
+    outline-offset: 7px;
+  }
+
+  #work-library.pl-library-v25 .pl-wordmark-link:focus-visible {
+    outline: 2px solid #0071e3 !important;
+  }
+
+  /* Guards against an older browser snapshot restoring presentation-only
+     library controls that no longer exist in the current markup. */
+  #work-library.pl-library-v25 :is(.pl-corner-intro, .pl-taxonomy),
+  html[data-view="library"].ui-v25 #work-library.pl-library-v25 + .pl-cv-jump {
+    display: none !important;
+  }
+
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #publications {
+    container-type: inline-size;
+    container-name: publications-list;
+  }
+
+  /* Desktop publication cards are a citation / contribution pair. */
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item {
+    display: grid !important;
+    grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr) !important;
+    align-items: stretch !important;
+    column-gap: clamp(20px, 2.2vw, 30px) !important;
+    row-gap: 12px !important;
+    --pub-gutter: 1.5rem;
+    padding: 18px 20px !important;
+    overflow: hidden !important;
+  }
+
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item:hover {
+    padding-left: 20px !important;
+  }
+
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item > .item-desc {
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-left: var(--pub-gutter) !important;
+    text-indent: calc(-1 * var(--pub-gutter));
+    align-self: center !important;
+  }
+
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .pub-n {
+    min-width: var(--pub-gutter) !important;
+  }
+
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item > .pub-value {
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 13px 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 9px !important;
+    background: var(--v23-muted-surface) !important;
+    color: var(--muted) !important;
+    line-height: 1.58 !important;
+    text-wrap: pretty;
+  }
+
+  html[data-view="cv"].ui-v25 body.ko:not(.reader) #cv-start #pubItems .item > .pub-value {
+    line-height: 1.68 !important;
+    word-break: keep-all;
+  }
+
+  @container publications-list (max-width: 719px) {
+    html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item {
+      grid-template-columns: minmax(0, 1fr) !important;
+      padding: 17px 18px !important;
+    }
+
+    html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item:hover {
+      padding-left: 18px !important;
+    }
+
+    html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item > .pub-value {
+      padding: 12px 14px !important;
+    }
+  }
+
+}
+
+@media screen and (max-width: 940px) {
+  #work-library.pl-library-v25 {
+    align-content: start !important;
+    padding-block: 24px 28px !important;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  #work-library.pl-library-v25 {
+    padding-block: 22px 24px !important;
+    row-gap: 12px !important;
+  }
+
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item {
+    padding: 15px 14px !important;
+  }
+
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item:hover {
+    padding-left: 14px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item {
+    transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item > .pub-value {
+    border-color: CanvasText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
 }
