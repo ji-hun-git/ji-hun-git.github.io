@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="ui-v23 ui-v24 ui-v25">
+<html lang="en" class="ui-v23 ui-v24 ui-v25 ui-v26">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1626,7 +1626,8 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=25-20260812d" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=26-20260812a" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=26-20260812a" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1659,11 +1660,15 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
 
-  <section class="work-library pl-embedded pl-library-v3 pl-library-v5 pl-library-v6 pl-library-v7 pl-library-v8 pl-library-v9 pl-library-v10 pl-library-v11 pl-library-v12 pl-library-v13 pl-library-v14 pl-library-v15 pl-library-v16 pl-library-v17 pl-library-v18 pl-library-v19 pl-library-v20 pl-library-v21 pl-library-v22 pl-library-v23 pl-library-v24 pl-library-v25" id="work-library" aria-labelledby="library-title">
+  <section class="work-library pl-embedded pl-library-v3 pl-library-v5 pl-library-v6 pl-library-v7 pl-library-v8 pl-library-v9 pl-library-v10 pl-library-v11 pl-library-v12 pl-library-v13 pl-library-v14 pl-library-v15 pl-library-v16 pl-library-v17 pl-library-v18 pl-library-v19 pl-library-v20 pl-library-v21 pl-library-v22 pl-library-v23 pl-library-v24 pl-library-v25 pl-library-v26" id="work-library" aria-labelledby="library-title">
     <header class="pl-site-header">
       <div class="pl-brand-lockup">
         <div class="pl-brand-copy">
           <h1 class="pl-wordmark" id="site-title">Jihun Chae<span aria-hidden="true">.</span></h1>
+          <p class="pl-hero-role">
+            <span lang="en">Human-centered AI research, product strategy, and systems built around human agency.</span>
+            <span lang="ko">사람의 주체성을 중심에 둔 인간 중심 AI 연구, 제품 전략, 시스템.</span>
+          </p>
         </div>
       </div>
     </header>
@@ -1689,13 +1694,15 @@
     </div>
   </section>
 
-  <a class="pl-cv-jump pl-cv-jump--arrow" data-cv-jump href="?view=cv#cv-start">
-    <span class="pl-sr-only" lang="en">Go to the full CV</span>
-    <span class="pl-sr-only" lang="ko">전체 이력서로 이동</span>
-    <svg class="pl-cv-jump__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M12 4v14"></path>
-      <path d="m6.5 12.5 5.5 5.5 5.5-5.5"></path>
-    </svg>
+  <a class="pl-cv-jump pl-cv-jump--arrow pl-cv-jump--primary" data-cv-jump href="?view=cv#cv-start">
+    <span class="pl-cv-jump__label" lang="en">Explore the full CV</span>
+    <span class="pl-cv-jump__label" lang="ko">전체 이력서 보기</span>
+    <span class="pl-cv-jump__icon" aria-hidden="true">
+      <svg class="pl-cv-jump__glyph" viewBox="0 0 24 24" focusable="false">
+        <path d="M12 4v14"></path>
+        <path d="m6.5 12.5 5.5 5.5 5.5-5.5"></path>
+      </svg>
+    </span>
   </a>
 
   <div class="page" id="cv-start" tabindex="-1">
@@ -2356,6 +2363,6 @@
   </script>
   <script defer src="assets/project-library/work-designs.js?v=23-20260812a"></script>
   <script defer src="assets/project-library/work-content.js?v=23-20260812a"></script>
-  <script defer src="assets/project-library/project-library.js?v=24-20260812b"></script>
+  <script defer src="assets/project-library/project-library.js?v=26-20260812a"></script>
 </body>
 </html>

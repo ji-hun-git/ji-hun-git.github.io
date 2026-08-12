@@ -55,6 +55,7 @@
   let compactKeywordState = root.clientWidth <= 760;
 
   root.dataset.inputModality = "pointer";
+  root.dataset.motionModel = "stable-hinge";
   document.addEventListener("pointerdown", () => {
     captionModality = "pointer";
     root.dataset.inputModality = "pointer";
@@ -860,6 +861,8 @@
     detail.dataset.cover = work.slug;
     detail.dataset.palette = work.palette;
     detail.dataset.type = work.type;
+    detail.setAttribute("role", "dialog");
+    detail.setAttribute("aria-modal", "true");
 
     const top = create("div", "pl-detail__top pl-detail__header");
     const headingGroup = create("div", "");
@@ -1070,21 +1073,7 @@
     });
   };
 
-  const playCvRise = (epoch, signal) => {
-    clearCvRise();
-    if (motionDisabled() || signal.aborted || epoch !== viewTransitionEpoch) return;
-    cvRiseTargets().forEach((target, index) => {
-      target.setAttribute("data-cv-rise", "");
-      target.style.setProperty("--cv-rise-index", String(index));
-    });
-    requestAnimationFrame(() => {
-      if (signal.aborted || epoch !== viewTransitionEpoch || documentViewFor() !== "cv") return;
-      document.documentElement.classList.add("is-cv-entering");
-      window.setTimeout(() => {
-        if (epoch === viewTransitionEpoch) clearCvRise();
-      }, 1080);
-    });
-  };
+  const playCvRise = () => clearCvRise();
 
   const cancelDocumentViewTransition = () => {
     viewTransitionController?.abort();
@@ -1115,7 +1104,8 @@
     } catch {
       target.focus();
     }
-    target.scrollIntoView({ behavior: "auto", block: view === "cv" ? "nearest" : "start", inline: "nearest" });
+    target.scrollIntoView({ behavior: "auto", block: "start", inline: "nearest" });
+    if (view === "cv" && target.id === "cv-start") window.scrollTo({ top: 0, behavior: "auto" });
   };
 
   const animateViewSurface = async (surface, keyframes, options, signal) => {
@@ -1172,19 +1162,8 @@
     document.documentElement.classList.add("is-view-transitioning");
     document.documentElement.setAttribute("aria-busy", "true");
 
-    if (previousView === nextView || motionDisabled()) {
+    if (previousView === nextView || motionDisabled() || compactLayout.matches) {
       commit();
-      await finish();
-      return;
-    }
-
-    if (typeof document.startViewTransition === "function") {
-      try {
-        activeNativeViewTransition = document.startViewTransition(commit);
-        await activeNativeViewTransition.finished.catch(() => undefined);
-      } catch {
-        commit();
-      }
       await finish();
       return;
     }
@@ -1194,7 +1173,7 @@
       { opacity: 1, transform: "translate3d(0,0,0)" },
       { opacity: 0, transform: previousView === "library" ? "translate3d(0,-10px,0)" : "translate3d(0,8px,0)" }
     ], {
-      duration: 170,
+      duration: 140,
       easing: "cubic-bezier(.4,0,.8,.2)"
     }, signal);
     if (signal.aborted || epoch !== viewTransitionEpoch) return;
@@ -1204,7 +1183,7 @@
       { opacity: 0, transform: nextView === "cv" ? "translate3d(0,14px,0)" : "translate3d(0,-8px,0)" },
       { opacity: 1, transform: "translate3d(0,0,0)" }
     ], {
-      duration: 300,
+      duration: 240,
       easing: "cubic-bezier(.2,.8,.2,1)"
     }, signal);
     await finish();
@@ -1241,6 +1220,8 @@
     // the reader instead, so the latest-intent queue never sees them. Keep the
     // moving reader click-through; restore its controls as soon as it is open.
     readingDock.style.pointerEvents = isBusy ? "none" : "";
+    if (phase === "open") viewport.setAttribute("inert", "");
+    else viewport.removeAttribute("inert");
   };
 
   const ANCHORED_READER_MIN_WIDTH = 840;
@@ -1846,7 +1827,11 @@
     const target = detail.querySelector(selector) || detail;
     try {
       target.focus({ preventScroll: true });
-      if (embeddedLayout && !readerUsesAnchoredLayout()) {
+      if (
+        embeddedLayout
+        && !readerUsesAnchoredLayout()
+        && root.dataset.motionModel !== "stable-hinge"
+      ) {
         const expectedSlug = currentWork?.slug;
         const alignCompactReader = () => {
           if (!currentWork || currentWork.slug !== expectedSlug || detail.hidden || readerUsesAnchoredLayout()) return;
@@ -1910,37 +1895,19 @@
     return compact
       ? {
         compact: true,
-        pull: 8,
-        extracting: 55,
-        arriving: 150,
-        hinge: 260,
-        leaves: 2,
-        flickDuration: 90,
-        flickStagger: 18,
-        closing: 130,
-        returning: 150,
-        extractingEasing: "cubic-bezier(0.32, 0.72, 0, 1)",
-        travelEasing: "cubic-bezier(0.32, 0.72, 0, 1)",
-        hingeEasing: "cubic-bezier(0.4, 0, 0.2, 1)",
-        flickEasing: "cubic-bezier(0.32, 0.02, 0.2, 1)",
-        returningEasing: "cubic-bezier(0.32, 0.72, 0, 1)"
+        hinge: 480,
+        reveal: 200,
+        turn: 210,
+        hingeEasing: "cubic-bezier(.22, 1, .36, 1)",
+        revealEasing: "cubic-bezier(.22, 1, .36, 1)"
       }
       : {
         compact: false,
-        pull: 12,
-        extracting: 65,
-        arriving: 190,
-        hinge: 300,
-        leaves: 2,
-        flickDuration: 105,
-        flickStagger: 22,
-        closing: 180,
-        returning: 190,
-        extractingEasing: "cubic-bezier(0.32, 0.72, 0, 1)",
-        travelEasing: "cubic-bezier(0.32, 0.72, 0, 1)",
-        hingeEasing: "cubic-bezier(0.4, 0, 0.2, 1)",
-        flickEasing: "cubic-bezier(0.32, 0.02, 0.2, 1)",
-        returningEasing: "cubic-bezier(0.32, 0.72, 0, 1)"
+        hinge: 560,
+        reveal: 240,
+        turn: 240,
+        hingeEasing: "cubic-bezier(.22, 1, .36, 1)",
+        revealEasing: "cubic-bezier(.22, 1, .36, 1)"
       };
   };
 
@@ -2218,6 +2185,114 @@
     }, token, profile.hinge + 36);
   };
 
+  const resetStableMotionStyles = () => {
+    [detail, detail.querySelector(".pl-detail__spread")].forEach((node) => {
+      node?.style.removeProperty("opacity");
+      node?.style.removeProperty("transform");
+      node?.style.removeProperty("will-change");
+    });
+  };
+
+  // The original interaction handed the selected spine through several
+  // measured clones before opening it. That made the result sensitive to
+  // scroll, viewport, and font timing. The stable model keeps one reader in
+  // one coordinate system: the spread fades in while a single rigid cover
+  // rotates around the center hinge.
+  const animateStableBookOpen = async (pageTurn, token, profile = flightMotionProfile()) => {
+    const spread = detail.querySelector(".pl-detail__spread");
+    if (!spread || !pageTurn || motionDisabled()) return transitionIsCurrent(token);
+
+    setTransitionPhase("opening");
+    pageTurn.style.setProperty("display", "block", "important");
+    pageTurn.style.setProperty("animation", "none", "important");
+    pageTurn.style.transformOrigin = "left center";
+    pageTurn.style.backfaceVisibility = "visible";
+    pageTurn.style.opacity = "1";
+    detail.style.willChange = "transform, opacity";
+    spread.style.willChange = "transform, opacity";
+    void pageTurn.offsetWidth;
+
+    const results = await Promise.all([
+      runWaapi(detail, [
+        { opacity: 0, transform: "translate3d(0, 10px, 0) scale(.985)" },
+        { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)" }
+      ], {
+        duration: profile.reveal,
+        easing: profile.revealEasing
+      }, token, profile.reveal + 48),
+      runWaapi(spread, [
+        { opacity: 0, transform: "translate3d(0, 5px, 0)" },
+        { offset: 0.16, opacity: 0, transform: "translate3d(0, 5px, 0)" },
+        { opacity: 1, transform: "translate3d(0, 0, 0)" }
+      ], {
+        duration: profile.hinge,
+        easing: profile.revealEasing
+      }, token, profile.hinge + 48),
+      runWaapi(pageTurn, rigidHingeKeyframes(false), {
+        duration: profile.hinge,
+        easing: profile.hingeEasing
+      }, token, profile.hinge + 48)
+    ]);
+
+    if (results.every(Boolean) && transitionIsCurrent(token)) {
+      pageTurn.style.setProperty("display", "none", "important");
+      resetStableMotionStyles();
+      return true;
+    }
+    return false;
+  };
+
+  const animateStableBookClose = async (pageTurn, token, profile = flightMotionProfile()) => {
+    const spread = detail.querySelector(".pl-detail__spread");
+    if (!spread || !pageTurn || motionDisabled()) return transitionIsCurrent(token);
+
+    setTransitionPhase("closing-cover");
+    pageTurn.style.setProperty("display", "block", "important");
+    pageTurn.style.setProperty("animation", "none", "important");
+    pageTurn.style.transformOrigin = "left center";
+    pageTurn.style.backfaceVisibility = "visible";
+    pageTurn.style.opacity = "1";
+    detail.style.willChange = "transform, opacity";
+    spread.style.willChange = "transform, opacity";
+    void pageTurn.offsetWidth;
+
+    const results = await Promise.all([
+      runWaapi(detail, [
+        { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)" },
+        { opacity: 0.96, transform: "translate3d(0, 7px, 0) scale(.988)" }
+      ], {
+        duration: profile.hinge,
+        easing: profile.hingeEasing
+      }, token, profile.hinge + 48),
+      runWaapi(spread, [
+        { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        { offset: 0.72, opacity: 0.28, transform: "translate3d(0, 3px, 0)" },
+        { opacity: 0, transform: "translate3d(0, 5px, 0)" }
+      ], {
+        duration: profile.hinge,
+        easing: profile.hingeEasing
+      }, token, profile.hinge + 48),
+      runWaapi(pageTurn, rigidHingeKeyframes(true), {
+        duration: profile.hinge,
+        easing: profile.hingeEasing
+      }, token, profile.hinge + 48)
+    ]);
+    return results.every(Boolean) && transitionIsCurrent(token);
+  };
+
+  const animateStablePageChange = (token, direction, profile = flightMotionProfile()) => {
+    const spread = detail.querySelector(".pl-detail__spread");
+    if (!spread || motionDisabled()) return Promise.resolve(transitionIsCurrent(token));
+    const offset = direction < 0 ? -10 : 10;
+    return runTransientWaapi(spread, [
+      { opacity: 0.25, transform: `translate3d(${offset}px, 0, 0)` },
+      { opacity: 1, transform: "translate3d(0, 0, 0)" }
+    ], {
+      duration: profile.turn,
+      easing: profile.revealEasing
+    }, token, profile.turn + 48);
+  };
+
   const returnClosedCoverToShelf = async (
     work,
     coverRect,
@@ -2308,15 +2383,10 @@
       && activation !== "programmatic"
       ? "push"
       : resolvedHistoryMode;
-    let pointerFlightCandidate = false;
     const token = beginVisualTransition();
 
     readingDock.querySelectorAll(".pl-closing-spread").forEach((node) => node.remove());
     detail.querySelectorAll(".pl-detail__spread--ghost").forEach((node) => node.remove());
-    const turningVisual = previousWork && !motionDisabled()
-      ? makeVisualClone(detail.querySelector(".pl-detail__spread"), "pl-detail__spread--ghost")
-      : null;
-
     previousItem?.classList.remove("is-open", "is-active");
     previousTrigger?.setAttribute("aria-expanded", "false");
     currentWork = work;
@@ -2328,22 +2398,22 @@
     } else {
       setReaderAnchorSource(work, item);
     }
-    const stackedFirstOpen = firstOpen && readingDock.dataset.readerLayout !== "anchored";
-    const stackedPointerOpen = stackedFirstOpen
-      && activation === "pointer"
-      && !motionDisabled()
-      && typeof Element.prototype.animate === "function";
-    commitsWithoutMotion = commitsWithoutMotion || (stackedFirstOpen && !stackedPointerOpen);
-    pointerFlightCandidate = firstOpen
-      && canStartPointerFlight(nextSourceRect, effectiveHistoryMode, activation);
     clearCaption();
     shelf.querySelectorAll(".pl-volume__trigger").forEach((book) => {
       book.tabIndex = book === currentTrigger ? 0 : -1;
     });
 
     renderDetail(work);
-    if (turningVisual) detail.insertBefore(turningVisual, detail.querySelector(".pl-page-turn"));
     detail.hidden = false;
+    if (firstOpen && !commitsWithoutMotion) {
+      detail.style.opacity = "0";
+      detail.style.transform = "translate3d(0, 10px, 0) scale(.985)";
+      const enteringSpread = detail.querySelector(".pl-detail__spread");
+      if (enteringSpread) {
+        enteringSpread.style.opacity = "0";
+        enteringSpread.style.transform = "translate3d(0, 5px, 0)";
+      }
+    }
     if (firstOpen) detail.setAttribute("inert", "");
     else detail.removeAttribute("inert");
     readingDock.hidden = false;
@@ -2352,12 +2422,11 @@
     readingDock.dataset.type = work.type;
     readingDock.dataset.pattern = work.pattern;
     setTransitionPhase(firstOpen
-      ? (pointerFlightCandidate || stackedPointerOpen ? "extracting" : "preparing-open")
+      ? "preparing-open"
       : (direction < 0 ? "turning-backward" : "turning-forward"));
     item.classList.add("is-active");
     nextTrigger.setAttribute("aria-expanded", "true");
     if (firstOpen && focus) nextTrigger.focus({ preventScroll: true });
-    if (pointerFlightCandidate) root.classList.add("is-extracting");
     root.classList.add("is-reading");
     moveDetail();
     void readingDock.offsetHeight;
@@ -2370,15 +2439,6 @@
 
     if (!firstOpen && focus && (focusMode === "previous" || focusMode === "next")) {
       focusReaderTarget(focusMode);
-    }
-
-    if (stackedPointerOpen) {
-      // Compact readers previously stopped after a 2-D shelf lift. Let that
-      // tactile pull finish, then continue through the same bounded rigid
-      // hinge used on desktop below. No separate mobile physics model means
-      // opening and closing stay exact inverses at every viewport size.
-      if (!await animateStackedSourceLift(nextTrigger, item, token)) return;
-      if (!transitionIsCurrent(token)) return;
     }
 
     if (commitsWithoutMotion) {
@@ -2408,31 +2468,11 @@
       const pageTurn = detail.querySelector(".pl-page-turn");
       const profile = flightMotionProfile();
       applyOpeningTurnBounds(pageTurn, coverRect, spreadRect);
-      if (activation === "pointer" && canUseFlight(nextSourceRect, coverRect, effectiveHistoryMode)) {
-        if (!await flyCoverToReader(work, nextSourceRect, coverRect, item, token)) {
-          clearOpeningTurnBounds();
-          return;
-        }
-      } else {
-        root.classList.remove("is-extracting");
-        item.classList.add("is-flight-source");
-      }
-      if (!transitionIsCurrent(token)) {
-        clearOpeningTurnBounds();
-        return;
-      }
-      setTransitionPhase("opening");
-      void pageTurn?.offsetWidth;
-      const opened = await openCoverAtReader(pageTurn, token, profile);
+      const opened = await animateStableBookOpen(pageTurn, token, profile);
       clearOpeningTurnBounds();
       if (!opened) return;
-      if (activation === "pointer" && !motionDisabled()) {
-        if (!await flickOpenPages(token, profile)) return;
-      }
     } else {
-      const pageTurn = detail.querySelector(".pl-page-turn");
-      void pageTurn?.offsetWidth;
-      if (!await waitForVisual(pageTurn, token, 760)) return;
+      if (!await animateStablePageChange(token, direction)) return;
     }
 
     if (!transitionIsCurrent(token)) return;
@@ -2486,6 +2526,7 @@
     if (restoreTriggerFocus) {
       triggerToRestore.focus({ preventScroll: true });
     }
+    resetStableMotionStyles();
     detail.hidden = true;
     detail.setAttribute("inert", "");
     detail.replaceChildren();
@@ -2535,6 +2576,16 @@
     window.dispatchEvent(new CustomEvent("site:layoutchange"));
   };
 
+  const closeCurrentWorkImmediately = ({ focus = false, announce = false } = {}) => {
+    if (!currentWork) return;
+    const triggerToRestore = currentTrigger;
+    const token = beginVisualTransition();
+    clearQueuedIntent();
+    triggerToRestore?.setAttribute("aria-expanded", "false");
+    finishClose(triggerToRestore, focus, !announce);
+    completeVisualTransition(token);
+  };
+
   const performClose = async (options = {}) => {
     const {
       immediate = false,
@@ -2545,12 +2596,9 @@
     if (!currentWork) return;
     const token = beginVisualTransition();
     holdReadingDockHeight();
-    const workToClose = currentWork;
     const triggerToRestore = currentTrigger;
     const item = triggerToRestore?.closest(".pl-volume");
     item?.classList.remove("is-open");
-    const liveSourceRect = snapshotRect(triggerToRestore?.querySelector(".pl-volume__spine"));
-    const returnSourceRect = liveSourceRect || currentSourceRect;
     const spreadRect = snapshotRect(detail.querySelector(".pl-detail__spread:not(.pl-detail__spread--ghost)"));
     const coverPanel = detail.querySelector(".pl-detail__page--left");
     const coverPanelRect = snapshotRect(coverPanel);
@@ -2563,84 +2611,22 @@
       && coverPanelRect.right > 0
       && coverPanelRect.left < window.innerWidth
     );
-    const stackedPointerClose = !immediate
-      && readingDock.dataset.readerLayout !== "anchored"
-      && activation === "pointer"
-      && !motionDisabled()
-      && typeof Element.prototype.animate === "function"
-      && coverIsVisible;
     const closeImmediately = immediate
-      || (readingDock.dataset.readerLayout !== "anchored" && !stackedPointerClose)
       || (focus && activation !== "pointer");
-    const animateClose = !closeImmediately && !motionDisabled();
-    const reverseFlight = animateClose
-      && !stackedPointerClose
-      && pageTurn
-      && canAnimateFlight(returnSourceRect, coverRect);
-    const closingVisual = animateClose && !stackedPointerClose && !reverseFlight
-      ? makeVisualClone(
-        detail.querySelector(".pl-detail__spread:not(.pl-detail__spread--ghost)"),
-        "pl-closing-spread"
-      )
-      : null;
+    const animateClose = !closeImmediately && !motionDisabled() && coverIsVisible;
     readingDock.querySelectorAll(".pl-closing-spread").forEach((node) => node.remove());
     detail.querySelectorAll(".pl-detail__spread--ghost").forEach((node) => node.remove());
-    if (closingVisual) readingDock.append(closingVisual);
     triggerToRestore?.setAttribute("aria-expanded", "false");
     if (updateUrl) setWorkUrl(null, "replace");
 
-    if (stackedPointerClose) {
-      const compactProfile = { ...flightMotionProfile(), compact: true, closing: 150 };
-      applyOpeningTurnBounds(pageTurn, coverRect, spreadRect);
-      if (!await settleReaderPages(token, compactProfile)) {
-        clearOpeningTurnBounds();
-        return;
-      }
-      if (!await closeCoverAtReader(pageTurn, token, compactProfile)) {
-        clearOpeningTurnBounds();
-        return;
-      }
-      clearOpeningTurnBounds();
-    } else if (reverseFlight) {
+    if (animateClose) {
       const profile = flightMotionProfile();
       applyOpeningTurnBounds(pageTurn, coverRect, spreadRect);
-      if (!await settleReaderPages(token, profile)) {
-        clearOpeningTurnBounds();
-        return;
-      }
-      if (!await closeCoverAtReader(pageTurn, token, profile)) {
-        clearOpeningTurnBounds();
-        return;
-      }
-      const handoffSpreadRect = snapshotRect(detail.querySelector(".pl-detail__spread:not(.pl-detail__spread--ghost)"));
-      const handoffCoverPanelRect = snapshotRect(detail.querySelector(".pl-detail__page--left"));
-      const handoffCoverRect = closedCoverRect(handoffSpreadRect, handoffCoverPanelRect);
-      const handoffSourceRect = snapshotRect(triggerToRestore?.querySelector(".pl-volume__spine")) || returnSourceRect;
-      const readerResizedDuringClose = !handoffCoverRect
-        || Math.abs(handoffCoverRect.width - coverRect.width) > 8
-        || Math.abs(handoffCoverRect.height - coverRect.height) > 8;
-      if (
-        !readerResizedDuringClose
-        && canAnimateFlight(handoffSourceRect, handoffCoverRect)
-        && !await returnClosedCoverToShelf(
-          workToClose,
-          handoffCoverRect,
-          handoffSourceRect,
-          item,
-          token,
-          focus
-        )
-      ) {
+      if (!await animateStableBookClose(pageTurn, token, profile)) {
         clearOpeningTurnBounds();
         return;
       }
       clearOpeningTurnBounds();
-    } else if (animateClose) {
-      setTransitionPhase("closing");
-      focusShelfBeforeReaderHide(triggerToRestore, focus);
-      detail.hidden = true;
-      detail.setAttribute("inert", "");
-      if (!await waitForVisual(closingVisual, token, 360)) return;
     } else {
       setTransitionPhase("closing");
     }
@@ -2721,16 +2707,36 @@
       adjacentWork(1, { activation, focusMode: activation === "pointer" ? "title" : "next" });
     }
     if (action === "view-cv" && currentWork) {
-      if (transitionIsBusy()) return;
-      const source = currentWork.source;
-      if (currentWork.type === "publication" && source.classList.contains("hidden")) {
+      const selectedWork = currentWork;
+      const source = selectedWork.source;
+      if (selectedWork.type === "publication" && source.classList.contains("hidden")) {
         document.querySelector('#pubFilter [data-year="all"]')?.click();
       }
       const url = new URL(control.href, window.location.href);
-      closeWork({ immediate: true, focus: false, updateUrl: false });
+      closeCurrentWorkImmediately({ focus: false });
       historyOwned = false;
       historyClosePending = false;
       await transitionDocumentView(url, { historyMode: "replace", focus: true });
+    }
+  });
+
+  detail.addEventListener("keydown", (event) => {
+    if (event.key !== "Tab" || transitionPhase !== "open") return;
+    const focusable = [...detail.querySelectorAll(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )].filter((node) => !node.closest('[hidden], [inert]') && node.getClientRects().length);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (
+      event.shiftKey
+      && (document.activeElement === first || document.activeElement === detail.querySelector(".pl-detail__title"))
+    ) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   });
 
@@ -2792,7 +2798,7 @@
     if (!isViewLink || nextView === currentView) return;
     event.preventDefault();
     if (currentWork && nextView === "cv") {
-      closeWork({ immediate: true, focus: false, updateUrl: false });
+      closeCurrentWorkImmediately({ focus: false });
       historyOwned = false;
       historyClosePending = false;
     }
@@ -2850,6 +2856,9 @@
   renderShelf();
   updateLocalizedLabels();
   root.classList.add("is-ready");
+  if (documentViewFor() === "cv" && window.location.hash) {
+    void focusDocumentViewTarget(new URL(window.location.href), "cv", viewTransitionEpoch);
+  }
   if (document.fonts?.ready) {
     document.fonts.ready
       .then(() => {
