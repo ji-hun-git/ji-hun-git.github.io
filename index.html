@@ -1626,7 +1626,7 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=25-20260812c" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=25-20260812d" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1663,9 +1663,7 @@
     <header class="pl-site-header">
       <div class="pl-brand-lockup">
         <div class="pl-brand-copy">
-          <a class="pl-wordmark-link" data-cv-jump href="?view=cv#cv-start">
-            <h1 class="pl-wordmark" id="site-title">Jihun Chae<span aria-hidden="true">.</span></h1>
-          </a>
+          <h1 class="pl-wordmark" id="site-title">Jihun Chae<span aria-hidden="true">.</span></h1>
         </div>
       </div>
     </header>
@@ -1690,6 +1688,15 @@
       </noscript>
     </div>
   </section>
+
+  <a class="pl-cv-jump pl-cv-jump--arrow" data-cv-jump href="?view=cv#cv-start">
+    <span class="pl-sr-only" lang="en">Go to the full CV</span>
+    <span class="pl-sr-only" lang="ko">전체 이력서로 이동</span>
+    <svg class="pl-cv-jump__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 4v14"></path>
+      <path d="m6.5 12.5 5.5 5.5 5.5-5.5"></path>
+    </svg>
+  </a>
 
   <div class="page" id="cv-start" tabindex="-1">
     <nav class="mobile-nav" aria-label="Sections">
