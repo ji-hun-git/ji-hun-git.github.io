@@ -47,3 +47,66 @@ html .p-chip .p-brand-wordmark {
 /* The ::before pseudo-elements are left alone: the same selector carries the
    monogram letter badge on chips with no logo. The four that paint a mark have
    their widths set individually in index.html. */
+
+/* ════════════════════════════════════════════════════════════════════════
+   One level of enclosure
+   ──────────────────────────────────────────────────────────────────────────
+   A single project entry was drawing six boxes inside the card: the .partners
+   container plus an outline around every chip. Three nested levels of border
+   for metadata, which is why the rows read as clutter rather than information.
+
+   The card is the container. Inside it, partners are separated by space and by
+   their own marks — the logo or the monogram badge already delimits where one
+   partner ends and the next begins, so the outline was doing nothing the eye
+   needed. Chips keep their full hit area; only the border and fill are gone.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html .p-chip {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+html .p-chip:hover {
+  border: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* Space now does the separating that borders were doing, so it has to be
+   unambiguous: a clear column gap, and a comfortable row gap when they wrap. */
+html .p-set {
+  gap: 8px 20px !important;
+}
+
+html .partners {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* The monogram badge is the delimiter for partners with no mark, so it stays -
+   but quieted to a filled dot of type rather than a ringed chip. */
+html .p-chip[data-m]::before {
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--soft, #6a6d75) !important;
+  font-weight: 700 !important;
+  padding: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+/* The border removal above lost a specificity race: the chip outline is set at
+   `html[data-view="cv"].ui-v23 #cv-start .p-chip` (1,3,1), which outranks a
+   plain `html .p-chip` (0,1,1). Mirror that weight so the rule actually lands. */
+html[data-view="cv"].ui-v23 #cv-start .p-chip,
+html[data-view="cv"].ui-v23 #cv-start .p-chip:hover,
+html[data-view="library"].ui-v23 .p-chip {
+  border: 0 !important;
+  border-width: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}

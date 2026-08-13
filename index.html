@@ -1654,17 +1654,19 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=55-20260814c" />
-  <link rel="stylesheet" href="assets/interior/logos.css?v=55-20260814c" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=55-20260814c" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=55-20260814c" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=58-20260814f" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=58-20260814f" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=58-20260814f" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=55-20260814c"
+  <link rel="stylesheet" href="assets/interior/archive.css?v=58-20260814f"
         media="(prefers-color-scheme: light)" />
+  <!-- Last: partner-mark sizing has to outrank project-library.css, which
+       loads above it. Source order, not specificity, was the problem. -->
+  <link rel="stylesheet" href="assets/interior/logos.css?v=58-20260814f" />
   <!-- Reader mode pins its own dark ink and never sets a light ground, so it
        inverts here rather than going invisible on the dark surface. -->
-  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=55-20260814c"
+  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=58-20260814f"
         media="(prefers-color-scheme: dark)" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
@@ -1956,7 +1958,7 @@
               <div class="item-meta"><span lang="en">2023.10 | 2023 Metaverse Developer Contest</span><span lang="ko">2023.10 | 2023 메타버스 개발자 경진대회</span></div>
               <p class="item-desc cv-summary" lang="en">Team EyeCU received the Skonec CEO Award for <em>Watchers</em>, a Meta Quest Pro application turning eye exercises into play. Jihun Chae contributed VR content research and design; the primary plan names Youngsung Lee as team leader.</p>
               <p class="item-desc cv-summary" lang="ko">Team EyeCU는 안구 운동을 놀이로 전환한 Meta Quest Pro 앱 <em>Watchers</em>로 스코넥 대표상을 받았습니다. 채지훈은 VR 콘텐츠 연구·설계를 담당했으며, 1차 기획서상 팀장은 이영성입니다.</p>
-              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />MSIT</span><span class="p-chip" data-m="K">Korea Metaverse Industry Association</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa.png" alt="" onerror="this.remove()" />NIPA</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />Skonec Entertainment</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />과학기술정보통신부</span><span class="p-chip" data-m="메">한국메타버스산업협회</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa.png" alt="" onerror="this.remove()" />정보통신산업진흥원</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />스코넥엔터테인먼트</span></span></div>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />MSIT</span><span class="p-chip" data-m="K">Korea Metaverse Industry Association</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa-mark.png" alt="" onerror="this.remove()" />NIPA</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />Skonec Entertainment</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />과학기술정보통신부</span><span class="p-chip" data-m="메">한국메타버스산업협회</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa-mark.png" alt="" onerror="this.remove()" />정보통신산업진흥원</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />스코넥엔터테인먼트</span></span></div>
             </div>
             <div class="item reveal">
               <span class="item-title"><span lang="en">Encouragement Prize</span><span lang="ko">장려상</span></span>
@@ -1977,7 +1979,7 @@
               <div class="item-meta"><span lang="en">2021.07 | DB-SNUbiz Global Startup Challenge</span><span lang="ko">2021.07 | DB-SNUbiz 글로벌 창업 챌린지</span></div>
               <p class="item-desc cv-summary" lang="en">Contributed to a blockchain venture pitch developed for a selective global startup challenge. Organizer records document the 152-to-38-to-14 selection funnel and the final date.</p>
               <p class="item-desc cv-summary" lang="ko">선별형 글로벌 창업 챌린지를 위해 블록체인 벤처 피치 개발에 기여했습니다. 주최 측 기록이 152→38→14 선발 과정과 본선일을 확인합니다.</p>
-              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu.png" alt="" onerror="this.remove()" />SNU Business School</span><span class="p-chip" data-m="D">DB Kim Jun-gi Culture Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu.png" alt="" onerror="this.remove()" />서울대학교 경영대학</span><span class="p-chip" data-m="D">DB김준기문화재단</span></span></div>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />SNU Business School</span><span class="p-chip" data-m="D">DB Kim Jun-gi Culture Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />서울대학교 경영대학</span><span class="p-chip" data-m="D">DB김준기문화재단</span></span></div>
             </div>
           </div>
         </section>
@@ -2406,11 +2408,11 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=55-20260814c"></script>
-  <script defer src="assets/project-library/work-content.js?v=55-20260814c"></script>
-  <script defer src="assets/interior/ripple.js?v=55-20260814c"></script>
-  <script defer src="assets/project-library/project-library.js?v=55-20260814c"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=55-20260814c"></script>
+  <script defer src="assets/project-library/work-designs.js?v=58-20260814f"></script>
+  <script defer src="assets/project-library/work-content.js?v=58-20260814f"></script>
+  <script defer src="assets/interior/ripple.js?v=58-20260814f"></script>
+  <script defer src="assets/project-library/project-library.js?v=58-20260814f"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=58-20260814f"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate
