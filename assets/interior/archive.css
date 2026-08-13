@@ -218,24 +218,6 @@ html[data-view="cv"].ui-v23 #cv-start .divider {
   border-radius: var(--ar-r-pill) !important;
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   Dark — the archive after hours. Paper warmth is kept in the ink, not the
-   ground, so the page does not glow.
-   ══════════════════════════════════════════════════════════════════════ */
-@media (prefers-color-scheme: dark) {
-  html[data-view="cv"].ui-v23,
-  html[data-view="cv"].ui-v23 body {
-    --ar-paper:        #14130f;
-    --ar-paper-raised: #1c1a15;
-    --ar-ink:          #f2efe6;
-    --ar-ink-soft:     #c3bdae;
-    --ar-ink-faint:    #a29b8c;
-    --ar-rule:         #302c24;
-    --ar-rule-strong:  #4b463b;
-    --ar-accent:       #9db8e0;
-    --ar-accent-deep:  #b8cdec;
-  }
-}
 
 /* ════════════════════════════════════════════════════════════════════════
    Floor
@@ -303,4 +285,58 @@ html[data-view="cv"].ui-v23 #cv-start :is(.filter button, .pub-value, .title-asi
 html[data-view="cv"].ui-v23 #cv-start .profile-image,
 html[data-view="cv"].ui-v23 #cv-start .profile-image img {
   border-radius: var(--ar-r-card) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Controls have to read AS controls on paper
+   ──────────────────────────────────────────────────────────────────────────
+   Measured on the first pass: .pill-btn and .pl-cv-jump sat at 1.07 and 1.09
+   against the paper — their near-white fill and soft hairline made them ghosts
+   — while .skip-link and the active filter kept a near-black fill and landed as
+   heavy slabs on cream. Both read as broken.
+
+   Fix: give a resting control a defined edge rather than a fill, and let the
+   one accent carry the active state instead of a black block. Ink on paper,
+   not plastic on paper.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html[data-view="cv"].ui-v23 :is(.pill-btn, .pl-cv-jump) {
+  background: var(--ar-paper-raised) !important;
+  border: 1px solid var(--ar-rule-strong) !important;
+  color: var(--ar-ink) !important;
+  box-shadow: none !important;
+}
+
+html[data-view="cv"].ui-v23 :is(.pill-btn, .pl-cv-jump):hover {
+  border-color: var(--ar-accent) !important;
+  color: var(--ar-accent-deep) !important;
+  background: var(--ar-paper-raised) !important;
+}
+
+/* The icon rides the text colour so it never becomes a lone blue mark on an
+   otherwise ink control. */
+html[data-view="cv"].ui-v23 .pill-btn .icon {
+  color: currentColor !important;
+}
+
+/* Primary/active controls: the accent, not a black slab. White on #2b4b7c
+   measures 7.4:1. */
+html[data-view="cv"].ui-v23 :is(.skip-link, .filter button.active, .button) {
+  background: var(--ar-accent) !important;
+  border-color: var(--ar-accent) !important;
+  color: #ffffff !important;
+}
+
+html[data-view="cv"].ui-v23 .filter button.active .count {
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  color: #ffffff !important;
+}
+
+
+/* A control boundary must clear 3:1 against its ground (WCAG 1.4.11).
+   --ar-rule-strong (#b9b2a3) measured 1.87 on paper — fine as a divider,
+   not enough to be the edge of a button. */
+:root { --ar-control-edge: #6f6a5c; }          /* 3.9:1 on #f4f1ea */
+html[data-view="cv"].ui-v23 :is(.pill-btn, .pl-cv-jump) {
+  border-color: var(--ar-control-edge) !important;
 }
