@@ -943,14 +943,11 @@
 
     /* Only use reviewed, transparent institutional marks. Opaque or
        permission-restricted files fall back to the organization name. */
-    .p-logo:is(
-      [src$="smilegate.png"],
-      [src$="krafton.png"],
-      [src$="oliveyoung.png"],
-      [src$="openai.png"],
-      [src$="nipa.png"],
-      [src$="snu.png"]
-    ) { display: none; }
+    /* Only KRAFTON stays hidden: its file is a 16x16 favicon and cannot render
+       at the 22px stage without going soft. The other five were opaque tiles,
+       not permission problems - their white grounds have been keyed out and
+       they now carry real alpha, so they show. */
+    .p-logo:is([src$="krafton.png"]) { display: none; }
 
     /* Partner marks use one predictable, plate-free stage. When an approved
        transparent asset is unavailable, a text wordmark keeps the partner
@@ -1022,19 +1019,19 @@
       background-image: url("assets/logos/anipen.svg");
     }
     #projects .item:nth-child(5) .p-chip[data-m="K"]::before {
-      width: 52px;
+      width: 26px;
       background-image: url("assets/logos/kai.svg");
     }
     #awards .item:nth-child(5) .p-set .p-chip[data-m="P"]:nth-child(2)::before {
-      width: 52px;
+      width: 40px;
       background-image: url("assets/logos/pohang-city.svg");
     }
     #awards .item:nth-child(5) .p-set .p-chip[data-m="P"]:nth-child(3)::before {
-      width: 52px;
+      width: 46px;
       background-image: url("assets/logos/pohang-cultural-foundation.svg");
     }
     #awards .item:nth-child(10) .p-chip[data-m="D"]::before {
-      width: 52px;
+      width: 46px;
       background-image: url("assets/logos/db-foundation.svg");
     }
 
@@ -1657,17 +1654,17 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=53-20260814a" />
-  <link rel="stylesheet" href="assets/interior/logos.css?v=53-20260814a" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=53-20260814a" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=53-20260814a" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=55-20260814c" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=55-20260814c" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=55-20260814c" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=55-20260814c" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=53-20260814a"
+  <link rel="stylesheet" href="assets/interior/archive.css?v=55-20260814c"
         media="(prefers-color-scheme: light)" />
   <!-- Reader mode pins its own dark ink and never sets a light ground, so it
        inverts here rather than going invisible on the dark surface. -->
-  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=53-20260814a"
+  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=55-20260814c"
         media="(prefers-color-scheme: dark)" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
@@ -2409,11 +2406,11 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=53-20260814a"></script>
-  <script defer src="assets/project-library/work-content.js?v=53-20260814a"></script>
-  <script defer src="assets/interior/ripple.js?v=53-20260814a"></script>
-  <script defer src="assets/project-library/project-library.js?v=53-20260814a"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=53-20260814a"></script>
+  <script defer src="assets/project-library/work-designs.js?v=55-20260814c"></script>
+  <script defer src="assets/project-library/work-content.js?v=55-20260814c"></script>
+  <script defer src="assets/interior/ripple.js?v=55-20260814c"></script>
+  <script defer src="assets/project-library/project-library.js?v=55-20260814c"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=55-20260814c"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate
