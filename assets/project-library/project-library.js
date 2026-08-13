@@ -13,6 +13,27 @@
 
   if (!root || !shelf || !viewport || !readingDock || !stage || !designs) return;
 
+  // The shelf viewport already goes inert while a book is open, but the skip
+  // link and the CV jump arrow are siblings of #work-library, so they stayed
+  // tabbable behind the dialog - and aria-modal="true" promises assistive tech
+  // that everything outside is unavailable. Inert every body child except the
+  // subtree holding the dialog. The marker attribute means we only ever undo
+  // what we set, never something inerted for another reason.
+  const setOutsideInert = (on) => {
+    for (const node of Array.from(document.body.children)) {
+      if (node === root || node.tagName === "SCRIPT") continue;
+      if (on) {
+        if (!node.hasAttribute("inert")) {
+          node.setAttribute("inert", "");
+          node.dataset.plInerted = "1";
+        }
+      } else if (node.dataset.plInerted) {
+        node.removeAttribute("inert");
+        delete node.dataset.plInerted;
+      }
+    }
+  };
+
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const forcedColors = window.matchMedia("(forced-colors: active)");
   const compactLayout = window.matchMedia("(max-width: 980px)");
@@ -83,7 +104,7 @@
     "game-accessibility-preferences": { en: "USER RESEARCH", ko: "사용자 연구" },
     "gaia-design-principles": { en: "AI DESIGN", ko: "AI 설계" },
     "game-ai-assistant-barriers": { en: "ACCESSIBILITY", ko: "접근성" },
-    "press-start-to-continue": { en: "ACCESSIBLE GAMES", ko: "게임 접근성" },
+    "press-start-to-continue": { en: "GAME ACCESS", ko: "게임 접근성" },
     "game-npc-identity": { en: "AI CHARACTERS", ko: "AI 캐릭터" },
     "rag-enhanced-gaia": { en: "AI CHATBOT", ko: "AI 챗봇" },
     "pleth-ethical-llm": { en: "AI ETHICS", ko: "AI 윤리" },
@@ -91,23 +112,23 @@
     "llm-npc-scoping-review": { en: "AI CHARACTERS", ko: "AI 캐릭터" },
     "hybe-multilabel-review": { en: "STRATEGY", ko: "경영 전략" },
     "bighit-to-hybe": { en: "MEDIA ANALYSIS", ko: "미디어 분석" },
-    "vr-environmental-awareness": { en: "VR LEARNING", ko: "VR 학습" },
-    "ml-demand-forecasting": { en: "FORECASTING", ko: "수요 예측" },
-    "recycling-gamification": { en: "BEHAVIOR CHANGE", ko: "행동 변화" },
-    "diplopia-rehabilitation": { en: "DIGITAL HEALTH", ko: "디지털 헬스" },
-    "eye-tracking-vr-games": { en: "EYE TRACKING", ko: "시선 추적" },
-    "cynophobia-vr-exposure": { en: "VR EXPOSURE", ko: "VR 노출" },
+    "vr-environmental-awareness": { en: "VR LEARN", ko: "VR 학습" },
+    "ml-demand-forecasting": { en: "FORECAST", ko: "수요 예측" },
+    "recycling-gamification": { en: "BEHAVIOR", ko: "행동 변화" },
+    "diplopia-rehabilitation": { en: "HEALTH", ko: "디지털 헬스" },
+    "eye-tracking-vr-games": { en: "GAZE", ko: "시선 추적" },
+    "cynophobia-vr-exposure": { en: "EXPOSURE", ko: "VR 노출" },
     "clustering-prediction": { en: "PREDICTION", ko: "예측 모델" },
-    "regression-clustering": { en: "FORECASTING", ko: "수요 예측" },
+    "regression-clustering": { en: "FORECAST", ko: "수요 예측" },
     "krafton-fde-challenge": { en: "AI AGENT", ko: "AI 에이전트" },
     "game-society-best-presentation": { en: "ACCESSIBLE AI", ko: "접근성 AI" },
     "edu40-ta-excellence": { en: "EDUCATION", ko: "교육" },
-    "asan-climate-tech-team": { en: "CLIMATE TECH", ko: "기후 기술" },
-    "pohang-media-facade-camp": { en: "MEDIA ART", ko: "미디어 아트" },
-    "eye-tracking-vr-research-award": { en: "EYE TRACKING", ko: "시선 추적" },
-    "watchers-metaverse-excellence": { en: "DIGITAL HEALTH", ko: "디지털 헬스" },
-    "esg-ar-encouragement-prize": { en: "CLIMATE TECH", ko: "기후 기술" },
-    "cynophobia-vr-research-award": { en: "VR EXPOSURE", ko: "VR 노출" },
+    "asan-climate-tech-team": { en: "CLIMATE", ko: "기후 기술" },
+    "pohang-media-facade-camp": { en: "MEDIA", ko: "미디어 아트" },
+    "eye-tracking-vr-research-award": { en: "GAZE", ko: "시선 추적" },
+    "watchers-metaverse-excellence": { en: "HEALTH", ko: "디지털 헬스" },
+    "esg-ar-encouragement-prize": { en: "CLIMATE", ko: "기후 기술" },
+    "cynophobia-vr-research-award": { en: "EXPOSURE", ko: "VR 노출" },
     "db-snubiz-startup-challenge": { en: "STARTUP", ko: "스타트업" }
   });
 
@@ -1220,8 +1241,13 @@
     // the reader instead, so the latest-intent queue never sees them. Keep the
     // moving reader click-through; restore its controls as soon as it is open.
     readingDock.style.pointerEvents = isBusy ? "none" : "";
-    if (phase === "open") viewport.setAttribute("inert", "");
-    else viewport.removeAttribute("inert");
+    if (phase === "open") {
+      viewport.setAttribute("inert", "");
+      setOutsideInert(true);
+    } else {
+      viewport.removeAttribute("inert");
+      setOutsideInert(false);
+    }
   };
 
   const ANCHORED_READER_MIN_WIDTH = 840;

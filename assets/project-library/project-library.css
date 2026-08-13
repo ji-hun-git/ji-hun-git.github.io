@@ -14042,7 +14042,11 @@ html[data-view="cv"].ui-v23 #cv-start .filter button .count {
     min-height: 44px;
   }
 
-  html[data-view="cv"].ui-v23 #cv-start :is(.contact-list a, .section-nav a, .filter button) {
+  /* The [href] variant is required: the desktop rule above also targets
+     `.contact-list a[href]` (1,4,2), which outranks a bare `.contact-list a`
+     (1,3,2) and silently held these at 32px on phones. Match it here so the
+     44px touch target actually applies. */
+  html[data-view="cv"].ui-v23 #cv-start :is(.contact-list a, .contact-list a[href], .section-nav a, .filter button) {
     min-height: 44px;
   }
 
@@ -14840,4 +14844,32 @@ html.ui-v23 body.reader #cv-start :is(.item-desc, .cv-summary, .pub-summary, .pu
     color: ButtonText !important;
     box-shadow: none !important;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Shelf rows align to the same left edge
+   ──────────────────────────────────────────────────────────────────────────
+   The book opening the final group was hand-placed into a later column with a
+   matching translateX, so the last row rendered inset and read as compacted
+   rather than as a continuation of the shelf.
+
+   Those offsets are spread across six breakpoints and pinned to specific
+   indices - nth-child(24), (27), (31), (36), and (n+20) - which is only
+   correct while the shelf holds exactly 37 volumes; adding or removing one
+   silently indents the wrong book. Rather than chase each index, reset every
+   volume generically.
+
+   Two selectors: the class-level one matches the .pl-library-v6 rules at
+   (0,6,0), the id-level one matches the .pl-library-v13/v14/v15 rules at
+   (1,3,0). Both sit last in the file, so they win on source order at equal
+   specificity without inventing new weight.
+   ══════════════════════════════════════════════════════════════════════════ */
+.work-library.pl-embedded.pl-library-v6 .pl-shelf > .pl-volume:nth-child(n) {
+  grid-column-start: auto !important;
+  transform: none !important;
+}
+
+#work-library.pl-library-v26 .pl-shelf > .pl-volume:nth-child(n) {
+  grid-column-start: auto !important;
+  transform: none !important;
 }

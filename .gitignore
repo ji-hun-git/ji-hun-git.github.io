@@ -3,7 +3,7 @@
 !.gitignore
 !.nojekyll
 !index.html
-!your-image.jpg
+!interactive.html
 !laboratory.html
 !LICENSE
 !README.md
@@ -11,3 +11,7 @@
 !assets/**
 !lab/
 !lab/**
+!tools/
+!tools/**
+tools/__pycache__/
+*.pyc
