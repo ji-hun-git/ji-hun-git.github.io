@@ -1,0 +1,59 @@
+/* ============================================================================
+   Partner marks share one stage
+   assets/interior/logos.css
+
+   Heights were already uniform at 20px, but widths ran from 20px (square marks
+   like Samsung, KAIST, Nexon) to 83px (the Pohang Cultural Foundation
+   wordmark). Same height, 3.2x the visual area — which is why they read as
+   different sizes.
+
+   Fix: every mark gets the same box and is contained inside it, so each one
+   occupies an identical footprint on the chip row regardless of its own
+   proportions. A square mark fills the height, a wordmark fills the width, and
+   neither can dominate the other.
+
+   52 x 22 is the smallest box that still lets a 6.4:1 wordmark render legibly
+   (52 x 8) while giving square marks a 22px cap.
+   ========================================================================== */
+
+:root {
+  --logo-stage-w: 52px;
+  --logo-stage-h: 22px;
+}
+
+/* Image marks ------------------------------------------------------------- */
+html .p-chip img.p-logo {
+  width: var(--logo-stage-w) !important;
+  max-width: var(--logo-stage-w) !important;
+  height: var(--logo-stage-h) !important;
+  max-height: var(--logo-stage-h) !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  flex: 0 0 var(--logo-stage-w) !important;
+}
+
+/* The pre-existing per-brand stages resize with it rather than fighting it. */
+html .p-chip .p-brand-stage,
+html .p-chip .p-brand-stage--fraunhofer,
+html .p-chip .p-brand-stage--kai {
+  width: var(--logo-stage-w) !important;
+  flex: 0 0 var(--logo-stage-w) !important;
+  height: var(--logo-stage-h) !important;
+}
+
+html .p-chip .p-brand-stage img.p-logo {
+  width: 100% !important;
+  max-width: var(--logo-stage-w) !important;
+}
+
+/* Text wordmarks stand in for marks we do not ship, so they take the same box. */
+html .p-chip .p-brand-wordmark {
+  min-width: var(--logo-stage-w) !important;
+  height: var(--logo-stage-h) !important;
+  justify-content: center !important;
+}
+/* The ::before pseudo-elements are deliberately NOT touched here: the same
+   selector carries the monogram letter badge on chips that have no logo, and
+   widening it would turn every badge into a 52px slab. The four chips that do
+   paint a mark have their widths set individually in index.html, matched to
+   this stage. */

@@ -1022,23 +1022,19 @@
       background-image: url("assets/logos/anipen.svg");
     }
     #projects .item:nth-child(5) .p-chip[data-m="K"]::before {
-      width: 30px;
+      width: 52px;
       background-image: url("assets/logos/kai.svg");
     }
     #awards .item:nth-child(5) .p-set .p-chip[data-m="P"]:nth-child(2)::before {
-      /* 262x79 (3.3:1) -> 43px gives a ~13px cap height */
-      width: 43px;
+      width: 52px;
       background-image: url("assets/logos/pohang-city.svg");
     }
     #awards .item:nth-child(5) .p-set .p-chip[data-m="P"]:nth-child(3)::before {
-      /* 263x41 (6.4:1). At 38px this painted under 6px tall - present but
-         invisible. 83px restores the same ~13px cap height as its siblings. */
-      width: 83px;
+      width: 52px;
       background-image: url("assets/logos/pohang-cultural-foundation.svg");
     }
     #awards .item:nth-child(10) .p-chip[data-m="D"]::before {
-      /* 324x64 (5.1:1) -> 66px for the same ~13px cap height */
-      width: 66px;
+      width: 52px;
       background-image: url("assets/logos/db-foundation.svg");
     }
 
@@ -1661,16 +1657,17 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=50-20260813x" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=50-20260813x" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=50-20260813x" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=53-20260814a" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=53-20260814a" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=53-20260814a" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=53-20260814a" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=50-20260813x"
+  <link rel="stylesheet" href="assets/interior/archive.css?v=53-20260814a"
         media="(prefers-color-scheme: light)" />
   <!-- Reader mode pins its own dark ink and never sets a light ground, so it
        inverts here rather than going invisible on the dark surface. -->
-  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=50-20260813x"
+  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=53-20260814a"
         media="(prefers-color-scheme: dark)" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
@@ -2412,11 +2409,11 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=50-20260813x"></script>
-  <script defer src="assets/project-library/work-content.js?v=50-20260813x"></script>
-  <script defer src="assets/interior/ripple.js?v=50-20260813x"></script>
-  <script defer src="assets/project-library/project-library.js?v=50-20260813x"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=50-20260813x"></script>
+  <script defer src="assets/project-library/work-designs.js?v=53-20260814a"></script>
+  <script defer src="assets/project-library/work-content.js?v=53-20260814a"></script>
+  <script defer src="assets/interior/ripple.js?v=53-20260814a"></script>
+  <script defer src="assets/project-library/project-library.js?v=53-20260814a"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=53-20260814a"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate
