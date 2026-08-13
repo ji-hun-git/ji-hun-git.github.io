@@ -106,3 +106,41 @@ heights last time, so treat that overlap as unresolved until proven otherwise.
 `prune-orphan-css.py` in this directory carries the old, known-bad list and a
 DO-NOT-RUN header. Its selector-list splitting and brace-balance guard are
 reusable; its `ORPHANS` constant is not.
+
+---
+
+## Attempt 2 (2026-08-13, same day): the guarded 48 also fail
+
+The 48-class list above was executed against a computed-style baseline
+(4 states × 1916 elements, 27 properties + bounding rect).
+
+- 128 rules dropped, 97 selector lists trimmed, 462.4 KB → 434.4 KB (-6.1%)
+- **Diff: 329 elements changed in both `library-en` and `library-ko`.**
+- Every sampled change was a uniform **3px upward shift** (`y 134 → 131`) with
+  all sizes unchanged — the same signature as the first, static-grep attempt.
+
+Reverted; the diff returned to 0 changed elements.
+
+**So the runtime census is necessary but not sufficient.** A class can be absent
+from the DOM in every observed state and still be load-bearing, because these
+rules do more than style the class they name: dropping the rule also drops
+whatever padding, margin or custom property it contributed to an ancestor that
+*is* live. The 3px is almost certainly one such contribution near the top of the
+shelf stage.
+
+### What to try next
+
+Do **not** delete by class. Delete by rule, one family at a time, smallest
+first, re-diffing after each:
+
+1. Start with `pl-taxonomy__*`, `pl-landing-*`, `pl-corner-*` — abandoned
+   components whose rules are self-contained.
+2. Leave `pl-height-*`, `pl-width-*` and `pl-pattern-*` until last. They are the
+   most likely source of the 3px: they set sizing custom properties that the
+   volume/stage geometry reads.
+3. Bisect the 3px directly: delete half the list, diff, halve again. Four or
+   five rounds isolates the offending family, and that answer is worth more than
+   the 28 KB.
+
+Expected ceiling is modest either way: 6.1% of the file. The real reduction
+needs the 27 stacked version layers collapsed, which is a rewrite, not a prune.
