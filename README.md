@@ -19,5 +19,6 @@ Released under **CC0 1.0 Universal** (see `LICENSE`) — copyright waived, no
 permission needed, attribution welcome but not required.
 
 Note that the organisation logos in `assets/logos/` are the trademarks of their
-respective owners. They appear here to identify partners, funders and hosts of
+respective owners. `krafton.svg` is from Wikimedia Commons (KRAFTON Logo New,
+CC BY-SA 4.0, credited to KRAFTON, Inc.). They appear here to identify partners, funders and hosts of
 the work described, and are not covered by the CC0 dedication above.

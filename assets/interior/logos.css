@@ -118,3 +118,42 @@ html[data-view="library"].ui-v23 .p-chip {
 html .p-brand-wordmark--krafton {
   letter-spacing: -0.02em !important;
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Capabilities block: no box, warm separators
+   ──────────────────────────────────────────────────────────────────────────
+   The rows themselves carry no borders — what read as "table lines" was the
+   .caps container's own 1px box plus the dot separators, which were left at
+   zinc #d4d4d8 and sit cold against the warm paper.
+
+   Same rule as the partner chips: the page already provides the enclosure, so
+   the block loses its box and keeps a single hairline above it to mark where
+   the section starts. Separators warm to the paper palette and drop back so
+   the terms read as a list, not a grid.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html[data-view="cv"].ui-v23 #cv-start .caps {
+  border: 0 !important;
+  border-top: 1px solid var(--ar-rule, #ded8cb) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 14px 0 0 !important;
+}
+
+html[data-view="cv"].ui-v23 #cv-start .caps-row {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+/* The dot is a breath between terms, not a rule. */
+html[data-view="cv"].ui-v23 #cv-start .caps .sep,
+html[data-view="cv"].ui-v23 #cv-start .caps-row .sep {
+  color: var(--ar-rule-strong, #b9b2a3) !important;
+  padding: 0 2px !important;
+}
+
+/* The stage label anchors each row, so it carries the weight instead. */
+html[data-view="cv"].ui-v23 #cv-start .caps-row .k {
+  color: var(--ar-ink-faint, #6f6a5e) !important;
+}
