@@ -110,3 +110,11 @@ html[data-view="library"].ui-v23 .p-chip {
   padding: 0 !important;
   border-radius: 0 !important;
 }
+
+/* KRAFTON has no usable file (16x16 favicon only) and its brand terms require
+   prior approval for the real asset, so it uses the wordmark device already
+   built for NYU and bHaptics. Tracked slightly tighter because the name is
+   longer than either of those. */
+html .p-brand-wordmark--krafton {
+  letter-spacing: -0.02em !important;
+}

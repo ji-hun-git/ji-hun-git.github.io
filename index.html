@@ -943,11 +943,11 @@
 
     /* Only use reviewed, transparent institutional marks. Opaque or
        permission-restricted files fall back to the organization name. */
-    /* Only KRAFTON stays hidden: its file is a 16x16 favicon and cannot render
-       at the 22px stage without going soft. The other five were opaque tiles,
-       not permission problems - their white grounds have been keyed out and
-       they now carry real alpha, so they show. */
-    .p-logo:is([src$="krafton.png"]) { display: none; }
+    /* Every shipped mark now renders. KRAFTON uses the wordmark device instead:
+       the only file available was a 16x16 favicon, and KRAFTON's brand terms
+       require prior approval for the real asset. Replace the wordmark with an
+       <img> once an official SVG/PNG is obtained from
+       https://www.krafton.com/en/about/brandcenter/ */
 
     /* Partner marks use one predictable, plate-free stage. When an approved
        transparent asset is unavailable, a text wordmark keeps the partner
@@ -1654,19 +1654,19 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=58-20260814f" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=58-20260814f" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=58-20260814f" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=59-20260814g" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=59-20260814g" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=59-20260814g" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=58-20260814f"
+  <link rel="stylesheet" href="assets/interior/archive.css?v=59-20260814g"
         media="(prefers-color-scheme: light)" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=58-20260814f" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=59-20260814g" />
   <!-- Reader mode pins its own dark ink and never sets a light ground, so it
        inverts here rather than going invisible on the dark surface. -->
-  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=58-20260814f"
+  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=59-20260814g"
         media="(prefers-color-scheme: dark)" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
@@ -1916,7 +1916,7 @@
               <div class="item-meta"><span lang="en">2026.07 | Cofathon: AI Native Battlegrounds</span><span lang="ko">2026.07 | 코파톤 (Cofathon): AI Native Battlegrounds</span></div>
               <p class="item-desc cv-summary" lang="en">Built a rapid AI application in under four hours, from agent-led requirement discovery through blind-review handoff. Official material documents the one-day Cofathon final, its prize pool, and the recruitment fast-track.</p>
               <p class="item-desc cv-summary" lang="ko">에이전트 기반 요구사항 발굴부터 블라인드 심사 인계까지 4시간 이내에 AI 애플리케이션을 구현했습니다. 공식 자료가 코파톤 1일 결선, 상금, 채용 우대를 확인합니다.</p>
-              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/krafton.png" alt="" onerror="this.remove()" />KRAFTON</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/oliveyoung.png" alt="" onerror="this.remove()" />CJ Olive Young</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/openai.png" alt="" onerror="this.remove()" />OpenAI</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/krafton.png" alt="" onerror="this.remove()" />크래프톤</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/oliveyoung.png" alt="" onerror="this.remove()" />CJ올리브영</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/openai.png" alt="" onerror="this.remove()" />OpenAI</span></span></div>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><span class="p-brand-wordmark p-brand-wordmark--krafton" aria-hidden="true">KRAFTON</span>KRAFTON</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/oliveyoung.png" alt="" onerror="this.remove()" />CJ Olive Young</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/openai.png" alt="" onerror="this.remove()" />OpenAI</span></span><span class="p-set" lang="ko"><span class="p-chip"><span class="p-brand-wordmark p-brand-wordmark--krafton" aria-hidden="true">KRAFTON</span>크래프톤</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/oliveyoung.png" alt="" onerror="this.remove()" />CJ올리브영</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/openai.png" alt="" onerror="this.remove()" />OpenAI</span></span></div>
             </div>
             <div class="item reveal">
               <span class="item-title"><span lang="en">Paper-Level Best Presentation Award</span><span lang="ko">논문 단위 우수발표논문상</span></span>
@@ -2408,11 +2408,11 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=58-20260814f"></script>
-  <script defer src="assets/project-library/work-content.js?v=58-20260814f"></script>
-  <script defer src="assets/interior/ripple.js?v=58-20260814f"></script>
-  <script defer src="assets/project-library/project-library.js?v=58-20260814f"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=58-20260814f"></script>
+  <script defer src="assets/project-library/work-designs.js?v=59-20260814g"></script>
+  <script defer src="assets/project-library/work-content.js?v=59-20260814g"></script>
+  <script defer src="assets/interior/ripple.js?v=59-20260814g"></script>
+  <script defer src="assets/project-library/project-library.js?v=59-20260814g"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=59-20260814g"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate
