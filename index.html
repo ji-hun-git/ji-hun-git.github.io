@@ -1551,30 +1551,30 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=68-20260814q" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=79-20260814zb" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=68-20260814q" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=86-20260815a" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=68-20260814q" />
+  <link rel="stylesheet" href="assets/interior/archive.css?v=86-20260815a" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=68-20260814q" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=86-20260815a" />
   <!-- Last: the open/close was switching non-animatable layout properties, so
        there was nothing to interpolate. This drives it on transform+opacity. -->
-  <link rel="stylesheet" href="assets/interior/book-motion.css?v=78-20260814za" />
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=86-20260815a" />
   <!-- After archive.css: archive.css scopes the display serif by language in
        one selector and not the next, which handed Hangul a Latin-only serif
        stack and dropped the Korean name into Batang. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/typography.css?v=68-20260814q" />
+  <link rel="stylesheet" href="assets/interior/typography.css?v=86-20260815a" />
   <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
        in project-library.css can never take effect. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/light-only.css?v=79-20260814zb" />
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=86-20260815a" />
   <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
        page frame both views consume. It has to outrank the base layers, which
        reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
        shorthands, so source order is load-bearing here. -->
-  <link rel="stylesheet" href="assets/interior/layout.css?v=74-20260814w" />
+  <link rel="stylesheet" href="assets/interior/layout.css?v=86-20260815a" />
   <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
        inside a max-width query, so it cannot reach desktop, and it declares
        no theme tokens, so it cannot outrank light-only.css. -->
@@ -1584,17 +1584,17 @@
        matched. Declaring that same query on the link takes it out of the
        render-blocking set on desktop without changing a single computed style -
        the sheet still loads, and on phones it applies exactly as before. -->
-  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=86-20260814zi" />
+  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=86-20260815a" />
   <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
        label off its plate, an overlay parked on the contact links). No theme
        tokens, so it cannot outrank light-only.css's colour pins. -->
-  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=73-20260814v" />
+  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=86-20260815a" />
   <!-- Loaded LAST, after fit-desktop.css: the Tools row under Capabilities. The
        block it joins is styled from four layers that all reach
        `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
        this file both mirrors that weight and loads after them. Glyphs are inline
        path data — no icon font, no sprite, no second third-party origin. -->
-  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=87-20260814zj" />
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=86-20260815a" />
   <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
        moved out of the book to flank it. They are styled from four layers of
        project-library.css, three of them with !important on the same
@@ -1602,13 +1602,13 @@
        them. It declares no theme tokens and no transform on the animated
        elements, so it cannot outrank light-only.css or collide with
        book-motion.css. See the file header. -->
-  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=76-20260814y" />
+  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=86-20260815a" />
 
   <!-- Ghost bookcase behind the library. Declares one class on one element
        it creates itself, at z-index -1 inside a section that already owns a
        stacking context — it cannot collide with any library layer, so load
        order against them does not matter. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=84-20260814zg" />
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=86-20260815a" />
 
   <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
        works ([data-state="turning-forward"|"turning-backward"]), and nothing
@@ -1617,7 +1617,7 @@
        animates `transform` only on an element the script leaves alone in those
        two states, so it cannot collide with animateStableBookOpen or with
        book-motion.css's rotate/translate split. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/page-turn.css?v=78-20260814za" />
+  <link rel="stylesheet" href="assets/interior/page-turn.css?v=86-20260815a" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1949,8 +1949,8 @@
             <div class="item reveal">
               <span class="item-title"><span lang="en">Automated Data-Quality Measurement &amp; Verification Engine (Industry Contract)</span><span lang="ko">데이터 품질 측정·검증 자동화 엔진 (산업체 용역)</span></span>
               <div class="item-meta"><span lang="en">2024 – 2026 | SKAIWORLDWIDE | Ministry of SMEs and Startups | Sole developer, DQM v1.0 engine</span><span lang="ko">2024 ~ 2026 | SKAIWORLDWIDE | 중소벤처기업부 | DQM v1.0 엔진 단독 개발</span></div>
-              <p class="item-desc cv-summary" lang="en">Sole developer of DQM v1.0, a data-quality automation engine for tabular enterprise data covering detection, correction, metadata repair, and standard generation, built within a government-funded R&amp;D project. Submitted to an accredited Korean testing laboratory for independent verification against four KPIs in August 2026.</p>
-              <p class="item-desc cv-summary" lang="ko">정부 지원 R&amp;D 과제의 일환으로, 정형 기업 데이터의 탐지·교정·메타데이터 복구·표준 생성을 아우르는 데이터 품질 자동화 엔진 DQM v1.0을 단독 개발했습니다. 2026년 8월 공인 소프트웨어 시험기관에 4개 KPI에 대한 독립 검증을 의뢰했습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Sole developer of DQM v1.0: software that detects and corrects data-quality errors in enterprise tables, then infers their primary keys, foreign keys, indexes and column-level rules. Built within a government-funded R&amp;D project and submitted to an accredited Korean laboratory for verification against four KPIs, August 2026.</p>
+              <p class="item-desc cv-summary" lang="ko">데이터를 자동으로 분석해 품질 오류를 탐지·보정하고, 구조 메타정보(PK·FK·Index)와 컬럼별 품질 기준(도메인·코드·형식)을 자동 추론·생성하는 데이터 품질 관리 자동화 소프트웨어 DQM v1.0을 단독 개발했습니다. 정부 지원 R&amp;D 과제의 일환이며, 2026년 8월 공인 소프트웨어 시험기관에 4개 KPI에 대한 독립 검증을 의뢰했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />SKAIWORLDWIDE</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />스카이월드와이드</span></span></div>
             </div>
 
@@ -2509,12 +2509,12 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=85-20260814zh"></script>
-  <script defer src="assets/project-library/work-content.js?v=85-20260814zh"></script>
-  <script defer src="assets/interior/ripple.js?v=68-20260814q"></script>
-  <script defer src="assets/project-library/project-library.js?v=76-20260814y"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=68-20260814q"></script>
-  <script defer src="assets/interior/shelf-field.js?v=84-20260814zg"></script>
+  <script defer src="assets/project-library/work-designs.js?v=86-20260815a"></script>
+  <script defer src="assets/project-library/work-content.js?v=86-20260815a"></script>
+  <script defer src="assets/interior/ripple.js?v=86-20260815a"></script>
+  <script defer src="assets/project-library/project-library.js?v=86-20260815a"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=86-20260815a"></script>
+  <script defer src="assets/interior/shelf-field.js?v=86-20260815a"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate

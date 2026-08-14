@@ -81,7 +81,7 @@
             "운영 조직은 실제 데이터에 많은 품질 규칙을 적용해야 하지만 수작업 검사는 느리고 재현하기 어렵습니다. 확률적 모델은 그럴듯한 설명을 만들 수 있어도 고객이 필요로 하는 정확한 감사 추적성을 약화시킬 수 있습니다."
           ),
           responsibility: p(
-            "As sole developer of the DQM v1.0 engine, I owned rule translation, architecture, implementation, versioning, and verification. The engine is my scope within SKAIWORLDWIDE's 2024-2026 Ministry of SMEs and Startups R&D project, not the project itself.",
+            "As sole developer of the DQM v1.0 engine, I owned rule translation, architecture, implementation, versioning, and verification — the engine detects and corrects data-quality errors, then infers primary keys, foreign keys, indexes and column-level rules. The engine is my scope within SKAIWORLDWIDE's 2024-2026 Ministry of SMEs and Startups R&D project, not the project itself.",
             "DQM v1.0 엔진의 단독 개발자로서 규칙 해석, 아키텍처, 구현, 버전 관리, 검증을 맡았습니다. 이 엔진은 스카이월드와이드가 수행한 2024~2026년 중소벤처기업부 R&D 과제 안에서 제가 맡은 범위이며, 과제 전체가 아닙니다."
           ),
           build: p(

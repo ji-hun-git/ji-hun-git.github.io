@@ -95,7 +95,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "감사 가능성과 재현성을 유지하면서 기업 데이터를 어떻게 자동 검증할 수 있을까?"
         },
         responsibility: {
-          en: "I was sole developer of the DQM v1.0 engine, covering rule interpretation, architecture, implementation, version control, and verification, within SKAIWORLDWIDE's Ministry of SMEs and Startups R&D project.",
+          en: "I was sole developer of the DQM v1.0 engine — which detects and corrects data-quality errors and infers primary keys, foreign keys, indexes and column-level rules — covering rule interpretation, architecture, implementation, version control, and verification, within SKAIWORLDWIDE's Ministry of SMEs and Startups R&D project.",
           ko: "스카이월드와이드가 수행한 중소벤처기업부 R&D 과제 안에서 DQM v1.0 엔진을 단독 개발하며 규칙 해석, 아키텍처, 구현, 버전 관리, 검증을 담당했습니다."
         },
         evaluation: {
