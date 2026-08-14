@@ -1577,7 +1577,7 @@
        `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
        this file both mirrors that weight and loads after them. Glyphs are inline
        path data — no icon font, no sprite, no second third-party origin. -->
-  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=75-20260814x" />
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=80-20260814zc" />
   <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
        moved out of the book to flank it. They are styled from four layers of
        project-library.css, three of them with !important on the same
@@ -1763,16 +1763,36 @@
             <span class="v" lang="ko">사용성 연구<span class="sep">·</span>현장 평가<span class="sep">·</span>기준선 비교<span class="sep">·</span>관측성<span class="sep">·</span>내재화 측정</span>
           </div>
 
-          <!-- Tools. Every entry is already named somewhere on this page; nothing
-               here introduces a technology the CV does not evidence in prose:
+          <!-- Two rows, because one row of nine was a wall: what he writes in
+               (Code) and what he builds on (Tools). The split reuses `.caps-row`
+               exactly as the four stage rows above do, so it adds a label, not a
+               new structure.
+
+               Provenance for every entry — page evidence first, then owner:
                  Python, TypeScript  — the Build row directly above.
                  Unreal Engine       — Awards: "Led technical implementation of a
                                        large-scale Unreal Engine media-façade
                                        prototype" (Pohang media-façade hackathon).
                  Meta Quest Pro      — Experience: the Watchers digital therapeutic,
                                        and again in Publications.
-               React, FastAPI and "computer vision" were considered and dropped:
-               none of the three appears anywhere in this file.
+                 Unity               — assets/project-library/work-content.js:431,
+                                       "Unity with Oculus and Meta Movement SDKs on
+                                       Meta Quest Pro" (the Watchers method note).
+                 C++, C#, R, Java    — supplied by the owner 2026-08-14 as his own
+                                       skills. Not evidenced in page prose; he is
+                                       the authority on his own CV, and he noted
+                                       there are "lots and lots more" to come.
+
+               React and FastAPI were REQUESTED for this row on the stated ground
+               that the CV already evidences them. It does not, and neither does
+               any other file: repo-wide, the only `React` hits are ripple.js
+               saying this site is *not* React and lab/experiments.js saying a
+               renderer could move into React later, and `FastAPI` has zero hits
+               anywhere. They are also absent from the owner's own list. Held out
+               pending his confirmation rather than asserted on his CV — adding
+               either is one `.tech-item` line, and they need a Build-row mention
+               to stay consistent with the rule above. "Computer vision" was
+               dropped earlier on the same test and stays dropped.
 
                The glyphs are category marks drawn as path data, not vendor logos
                — see the header of tech-icons.css for why, and note the same
@@ -1785,18 +1805,42 @@
                share one grid. Dropping it puts this whole row in the 62px label
                column. -->
           <div class="caps-row tech-row">
-            <span class="k"><span lang="en">Tools</span><span lang="ko">도구</span></span>
-            <!-- No aria-labelledby on the list. Pointing it at the `.k` span was
-                 measured in the Chrome AX tree and gave the list the name
-                 "TOOLS" — uppercased, because `.k` carries text-transform and
+            <span class="k"><span lang="en">Code</span><span lang="ko">코드</span></span>
+            <!-- No aria-labelledby on either list. Pointing it at the `.k` span
+                 was measured in the Chrome AX tree and gave the list the name
+                 "CODE" — uppercased, because `.k` carries text-transform and
                  Chrome computes the name from rendered text. The label is
                  already a StaticText node immediately before the list in
-                 reading order, so the result was "TOOLS … TOOLS, list, 4
-                 items", and several screen readers spell all-caps names out
-                 letter by letter. Unnamed, it reads "TOOLS … list, 4 items". -->
+                 reading order, so the result was "CODE … CODE, list, 6 items",
+                 and several screen readers spell all-caps names out letter by
+                 letter. Unnamed, it reads "CODE … list, 6 items".
+
+                 The label is "Code" and not "Languages" for a measured reason:
+                 `.caps` is `grid-template-columns: max-content minmax(0,1fr)`
+                 (layout.css:289), so the label column is sized by the longest
+                 label in the whole block — currently DISCOVER/VALIDATE at
+                 59.48px. "LANGUAGES" is one character longer and would push
+                 every one of the five content columns ~7.4px to the right. -->
             <span class="tech-set" role="list">
               <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.8 3 9.4 10 2.8 17"/><path d="M11.6 17h6"/></svg><span class="tech-n">Python</span></span>
               <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8.6 2.8c-1.8 0-2.7.9-2.7 2.7v2.1c0 1.6-.9 2.4-2.7 2.4 1.8 0 2.7.8 2.7 2.4v2.1c0 1.8.9 2.7 2.7 2.7"/><path d="M11.4 2.8c1.8 0 2.7.9 2.7 2.7v2.1c0 1.6.9 2.4 2.7 2.4-1.8 0-2.7.8-2.7 2.4v2.1c0 1.8-.9 2.7-2.7 2.7"/></svg><span class="tech-n">TypeScript</span></span>
+              <!-- C++, C# and R carry no glyph and no second label: the name is
+                   already the mark. A drawn "C++" beside the words "C++" is a
+                   stutter, and there is no non-name pictogram for any of the
+                   three (C++ has no logo at all — it is an ISO standard, not a
+                   product). Set in the mono face at the glyph's optical size,
+                   the token reads as a mark and stays real selectable text, so
+                   it needs no aria-hidden and no accessible-name patch. -->
+              <span class="tech-item" role="listitem"><span class="tech-w">C++</span></span>
+              <span class="tech-item" role="listitem"><span class="tech-w">C#</span></span>
+              <span class="tech-item" role="listitem"><span class="tech-w">R</span></span>
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3.6 8.2h8.8v4.4a3.4 3.4 0 0 1-3.4 3.4H7a3.4 3.4 0 0 1-3.4-3.4Z"/><path d="M12.4 9.4h1.5a2.1 2.1 0 0 1 0 4.2h-1.5"/><path d="M6.6 3c-.8.9-.8 1.8 0 2.7M9.6 3c-.8.9-.8 1.8 0 2.7"/></svg><span class="tech-n">Java</span></span>
+            </span>
+          </div>
+          <div class="caps-row tech-row">
+            <span class="k"><span lang="en">Tools</span><span lang="ko">도구</span></span>
+            <span class="tech-set" role="list">
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 2.8 17.4 16.2H2.6Z"/><path d="M6.3 9.5H13.7L10 16.2Z"/></svg><span class="tech-n">Unity</span></span>
               <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.7 17.2 5.85v8.3L10 18.3l-7.2-4.15v-8.3Z"/><path d="M10 10 2.8 5.85M10 10l7.2-4.15M10 10v8.3"/></svg><span class="tech-n">Unreal Engine</span></span>
               <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.2 6.8h11.6a2.6 2.6 0 0 1 2.6 2.6v2.8a2.6 2.6 0 0 1-2.6 2.6h-2.1a1.6 1.6 0 0 1-1.3-.7l-.9-1.3a1.6 1.6 0 0 0-2.6 0l-.9 1.3a1.6 1.6 0 0 1-1.3.7H4.2a2.6 2.6 0 0 1-2.6-2.6V9.4a2.6 2.6 0 0 1 2.6-2.6Z"/><path d="M2.6 7.6C3.4 4 6.4 2 10 2s6.6 2 7.4 5.6"/></svg><span class="tech-n">Meta Quest Pro</span></span>
             </span>

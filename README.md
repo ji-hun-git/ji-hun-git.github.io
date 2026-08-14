@@ -30,6 +30,17 @@ a documented source:
 | `pohang-city.svg` | Pohang City symbol mark | Trademark of Pohang City. The city's CI page reserves commercial use and use that would damage the mark; identification of a co-host is neither. |
 | `pohang-cultural-foundation.svg` | Pohang Cultural Foundation, `www.phcf.or.kr` footer lockup | **Unused — do not wire it up as-is.** It is the reversed (white) version, invisible on this light-only page. The foundation publishes no positive version; the chip shows a monogram until one is obtained. |
 
+The technology marks in the CV's Code and Tools rows are a separate case: **no
+file was downloaded for any of them.** Every glyph is original path data drawn
+for this repo in `assets/interior/tech-icons.css`'s markup, and C++, C# and R
+are set as type in the page's own mono face. None reproduces a vendor logo —
+deliberately, because the row's constraint is 20px monochrome inheriting
+`currentColor`, and recolouring a two-tone mark like Python's to a single ink
+is exactly what those guidelines prohibit. The names identify skills
+nominatively; the drawings are category marks, not brand marks. Same reasoning
+as the `.p-brand-wordmark` device KRAFTON, NYU and bHaptics use — see the
+header of `assets/interior/tech-icons.css`.
+
 Getting a logo wrong is usually not a missing file. Two marks shipped in this
 repo for months while rendering nothing at all — see the comment above the
 partner chips in `index.html`. A mark belongs in the markup as

@@ -141,3 +141,78 @@ html[data-view="cv"].ui-v23 #cv-start .caps .tech-i {
     stroke: CanvasText !important;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Wordmark items — where the name is already the mark
+   ──────────────────────────────────────────────────────────────────────────
+   Added when the row grew to nine entries and split into Code / Tools.
+
+   C++, C# and R get no glyph and no second label. Two reasons, and the first
+   is the real one: a drawn "C++" sitting beside the words "C++" is a stutter,
+   which is the same redundancy the aria-hidden note above is guarding against
+   — just visual rather than aural. The second is that there is no honest
+   pictogram to draw. C++ has no logo at all (it is an ISO standard, not a
+   product), C#'s identity is the sharp sign in its name, and R's is the
+   letter. Inventing three shapes to stand in for three names the reader can
+   already see would be decoration pretending to be information.
+
+   So the token *is* the item: one span, mono face, no glyph. Because it stays
+   real selectable text it needs no aria-hidden and no accessible name — it is
+   the label. Screen readers read "C++", once.
+
+   Weight 500 is the row's own weight (`.tech-item`), not a heavier "mark"
+   weight. 600 was drawn and compared side by side against the 1.5px-stroke
+   glyphs at true size first: solid letterforms carry far more ink than a line
+   drawing at the same measure, and at 600 the three tokens pulled the eye off
+   every glyph+label pair beside them. At 500 the whole row is one weight and
+   the only things marking a token as a token are the mono face and a single
+   extra pixel of size — which is the right amount of presence for an item
+   whose mark and label are the same object.
+
+   The box is the shared --logo-h so a wordmark and a glyph occupy identical
+   space, on the same cap-height principle as logos.css.
+   ══════════════════════════════════════════════════════════════════════ */
+html[data-view="cv"].ui-v23 #cv-start .caps .tech-w {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  height: var(--logo-h, 20px) !important;
+  font-family: var(--ar-mono, ui-monospace, SFMono-Regular, Menlo, monospace) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  /* Same as .tech-item: the enclosure logos.css removed does not come back. */
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Korean keeps the mono face here on purpose. §5 of typography.css re-faces
+   the *labels* to Pretendard because Hangul in a Latin mono is wrong, but
+   "C++" and "R" are Latin tokens in both languages — there is no Hangul in
+   them to re-face, and swapping the face would make the same three items
+   render differently between /en and /ko for no reason. */
+
+/* The 4px that sets the tools apart from the four stages is carried by the
+   FIRST tech row only. Both rows match `.tech-row`, so without this the gap
+   between Code and Tools would inherit the same nudge and the two rows would
+   drift apart from each other as well as from the block. Adjacent-sibling
+   still matches under `display: contents` — that changes box generation, not
+   the DOM. Appended rather than edited into the rules above: re-serialising a
+   selector list in this file is what moved the row 3px last time. */
+@media (min-width: 761px) {
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-row + .tech-row > .k,
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-row + .tech-row .tech-set {
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-row + .tech-row {
+    margin-top: 0 !important;
+  }
+}
