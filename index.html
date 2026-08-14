@@ -1652,19 +1652,22 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=64-20260814m" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=64-20260814m" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=64-20260814m" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=65-20260814n" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=65-20260814n" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=65-20260814n" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=64-20260814m"
+  <link rel="stylesheet" href="assets/interior/archive.css?v=65-20260814n"
         media="(prefers-color-scheme: light)" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=64-20260814m" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=65-20260814n" />
+  <!-- Last: the open/close was switching non-animatable layout properties, so
+       there was nothing to interpolate. This drives it on transform+opacity. -->
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=65-20260814n" />
   <!-- Reader mode pins its own dark ink and never sets a light ground, so it
        inverts here rather than going invisible on the dark surface. -->
-  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=64-20260814m"
+  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=65-20260814n"
         media="(prefers-color-scheme: dark)" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
@@ -2406,11 +2409,11 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=64-20260814m"></script>
-  <script defer src="assets/project-library/work-content.js?v=64-20260814m"></script>
-  <script defer src="assets/interior/ripple.js?v=64-20260814m"></script>
-  <script defer src="assets/project-library/project-library.js?v=64-20260814m"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=64-20260814m"></script>
+  <script defer src="assets/project-library/work-designs.js?v=65-20260814n"></script>
+  <script defer src="assets/project-library/work-content.js?v=65-20260814n"></script>
+  <script defer src="assets/interior/ripple.js?v=65-20260814n"></script>
+  <script defer src="assets/project-library/project-library.js?v=65-20260814n"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=65-20260814n"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate

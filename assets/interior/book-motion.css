@@ -1,0 +1,158 @@
+/* ============================================================================
+   Book motion — opening a volume as a physical object
+   assets/interior/book-motion.css   ·  loaded last
+
+   Why the old open felt like a teleport: when the reading dock fills, the panel
+   switches position, inset, display, width and height in one frame. None of
+   those properties are animatable, so the browser has nothing to interpolate —
+   the book simply appears at its final size. The 3D scaffolding was already
+   there (perspective: 1600px, preserve-3d on the dock) and unused.
+
+   This animates transform and opacity only, which the compositor can run off
+   the main thread, so the motion survives the layout work happening beside it.
+
+   The physical model: a book lifted off the shelf is nearer the eye, still
+   angled away, and swings square as it settles. So the panel enters pushed
+   back in Z and rotated about its spine (the left edge), then rotates to flat
+   while coming forward. Because the hinge is the spine, the right edge travels
+   further than the left — which is what selling "a cover opening" depends on.
+
+   Timings: 460ms to open, 300ms to close. Opening uses a decelerating curve
+   with a whisper of overshoot so the cover settles rather than stops dead;
+   closing is a plain ease-in, because a book shutting has no rebound.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* The stage. The dock already declares perspective; the origin is moved to
+     the left so rotation happens about the spine rather than the centre. */
+  #work-library .pl-reading-dock:not(:empty) {
+    perspective: 1400px !important;
+    perspective-origin: 30% 50% !important;
+    animation: bookBackdropIn 260ms cubic-bezier(.32, .72, 0, 1) both;
+  }
+
+  #work-library .pl-reading-dock:not(:empty) .pl-detail {
+    transform-origin: left center !important;
+    transform-style: preserve-3d !important;
+    will-change: transform, opacity;
+    animation: bookOpen 460ms cubic-bezier(.22, 1.02, .36, 1) both;
+  }
+
+  /* The spread carries a shallower counter-rotation. Two surfaces moving at
+     slightly different rates is what stops a 3D transform reading as a single
+     flat card being spun. */
+  #work-library .pl-reading-dock:not(:empty) .pl-detail__spread {
+    transform-origin: left center !important;
+    animation: bookSpreadSettle 460ms cubic-bezier(.22, 1.02, .36, 1) both;
+  }
+
+  /* Closing: the dock empties on the way out, so the closing phases are keyed
+     off the state the JS already writes to data-state. */
+  #work-library .pl-reading-dock[data-state="closing"] .pl-detail,
+  #work-library .pl-reading-dock[data-state="closing-cover"] .pl-detail,
+  #work-library .pl-reading-dock[data-state="returning"] .pl-detail {
+    animation: bookClose 300ms cubic-bezier(.4, 0, .78, .4) both !important;
+  }
+
+  /* Page turn: a real hinge at the spine. The leaf lifts slightly as it swings
+     so it clears the page beneath instead of shearing through it. */
+  #work-library .pl-page-turn,
+  #work-library .pl-detail__page--turning {
+    transform-origin: left center !important;
+    transform-style: preserve-3d !important;
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+
+  #work-library .pl-reading-dock[data-state="turning-forward"] .pl-page-turn {
+    animation: pageTurnForward 520ms cubic-bezier(.36, .12, .2, 1) both;
+  }
+
+  #work-library .pl-reading-dock[data-state="turning-backward"] .pl-page-turn {
+    animation: pageTurnBackward 520ms cubic-bezier(.36, .12, .2, 1) both;
+  }
+
+  /* A turning leaf catches light along its curl. Cheap to composite, and it is
+     the cue that reads as paper rather than a rotating rectangle. */
+  #work-library .pl-page-turn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(100deg,
+      rgba(0, 0, 0, .16) 0%,
+      rgba(0, 0, 0, .05) 22%,
+      rgba(255, 255, 255, .10) 55%,
+      rgba(0, 0, 0, .07) 100%);
+    opacity: 0;
+    animation: pageSheen 520ms linear both;
+  }
+}
+
+@keyframes bookOpen {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, -140px) rotateY(-24deg) scale(.965);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
+  }
+}
+
+/* Counter-rotates a few degrees less than the cover, so the inner surface
+   trails it slightly instead of moving as one rigid block. */
+@keyframes bookSpreadSettle {
+  0%   { transform: rotateY(6deg) translateZ(0); }
+  100% { transform: rotateY(0deg) translateZ(0); }
+}
+
+@keyframes bookClose {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 6px, -110px) rotateY(-16deg) scale(.975);
+  }
+}
+
+@keyframes pageTurnForward {
+  0%   { transform: rotateY(0deg)    translateZ(0); }
+  50%  { transform: rotateY(-92deg)  translateZ(14px); }
+  100% { transform: rotateY(-178deg) translateZ(0); }
+}
+
+@keyframes pageTurnBackward {
+  0%   { transform: rotateY(-178deg) translateZ(0); }
+  50%  { transform: rotateY(-92deg)  translateZ(14px); }
+  100% { transform: rotateY(0deg)    translateZ(0); }
+}
+
+@keyframes pageSheen {
+  0%   { opacity: 0; }
+  45%  { opacity: .85; }
+  100% { opacity: 0; }
+}
+
+@keyframes bookBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Reduced motion keeps the state change instant, which is the honest
+   translation of "a book opened" when motion is not wanted. */
+@media (prefers-reduced-motion: reduce) {
+  #work-library .pl-reading-dock:not(:empty) .pl-detail,
+  #work-library .pl-reading-dock:not(:empty) .pl-detail__spread,
+  #work-library .pl-page-turn {
+    animation: none !important;
+    transform: none !important;
+  }
+}
