@@ -176,3 +176,35 @@ of the shelf stage.
 Bear in mind the whole 48-class set is only worth ~26 KB of 462 KB. The
 remaining families are worth testing to close the question, but the real
 reduction is still the 27-layer collapse, which is a rewrite.
+
+---
+
+## Resolved: the 3px was the selector-list trimming, not the deletions
+
+Bisecting the four remaining families **in the browser** (deleting matching
+rules via CSSOM, measuring, re-inserting at the same index) gave:
+
+| group | rules removed | changed elements |
+|---|---|---|
+| taxonomy | 35 | **0** |
+| corner | 25 | **0** |
+| detail | 14 | **0** |
+| misc | 52 | **0** |
+
+Every group clean, and every restore returned 0 residual. Yet the file-based
+prune of the same classes moved 329 elements. The two runs differ in exactly
+one way: the Python version also **trimmed selector lists** — rewriting
+`.live, .orphan { … }` to `.live { … }` — which re-serialises the rule.
+
+Switching the script to **drop-only** (remove a rule when *every* part is
+orphaned; otherwise leave it exactly as authored) and running all 48 classes:
+
+- 128 rules dropped, 462.4 KB → **439.6 KB (−22.8 KB)**
+- diff: **0 changed in EN**, 3 in KO — all on the skip link parked at `y = −54`,
+  a 2px width change on an element that is off-screen until focused
+- CV view: 0 contrast failures, 24 marks rendering, no horizontal scroll
+
+So the rule for this codebase is simply: **never rewrite a selector list.**
+Whole-rule deletion is safe; partial rewriting is not.
+
+`prune-bisect.py` is now drop-only and carries that reasoning inline.

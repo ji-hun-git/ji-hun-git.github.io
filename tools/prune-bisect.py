@@ -100,9 +100,12 @@ def prune(css: str, classes: list[str]) -> tuple[str, int, int]:
             while out and out[-1].strip() == "":
                 out.pop()
         else:
+            # DROP-ONLY. Trimming a selector list re-serialises the rule, and
+            # that - not the deletions - is what shifted the layout 3px. Rules
+            # with a live part are left exactly as authored.
             if len(kept) != len(parts):
                 trimmed += 1
-            out.append(",".join(kept) + block)
+            out.append(pre + block)
         i = j
     return "".join(out), dropped, trimmed
 
