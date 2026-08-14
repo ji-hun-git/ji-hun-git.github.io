@@ -37,6 +37,13 @@
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const forcedColors = window.matchMedia("(forced-colors: active)");
   const compactLayout = window.matchMedia("(max-width: 980px)");
+  // Previous/next leave the page and flank the book, but only where there is a
+  // margin either side to put them in. Below 1101px project-library-v26.css
+  // turns the reader into a full-bleed overlay sheet with 12px of side padding,
+  // so this query is the hard floor; the anchored check in placeReaderNav() is
+  // the real gate, because between 1101px and 1300px the reader is still the
+  // stacked single column that scrolls with the document.
+  const flankedNavLayout = window.matchMedia("(min-width: 1101px)");
   const embeddedLayout = root.classList.contains("pl-embedded");
   const scrollButtons = [...root.querySelectorAll("[data-pl-scroll]")];
   const sourceNodes = {
@@ -1037,6 +1044,42 @@
 
     detail.append(close, spread, turningPage);
     detail.setAttribute("aria-labelledby", title.id);
+    placeReaderNav();
+  };
+
+  // Where previous/next live. The spread clips (`overflow: hidden`) and so does
+  // the right page (`overflow: auto`, it is the scroller), so a control built
+  // inside the right page cannot be pushed outside the book by CSS alone - it
+  // gets cut at the page edge. It has to be re-parented to #work-detail, whose
+  // box is the book itself and which does not clip.
+  //
+  // #work-detail, not the dock: the dialog's Tab trap, focusReaderTarget() and
+  // the click delegation all query within #work-detail, and aria-modal="true"
+  // promises nothing outside it is reachable. Parked on the dock these two
+  // buttons would be tabbable from outside the dialog.
+  //
+  // Appending last keeps them last among the dialog's focusable nodes, which is
+  // exactly where they were as the final children of the right page, so the tab
+  // order does not change in either placement.
+  //
+  // JS owns the decision and publishes it as data-nav-placement; the flank
+  // stylesheet only reads that attribute and never re-derives the breakpoint,
+  // so the two cannot disagree about which layout is on screen.
+  const placeReaderNav = () => {
+    const nav = detail.querySelector(".pl-detail__nav");
+    if (!nav) return;
+    const rightPage = detail.querySelector(".pl-detail__page--right");
+    const flank = flankedNavLayout.matches
+      && readingDock.dataset.readerLayout === "anchored";
+    detail.dataset.navPlacement = flank ? "flank" : "inline";
+    const destination = flank ? detail : rightPage;
+    if (!destination || nav.parentElement === destination) return;
+    const focused = nav.contains(document.activeElement) ? document.activeElement : null;
+    if (flank) detail.append(nav);
+    else rightPage.insertBefore(nav, rightPage.querySelector(".pl-detail__folio"));
+    // Re-parenting a focused node blurs it in Chromium. A resize across the
+    // breakpoint must not drop the keyboard user out of an open dialog.
+    focused?.focus({ preventScroll: true });
   };
 
   const moveDetail = () => {
@@ -1425,6 +1468,9 @@
         { preserveSource: true }
       );
       const nextLayout = readingDock.dataset.readerLayout;
+      // configureReaderAnchor() has just settled anchored-vs-stacked for the
+      // new viewport, so this is the first moment placeReaderNav() can read it.
+      placeReaderNav();
       if (focusedReaderTarget && previousLayout !== nextLayout) {
         requestAnimationFrame(() => {
           if (!focusedReaderTarget.isConnected || readingDock.dataset.readerLayout !== nextLayout) return;
@@ -2808,6 +2854,13 @@
     moveDetail();
     scheduleReaderAnchor();
     window.dispatchEvent(new CustomEvent("site:layoutchange"));
+  });
+  // scheduleReaderAnchor() also re-places the controls, but it bails while a
+  // page turn is in flight. Crossing the overlay breakpoint has to take effect
+  // whether or not the reader happens to be busy at that instant.
+  flankedNavLayout.addEventListener("change", () => {
+    placeReaderNav();
+    scheduleReaderAnchor();
   });
 
   document.addEventListener("click", (event) => {

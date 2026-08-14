@@ -59,7 +59,18 @@
     --surface: #ffffff;
     --text: #09090b;
     --muted: #52525b;
-    --soft: #71717a;
+    /* --soft was #71717a (zinc-500). It is the winning definition for the token
+       (this file loads after project-library.css at equal specificity), and
+       project-library.css:12688 spends it as `color: var(--soft) !important` on
+       the reader's editorial labels + citation lines. Measured against the four
+       surfaces those labels actually land on, #71717a missed AA 4.5:1 on every
+       paper the reader uses: award #f3ecde 4.11, publication #f7f2e8 4.33,
+       project #f4f4f5 4.40, cv #f4f1ea 4.28 (only plain white passed, 4.83).
+       #67676f is the same zinc hue two steps darker and clears all of them with
+       margin: 4.77 / 5.02 / 5.10 / 4.97 / 5.61. Colour-only change - no
+       selector was re-serialised, so no layout moves. Keep in sync with
+       project-library.css:12643. */
+    --soft: #67676f;
     --line: #e4e4e7;
     --line-strong: #d4d4d8;
     --shadow: 0 1px 2px rgba(0, 0, 0, .045);

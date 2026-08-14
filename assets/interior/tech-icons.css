@@ -1,0 +1,143 @@
+/* ============================================================================
+   Tools row — the named stack, at the partner-mark cap height
+   assets/interior/tech-icons.css
+
+   LOADED LAST, after fit-desktop.css. The Capabilities block is reached at
+   `html[data-view="cv"].ui-v23 #cv-start .caps …` from four separate layers
+   (index.html base, archive.css, logos.css, layout.css), three of which use
+   !important. Every rule here mirrors that selector weight *and* loads after
+   all of them, so nothing below depends on winning a specificity race it
+   could lose to a later edit upstream.
+
+   ── Why glyphs and not vendor logos ──────────────────────────────────────
+   The brief asked for 20px monochrome marks inheriting currentColor. A brand
+   logo cannot satisfy that and stay a brand logo: the Python mark is two-tone
+   by definition, the TypeScript mark is a white wordmark on a blue square,
+   and recolouring either to a single ink is precisely the modification their
+   guidelines forbid. This site already answered that question once — KRAFTON,
+   NYU and bHaptics ship as `.p-brand-wordmark` type devices rather than as
+   marks that need prior approval (see logos.css).
+
+   So the glyph names the *kind* of tool and the visible text names the tool:
+   a console prompt for the interpreted language, braces for the typed one, a
+   wireframe cube for the 3D engine, a visor for the headset. None of them
+   reproduces a trademark, and each is drawn here as path data rather than
+   fetched, so the page keeps its single third-party origin (jsdelivr, for
+   Pretendard) and gains no icon font, no sprite sheet and no script.
+
+   The glyphs are `aria-hidden`: the text beside them already carries the
+   name, so an accessible name on the SVG would make every screen reader say
+   each tool twice.
+
+   ── Why the row is a `.caps-row` ─────────────────────────────────────────
+   layout.css:287 turns `.caps` into a two-column grid and `.caps-row` into
+   `display: contents` above 761px, so the stage labels and their terms are
+   siblings in one grid and every label aligns on the same 62px-ish column.
+   A plain `<div>` appended to `.caps` would have become a single grid item
+   in the *label* column and rendered ~60px wide. Carrying the `.caps-row`
+   class instead means the label/content split, the 761px collapse to one
+   column, the row rhythm and the Korean label face all arrive already
+   solved — this file only has to lay out what is inside the second column.
+
+   ── No enclosure ─────────────────────────────────────────────────────────
+   logos.css removed the border and fill from every `.p-chip` because the
+   card was drawing three nested levels of box around metadata. The same rule
+   is asserted here from the start rather than added back later: items are
+   separated by space, never by an outline.
+   ========================================================================== */
+
+/* A single ink for the row so `currentColor` has one thing to inherit.
+   --ar-ink-soft is #57534a, measured 6.79:1 on the #f4f1ea paper — the same
+   ink the capability terms above already use, and the same one `.p-chip`
+   uses beside the partner logos. Well clear of 4.5:1 for the 12px labels and
+   of 3:1 for the glyph strokes (WCAG 1.4.11). */
+html[data-view="cv"].ui-v23 #cv-start .caps .tech-set {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  /* Column gap matches `.p-set` in logos.css: this row and the partner rows
+     are the same kind of object and separate on the same measure. */
+  gap: var(--sp-xs, 8px) var(--sp-lg, 20px) !important;
+  min-width: 0 !important;
+  color: var(--ar-ink-soft, #57534a) !important;
+}
+
+/* Above 761px `.caps-row` is `display: contents`, so the row element has no
+   box and a margin on it would do nothing. The breath that sets the tools
+   apart from the four stages has to be carried by both grid items equally,
+   or the row would shear.
+
+   `align-self` is the load-bearing half. layout.css:291 sets
+   `align-items: baseline` on `.caps`, which is right for the four stage rows
+   — label baseline to term baseline. It is wrong here: a flex container takes
+   its baseline from its first flex item, that item is the 20px SVG, and an
+   SVG's baseline is its bottom edge. Measured, that dropped the TOOLS label
+   7.2px below the glyph row while the four labels above sat true. Taking both
+   items out of the baseline group and centring them in the row instead lands
+   the label baseline within 0.5px of the item text baseline — so the label
+   column stays regular AND the glyphs sit on the label's optical centre. */
+@media (min-width: 761px) {
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-row > .k,
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-set {
+    align-self: center !important;
+    margin-top: var(--sp-2xs, 4px) !important;
+  }
+}
+
+/* Below 761px the row is a real one-column grid again, so it takes the
+   margin itself and the label sits above the items. */
+@media (max-width: 760px) {
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-row {
+    margin-top: var(--sp-2xs, 4px) !important;
+  }
+}
+
+/* One item: glyph, then name. Typography deliberately identical to `.p-chip`
+   (12px / 18px / 500 / -0.005em) so a tool beside its glyph and a partner
+   beside its logo read as one family down the page. */
+html[data-view="cv"].ui-v23 #cv-start .caps .tech-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: var(--sp-xs, 8px) !important;
+  min-width: 0 !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.005em !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  /* The enclosure that logos.css spent a section removing does not come back. */
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* The mark itself. `--logo-h` is logos.css's shared cap height, so if that
+   file ever retunes the partner marks these retune with them; the literal
+   20px is only the fallback for the case where logos.css fails to load. */
+html[data-view="cv"].ui-v23 #cv-start .caps .tech-i {
+  width: var(--logo-h, 20px) !important;
+  height: var(--logo-h, 20px) !important;
+  flex: 0 0 auto !important;
+  display: block !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.5 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+/* Windows High Contrast paints SVG strokes from `color`, and the forced-colors
+   block in archive.css already pins `.caps` to Canvas/CanvasText. Naming the
+   system keyword here means the glyphs follow the text instead of dropping to
+   the default graphic colour. */
+@media (forced-colors: active) {
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-set,
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-item {
+    color: CanvasText !important;
+  }
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-i {
+    stroke: CanvasText !important;
+  }
+}

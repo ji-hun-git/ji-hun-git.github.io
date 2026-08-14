@@ -40,7 +40,20 @@
      #work-detail  `rotate`, `translate`    ->  THIS FILE
      .pl-detail__spread                     ->  project-library.js
      .pl-page-turn                          ->  project-library.js (spine hinge)
+                                                during [data-state="opening"]
+                                                and [data-state="closing-cover"]
+                                            ->  page-turn.css during
+                                                [data-state="turning-forward"]
+                                                and [data-state="turning-backward"]
      #plReadingDock `opacity`               ->  THIS FILE (the scrim)
+
+   The leaf has two owners because it plays two parts, and the state sets they
+   answer to are disjoint: the script's rigid cover hinge never runs in a
+   turning-* state, and page-turn.css never runs in an opening/closing-cover
+   one. So there is still exactly one owner of `transform` on .pl-page-turn at
+   any instant, which is the only thing the rule below actually requires.
+   assets/interior/page-turn.css loads last of all the stylesheets and carries
+   the reasoning for the turn; read its header before touching the leaf.
 
    `rotate` and `translate` are separate properties from `transform` (CSS
    Transforms 2), and the browser composes them as translate -> rotate -> scale

@@ -163,7 +163,7 @@ html[data-view="cv"].ui-v23 #cv-start .site-footer .ft-mono {
    `text-transform` is deliberately not restated: each element already
    carries the value it wants in English, and Korean turns it off in §5.
    ══════════════════════════════════════════════════════════════════════ */
-html[data-view="cv"].ui-v23 #cv-start :is(.side-label, .caps-row .k, .p-label, .featured-kicker) {
+html[data-view="cv"].ui-v23 #cv-start :is(.side-label, .caps-row .k, .p-label) {
   font-family: var(--ar-mono) !important;
   font-size: var(--ar-t-label) !important;
   font-weight: 600 !important;
@@ -191,7 +191,7 @@ html[data-view="cv"].ui-v23 #cv-start :is(.side-label, .caps-row .k, .p-label, .
    actually needs.
    ══════════════════════════════════════════════════════════════════════ */
 html[data-view="cv"].ui-v23 body.ko #cv-start :is(
-  .side-label, .caps-row .k, .p-label, .featured-kicker
+  .side-label, .caps-row .k, .p-label
 ) {
   font-family: var(--ar-ko) !important;
   letter-spacing: 0.02em !important;

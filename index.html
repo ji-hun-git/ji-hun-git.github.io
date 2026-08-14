@@ -445,47 +445,6 @@
       color: #17683a;
     }
 
-    .section-nav {
-      display: grid;
-      gap: 2px;
-      margin: 4px 0 0;
-      font-size: 0.9rem;
-    }
-    .section-nav a {
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding: 6px 10px 6px 14px;
-      color: var(--soft);
-      border-radius: 10px;
-      transition: color 0.25s ease, background 0.25s ease, padding-left 0.3s var(--ease-spring);
-    }
-    .section-nav a::before {
-      content: "";
-      position: absolute;
-      left: 4px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 4px;
-      height: 4px;
-      border-radius: 999px;
-      background: rgba(23,24,27,0.28);
-      transition: background 0.3s ease, width 0.3s ease, height 0.3s ease;
-    }
-    .section-nav a:hover {
-      color: var(--text);
-      background: rgba(23,24,27,0.05);
-    }
-    .section-nav a.active {
-      color: var(--text);
-      padding-left: 22px;
-    }
-    .section-nav a.active::before {
-      background: var(--ink-accent);
-      width: 12px;
-      height: 1.5px;
-      border-radius: 2px;
-    }
 
     .button .arrow { transition: transform 0.25s var(--ease-spring); display: inline-block; }
     .button:hover .arrow { transform: translateX(4px); }
@@ -548,19 +507,6 @@
       0%   { background-position: 0% 50%; }
       100% { background-position: 100% 50%; }
     }
-
-    /* ── Featured award ── */
-    .item.featured { border-color: rgba(43,75,124,0.45); }
-    .featured-kicker {
-      display: block;
-      margin-bottom: 6px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.64rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ink-accent);
-    }
-    body.ko .featured-kicker { font-family: 'Pretendard', sans-serif; letter-spacing: 0.06em; font-size: 0.74rem; }
 
     /* ── Capabilities: build / ship / prove, as scannable chips ── */
     .caps {
@@ -997,40 +943,25 @@
       letter-spacing: -0.045em;
     }
 
-    /* Verified official marks for partners that previously had monograms. */
-    #projects .item:nth-child(4) .p-chip[data-m="A"]::before,
-    #projects .item:nth-child(5) .p-chip[data-m="K"]::before,
-    #awards .item:nth-child(5) .p-chip[data-m="P"]::before,
-    #awards .item:nth-child(10) .p-chip[data-m="D"]::before {
-      content: "";
-      width: 34px;
-      height: 18px;
-      border: 0;
-      border-radius: 0;
-      background-color: transparent;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-    }
-    #projects .item:nth-child(4) .p-chip[data-m="A"]::before {
-      background-image: url("assets/logos/anipen.svg");
-    }
-    #projects .item:nth-child(5) .p-chip[data-m="K"]::before {
-      width: 26px;
-      background-image: url("assets/logos/kai.svg");
-    }
-    #awards .item:nth-child(5) .p-set .p-chip[data-m="P"]:nth-child(2)::before {
-      width: 40px;
-      background-image: url("assets/logos/pohang-city.svg");
-    }
-    #awards .item:nth-child(5) .p-set .p-chip[data-m="P"]:nth-child(3)::before {
-      width: 46px;
-      background-image: url("assets/logos/pohang-cultural-foundation.svg");
-    }
-    #awards .item:nth-child(10) .p-chip[data-m="D"]::before {
-      width: 46px;
-      background-image: url("assets/logos/db-foundation.svg");
-    }
+    /* A block of positional `::before` rules used to paint five partner marks as
+       background-images. Every one of them was invisible on the live page and had
+       been for a while, for two independent reasons:
+
+         1. Two later layers won on !important. logos.css:91 sets
+            `background: transparent !important` on `.p-chip[data-m]::before` (the
+            shorthand also resets background-image to none), and layout.css:386
+            pins the same pseudo to a 20px box. The index.html rules carry higher
+            specificity but no !important, so they lost both races. The marks
+            still reserved their `content: ""` box — an empty 20px gap where a
+            logo should be, with the monogram letter suppressed too.
+         2. The selectors were positional. `#projects .item:nth-child(4)` and
+            `:nth-child(5)` matched nothing at all once those two chips moved to
+            `.p-brand-stage` markup, and `.p-chip[data-m="P"]:nth-child(2|3)`
+            depended on KT staying the first chip in the row.
+
+       Marks now ship the same way as every other chip on the page: an
+       `<img class="p-logo">` in the markup, sized by the one rule in logos.css
+       that owns logo sizing. Nothing here is left to re-break. */
 
 
     /* Publications read as an academic list, not a stack of cards */
@@ -1271,7 +1202,6 @@
       }
       .profile-image { max-width: 280px; }
       .content { padding-top: 0; }
-      .section-nav { display: none; }
       .kbd-hint { display: none; }
       .top-controls {
         top: 10px;
@@ -1387,7 +1317,6 @@
     body.reader .kbd-hint,
     body.reader .mobile-nav,
     body.reader .filter,
-    body.reader .section-nav,
     body.reader .profile-image,
     body.reader .divider,
     body.reader .button {
@@ -1586,7 +1515,7 @@
         --ink-accent: #2b4b7c;
       }
       .skip-link, .top-controls, .kbd-hint, .mobile-nav, .scroll-progress,
-      .button, .filter, .section-nav, .toast { display: none !important; }
+      .button, .filter, .toast { display: none !important; }
       body, body:not(.reader) { background: #fff !important; }
       body::before { content: none !important; display: none !important; }
       .reveal, .reveal > * {
@@ -1612,7 +1541,7 @@
     }
   </style>
   <link rel="stylesheet" href="assets/interior/ripple.css?v=68-20260814q" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=68-20260814q" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=79-20260814zb" />
   <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=68-20260814q" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
@@ -1622,14 +1551,14 @@
   <link rel="stylesheet" href="assets/interior/logos.css?v=68-20260814q" />
   <!-- Last: the open/close was switching non-animatable layout properties, so
        there was nothing to interpolate. This drives it on transform+opacity. -->
-  <link rel="stylesheet" href="assets/interior/book-motion.css?v=71-20260814t" />
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=78-20260814za" />
   <!-- After archive.css: archive.css scopes the display serif by language in
        one selector and not the next, which handed Hangul a Latin-only serif
        stack and dropped the Korean name into Batang. See the file header. -->
   <link rel="stylesheet" href="assets/interior/typography.css?v=68-20260814q" />
   <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
        in project-library.css can never take effect. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/light-only.css?v=68-20260814q" />
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=79-20260814zb" />
   <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
        page frame both views consume. It has to outrank the base layers, which
        reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
@@ -1643,6 +1572,35 @@
        label off its plate, an overlay parked on the contact links). No theme
        tokens, so it cannot outrank light-only.css's colour pins. -->
   <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=73-20260814v" />
+  <!-- Loaded LAST, after fit-desktop.css: the Tools row under Capabilities. The
+       block it joins is styled from four layers that all reach
+       `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
+       this file both mirrors that weight and loads after them. Glyphs are inline
+       path data — no icon font, no sprite, no second third-party origin. -->
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=75-20260814x" />
+  <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
+       moved out of the book to flank it. They are styled from four layers of
+       project-library.css, three of them with !important on the same
+       properties, so this file has to both carry that weight and arrive after
+       them. It declares no theme tokens and no transform on the animated
+       elements, so it cannot outrank light-only.css or collide with
+       book-motion.css. See the file header. -->
+  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=76-20260814y" />
+
+  <!-- Ghost bookcase behind the library. Declares one class on one element
+       it creates itself, at z-index -1 inside a section that already owns a
+       stacking context — it cannot collide with any library layer, so load
+       order against them does not matter. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=77-20260814z" />
+
+  <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
+       works ([data-state="turning-forward"|"turning-backward"]), and nothing
+       else. Six version tiers of project-library.css reach that same leaf with
+       !important, so source order is what makes this file reachable at all. It
+       animates `transform` only on an element the script leaves alone in those
+       two states, so it cannot collide with animateStableBookOpen or with
+       book-motion.css's rotate/translate split. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/page-turn.css?v=78-20260814za" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1775,15 +1733,6 @@
 
           <div class="divider"></div>
 
-          <p class="side-label"><span lang="en">Sections</span><span lang="ko">섹션</span></p>
-          <nav class="section-nav" aria-label="Page sections">
-            <a href="#projects" data-target="projects"><span lang="en">R&amp;D Projects</span><span lang="ko">연구·개발</span></a>
-            <a href="#awards" data-target="awards"><span lang="en">Awards</span><span lang="ko">수상</span></a>
-            <a href="#education" data-target="education"><span lang="en">Education</span><span lang="ko">학력</span></a>
-            <a href="#publications" data-target="publications"><span lang="en">Publications</span><span lang="ko">논문</span></a>
-            <a href="#patents" data-target="patents"><span lang="en">Patents</span><span lang="ko">특허</span></a>
-          </nav>
-
           <a href="mailto:chaejihun@kaist.ac.kr" data-copy="chaejihun@kaist.ac.kr" class="button" id="ctaButton">
             <span lang="en">Get in touch</span><span lang="ko">연락하기</span> <span class="arrow">→</span>
           </a>
@@ -1813,6 +1762,45 @@
             <span class="v" lang="en">Usability Studies<span class="sep">·</span>Field Evaluation<span class="sep">·</span>Baseline Comparison<span class="sep">·</span>Observability<span class="sep">·</span>Adoption Measurement</span>
             <span class="v" lang="ko">사용성 연구<span class="sep">·</span>현장 평가<span class="sep">·</span>기준선 비교<span class="sep">·</span>관측성<span class="sep">·</span>내재화 측정</span>
           </div>
+
+          <!-- Tools. Every entry is already named somewhere on this page; nothing
+               here introduces a technology the CV does not evidence in prose:
+                 Python, TypeScript  — the Build row directly above.
+                 Unreal Engine       — Awards: "Led technical implementation of a
+                                       large-scale Unreal Engine media-façade
+                                       prototype" (Pohang media-façade hackathon).
+                 Meta Quest Pro      — Experience: the Watchers digital therapeutic,
+                                       and again in Publications.
+               React, FastAPI and "computer vision" were considered and dropped:
+               none of the three appears anywhere in this file.
+
+               The glyphs are category marks drawn as path data, not vendor logos
+               — see the header of tech-icons.css for why, and note the same
+               decision already made for KRAFTON/NYU/bHaptics in logos.css. The
+               visible text carries the name, so the SVGs are aria-hidden; saying
+               "Python Python" is the failure mode if they are not.
+
+               The `caps-row` class is load-bearing: layout.css:287 makes
+               `.caps-row` `display: contents` above 761px so labels and content
+               share one grid. Dropping it puts this whole row in the 62px label
+               column. -->
+          <div class="caps-row tech-row">
+            <span class="k"><span lang="en">Tools</span><span lang="ko">도구</span></span>
+            <!-- No aria-labelledby on the list. Pointing it at the `.k` span was
+                 measured in the Chrome AX tree and gave the list the name
+                 "TOOLS" — uppercased, because `.k` carries text-transform and
+                 Chrome computes the name from rendered text. The label is
+                 already a StaticText node immediately before the list in
+                 reading order, so the result was "TOOLS … TOOLS, list, 4
+                 items", and several screen readers spell all-caps names out
+                 letter by letter. Unnamed, it reads "TOOLS … list, 4 items". -->
+            <span class="tech-set" role="list">
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.8 3 9.4 10 2.8 17"/><path d="M11.6 17h6"/></svg><span class="tech-n">Python</span></span>
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8.6 2.8c-1.8 0-2.7.9-2.7 2.7v2.1c0 1.6-.9 2.4-2.7 2.4 1.8 0 2.7.8 2.7 2.4v2.1c0 1.8.9 2.7 2.7 2.7"/><path d="M11.4 2.8c1.8 0 2.7.9 2.7 2.7v2.1c0 1.6.9 2.4 2.7 2.4-1.8 0-2.7.8-2.7 2.4v2.1c0 1.8-.9 2.7-2.7 2.7"/></svg><span class="tech-n">TypeScript</span></span>
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.7 17.2 5.85v8.3L10 18.3l-7.2-4.15v-8.3Z"/><path d="M10 10 2.8 5.85M10 10l7.2-4.15M10 10v8.3"/></svg><span class="tech-n">Unreal Engine</span></span>
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.2 6.8h11.6a2.6 2.6 0 0 1 2.6 2.6v2.8a2.6 2.6 0 0 1-2.6 2.6h-2.1a1.6 1.6 0 0 1-1.3-.7l-.9-1.3a1.6 1.6 0 0 0-2.6 0l-.9 1.3a1.6 1.6 0 0 1-1.3.7H4.2a2.6 2.6 0 0 1-2.6-2.6V9.4a2.6 2.6 0 0 1 2.6-2.6Z"/><path d="M2.6 7.6C3.4 4 6.4 2 10 2s6.6 2 7.4 5.6"/></svg><span class="tech-n">Meta Quest Pro</span></span>
+            </span>
+          </div>
         </section>
 
         <section class="section" id="projects">
@@ -1831,6 +1819,7 @@
               <div class="item-meta"><span lang="en">2026 | SKAIWORLDWIDE | Sole developer, DQM v1.0 engine</span><span lang="ko">2026 | SKAIWORLDWIDE | DQM v1.0 엔진 단독 개발</span></div>
               <p class="item-desc cv-summary" lang="en">Sole developer of DQM v1.0, a data-quality automation engine for tabular enterprise data covering detection, correction, metadata repair, and standard generation. Submitted to an accredited Korean testing laboratory for independent verification against four KPIs in August 2026.</p>
               <p class="item-desc cv-summary" lang="ko">정형 기업 데이터의 탐지·교정·메타데이터 복구·표준 생성을 아우르는 데이터 품질 자동화 엔진 DQM v1.0을 단독 개발했습니다. 2026년 8월 공인 소프트웨어 시험기관에 4개 KPI에 대한 독립 검증을 의뢰했습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />SKAIWORLDWIDE</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />스카이월드와이드</span></span></div>
             </div>
 
             <div class="item reveal">
@@ -1886,7 +1875,6 @@
           <h2 class="section-title"><span class="num">02</span><span lang="en">Recognition &amp; External Validation</span><span lang="ko">외부 인정 및 검증</span></h2>
           <div class="items">
             <div class="item reveal">
-              <span class="featured-kicker"><span lang="en">AI Product Challenge · 2026</span><span lang="ko">AI 제품 챌린지 · 2026</span></span>
               <span class="item-title"><span lang="en">Top 3 Finish – Rapid AI Product Build</span><span lang="ko">상위 3팀 – AI 제품 신속 개발</span></span>
               <div class="item-meta"><span lang="en">2026.07 | Cofathon: AI Native Battlegrounds</span><span lang="ko">2026.07 | 코파톤 (Cofathon): AI Native Battlegrounds</span></div>
               <p class="item-desc cv-summary" lang="en">Placed in the top 3 through a roughly 25-to-6-to-3 selection funnel, building an AI application in under four hours from agent-led requirement discovery through blind-review handoff. Official material documents the one-day final and its recruitment fast-track.</p>
@@ -1919,7 +1907,13 @@
               <div class="item-meta"><span lang="en">2024.01 | Pohang Culture &amp; Arts Factory Hackathon</span><span lang="ko">2024.01 | 포항문화예술공장 해커톤</span></div>
               <p class="item-desc cv-summary" lang="en">Led technical implementation of a large-scale Unreal Engine media-façade prototype demonstrating a smart-city experience concept. The hackathon, co-hosted by Pohang City, the Pohang Cultural Foundation, KT, and Handong Global University, awarded it the Grand Prize.</p>
               <p class="item-desc cv-summary" lang="ko">스마트시티 경험 콘셉트를 구현한 대규모 Unreal Engine 미디어파사드 프로토타입의 기술 구현을 총괄했습니다. 포항시, 포항문화재단, KT, 한동대학교가 공동 주최한 해커톤에서 대상을 받았습니다.</p>
-              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kt.png" alt="" onerror="this.remove()" />KT</span><span class="p-chip" data-m="P">Pohang City</span><span class="p-chip" data-m="P">Pohang Cultural Foundation</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />Handong Global University</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kt.png" alt="" onerror="this.remove()" />KT</span><span class="p-chip" data-m="포">포항시</span><span class="p-chip" data-m="포">포항문화재단</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />한동대학교</span></span></div>
+              <!-- Pohang Cultural Foundation keeps the monogram. The only official
+                   file the foundation publishes is the reversed (white) lockup in
+                   its site footer — assets/logos/pohang-cultural-foundation.svg is
+                   that file, kept for when a positive version can be obtained. On
+                   this light-only page it is white on cream, i.e. invisible, so the
+                   monogram is the honest fallback rather than a recoloured mark. -->
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kt.png" alt="" onerror="this.remove()" />KT</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/pohang-city.svg" alt="" onerror="this.remove()" />Pohang City</span><span class="p-chip" data-m="P">Pohang Cultural Foundation</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />Handong Global University</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kt.png" alt="" onerror="this.remove()" />KT</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/pohang-city.svg" alt="" onerror="this.remove()" />포항시</span><span class="p-chip" data-m="포">포항문화재단</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />한동대학교</span></span></div>
             </div>
             <div class="item reveal">
               <span class="item-title"><span lang="en">Excellence Award – Undergraduate Paper Competition</span><span lang="ko">우수상 – 추계학부생논문경진대회</span></span>
@@ -1954,7 +1948,7 @@
               <div class="item-meta"><span lang="en">2021.07 | DB-SNUbiz Global Startup Challenge</span><span lang="ko">2021.07 | DB-SNUbiz 글로벌 창업 챌린지</span></div>
               <p class="item-desc cv-summary" lang="en">Pitched a blockchain venture to a panel of venture capitalists and industry experts, reaching the final 14 teams from a field of 152 applicants. The challenge carried a $91,000 prize pool.</p>
               <p class="item-desc cv-summary" lang="ko">152개 지원팀 가운데 본선 14팀에 올라 벤처캐피털과 산업 전문가 심사단 앞에서 블록체인 벤처를 피칭했습니다. 이 챌린지의 총상금 규모는 9만 1천 달러였습니다.</p>
-              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />SNU Business School</span><span class="p-chip" data-m="D">DB Kim Jun-gi Culture Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />서울대학교 경영대학</span><span class="p-chip" data-m="D">DB김준기문화재단</span></span></div>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />SNU Business School</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/db-foundation.svg" alt="" onerror="this.remove()" />DB Kim Jun-gi Culture Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />서울대학교 경영대학</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/db-foundation.svg" alt="" onerror="this.remove()" />DB김준기문화재단</span></span></div>
             </div>
           </div>
         </section>
@@ -2386,8 +2380,9 @@
   <script defer src="assets/project-library/work-designs.js?v=68-20260814q"></script>
   <script defer src="assets/project-library/work-content.js?v=68-20260814q"></script>
   <script defer src="assets/interior/ripple.js?v=68-20260814q"></script>
-  <script defer src="assets/project-library/project-library.js?v=68-20260814q"></script>
+  <script defer src="assets/project-library/project-library.js?v=76-20260814y"></script>
   <script defer src="assets/interior/fit-spine-labels.js?v=68-20260814q"></script>
+  <script defer src="assets/interior/shelf-field.js?v=77-20260814z"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate

@@ -12640,7 +12640,10 @@ html.ui-v23 {
   --surface: #ffffff;
   --text: #09090b;
   --muted: #52525b;
-  --soft: #71717a;
+  /* #71717a -> #67676f for AA. See the measured ratios in light-only.css:62,
+     which restates this block and is the definition that actually wins.
+     Kept identical here so the two token blocks do not drift. */
+  --soft: #67676f;
   --line: #e4e4e7;
   --line-strong: #d4d4d8;
   --shadow: 0 1px 2px rgba(0, 0, 0, .045);
@@ -12986,31 +12989,6 @@ html[data-view="cv"].ui-v23 #cv-start .contact-list a:hover {
   color: var(--text) !important;
 }
 
-html[data-view="cv"].ui-v23 #cv-start .section-nav {
-  gap: 2px;
-}
-
-html[data-view="cv"].ui-v23 #cv-start .section-nav a {
-  min-height: 32px;
-  padding: 0 10px !important;
-  border-radius: 8px !important;
-  color: var(--soft) !important;
-  font-family: "Geist Portfolio", Geist, Inter, "Pretendard Variable", Pretendard, sans-serif !important;
-  font-size: .8125rem !important;
-  font-weight: 500 !important;
-  letter-spacing: -.005em !important;
-}
-
-html[data-view="cv"].ui-v23 #cv-start .section-nav a::before {
-  display: none !important;
-}
-
-html[data-view="cv"].ui-v23 #cv-start .section-nav a:is(:hover, .active) {
-  padding-left: 10px !important;
-  background: var(--v23-muted-surface) !important;
-  color: var(--text) !important;
-}
-
 html[data-view="cv"].ui-v23 #cv-start .button {
   border-color: #18181b !important;
   background: #18181b !important;
@@ -13149,7 +13127,7 @@ html[data-view="cv"].ui-v23 #cv-start .filter button .count {
      `.contact-list a[href]` (1,4,2), which outranks a bare `.contact-list a`
      (1,3,2) and silently held these at 32px on phones. Match it here so the
      44px touch target actually applies. */
-  html[data-view="cv"].ui-v23 #cv-start :is(.contact-list a, .contact-list a[href], .section-nav a, .filter button) {
+  html[data-view="cv"].ui-v23 #cv-start :is(.contact-list a, .contact-list a[href], .filter button) {
     min-height: 44px;
   }
 
