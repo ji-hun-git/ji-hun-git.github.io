@@ -57,12 +57,6 @@
     opacity var(--ripple-fade, 0.32s) linear;
 }
 
-@media (prefers-color-scheme: dark) {
-  .ripple-layer > .ripple {
-    background: var(--ripple-tint-dark, rgba(255, 255, 255, 0.18));
-  }
-}
-
 @media (forced-colors: active) {
   .ripple-layer { display: none; }
 }

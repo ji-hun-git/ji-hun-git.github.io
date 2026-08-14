@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Jihun Chae is a human-centered AI researcher and product strategist who translates user evidence into product requirements, testable systems, and decision-grade evaluation." />
-  <meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f6f5f2" />
   <link rel="canonical" href="https://ji-hun-git.github.io/" />
   <title>Jihun Chae | Human-Centered AI Researcher &amp; Product Strategist</title>
   <meta property="og:title" content="Jihun Chae | Human-Centered AI Researcher &amp; Product Strategist" />
@@ -1569,50 +1568,10 @@
       }
       .reveal, .reveal > * { opacity: 1; transform: none; filter: none; }
     }
-    /* ── Dark theme: same design, inverted ground. Tokens carry the flip;
-       the accents are lightened so they hold AA on the dark surface. ── */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        color-scheme: dark;
-        --bg: #131417;
-        --bg2: #17181c;
-        --surface: #1c1d22;
-        --text: #ececee;
-        --muted: #b7b9bf;
-        --soft: #93969e;
-        --line: rgba(236,236,238,0.11);
-        --line-strong: rgba(236,236,238,0.24);
-        --shadow: 0 1px 2px rgba(0,0,0,0.30), 0 6px 20px rgba(0,0,0,0.35);
-        --ink-accent: #8db0dd;
-        --brand-linkedin: #8db9f0;
-        --brand-scholar: #72b7f5;
-        --brand-orcid: #b4d95d;
-        --brand-email: #e5a15d;
-        --c-education: 226, 172, 92;
-        --c-projects:  141, 176, 221;
-        --c-awards:    232, 130, 172;
-        --c-pubs:      104, 196, 164;
-        --c-patents:   186, 148, 230;
-      }
-      ::selection { background: rgba(141,176,221,0.32); color: var(--text); }
-      .pill-btn { background: rgba(28,29,34,0.88); }
-      .pill-btn:hover { background: #26272d; }
-      .mobile-nav { background: rgba(19,20,23,0.92) !important; }
-      /* light-on-dark controls invert their labels */
-      .button, .skip-link,
-      .filter button.active, .filter button.active .count { color: #17181b; }
-      .filter button.active .count { border-color: rgba(23,24,27,0.3); }
-      .kbd-hint {
-        background: rgba(28,29,34,0.92);
-        border-color: var(--line-strong);
-      }
-      .kbd-hint kbd { background: rgba(236,236,238,0.08); border-color: var(--line); }
-      .profile-card::before {
-        background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(141,176,221,0.14), transparent 55%);
-      }
-      .profile-image img { filter: grayscale(100%) brightness(0.92); }
-      .toast { background: rgba(38,39,44,0.92); }
-    }
+    /* Night mode removed 2026-08-14 (owner's decision). The dark route caused
+       four defects — white-on-white cards, invisible reader text, wrong icon
+       and font rendering — and it forced archive.css to load light-only, which
+       left the site wearing two identities. One light identity now. */
 
     /* ── Print: the page doubles as a paper CV ── */
     @media print {
@@ -1652,23 +1611,38 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=65-20260814n" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=65-20260814n" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=65-20260814n" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=68-20260814q" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=68-20260814q" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=68-20260814q" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=65-20260814n"
-        media="(prefers-color-scheme: light)" />
+  <link rel="stylesheet" href="assets/interior/archive.css?v=68-20260814q" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=65-20260814n" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=68-20260814q" />
   <!-- Last: the open/close was switching non-animatable layout properties, so
        there was nothing to interpolate. This drives it on transform+opacity. -->
-  <link rel="stylesheet" href="assets/interior/book-motion.css?v=65-20260814n" />
-  <!-- Reader mode pins its own dark ink and never sets a light ground, so it
-       inverts here rather than going invisible on the dark surface. -->
-  <link rel="stylesheet" href="assets/interior/reader-dark.css?v=65-20260814n"
-        media="(prefers-color-scheme: dark)" />
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=71-20260814t" />
+  <!-- After archive.css: archive.css scopes the display serif by language in
+       one selector and not the next, which handed Hangul a Latin-only serif
+       stack and dropped the Korean name into Batang. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/typography.css?v=68-20260814q" />
+  <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
+       in project-library.css can never take effect. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=68-20260814q" />
+  <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
+       page frame both views consume. It has to outrank the base layers, which
+       reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
+       shorthands, so source order is load-bearing here. -->
+  <link rel="stylesheet" href="assets/interior/layout.css?v=74-20260814w" />
+  <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
+       inside a max-width query, so it cannot reach desktop, and it declares
+       no theme tokens, so it cannot outrank light-only.css. -->
+  <link rel="stylesheet" href="assets/interior/fit-mobile.css?v=71-20260814t" />
+  <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
+       label off its plate, an overlay parked on the contact links). No theme
+       tokens, so it cannot outrank light-only.css's colour pins. -->
+  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=73-20260814v" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1854,9 +1828,9 @@
 
             <div class="item reveal">
               <span class="item-title"><span lang="en">Automated Data-Quality Measurement &amp; Verification Engine (Industry Contract)</span><span lang="ko">데이터 품질 측정·검증 자동화 엔진 (산업체 용역)</span></span>
-              <div class="item-meta"><span lang="en">2026 | Industry-commissioned project | Named technical performer</span><span lang="ko">2026 | 산업체 용역 과제 | 보고서상 기술 수행자</span></div>
-              <p class="item-desc cv-summary" lang="en">Designed and implemented a versioned enterprise data-quality engine using deterministic rules and statistical validation where auditability mattered more than LLM flexibility. Verification was documented in the formal project report.</p>
-              <p class="item-desc cv-summary" lang="ko">LLM의 유연성보다 감사 가능성이 중요한 영역에 결정론적 규칙과 통계 검증을 적용한 버전 관리형 기업 데이터 품질 엔진을 설계·구현했습니다. 검증 결과는 공식 과제 보고서에 기록했습니다.</p>
+              <div class="item-meta"><span lang="en">2026 | SKAIWORLDWIDE | Sole developer, DQM v1.0 engine</span><span lang="ko">2026 | SKAIWORLDWIDE | DQM v1.0 엔진 단독 개발</span></div>
+              <p class="item-desc cv-summary" lang="en">Sole developer of DQM v1.0, a data-quality automation engine for tabular enterprise data covering detection, correction, metadata repair, and standard generation. Submitted to an accredited Korean testing laboratory for independent verification against four KPIs in August 2026.</p>
+              <p class="item-desc cv-summary" lang="ko">정형 기업 데이터의 탐지·교정·메타데이터 복구·표준 생성을 아우르는 데이터 품질 자동화 엔진 DQM v1.0을 단독 개발했습니다. 2026년 8월 공인 소프트웨어 시험기관에 4개 KPI에 대한 독립 검증을 의뢰했습니다.</p>
             </div>
 
             <div class="item reveal">
@@ -2409,11 +2383,11 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=65-20260814n"></script>
-  <script defer src="assets/project-library/work-content.js?v=65-20260814n"></script>
-  <script defer src="assets/interior/ripple.js?v=65-20260814n"></script>
-  <script defer src="assets/project-library/project-library.js?v=65-20260814n"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=65-20260814n"></script>
+  <script defer src="assets/project-library/work-designs.js?v=68-20260814q"></script>
+  <script defer src="assets/project-library/work-content.js?v=68-20260814q"></script>
+  <script defer src="assets/interior/ripple.js?v=68-20260814q"></script>
+  <script defer src="assets/project-library/project-library.js?v=68-20260814q"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=68-20260814q"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate

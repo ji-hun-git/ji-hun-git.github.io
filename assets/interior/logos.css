@@ -146,10 +146,15 @@ html[data-view="cv"].ui-v23 #cv-start .caps-row {
   background: transparent !important;
 }
 
-/* The dot is a breath between terms, not a rule. */
+/* The dot is a breath between terms, not a rule.
+   --ar-rule-strong is a hairline colour and measured 1.87:1 on the paper — an
+   AA failure on a character that is really rendered text (30 of them). Moved
+   to --ar-ink-faint (4.77:1), the ink the stage label already uses, rather
+   than minting a fourth grey. The dot still sits below the terms themselves
+   (6.79:1), so it reads as a breath and not as a divider. */
 html[data-view="cv"].ui-v23 #cv-start .caps .sep,
 html[data-view="cv"].ui-v23 #cv-start .caps-row .sep {
-  color: var(--ar-rule-strong, #b9b2a3) !important;
+  color: var(--ar-ink-faint, #6f6a5e) !important;
   padding: 0 2px !important;
 }
 

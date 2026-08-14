@@ -1,0 +1,428 @@
+/* ============================================================================
+   Layout — one spacing scale, one page frame
+   assets/interior/layout.css      LOADS LAST (after typography.css)
+
+   The site standardised type (7 size steps) and radii (3 steps) but never
+   standardised space. Vertical and horizontal rhythm was carried by ~30 one-off
+   values scattered across index.html's inline media queries and the interior
+   layers — 5, 6, 8, 9, 10, 12, 13, 14, 16, 20, 21.6, 22, 24, 26, 28, 30.72, 34,
+   36, 40, 45, 46, 52, 54, 56, 68 — with no step relation between them. The same
+   semantic gap took a different value in each view, each breakpoint and each
+   language.
+
+   Two recent simplifications made that fatal rather than merely untidy: removing
+   the partner-chip borders and the capabilities box deleted the enclosure that
+   had justified the tight gaps sitting *inside* those boxes. Whitespace became
+   the only separator in places where it was scaled too small to separate.
+
+   This file does three things and nothing else:
+     1. declares a step scale and maps each spacing role to a step;
+     2. gives both views one page frame so switching view does not shift the page;
+     3. re-anchors the four components that were positioned against a stage size
+        that only resolved correctly at 1440 — the book caption, the fixed CTA,
+        the sticky sidebar, the collapsed pill buttons.
+
+   Everything here is scoped and !important because the base layers are: many
+   rules below have to outrank `html[data-view="cv"].ui-v23 #cv-start ...` or a
+   `padding: … !important` shorthand in project-library.css. Source order alone
+   is not enough against a shorthand carrying !important.
+   ========================================================================== */
+
+/* ════════════════════════════════════════════════════════════════════════
+   1 · The scale
+   ──────────────────────────────────────────────────────────────────────────
+   Nine steps. Every gap this file sets resolves to one of them; the semantic
+   tokens below are the only place a role is mapped to a step, so a breakpoint
+   changes the mapping once instead of thirty times.
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --sp-2xs: 4px;
+  --sp-xs:  8px;
+  --sp-sm:  12px;
+  --sp-md:  16px;
+  --sp-lg:  24px;
+  --sp-xl:  32px;
+  --sp-2xl: 40px;
+  --sp-3xl: 48px;
+  --sp-4xl: 64px;
+
+  /* Roles ------------------------------------------------------------- */
+  /* The page frame: the only horizontal margin either view is allowed. */
+  --page-pad: var(--sp-4xl);          /* 64 */
+  /* One measure for both views, so the text block does not jump on switch. */
+  --page-measure: 1180px;
+
+  /* Section to section, capabilities to first section, last section to footer.
+     One value: the capabilities block lost its box, so it may not also have
+     the tightest gap on the page. */
+  --rhythm-section: var(--sp-4xl);    /* 64 */
+  /* Inside a section: a summary to its first group, a title to its body. */
+  --rhythm-block: var(--sp-lg);       /* 24 */
+  /* Between sibling rows of a list (capability rows, partner chip rows). */
+  --rhythm-row: var(--sp-md);         /* 16 */
+  /* A label to the thing it labels. Always the smallest gap in its group. */
+  --rhythm-label: var(--sp-xs);       /* 8 */
+
+  /* Card interior. The 2px rule on .item stands in for a binding edge and is
+     subtracted from the left padding so the text block sits optically centred. */
+  --card-pad-y: var(--sp-lg);         /* 24 — was 20/13, neither on any step */
+  --card-pad-x: var(--sp-lg);         /* 24 */
+  --card-rule: 2px;
+
+  /* Library: the strip under the shelf that the hover/focus caption lives in,
+     and the footprint the fixed CTA occupies at small widths. */
+  --shelf-caption-strip: 80px;
+  --cv-jump-h: 58px;
+  --cv-jump-inset: 12px;
+}
+
+@media (max-width: 980px) {
+  :root { --page-pad: var(--sp-2xl); }        /* 40 */
+}
+
+@media (max-width: 760px) {
+  :root {
+    --page-pad: var(--sp-md);                 /* 16 */
+    --rhythm-section: var(--sp-2xl);          /* 40 */
+    /* The label stacks above its terms below 760, so a row is two lines deep
+       and needs a wider gap than the 9px that separates them. */
+    --rhythm-row: var(--sp-lg);               /* 24 */
+    --card-pad-y: var(--sp-sm);               /* 12 */
+    --card-pad-x: var(--sp-md);               /* 16 */
+    --shelf-caption-strip: 96px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   2 · One page frame
+   ──────────────────────────────────────────────────────────────────────────
+   The CV page measured 1180 inside a 40/24/18px gutter; the library header
+   measured 1120 inside a 52/30.72/14px padding. At 1440 the library's text
+   block spanned 160..1280 and the CV's 123..1303, so changing view shifted the
+   whole page 37px sideways. Both now consume --page-pad and --page-measure and
+   land on the same axis at every width. 30.72px was a fractional value that
+   matched nothing else in the system.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* The library fits its viewport and the CV does not, so one view had a
+   scrollbar and the other did not, and the shared measure still landed 7px
+   apart on switch. Reserving the gutter in both states closes the last of it. */
+html {
+  scrollbar-gutter: stable;
+}
+
+html[data-view="cv"] #cv-start.page {
+  width: min(var(--page-measure), calc(100% - var(--page-pad) * 2)) !important;
+  margin-inline: auto !important;
+}
+
+/* The library's own padding is set by `#work-library.pl-library-v11` (1,1,0)
+   and `#work-library.pl-library-v26` (1,1,0), both with !important, so the
+   selectors below have to carry the view attribute and the version class to
+   outrank them. This is the same weight the base layers reach for. */
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 {
+  padding-inline: var(--page-pad) !important;
+}
+
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-site-header {
+  width: min(var(--page-measure), 100%) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   3 · Library — the fixed CTA, the shelf's vertical placement, the caption
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Below 1100 the "Explore the full CV" pill becomes position:fixed with
+   z-index 1000. At 375 the document is 960px against an 812px viewport, so
+   there was no scroll position at which the pill was not sitting on top of the
+   last shelf rows. Reserve its footprint instead of hoping the page is short
+   enough. */
+@media screen and (max-width: 1100px) {
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 {
+    padding-bottom: calc(
+      var(--cv-jump-h) + max(var(--cv-jump-inset), env(safe-area-inset-bottom)) + var(--sp-md)
+    ) !important;
+  }
+}
+
+/* At 768 the placement strategy flipped from centred to top-aligned, which
+   dumped the whole leftover height under the shelf as a 249px void — about a
+   quarter of the viewport. Splitting it above and below costs nothing: where
+   the content is taller than the box (375) `center` behaves as `start`. */
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 {
+  align-content: center !important;
+}
+
+/* The caption was absolutely positioned against the TOP of the stage below a
+   1150px container, and against the BOTTOM above it — so at 768 it landed on
+   row 1 and hid six spine labels, while at 1440 it sat 52px below the shelf.
+   It is now anchored to the bottom of the stage at every width, and the shell
+   reserves a strip for it so it clears the shelf above and the CTA below. At
+   1440 and 768 the strip is absorbed by slack the grid already had.
+
+   The strip goes on the shell, not the stage: the stage carries an explicit
+   height (`#work-library.pl-library-v12 .pl-stage`), so padding there is eaten
+   by the shelf viewport instead of reserved beneath it. */
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-shell {
+  padding-bottom: var(--shelf-caption-strip) !important;
+}
+
+/* `top: 100%` is the stage's own bottom edge, so the caption starts below the
+   shelf by construction at every width — there is no stage height at which it
+   can land on a spine label. */
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-book-caption {
+  top: calc(100% + var(--sp-sm)) !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: 50% !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   4 · The collapsed pill buttons
+   ──────────────────────────────────────────────────────────────────────────
+   Below 700 `.pill-btn .label-text { display:none }` collapses the controls to
+   a square, and `html.ui-v23 .pill-btn { min-width:44px }` sets the square. The
+   Library button's label is not wrapped in .label-text and it has no icon, so
+   only the collapse applied: a 41px (EN) / 52px (KO) label painted outside a
+   44px pill with a 20px content box. The lang toggle already carries a
+   `width:auto` escape hatch; every labelled pill gets the same one, so a pill
+   collapses to a square only when it actually has an icon to collapse to.
+   ══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 760px) {
+  html .top-controls .pill-btn:not(:has(.icon)) {
+    width: auto !important;
+    min-width: 44px !important;
+    padding-inline: var(--sp-sm) !important;
+    justify-content: center !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   5 · CV — the sticky profile card
+   ──────────────────────────────────────────────────────────────────────────
+   The card is 1280px tall with top:28px against a 900px viewport, so once it
+   stuck, its bottom 408px — Email, LinkedIn, Google Scholar, ORCID,
+   Simulations, the entire contact block — was below the fold and stayed there
+   for the remaining 8,800px of scroll. top:28px only ever made sense for a
+   card shorter than the viewport. Constrain it to the viewport so the contact
+   block is reachable; on a tall enough screen no scroller appears at all.
+   ══════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 981px) {
+  html[data-view="cv"] #cv-start .sidebar {
+    top: var(--sp-lg) !important;
+    max-height: calc(100vh - var(--sp-lg) * 2) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    /* thin + a reserved gutter: the card keeps one width whether the viewport
+       is tall enough to fit it or not, instead of jumping 10px at the height
+       where the scroller appears. */
+    scrollbar-width: thin !important;
+    scrollbar-gutter: stable !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   6 · CV — section rhythm
+   ──────────────────────────────────────────────────────────────────────────
+   Measured gaps down the content column were 46 (caps→projects), 68 ×4
+   (section→section) and 34 (→footer) at desktop; 36, 40 ×4 and 56 at 375. So
+   the block that lost its box got the tightest gap on the page, and the footer
+   gap inverted across the breakpoint — half a section gap at desktop, larger
+   than one at 375. All three roles are the same step now, mapped once per
+   breakpoint. Publications' summary sat 6px from its first year group where
+   every other gap in that section is 22px.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html[data-view="cv"].ui-v23 #cv-start .section {
+  margin-top: var(--rhythm-section) !important;
+}
+html[data-view="cv"].ui-v23 #cv-start .section:first-of-type {
+  margin-top: 0 !important;
+}
+html[data-view="cv"].ui-v23 #cv-start .site-footer {
+  margin-top: var(--rhythm-section) !important;
+}
+html[data-view="cv"].ui-v23 #cv-start .pub-summary {
+  margin-bottom: var(--rhythm-block) !important;
+}
+html[data-view="cv"].ui-v23 #cv-start .pub-group + .pub-group {
+  margin-top: var(--rhythm-block) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   7 · CV — capabilities
+   ──────────────────────────────────────────────────────────────────────────
+   Three separate failures, all of them the same root cause.
+
+   (a) Rows were 6px apart while a wrapped continuation line inside a row had
+       0px of separation at a 21px line height, so a continuation line was
+       indistinguishable from a new row. Rows now sit --rhythm-row apart.
+
+   (b) The label column was hard-coded to 62px, sized for DISCOVER/VALIDATE. The
+       two-character Korean labels (발견 설계 구축 검증) left a ~60px dead
+       gutter — four times the English gap. The rows are now cells of one grid
+       (`display:contents` on the row) instead of four independent grids, so a
+       single `max-content` track sizes itself to whichever language is
+       rendered and every row still aligns on one axis.
+
+   (c) Terms split across lines because the only wrap opportunities in the
+       markup are the spaces *inside* terms — the separators carry no
+       surrounding whitespace at all. Suppressing wrapping on the value and
+       reopening it on the separator moves every break onto the separator: the
+       word joiner forbids a break before the dot, the trailing space allows one
+       after it. Measured at the worst case (a 168px column): 0 split terms,
+       0 lines beginning with a separator, no horizontal overflow.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html[data-view="cv"].ui-v23 #cv-start .caps {
+  display: grid !important;
+  row-gap: var(--rhythm-row) !important;
+  margin: 0 0 var(--rhythm-section) !important;
+  padding: var(--sp-md) 0 0 !important;
+}
+
+@media (min-width: 761px) {
+  html[data-view="cv"].ui-v23 #cv-start .caps {
+    grid-template-columns: max-content minmax(0, 1fr) !important;
+    column-gap: var(--sp-md) !important;
+    align-items: baseline !important;
+  }
+  html[data-view="cv"].ui-v23 #cv-start .caps-row {
+    display: contents !important;
+  }
+}
+
+/* At 375 the block was two 167.5px columns, which shredded every term into
+   2–3 word fragments and pushed separator dots to the start of lines. One
+   353px column reads; two 167px columns do not. The label goes above its terms
+   so the terms get the full measure, at a gap smaller than the row gap. */
+@media (max-width: 760px) {
+  html[data-view="cv"].ui-v23 #cv-start .caps {
+    grid-template-columns: minmax(0, 1fr) !important;
+    column-gap: var(--sp-md) !important;   /* inert at one column; kept on scale */
+  }
+  html[data-view="cv"].ui-v23 #cv-start .caps-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    row-gap: var(--sp-2xs) !important;
+  }
+}
+
+html[data-view="cv"].ui-v23 #cv-start .caps-row .v {
+  white-space: nowrap !important;
+}
+
+html[data-view="cv"].ui-v23 #cv-start .caps .sep,
+html[data-view="cv"].ui-v23 #cv-start .caps-row .sep {
+  white-space: normal !important;
+  margin: 0 !important;
+  padding: 0 var(--sp-2xs) !important;
+}
+html[data-view="cv"].ui-v23 #cv-start .caps .sep::before { content: "\2060"; }
+html[data-view="cv"].ui-v23 #cv-start .caps .sep::after  { content: " "; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   8 · CV — entry cards
+   ──────────────────────────────────────────────────────────────────────────
+   The 2px left border that stands in for the binding edge was never subtracted
+   from the left padding, so text started 24px from the left edge and ended 22px
+   from the right at desktop, and 18px against 14px at 375 — off by a different
+   amount at each breakpoint. Left padding is now (right − border).
+   ══════════════════════════════════════════════════════════════════════ */
+
+html[data-view="cv"].ui-v23 #cv-start .item {
+  padding:
+    var(--card-pad-y)
+    var(--card-pad-x)
+    var(--card-pad-y)
+    calc(var(--card-pad-x) - var(--card-rule)) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   9 · CV — partner rows
+   ──────────────────────────────────────────────────────────────────────────
+   The row label wrapped above the chips when the set was wide and stayed inline
+   when it was narrow, so chip runs in one column started at three different
+   left edges (545 / 612 / 673 at 1440; 29 / 96 / 157 at 375). With the chip
+   borders gone there was no container to explain the shift, so the rows looked
+   arbitrarily indented. The label now always sits on its own line and every
+   chip run starts on the card's text axis, whatever the chip count or language.
+
+   The spacing hierarchy inside the row was also inverted: the label sat 12px
+   from the first chip while chips sat 20px from each other, and a wrapped chip
+   row sat 8px below the row above. So the label bound to the first partner and
+   an orphaned wrapped chip read as part of the previous group. Row gap now
+   matches the column gap — in a wrapping set of peers, a row gap smaller than
+   the column gap makes the eye read columns — and the label gap is the smallest
+   in the group, which is what makes it read as a heading.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html[data-view="cv"].ui-v23 #cv-start .partners {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  row-gap: var(--rhythm-label) !important;
+  margin-top: var(--rhythm-block) !important;
+  padding-top: 0 !important;
+  align-items: start !important;
+}
+
+html[data-view="cv"].ui-v23 #cv-start .p-label {
+  margin: 0 !important;
+}
+
+html[data-view="cv"].ui-v23 #cv-start .p-set {
+  gap: var(--rhythm-block) !important;
+}
+
+/* The two kinds of partner mark stopped reading as one component: a chip with
+   an image got a 20px full-colour logo, a chip with a monogram got a bare
+   letter with `width:auto; min-width:0`, which sat as a footnote marker rather
+   than as a mark. logos.css chose equal cap height as the invariant for images;
+   the monogram gets the same 20px box and the same centre line. Its colour is
+   the other half of that finding and belongs to the colour layer, not here. */
+html .p-chip[data-m]::before {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  width: var(--logo-h, 20px) !important;
+  min-width: var(--logo-h, 20px) !important;
+  height: var(--logo-h, 20px) !important;
+  font-size: 0.875rem !important;
+  line-height: 1 !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   10 · CV — the small-screen chrome
+   ──────────────────────────────────────────────────────────────────────────
+   The sticky section-nav pills had zero horizontal padding, so labels touched
+   their own 44px tap target on both sides — a pinched box, not a pill. The
+   inter-item gap drops as the padding goes in, so the row still fits without
+   becoming a scroller. The nav band is pulled out into the page gutter by
+   exactly the padding it gained, which keeps the first label on the same axis
+   as the section titles below it.
+
+   Two stacked translucent bars (0.92 and 0.94 alpha) also let page content
+   ghost through the chrome: serif glyph tops smeared through the nav band and
+   elementFromPoint(100,30) returned a chip sitting under the top bar. On a page
+   whose identity is ink on paper, 0.92 alpha reads as smudge, not as glass.
+   ══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 700px) {
+  html[data-view="cv"] #cv-start .mobile-nav {
+    gap: var(--sp-2xs) !important;
+    padding-inline: 0 !important;
+    margin-inline: calc(var(--sp-sm) * -1) !important;
+    width: calc(100% + var(--sp-sm) * 2) !important;
+    background: var(--ar-paper, #f4f1ea) !important;
+  }
+  html[data-view="cv"] #cv-start .mobile-nav a {
+    padding-inline: var(--sp-sm) !important;
+  }
+  html[data-view="cv"] body::before {
+    background: var(--ar-paper, #f4f1ea) !important;
+  }
+}
