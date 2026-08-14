@@ -20,10 +20,21 @@
 
    So the glyph names the *kind* of tool and the visible text names the tool:
    a console prompt for the interpreted language, braces for the typed one, a
-   wireframe cube for the 3D engine, a visor for the headset. None of them
-   reproduces a trademark, and each is drawn here as path data rather than
-   fetched, so the page keeps its single third-party origin (jsdelivr, for
-   Pretendard) and gains no icon font, no sprite sheet and no script.
+   wireframe cube for the 3D engine, a closed visor for the VR headset,
+   see-through glasses for the mixed-reality one, a lens ring for the tracking
+   camera. None of them reproduces a trademark, and each is drawn here as path
+   data rather than fetched, so the page keeps its single third-party origin
+   (jsdelivr, for Pretendard) and gains no icon font, no sprite sheet and no
+   script.
+
+   Two headsets in one row is the case this rule had to earn. Meta Quest Pro and
+   HoloLens 2 are the same kind at the level of "head-worn", so the first draft
+   drew the second as another visor and the row grew two marks a reader could
+   only tell apart by reading the labels — which is the aural stutter the
+   aria-hidden note below guards against, in visual form. They separate one
+   level down, where it matters: you see the room through one and not the other.
+   Closed visor, see-through glasses. The four rejected drawings and why they
+   failed at 20px are recorded beside the markup in index.html.
 
    The glyphs are `aria-hidden`: the text beside them already carries the
    name, so an accessible name on the SVG would make every screen reader say
@@ -214,5 +225,52 @@ html[data-view="cv"].ui-v23 #cv-start .caps .tech-w {
 @media (max-width: 760px) {
   html[data-view="cv"].ui-v23 #cv-start .caps .tech-row + .tech-row {
     margin-top: 0 !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   The stranded sixth item on a phone
+   ──────────────────────────────────────────────────────────────────────────
+   The CODE set holds six items. Laid out end to end at a 12px gap they span
+   317.55px in English and 311.23px in Korean; at the authored 24px gap that
+   becomes 377.55px. The `.tech-set` column measures viewport minus 47px, so
+   375 offers 328px — and "Java" wrapped alone onto a second line. Measured
+   rows at 375 before this rule: CODE [5, 1], TOOLS [3, 2].
+
+   The gap is the only lever here. The items are `white-space: nowrap` and
+   range from 7.5px ("R") to 115.4px ("Meta Quest Pro"), so a grid track wide
+   enough for the longest would overflow the viewport, and flex wrapping is
+   greedy — there is no property that asks it to balance the last line.
+
+   12px was chosen by measuring, not by taste. At 375 it leaves 10.45px of
+   slack in English and 16.77px in Korean, and the slack only grows with the
+   viewport (65.45px EN at 430).
+
+   It does NOT rescue every phone width, and should not be widened to try:
+
+     360-364   English needs a 317.55px column and only gets 313-317px, so it
+               still reads [5, 1] there — unchanged from the authored gap, not
+               a regression. Korean needs 311.23px and does fit.
+     below 360 six items cannot share a line at any usable gap: 320 gives a
+               273px column against 250.34px for five items alone. Tightening
+               there would only convert the balanced CODE [4, 2] into [5, 1],
+               so 320 deliberately keeps the authored gap.
+     above 430 the authored gap already yields CODE [6]. Carrying 12px upward
+               instead pulls a fourth item onto the TOOLS line and strands
+               "HoloLens 2" — measured [4, 1] at 480 in English.
+
+   TOOLS is unaffected at every width in the query: its first line holds
+   Unity + Unreal Engine + OptiTrack either way, and the tighter gap only adds
+   slack (42.69px at 360, 57.69px at 375), so the deliberate ordering
+   documented at index.html:1897 — the two headsets landing together on line
+   two — still holds, with more margin than before rather than less.
+
+   Appended rather than edited into the rule above, per the note at the top of
+   this section: re-serialising a selector list in this file moved the row 3px
+   last time. This adds one property in its own block and changes nothing at
+   any width outside the query. */
+@media (min-width: 360px) and (max-width: 430px) {
+  html[data-view="cv"].ui-v23 #cv-start .caps .tech-set {
+    column-gap: 12px !important;
   }
 }

@@ -1,19 +1,30 @@
 /* ══════════════════════════════════════════════════════════════════════
-   SHELF FIELD — the ghost bookcase behind the real one
+   SHELF FIELD — the page the shelf is standing on
    ══════════════════════════════════════════════════════════════════════
-   A static canvas of box-drawing characters that schematically continues
-   the bookcase past the edges of the one you can actually read. Drawn once
-   from a fixed seed, so it is the same drawing on every load and every
-   resize — a background that changes shape when you tilt your laptop reads
-   as a bug, not as atmosphere.
+   A static canvas of the CV's own vocabulary set in monospace, peaking at
+   2.4% ink — about 5/255 at its darkest stroke against the #f6f5f2 ground:
+   grain at reading distance, words if you lean in. Drawn once from
+   a fixed seed, so it is the same drawing on every load and every resize —
+   a background that changes shape when you tilt your laptop reads as a bug,
+   not as atmosphere. See shelf-field.js for why this replaced the ghost
+   bookcase the first pass drew here.
 
    Placement is why this works without touching any of the 27 stacked
-   library layers: `.work-library` already establishes a stacking context
-   (position: relative; z-index: 1) and paints `background: var(--bg)` on
-   itself. A z-index:-1 child therefore lands in exactly one gap — above
-   that background, below every static descendant — and `overflow: clip`
-   on the section handles the bleed. No z-index on any existing element
-   had to move.
+   library layers: `.work-library` sets `isolation: isolate`, so it is a
+   stacking context whatever its z-index does. A z-index:-1 child is
+   therefore clamped inside it — below every static descendant, above the
+   section's own background — and cannot reach the page behind it. No
+   z-index on any existing element had to move.
+
+   Two earlier claims in this header were measured false and are corrected
+   here, because the wrong ones would get someone hurt later:
+     · the section's background is `rgba(0,0,0,0)`, not `var(--bg)`. The
+       field still lands correctly, but because of `isolation`, not because
+       of a painted background.
+     · the section is `overflow: visible`, not `overflow: clip`. Nothing
+       clips the bleed, so the canvas must never exceed the section box.
+       The JS sizes it to clientWidth/clientHeight exactly and the
+       `max-width` below is the second lock on that.
    ══════════════════════════════════════════════════════════════════════ */
 
 .pl-shelf-field {
@@ -22,6 +33,9 @@
   z-index: -1;
   width: 100%;
   height: 100%;
+  /* The section does not clip (see header). Nothing here may widen the
+     page at any viewport. */
+  max-width: 100%;
   pointer-events: none;
   /* The canvas is decoration with no informational content of its own —
      everything it depicts is stated by the real shelf in front of it. */
@@ -29,7 +43,10 @@
 }
 
 /* Reader (TTS) mode strips the page to text, and print should not spend
-   toner on a texture that is 4% ink by design. */
+   toner on a texture that is 2.4% ink by design. Reader mode persists in
+   localStorage, so this is a state a visitor can be in for months — the JS
+   checks for it too and skips the whole draw rather than painting into a
+   hidden canvas. */
 body.reader .pl-shelf-field { display: none; }
 
 @media print {

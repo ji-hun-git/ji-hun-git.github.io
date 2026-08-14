@@ -51,6 +51,25 @@
     top: 0.675em;
     top: 0.5lh;
   }
+
+  /* ── Publications header, narrow phones ──────────────────────────────
+     #publications is the only .section-title carrying a .title-aside
+     (index.html:2111). The aside is `white-space: nowrap` (index.html:600)
+     with `margin-left: auto`, and the heading is a nowrap flex row, so the
+     chip cannot yield: at 320 it measured right edge 325.3 against a 320
+     viewport and put a real 5px horizontal scroll on the document
+     (scrollWidth 325). On screen the chip read "Google Schola" with the
+     arrow past the edge.
+
+     The English label is what overflows; Korean ("논문") is 20px shorter and
+     never did. The chip needs about 326px of viewport to sit inline, so
+     rather than invent a fifth breakpoint this lets the row wrap: flex-wrap
+     is inert while the line fits, so 375 and 414 keep the aside inline and
+     unchanged, and only the widths that cannot fit it drop it to its own
+     line, still right-aligned by the existing `margin-left: auto`. */
+  #publications .section-title {
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 700px) and (pointer: coarse) {

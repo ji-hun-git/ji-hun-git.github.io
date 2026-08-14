@@ -46,6 +46,17 @@
        so the request was a render-blocking round trip to a third-party origin
        for nothing. One fewer origin also keeps visitor IPs off Google. -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <!-- Geist is the body font for the whole site, but its @font-face is declared
+       at line 12628 of project-library.css (463 KB). The browser cannot even
+       learn the font's URL until that entire stylesheet has downloaded and
+       parsed, so the fetch was measured starting ~28 ms after navigation, in
+       series behind the largest asset on the page. This preload starts it
+       immediately, in parallel with the CSS, and shortens the font-display:swap
+       flash. Same origin as the preconnect above - no new third party.
+       Keep this URL identical to the one in project-library.css: if they drift,
+       the preload becomes a wasted 57 KB download instead of a head start. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/Geist-Variable.woff2" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
   <script>
     document.documentElement.dataset.view = new URLSearchParams(window.location.search).get('view') === 'cv'
@@ -1567,7 +1578,13 @@
   <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
        inside a max-width query, so it cannot reach desktop, and it declares
        no theme tokens, so it cannot outrank light-only.css. -->
-  <link rel="stylesheet" href="assets/interior/fit-mobile.css?v=71-20260814t" />
+  <!-- media attribute added after measuring: every rule in this file sits inside
+       `@media (max-width: 700px)` (two top-level blocks, zero rules outside
+       them), and CDP rule-usage tracking at 1440px reports 0 of 4,614 bytes
+       matched. Declaring that same query on the link takes it out of the
+       render-blocking set on desktop without changing a single computed style -
+       the sheet still loads, and on phones it applies exactly as before. -->
+  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=86-20260814zi" />
   <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
        label off its plate, an overlay parked on the contact links). No theme
        tokens, so it cannot outrank light-only.css's colour pins. -->
@@ -1577,7 +1594,7 @@
        `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
        this file both mirrors that weight and loads after them. Glyphs are inline
        path data — no icon font, no sprite, no second third-party origin. -->
-  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=80-20260814zc" />
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=87-20260814zj" />
   <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
        moved out of the book to flank it. They are styled from four layers of
        project-library.css, three of them with !important on the same
@@ -1591,7 +1608,7 @@
        it creates itself, at z-index -1 inside a section that already owns a
        stacking context — it cannot collide with any library layer, so load
        order against them does not matter. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=77-20260814z" />
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=84-20260814zg" />
 
   <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
        works ([data-state="turning-forward"|"turning-backward"]), and nothing
@@ -1782,6 +1799,38 @@
                                        skills. Not evidenced in page prose; he is
                                        the authority on his own CV, and he noted
                                        there are "lots and lots more" to come.
+                 HoloLens 2          — supplied by the owner 2026-08-14, the only
+                                       tool he named explicitly this round. It has
+                                       zero hits anywhere in the repo, so it rests
+                                       on his word alone exactly as C++/C#/R/Java
+                                       do — which is a sufficient ground here, not
+                                       a weak one. He says there is "so much more".
+                 OptiTrack           — work-content.js:375, "a projection-based VR
+                                       recycling game using 12 OptiTrack Prime17W
+                                       cameras", and again at :403, "an OptiTrack
+                                       recycling task"; summarised in
+                                       work-designs.js:811. Both are his own
+                                       published studies, listed on this page at
+                                       :2101 and :2109. That is page evidence of
+                                       the same kind that carried Unity, only
+                                       named three times instead of once.
+
+               Found in the repo and deliberately NOT added, recorded so the next
+               pass does not spend the search again:
+                 Oculus SDK, Meta Movement SDK — work-content.js:431, the same
+                   sentence that evidences Unity, so the evidence is real. Held
+                   because both are components of the Meta Quest Pro entry already
+                   in this row: three items drawn from one method note would make
+                   the Tools row read as one project rather than a career.
+                 Discord (work-content.js:235, :290), FAISS and GPT-4 Turbo (:290),
+                   GPT-4o (:305, and this page at :2079) — all genuinely his work.
+                   Held because a chat platform, a vector index and a model are a
+                   different kind of object from an engine or a headset. This row
+                   is what he builds ON, and a named model carries a version that
+                   goes stale on the page faster than the CV around it.
+                 Microsoft Azure (:2149) — that entry is the AI-900 certification.
+                   It evidences study, not something he built with.
+               Each is one `.tech-item` line whenever the owner says the word.
 
                React and FastAPI were REQUESTED for this row on the stated ground
                that the CV already evidences them. It does not, and neither does
@@ -1792,7 +1841,9 @@
                pending his confirmation rather than asserted on his CV — adding
                either is one `.tech-item` line, and they need a Build-row mention
                to stay consistent with the rule above. "Computer vision" was
-               dropped earlier on the same test and stays dropped.
+               dropped earlier on the same test and stays dropped. Re-checked on
+               the 2026-08-14 expansion pass: both still have exactly the hits
+               described above and nothing else. They stay out.
 
                The glyphs are category marks drawn as path data, not vendor logos
                — see the header of tech-icons.css for why, and note the same
@@ -1842,7 +1893,44 @@
             <span class="tech-set" role="list">
               <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 2.8 17.4 16.2H2.6Z"/><path d="M6.3 9.5H13.7L10 16.2Z"/></svg><span class="tech-n">Unity</span></span>
               <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.7 17.2 5.85v8.3L10 18.3l-7.2-4.15v-8.3Z"/><path d="M10 10 2.8 5.85M10 10l7.2-4.15M10 10v8.3"/></svg><span class="tech-n">Unreal Engine</span></span>
+              <!-- The order below is measured rather than tasteful. At 375
+                   `.tech-set` is a 328px column, and Unity + Unreal Engine + Meta
+                   Quest Pro measure 326.09px of it in Geist — 1.91px of slack. A
+                   fourth item was always going to wrap; the question was where.
+                   Left in name order the break fell 3 + 2 on that 1.91px, so any
+                   metric wobble (a Geist revision, the jsdelivr @font-face failing
+                   to the Inter fallback, a user minimum font size) would have
+                   dropped Meta Quest Pro to line 2 and pushed OptiTrack alone onto
+                   line 3 — the single-word orphan. Putting OptiTrack third breaks
+                   line 1 at Unity + Unreal Engine + OptiTrack = 294.30px, 33.70px
+                   of slack, and lands the two headsets together on line 2 at
+                   230.44px. Same five items, a break that survives a font change,
+                   and the pair that belongs together no longer split across lines.
+                   Reading order stays coherent on one line above 761px: the two
+                   engines, the camera that captures into them, the two headsets
+                   they play out on. Verified 320/375/761/961/1280 in both
+                   languages. -->
+              <!-- OptiTrack is the tracking camera: a housing, the LED ring, the
+                   lens. The first draft filled the 20px box the way a real Prime
+                   camera fills its housing and came out visibly denser than the
+                   line-drawn cube and visor next to it, so the body was pulled in
+                   to 14x11.2 and the centre lens to r1.2 — same silhouette, same
+                   ink as its neighbours. A mount stub was drawn and dropped: it
+                   turned the camera into a desktop monitor at this size. -->
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 4.4h10a2 2 0 0 1 2 2v7.2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6.4a2 2 0 0 1 2-2Z"/><path d="M10 6.4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2Z"/><path d="M10 8.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z"/></svg><span class="tech-n">OptiTrack</span></span>
               <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.2 6.8h11.6a2.6 2.6 0 0 1 2.6 2.6v2.8a2.6 2.6 0 0 1-2.6 2.6h-2.1a1.6 1.6 0 0 1-1.3-.7l-.9-1.3a1.6 1.6 0 0 0-2.6 0l-.9 1.3a1.6 1.6 0 0 1-1.3.7H4.2a2.6 2.6 0 0 1-2.6-2.6V9.4a2.6 2.6 0 0 1 2.6-2.6Z"/><path d="M2.6 7.6C3.4 4 6.4 2 10 2s6.6 2 7.4 5.6"/></svg><span class="tech-n">Meta Quest Pro</span></span>
+              <!-- HoloLens 2 gets glasses, not a second visor. The Quest Pro mark
+                   beside it is a closed block with a nose notch — the VR silhouette
+                   — and drawing the HoloLens as another block would put two marks
+                   in one row that a reader has to compare letter-labels to tell
+                   apart. Four other drawings were tried first (band-and-visor, the
+                   halo ring, a see-through stack, a ring-and-plate) and at 20px
+                   every one of them read as a hat or a stack of plates, not a
+                   headset. Glasses is the honest kind-mark anyway: the difference
+                   that matters between these two devices is that you see the room
+                   through one and not the other, and this file's rule is that the
+                   glyph names the kind while the text names the tool. -->
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M1.5 8.1h6.3v3.2a2 2 0 0 1-2 2H3.5a2 2 0 0 1-2-2Z"/><path d="M12.2 8.1h6.3v3.2a2 2 0 0 1-2 2h-2.3a2 2 0 0 1-2-2Z"/><path d="M7.8 9.2a3 3 0 0 1 4.4 0"/><path d="M1.5 8.1 3.6 6.2a2.2 2.2 0 0 1 1.5-.6h9.8a2.2 2.2 0 0 1 1.5.6l2.1 1.9"/></svg><span class="tech-n">HoloLens 2</span></span>
             </span>
           </div>
         </section>
@@ -1860,9 +1948,9 @@
 
             <div class="item reveal">
               <span class="item-title"><span lang="en">Automated Data-Quality Measurement &amp; Verification Engine (Industry Contract)</span><span lang="ko">데이터 품질 측정·검증 자동화 엔진 (산업체 용역)</span></span>
-              <div class="item-meta"><span lang="en">2026 | SKAIWORLDWIDE | Sole developer, DQM v1.0 engine</span><span lang="ko">2026 | SKAIWORLDWIDE | DQM v1.0 엔진 단독 개발</span></div>
-              <p class="item-desc cv-summary" lang="en">Sole developer of DQM v1.0, a data-quality automation engine for tabular enterprise data covering detection, correction, metadata repair, and standard generation. Submitted to an accredited Korean testing laboratory for independent verification against four KPIs in August 2026.</p>
-              <p class="item-desc cv-summary" lang="ko">정형 기업 데이터의 탐지·교정·메타데이터 복구·표준 생성을 아우르는 데이터 품질 자동화 엔진 DQM v1.0을 단독 개발했습니다. 2026년 8월 공인 소프트웨어 시험기관에 4개 KPI에 대한 독립 검증을 의뢰했습니다.</p>
+              <div class="item-meta"><span lang="en">2024 – 2026 | SKAIWORLDWIDE | Ministry of SMEs and Startups | Sole developer, DQM v1.0 engine</span><span lang="ko">2024 ~ 2026 | SKAIWORLDWIDE | 중소벤처기업부 | DQM v1.0 엔진 단독 개발</span></div>
+              <p class="item-desc cv-summary" lang="en">Sole developer of DQM v1.0, a data-quality automation engine for tabular enterprise data covering detection, correction, metadata repair, and standard generation, built within a government-funded R&amp;D project. Submitted to an accredited Korean testing laboratory for independent verification against four KPIs in August 2026.</p>
+              <p class="item-desc cv-summary" lang="ko">정부 지원 R&amp;D 과제의 일환으로, 정형 기업 데이터의 탐지·교정·메타데이터 복구·표준 생성을 아우르는 데이터 품질 자동화 엔진 DQM v1.0을 단독 개발했습니다. 2026년 8월 공인 소프트웨어 시험기관에 4개 KPI에 대한 독립 검증을 의뢰했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />SKAIWORLDWIDE</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />스카이월드와이드</span></span></div>
             </div>
 
@@ -2421,12 +2509,12 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=68-20260814q"></script>
-  <script defer src="assets/project-library/work-content.js?v=68-20260814q"></script>
+  <script defer src="assets/project-library/work-designs.js?v=85-20260814zh"></script>
+  <script defer src="assets/project-library/work-content.js?v=85-20260814zh"></script>
   <script defer src="assets/interior/ripple.js?v=68-20260814q"></script>
   <script defer src="assets/project-library/project-library.js?v=76-20260814y"></script>
   <script defer src="assets/interior/fit-spine-labels.js?v=68-20260814q"></script>
-  <script defer src="assets/interior/shelf-field.js?v=77-20260814z"></script>
+  <script defer src="assets/interior/shelf-field.js?v=84-20260814zg"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate
