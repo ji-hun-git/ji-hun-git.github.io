@@ -12,7 +12,8 @@
   --signal: #2c7187;
   --signal-bright: #55b6d0;
   --success: #75d29a;
-  --font-sans: "Manrope", "Pretendard Variable", "Pretendard", Arial, sans-serif;
+  --font-sans:
+    "Manrope", "Pretendard Variable", "Pretendard", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
   --page: min(100% - 48px, 1380px);
   --section-space: clamp(96px, 11vw, 176px);
@@ -76,7 +77,7 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--signal-bright);
+  outline: 3px solid var(--signal);
   outline-offset: 4px;
 }
 
@@ -113,6 +114,7 @@ a {
 
 .brand {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   width: max-content;
   gap: 12px;
@@ -153,6 +155,9 @@ a {
 
 .site-nav a {
   position: relative;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   color: #bbbcb8;
   transition: color 160ms ease;
 }
@@ -181,6 +186,9 @@ a {
 }
 
 .header-cta {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   justify-self: end;
   padding: 10px 0 10px 18px;
   border-left: 1px solid var(--line-dark);
@@ -255,6 +263,10 @@ a {
   font-weight: 500;
 }
 
+.eyebrow-name {
+  display: none;
+}
+
 .status-dot {
   width: 7px;
   height: 7px;
@@ -321,7 +333,10 @@ a {
   letter-spacing: 0.05em;
   text-decoration: none;
   text-transform: uppercase;
-  transition: color 160ms ease, background 160ms ease, transform 160ms var(--ease);
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    transform 160ms var(--ease);
 }
 
 .button:hover {
@@ -548,7 +563,9 @@ a {
   padding: 26px 24px 32px;
   border-bottom: 1px solid var(--line);
   border-left: 1px solid var(--line);
-  transition: background 180ms ease, transform 180ms var(--ease);
+  transition:
+    background 180ms ease,
+    transform 180ms var(--ease);
 }
 
 .operating-model > li:hover {
@@ -603,7 +620,9 @@ a {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.24);
-  transition: background 180ms ease, transform 180ms var(--ease);
+  transition:
+    background 180ms ease,
+    transform 180ms var(--ease);
 }
 
 .case:hover {
@@ -774,7 +793,9 @@ a {
   border-right: 1px solid var(--line-dark);
   border-bottom: 1px solid var(--line-dark);
   text-decoration: none;
-  transition: background 180ms ease, transform 180ms var(--ease);
+  transition:
+    background 180ms ease,
+    transform 180ms var(--ease);
 }
 
 .funder:hover {
@@ -799,6 +820,16 @@ a {
 
 .funder-logo-mss img {
   max-height: 54px;
+}
+
+.funder-text {
+  align-content: center;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .funder-copy {
@@ -829,7 +860,9 @@ a {
   right: 26px;
   bottom: 26px;
   color: #7d858a;
-  transition: color 160ms ease, transform 160ms ease;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
 }
 
 .funder:hover .funder-arrow {
@@ -913,7 +946,9 @@ a {
   gap: 32px;
   padding: 30px 0;
   border-bottom: 1px solid var(--line);
-  transition: padding 180ms var(--ease), background 180ms ease;
+  transition:
+    padding 180ms var(--ease),
+    background 180ms ease;
 }
 
 .recognition-list article:hover {
@@ -966,7 +1001,9 @@ a {
   padding: clamp(30px, 4vw, 48px);
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  transition: background 180ms ease, transform 180ms var(--ease);
+  transition:
+    background 180ms ease,
+    transform 180ms var(--ease);
 }
 
 .featured-pubs article:hover {
@@ -1090,6 +1127,8 @@ a {
 
 .record-link {
   display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   margin-top: 34px;
   gap: 12px;
   color: var(--signal);
@@ -1157,7 +1196,9 @@ a {
 }
 
 .credential-columns a {
-  display: inline-block;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   margin-top: 12px;
   color: var(--signal);
   font-family: var(--font-mono);
@@ -1212,6 +1253,8 @@ a {
 
 .contact > a {
   display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   margin-top: 54px;
   gap: 18px;
   color: var(--signal-bright);
@@ -1257,6 +1300,9 @@ a {
 }
 
 .site-footer nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   color: var(--text);
 }
 
@@ -1270,7 +1316,9 @@ a {
 .reveal-ready {
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 560ms var(--ease), transform 560ms var(--ease);
+  transition:
+    opacity 560ms var(--ease),
+    transform 560ms var(--ease);
 }
 
 .reveal-ready.is-visible {
@@ -1354,6 +1402,10 @@ a {
 
   .brand-name {
     display: none;
+  }
+
+  .eyebrow-name {
+    display: inline;
   }
 
   .site-nav {
@@ -1476,10 +1528,6 @@ a {
   .site-nav {
     gap: 13px;
     font-size: 9px;
-  }
-
-  .site-nav a:nth-child(2) {
-    display: none;
   }
 
   .hero-copy {
@@ -1691,7 +1739,6 @@ a {
 @media print {
   .site-header,
   .hero-grid,
-  .contact,
   .hero-actions,
   .record-link {
     display: none !important;
@@ -1706,6 +1753,7 @@ a {
   .hero,
   .section,
   .signal-bar,
+  .contact,
   .site-footer {
     width: 100%;
     border: 0;
@@ -1717,6 +1765,7 @@ a {
   }
 
   .hero-copy {
+    min-height: 0;
     padding: 24pt 12pt;
   }
 
@@ -1730,7 +1779,53 @@ a {
 
   .section {
     padding: 28pt 12pt;
-    break-inside: avoid;
+    break-inside: auto;
+  }
+
+  .signal-bar,
+  .profile-readout,
+  .case,
+  .case-dark,
+  .evidence,
+  .contact {
+    min-height: 0;
+    color: #000 !important;
+    border-color: #777 !important;
+    background: #fff !important;
+  }
+
+  .signal-bar *,
+  .profile-readout *,
+  .case-dark *,
+  .evidence *,
+  .contact * {
+    color: #000 !important;
+  }
+
+  .contact {
+    padding: 28pt 12pt;
+    border-top: 1pt solid #000 !important;
+  }
+
+  .contact > a {
+    margin-top: 16pt;
+  }
+
+  .featured-pubs article {
+    min-height: 0;
+  }
+
+  .publication-archive > * {
+    display: block !important;
+  }
+
+  .publication-archive summary {
+    min-height: 0;
+    padding: 12pt 0;
+  }
+
+  .publication-archive summary::after {
+    display: none;
   }
 
   .case,
