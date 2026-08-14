@@ -144,3 +144,35 @@ first, re-diffing after each:
 
 Expected ceiling is modest either way: 6.1% of the file. The real reduction
 needs the 27 stacked version layers collapsed, which is a rewrite, not a prune.
+
+---
+
+## Attempt 3: bisecting the 3px
+
+`prune-bisect.py` splits the 48 classes into families and prunes one group at a
+time from a pristine snapshot, so any group can be tested and undone in one
+command.
+
+Baseline: library view, EN + KO, 1916 elements, 22 properties + bounding rect.
+
+| group | classes | rules dropped | size | diff (EN / KO) |
+|---|---|---|---|---|
+| `safe` (taxonomy+landing+corner+detail+misc) | 27 | 128 | -25.7 KB | **329 / 331** |
+| `landing` (masthead, name, jc-mark, intro-copy) | 4 | 9 | -1.2 KB | **0 / 3** |
+
+**The prediction in Attempt 2 was wrong.** `pl-height-*`, `pl-width-*` and
+`pl-pattern-*` were the suspects; the shift is actually inside the 27 classes
+that were assumed self-contained.
+
+`landing` is effectively clean: 0 changed elements in English, and the 3 in
+Korean are a 2px width change on the skip link at `y = -54`, i.e. parked
+off-screen and never seen. That group is safe to drop for 1.2 KB.
+
+The culprit is therefore in **taxonomy, corner, detail or misc**. Next: run
+each of those four alone against the same baseline. The header shift
+(`y 87 → 84`) says it is something contributing padding or margin near the top
+of the shelf stage.
+
+Bear in mind the whole 48-class set is only worth ~26 KB of 462 KB. The
+remaining families are worth testing to close the question, but the real
+reduction is still the 27-layer collapse, which is a rewrite.
