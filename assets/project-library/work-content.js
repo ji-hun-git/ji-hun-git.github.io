@@ -68,7 +68,7 @@
       },
       "data-quality-engine": {
         subtitle: p(
-          "A production verification engine designed for repeatability, traceability, and audit.",
+          "An auditable engine that turns enterprise tables into test-ready data assets.",
           "반복 가능성·추적성·감사를 위해 설계한 운영 검증 엔진"
         ),
         editorial: {
@@ -81,11 +81,11 @@
             "운영 조직은 실제 데이터에 많은 품질 규칙을 적용해야 하지만 수작업 검사는 느리고 재현하기 어렵습니다. 확률적 모델은 그럴듯한 설명을 만들 수 있어도 고객이 필요로 하는 정확한 감사 추적성을 약화시킬 수 있습니다."
           ),
           responsibility: p(
-            "As sole developer of the DQM v1.0 engine, I owned rule translation, architecture, implementation, versioning, and verification — the engine detects and corrects data-quality errors, then infers primary keys, foreign keys, indexes and column-level rules. The engine is my scope within SKAIWORLDWIDE's 2024-2026 Ministry of SMEs and Startups R&D project, not the project itself.",
-            "DQM v1.0 엔진의 단독 개발자로서 규칙 해석, 아키텍처, 구현, 버전 관리, 검증을 맡았습니다. 이 엔진은 스카이월드와이드가 수행한 2024~2026년 중소벤처기업부 R&D 과제 안에서 제가 맡은 범위이며, 과제 전체가 아닙니다."
+            "As sole developer of the data-quality engine, I owned rule translation, architecture, implementation, versioning, and test preparation. The engine detects and corrects data-quality errors, then infers primary keys, foreign keys, indexes, and column-level rules. This engine is my scope within a broader Ministry of SMEs and Startups R&D project, not the project itself.",
+            "데이터 품질 엔진의 단독 개발자로서 규칙 해석, 아키텍처, 구현, 버전 관리, 시험 준비를 맡았습니다. 이 엔진은 품질 오류를 탐지·보정하고 기본키·외래키·인덱스·컬럼별 규칙을 추론합니다. 제가 책임진 범위는 더 큰 중소벤처기업부 R&D 과제 안의 엔진이며, 과제 전체가 아닙니다."
           ),
           build: p(
-            "A versioned data-quality engine that applies deterministic rules and statistical checks to production datasets and records reviewable outputs for delivery.",
+            "A versioned data-quality engine that applies deterministic rules and statistical checks to enterprise datasets and records reviewable outputs for testing.",
             "운영 데이터에 결정론적 규칙과 통계 검사를 적용하고 검토 가능한 결과를 기록하는 버전형 데이터 품질 엔진을 구축했습니다."
           ),
           decision: p(
@@ -93,11 +93,11 @@
             "동일 입력이 검토 가능하고 반복 가능한 동일 결과를 내야 하는 구간에는 LLM 대신 규칙과 통계를 선택했습니다."
           ),
           validation: p(
-            "The engine was tested with enterprise datasets and documented in a formal verification report. The available evidence supports technical delivery, not a claim of client acceptance.",
+            "The engine was submitted in August 2026 for independent testing against four predefined performance criteria. Test results and client acceptance are not claimed.",
             "기업 데이터셋으로 엔진을 검증하고 공식 검증 보고서에 기록했습니다. 확보된 근거는 기술 납품을 뒷받침하지만 고객 인수 완료를 입증하지는 않습니다."
           ),
-          outcomeSystem: p("A production-oriented, versioned verification engine and a formal results report prepared for handoff.", "운영 지향 버전형 검증 엔진과 인수인계를 위해 작성한 공식 결과보고서"),
-          outcomeEvidence: p("Rule-level results can be reproduced and inspected rather than accepted as model judgment.", "모델 판단을 수용하는 대신 규칙 단위 결과를 재현하고 점검할 수 있게 했습니다."),
+          outcomeSystem: p("A versioned data-quality engine and test package prepared for independent evaluation.", "독립 평가를 위해 준비한 버전형 데이터 품질 엔진과 시험 패키지"),
+          outcomeEvidence: p("Deterministic rule outputs are reproducible and inspectable; independent test results remain pending.", "결정론적 규칙 결과는 재현·점검할 수 있으며 독립 시험 결과는 아직 확정되지 않았습니다."),
           outcomeValue: p("The work created an auditable foundation for recurring quality checks and future extension; client acceptance is outside the documented evidence.", "반복 품질 검사와 향후 확장을 위한 감사 가능한 기반을 구축했으며 고객 인수 여부는 문서화된 근거 범위 밖입니다."),
           lesson: p("The challenge was not adding AI. It was choosing the smallest reliable mechanism for each decision boundary.", "핵심은 AI를 더하는 일이 아니라 각 판단 경계에 가장 작고 신뢰할 수 있는 메커니즘을 선택하는 일이었습니다.")
         }
@@ -498,19 +498,19 @@
         category: p("Paper-Level Recognition", "논문 단위 인정"),
         awardName: p("Best Presentation Award, Korea Game Society Spring Conference 2026", "2026 한국게임학회 춘계학술발표대회 우수발표논문상"),
         editorial: {
-          verifiedResult: p("As second author, Jihun contributed the accessibility-AI framing, barrier interpretation, and design synthesis to this recognized paper. Professor Young Yim Doh's July 2026 CV records the award; no organizer-issued certificate is available.", "제2저자 채지훈은 수상 논문의 접근성 AI 프레이밍, 장벽 해석, 설계 종합에 기여했습니다. 도영임 교수의 2026년 7월 CV가 수상을 기록하며 주최 측 발행 증서는 확보되지 않았습니다."),
-          selectionContext: p("Conference paper, pp. 83-88, authored by Sojeong Lee, Jihun Chae, Seoyoon Jeong, and Young Yim Doh. The paper was scheduled on 30 May 2026 at Tech University of Korea; the registration record lists Jihun as a coauthor or related author and identifies the presenter separately.", "이소정·채지훈·정서윤·도영임 공저 학술대회 논문(83~88쪽)으로 2026년 5월 30일 한국공학대학교 세션에 편성됐습니다. 등록 기록은 채지훈을 공저자·논문 관계자로 기재하고 발표자를 별도로 명시합니다."),
+          verifiedResult: p("As second author, I contributed the accessibility-AI framing, barrier interpretation, and design synthesis. Available project records support paper-level recognition; no organizer-issued certificate is available.", "제2저자로 접근성 AI 프레이밍, 장벽 해석, 설계 종합에 기여했습니다. 확보된 과제 기록은 논문 단위 인정을 뒷받침하지만 주최 측 발행 증서는 확보되지 않았습니다."),
+          selectionContext: p("The six-page conference paper was scheduled on 30 May 2026 at Tech University of Korea. The registration record lists my coauthor role separately from the presenter.", "6쪽 분량의 학술대회 논문은 2026년 5월 30일 한국공학대학교 세션에 편성됐습니다. 등록 기록은 제 공저자 역할과 발표자를 구분해 기재합니다."),
           challenge: p("The team had to convert open-ended responses from 112 players with disabilities into defensible barrier categories, accessibility requirements, design principles, and a concise conference presentation.", "장애인 플레이어 112명의 개방형 응답을 방어 가능한 장벽 범주·접근성 요구사항·설계 원칙으로 전환해 간결한 학술 발표로 제시해야 했습니다."),
           contribution: p("As second author, I contributed accessibility-AI framing, barrier interpretation, design-principle synthesis, and preparation of the research output.", "제2저자로 접근성 AI 프레이밍, 장벽 해석, 설계 원칙 종합, 연구 결과물 준비에 기여했습니다."),
           criteria: p("The official rubric was not preserved in the available record. The evaluated artifact was the paper and its presentation, including research clarity, evidence, contribution, and delivery.", "공식 평가표는 확보 자료에 남아 있지 않습니다. 평가 대상은 연구 명료성·근거·기여·전달을 포함한 논문과 발표였습니다."),
-          validates: p("Paper-level recognition for translating disability findings into actionable game-AI design principles, with Jihun contributing as second author.", "장애 근거를 실행 가능한 게임 AI 설계 원칙으로 전환한 논문 단위 인정이며, 채지훈은 제2저자로 기여했습니다.")
+          validates: p("Paper-level recognition for translating disability findings into actionable game-AI design principles; I contributed as second author.", "장애 근거를 실행 가능한 게임 AI 설계 원칙으로 전환한 논문 단위 인정이며, 제2저자로 기여했습니다.")
         }
       },
       "edu40-ta-excellence": {
         shortTitle: p("TA Report Excellence", "조교 활동보고서 우수상"),
         awardName: p("Education4.0 Q Teaching Assistant Report Recognition", "Education4.0 Q 조교 활동보고서 포상"),
         editorial: {
-          verifiedResult: p("KAIST awarded Jihun Chae Certificate EC-2026-0001 for Excellence in the Education4.0 Q TA Report on 23 March 2026.", "KAIST는 2026년 3월 23일 채지훈에게 Education4.0 Q 조교 활동보고서 우수상(증서 EC-2026-0001)을 수여했습니다."),
+          verifiedResult: p("I received Certificate EC-2026-0001 for Excellence in the Education4.0 Q TA Report on 23 March 2026.", "2026년 3월 23일 Education4.0 Q 조교 활동보고서 우수상 증서 EC-2026-0001을 받았습니다."),
           selectionContext: p("KAIST's Education4.0 Q program recognizes teaching-assistant practice within its question-centered learning model; the certificate does not publish applicant or cohort counts.", "KAIST Education4.0 Q는 질문 중심 학습 모델의 조교 실천을 포상하며 증서에는 지원자나 전체 인원 수가 공개되지 않습니다."),
           challenge: p("The assessed work was a TA activity report documenting how question-centered course support was planned, operated, and reflected upon.", "질문 중심 수업 지원을 어떻게 기획·운영하고 성찰했는지 기록한 조교 활동보고서가 평가 대상이었습니다."),
           contribution: p("As the named TA report author and recipient, I documented the teaching intervention, its operation, and reflection.", "조교 활동보고서의 작성자이자 수상자로서 교육 개입의 운영과 성찰을 기록했습니다."),
@@ -522,7 +522,7 @@
         shortTitle: p("Climate-Tech Team Selection", "기후기술 팀 선정"),
         awardName: p("Asan UniverCT Climate-Tech Team Selection", "아산 UniverCT 기후테크 팀 선정"),
         editorial: {
-          verifiedResult: p("Selected climate-tech student startup team in KAIST's Asan UniverCT program. The primary business plan names Glean and Jihun Chae as team representative; this was a program selection, not a Chung Ju-yung competition award.", "KAIST 아산 UniverCT 기후테크 학생 창업팀으로 선정됐습니다. 1차 사업계획서는 Glean과 팀 대표 채지훈을 명시하며, 정주영 창업경진대회 수상이 아니라 프로그램 선정입니다."),
+          verifiedResult: p("The venture was selected as a climate-tech student startup team in KAIST's Asan UniverCT program, with me as the named representative. This was a program selection, not an individual competition award.", "해당 벤처는 KAIST 아산 UniverCT 기후테크 학생 창업팀으로 선정됐고 저는 명시된 대표를 맡았습니다. 이는 개인 경진대회 수상이 아니라 프로그램 선정입니다."),
           selectionContext: p("Asan Nanum Foundation supported selected climate-tech teams through mentoring and venture-development resources; no paid-support amount is claimed.", "아산나눔재단은 선정된 기후테크 팀에 멘토링과 창업 개발 자원을 지원했으며 지원금 지급액은 주장하지 않습니다."),
           challenge: p("Teams had to frame a climate problem as a viable venture and develop it through university-linked entrepreneurship support toward a demonstrable concept.", "기후 문제를 실행 가능한 벤처로 정의하고 대학 연계 창업 지원 안에서 시연 가능한 콘셉트로 발전시켜야 했습니다."),
           contribution: p("As the named team representative, I owned overall venture coordination and the application assigns me AI-modeling and patent filing responsibilities. Glean framed an AR litter-scanning and reward service with environmental-data value for organizations.", "팀 대표로 사업 전반을 총괄했고 신청서는 AI 모델링과 특허 보유·출원 업무를 제 책임으로 배정합니다. Glean은 AR 쓰레기 스캔·리워드 서비스와 기관용 환경 데이터 가치를 제안했습니다."),
@@ -536,7 +536,7 @@
         awardName: p("Pohang Culture and Arts Factory Responsive Media-Façade Education Camp", "포항시 문화예술팩토리 반응형 미디어파사드 교육 캠프"),
         editorial: {
           verifiedResult: p("Project records describe technical leadership and an Unreal Engine underwater media-façade implementation. The camp is verified; no named result currently confirms an individual award or role.", "과제 기록은 수중 미디어파사드의 기술 리드와 Unreal Engine 구현을 설명합니다. 캠프는 확인되지만 개인 수상이나 역할을 확인하는 실명 결과는 확보되지 않았습니다."),
-          selectionContext: p("The five-day Unreal Engine camp was limited to 20 participants and advertised a KRW 5 million-equivalent reward pool, including an HGU President's Award. Independent reporting verifies the program, not an individual award placement.", "5일간 Unreal Engine 캠프는 20명 정원이며 한동대 총장상을 포함한 500만원 상당의 시상을 예고했습니다. 독립 보도는 프로그램을 확인하지만 개인 수상 등급은 입증하지 않습니다."),
+          selectionContext: p("The five-day Unreal Engine camp was limited to 20 participants. Available records verify the program and build, not an individual award placement.", "5일간 Unreal Engine 캠프는 20명 정원으로 운영됐습니다. 확보된 기록은 프로그램과 구현 결과를 확인하지만 개인 수상 등급은 입증하지 않습니다."),
           challenge: p("The team had to turn an environmental and smart-city theme into large-scale content that could run reliably on a real architectural media surface.", "환경·스마트시티 주제를 실제 건축 미디어 표면에서 안정적으로 구동되는 대형 콘텐츠로 구현해야 했습니다."),
           contribution: p("Project records describe my technical-lead role and Unreal Engine implementation; no primary roster or submission artifact independently confirms that role.", "과제 기록은 기술 리드 역할과 Unreal Engine 구현을 설명하며 1차 명단이나 제출물로 해당 역할이 독립 확인되지는 않았습니다."),
           criteria: p("Concept and public relevance; technical execution; fit to the media-facade format; completeness for exhibition. The exact scored rubric was not located.", "콘셉트·공공성; 기술 구현; 미디어 파사드 형식 적합성; 전시 완성도. 정확한 배점표는 확인되지 않았습니다."),
@@ -547,7 +547,7 @@
         shortTitle: p("Eye-Tracking VR Paper Award", "시선추적 VR 논문상"),
         awardName: p("2023 KMMS Fall Undergraduate Paper Competition", "2023 한국멀티미디어학회 추계학부생논문경진대회"),
         editorial: {
-          verifiedResult: p("Excellence Award for 'Eye-Tracking-Based VR Interactive Game for Eye Exercises,' dated 17 November 2023. Jihun Chae is the fourth author on the certificate.", "「안구 운동을 위한 시선 추적 기반 VR 인터랙티브 게임」으로 2023년 11월 17일 우수상 수상. 증서상 채지훈은 제4저자입니다."),
+          verifiedResult: p("The paper received a team-level Excellence Award on 17 November 2023; I am the fourth author on the certificate.", "해당 논문은 2023년 11월 17일 팀 단위 우수상을 받았으며 저는 증서상 제4저자입니다."),
           selectionContext: p("The award was issued in the society's fall undergraduate paper competition to a seven-author research team. It is a paper-level team result, not an individual first-author award.", "학회 추계학부생논문경진대회에서 7인 연구팀 논문에 수여된 팀 단위 결과이며 개인 제1저자상이 아닙니다."),
           challenge: p("The paper had to present a viable gaze-controlled VR game that translated eye exercises into interactive mechanics and a preliminary user-facing prototype.", "안구 운동을 상호작용 메커닉으로 전환한 시선 제어 VR 게임과 예비 사용자 프로토타입을 제시해야 했습니다."),
           contribution: p("As fourth author, I contributed to the team research and VR game work. The certificate does not break down individual tasks, so the contribution is stated at team level.", "제4저자로 팀 연구와 VR 게임 작업에 기여했습니다. 증서는 개인 업무를 구분하지 않아 팀 수준으로 기여를 서술합니다."),
@@ -559,10 +559,10 @@
         shortTitle: p("VR Health App Award", "VR 헬스 앱 수상"),
         awardName: p("2023 Metaverse Developer Contest, Adult Division", "2023 메타버스 개발자 경진대회 성인 부문"),
         editorial: {
-          verifiedResult: p("Excellence Award, Skonec Entertainment CEO Award, Team EyeCU, for Watchers, dated 18 October 2023.", "Watchers를 개발한 Team EyeCU로 2023년 10월 18일 우수상·스코넥엔터테인먼트 대표이사상을 수상했습니다."),
+          verifiedResult: p("Team-level Excellence recognition for Watchers, dated 18 October 2023.", "Watchers로 2023년 10월 18일 팀 단위 우수 인정을 받았습니다."),
           selectionContext: p("The official contest awarded 37 teams from a KRW 219 million pool. Independent reporting names EyeCU's Watchers as the Skonec task winner with KRW 5 million, recruitment benefit, and potential joint development.", "공식 대회는 총상금 2억 1,900만원 규모로 37개 팀을 시상했습니다. 독립 보도는 EyeCU의 Watchers가 스코넥 지정과제 수상팀이며 500만원·채용 우대·공동개발 가능성을 받았다고 확인합니다."),
           challenge: p("The team had to create a Meta Quest Pro application that turned eye-muscle rehabilitation exercises into a coherent, demonstrable VR experience.", "안구 근육 재활 운동을 일관되고 시연 가능한 Meta Quest Pro VR 경험으로 구현해야 했습니다."),
-          contribution: p("I contributed VR content research and experience design to Watchers as a member of Team EyeCU; Youngsung Lee served as team lead.", "Team EyeCU의 구성원으로 Watchers의 VR 콘텐츠 조사와 경험 설계에 기여했으며, 이영성이 팀 리드를 맡았습니다."),
+          contribution: p("I contributed VR content research and experience design to Watchers as a member of the project team.", "프로젝트 팀 구성원으로 Watchers의 VR 콘텐츠 조사와 경험 설계에 기여했습니다."),
           criteria: p("Task fit; technical implementation; experience and content design; completion and demonstration. The organizer's exact scorecard was not in the reviewed artifact.", "지정과제 적합성; 기술 구현; 경험·콘텐츠 설계; 완성·시연. 검토 자료에는 주최 측 정확한 배점표가 없었습니다."),
           validates: p("National external recognition for translating rehabilitation exercises into a working eye-tracked VR content concept as part of a multidisciplinary team.", "다학제 팀에서 재활 운동을 작동형 시선 추적 VR 콘텐츠로 전환한 작업에 대한 전국 규모 외부 인정입니다.")
         }
@@ -572,7 +572,7 @@
         awardName: p("11th Handong Startup Competition Final", "제11회 한동창업경진대회 본선"),
         editorial: {
           verifiedResult: p("Team CGreen received the Encouragement Prize on 24 November 2022.", "Team CGreen은 2022년 11월 24일 장려상을 받았습니다."),
-          selectionContext: p("A campus startup final for student venture teams. The application names Jihun Chae as team representative; the available evidence does not report applicant, semifinalist, or finalist counts.", "학생 벤처팀 대상 교내 창업경진대회 본선입니다. 신청서에는 채지훈이 팀 대표로 기록되며 지원·예선·본선 팀 수는 확인되지 않습니다."),
+          selectionContext: p("A campus startup final for student venture teams. The application names me as team representative; the available evidence does not report applicant, semifinalist, or finalist counts.", "학생 벤처팀 대상 교내 창업경진대회 본선입니다. 신청서에는 제가 팀 대표로 기록되며 지원·예선·본선 팀 수는 확인되지 않습니다."),
           challenge: p("CGreen proposed Glean, an XR and metaverse recycling-reward application connecting environmentally responsible behavior with user incentives.", "CGreen은 환경 책임 행동을 사용자 보상과 연결한 XR·메타버스 재활용 리워드 앱 Glean을 제안했습니다."),
           contribution: p("As the named team representative, I led the venture submission and helped frame the ESG problem, XR service concept, and competition delivery.", "팀 대표로 창업 신청을 이끌고 ESG 문제, XR 서비스 콘셉트, 경진대회 결과물 구성을 주도했습니다."),
           criteria: p("Problem and social value; business-model feasibility; technical concept; team execution. The exact competition scorecard was not preserved.", "문제·사회적 가치; 비즈니스 모델 실행 가능성; 기술 콘셉트; 팀 실행력. 정확한 대회 배점표는 확보되지 않았습니다."),
@@ -583,7 +583,7 @@
         shortTitle: p("VR Exposure Paper Award", "VR 노출 연구 논문상"),
         awardName: p("2022 KMMS Spring Undergraduate Paper Competition", "2022 한국멀티미디어학회 춘계학부생논문경진대회"),
         editorial: {
-          verifiedResult: p("Presentation Award certificate stating selection for Excellence, for the VR cynophobia exposure paper, dated 13 May 2022. Jihun Chae is the second author.", "개 공포증 VR 노출 논문으로 2022년 5월 13일 우수상 선정·발표상 증서를 받았으며 채지훈은 제2저자입니다."),
+          verifiedResult: p("The VR cynophobia exposure paper received a shared paper-level Presentation Award on 13 May 2022; I am the second author.", "개 공포증 VR 노출 논문은 2022년 5월 13일 공동 논문 단위 발표상을 받았으며 저는 제2저자입니다."),
           selectionContext: p("A society undergraduate paper competition recognized the team's preliminary research on staged spatial exposure. The result is paper-level and shared across the author team.", "학회 학부생논문경진대회가 단계적 공간 노출 예비 연구를 인정한 팀 단위 논문 수상입니다."),
           challenge: p("The research had to turn distance and spatial progression into a controllable VR exposure design and communicate preliminary evidence within a one-page conference format.", "거리·공간 진행을 조절 가능한 VR 노출 설계로 만들고 1쪽 학술대회 형식에 예비 근거를 전달해야 했습니다."),
           contribution: p("As second author, I contributed to the VR exposure research and paper; individual technical tasks are not documented.", "제2저자로 VR 노출 연구와 논문에 기여했으며 개인별 기술 업무는 문서화되어 있지 않습니다."),

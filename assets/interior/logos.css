@@ -162,3 +162,43 @@ html[data-view="cv"].ui-v23 #cv-start .caps-row .sep {
 html[data-view="cv"].ui-v23 #cv-start .caps-row .k {
   color: var(--ar-ink-faint, #6f6a5e) !important;
 }
+
+/* Project-level funding context uses the existing metadata grammar so the
+   original CV design stays intact. Official marks get a larger optical stage
+   than partner icons because the organization name is part of each mark. */
+html .funding-context-row {
+  margin-top: 14px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid var(--ar-rule, #ded8cb) !important;
+}
+
+html .p-chip.funder-chip {
+  display: inline-flex !important;
+  min-height: 44px;
+  align-items: center;
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+html .p-chip.funder-chip img.p-logo {
+  width: auto !important;
+  height: 34px !important;
+  max-width: 170px !important;
+  max-height: 34px !important;
+  object-fit: contain !important;
+}
+
+html .p-chip.funder-chip--wide img.p-logo {
+  max-width: 190px !important;
+}
+
+html .p-chip.funder-chip--text {
+  font-weight: 650;
+}
+
+html .funding-disclaimer {
+  margin: 14px 0 0;
+  color: var(--soft, #6a6d75);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}

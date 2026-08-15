@@ -340,3 +340,49 @@ html[data-view="cv"].ui-v23 .filter button.active .count {
 html[data-view="cv"].ui-v23 :is(.pill-btn, .pl-cv-jump) {
   border-color: var(--ar-control-edge) !important;
 }
+/* Compact full publication record. The bookshelf still reads every nested
+   item, while the CV keeps the 21-output archive behind one native disclosure. */
+html[data-view="cv"] #cv-start .publication-archive {
+  margin-top: 14px;
+  border-top: 1px solid var(--ar-rule, #ded8cb);
+}
+
+html[data-view="cv"] #cv-start .publication-archive > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  color: var(--ar-ink, #211f1a);
+  cursor: pointer;
+  font-family: var(--ar-mono, ui-monospace, monospace);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  list-style: none;
+}
+
+html[data-view="cv"] #cv-start .publication-archive > summary::-webkit-details-marker {
+  display: none;
+}
+
+html[data-view="cv"] #cv-start .publication-archive > summary::after {
+  content: "+";
+  color: var(--ar-ink-faint, #6f6a5e);
+  font-size: 1rem;
+}
+
+html[data-view="cv"] #cv-start .publication-archive[open] > summary::after {
+  content: "−";
+}
+
+@media print {
+  html[data-view="cv"] #cv-start .publication-archive > * {
+    display: block !important;
+  }
+
+  html[data-view="cv"] #cv-start .publication-archive > summary::after {
+    display: none;
+  }
+}
