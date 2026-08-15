@@ -3,9 +3,6 @@
 !.gitignore
 !.nojekyll
 !index.html
-!styles.css
-!app.js
-!.htmlvalidate.json
 !interactive.html
 !laboratory.html
 !LICENSE

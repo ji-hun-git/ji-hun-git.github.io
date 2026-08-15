@@ -1429,7 +1429,7 @@ export const labArchitecture = {
     "lab/simulations/gridworld-prompt.js   # Behavior-Prompt Gridworld (core thesis)",
     "lab/simulations/arc-adaptive-robot.js # fault-tolerant drone/mech control",
     "lab/simulations/maze-chase.js         # BFS pursuit/evasion",
-    "lab/simulations/snake-swarm.js        # Flood-fill snake AI",
+    "lab/simulations/snake-growth.js       # Flood-fill snake AI",
     "lab/simulations/light-cycle.js        # Tron space-control agents",
     "lab/simulations/frozen-lake.js        # Value iteration + slippery policy",
     "lab/simulations/cartpole.js           # Cartpole control ensemble",

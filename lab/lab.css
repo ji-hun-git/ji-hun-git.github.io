@@ -266,7 +266,7 @@ p { margin: 0; text-wrap: pretty; }
 }
 .rail-head { padding: 0 2px 14px; }
 .rail-head .eyebrow { margin-bottom: 8px; }
-.rail-head h1 {
+.rail-head h2 {
   font-family: var(--display);
   font-weight: 500;
   font-size: 1.34rem;
@@ -447,7 +447,7 @@ p { margin: 0; text-wrap: pretty; }
 .tags { display: none; }   /* index rows stay terse */
 
 /* CENTER - the figure + analysis stack */
-.console-stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; min-width: 0; }
+.console-stage { display: grid; gap: 24px; min-width: 0; }
 
 .viewport-panel,
 .detail-grid .panel {
@@ -527,7 +527,7 @@ p { margin: 0; text-wrap: pretty; }
 }
 
 /* ── Detail panels ──────────────────────────────────────────── */
-.detail-grid { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
 .detail-grid .panel { padding: 22px; }
 .detail-grid .panel-math { grid-column: 1 / -1; order: -2; }
 .detail-grid .panel-signals { grid-column: 1 / -1; order: -1; padding: 0; }
@@ -789,7 +789,7 @@ input[type="number"]:focus { outline: none; border-color: var(--ink-3); }
   .console { grid-template-columns: 1fr; }
   .console-rail { position: static; max-height: none; }
   .project-list { max-height: 360px; }
-  .detail-grid, .analysis-grid { grid-template-columns: minmax(0, 1fr); }
+  .detail-grid, .analysis-grid { grid-template-columns: 1fr; }
   .controls { grid-template-columns: 1fr; }
   .lab-nav { flex-wrap: wrap; gap: 12px; }
   body {

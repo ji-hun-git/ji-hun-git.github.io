@@ -1,1189 +1,2531 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Jihun Chae turns field evidence into human-centered AI research, prototypes, and testable systems."
-    />
-    <meta name="theme-color" content="#0b0d0f" />
-    <link rel="canonical" href="https://ji-hun-git.github.io/" />
-    <title>Jihun Chae — Human-Centered AI, Built for the Real World</title>
+<!DOCTYPE html>
+<html lang="en" class="ui-v23 ui-v24 ui-v25 ui-v26">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Jihun Chae is a human-centered AI researcher and product strategist who translates user evidence into product requirements, testable systems, and decision-grade evaluation." />
+  <meta name="theme-color" content="#f6f5f2" />
+  <link rel="canonical" href="https://ji-hun-git.github.io/" />
+  <title>Jihun Chae | Human-Centered AI Researcher &amp; Product Strategist</title>
+  <meta property="og:title" content="Jihun Chae | Human-Centered AI Researcher &amp; Product Strategist" />
+  <meta property="og:description" content="User evidence translated into AI product requirements, testable systems, and decision-grade evaluation." />
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://ji-hun-git.github.io/" />
+  <meta property="og:site_name" content="Jihun Chae" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Jihun Chae | Human-Centered AI Researcher &amp; Product Strategist" />
+  <meta name="twitter:description" content="Projects, publications, and external validation presented through an interactive work library." />
+  <meta property="og:image" content="https://ji-hun-git.github.io/assets/profile/jihun-chae-og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="1543" />
+  <meta property="og:image:alt" content="Jihun Chae" />
+  <meta name="twitter:image" content="https://ji-hun-git.github.io/assets/profile/jihun-chae-og.jpg" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2317181b'/%3E%3Ctext x='32' y='43' font-family='Inter,Arial,sans-serif' font-size='28' font-weight='700' fill='%23f6f5f2' text-anchor='middle'%3EJC%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Jihun Chae",
+    "alternateName": "채지훈",
+    "jobTitle": "Human-Centered AI Researcher & Product Strategist",
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "KAIST Graduate School of Culture Technology" },
+    "email": "mailto:chaejihun@kaist.ac.kr",
+    "image": "https://ji-hun-git.github.io/assets/profile/jihun-chae-og.jpg",
+    "url": "https://ji-hun-git.github.io/",
+    "sameAs": [
+      "https://www.linkedin.com/in/jihun-chae-15457756/",
+      "https://scholar.google.com/citations?user=OjxItRUAAAAJ",
+      "https://orcid.org/0009-0005-7425-3806"
+    ],
+    "knowsAbout": ["Human-centered AI", "AI product strategy", "Accessibility research", "LLM agents", "RAG", "Mixed-method evaluation", "Game accessibility"]
+  }
+  </script>
+  <!-- Google Fonts (Inter) removed 2026-08-13: measured on the live site, zero
+       elements rendered in Inter. Geist wins the body stack and the only two
+       rules that asked for Inter first were already falling through to Arial,
+       so the request was a render-blocking round trip to a third-party origin
+       for nothing. One fewer origin also keeps visitor IPs off Google. -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <!-- Geist is the body font for the whole site, but its @font-face is declared
+       at line 12628 of project-library.css (463 KB). The browser cannot even
+       learn the font's URL until that entire stylesheet has downloaded and
+       parsed, so the fetch was measured starting ~28 ms after navigation, in
+       series behind the largest asset on the page. This preload starts it
+       immediately, in parallel with the CSS, and shortens the font-display:swap
+       flash. Same origin as the preconnect above - no new third party.
+       Keep this URL identical to the one in project-library.css: if they drift,
+       the preload becomes a wasted 57 KB download instead of a head start. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/Geist-Variable.woff2" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <script>
+    document.documentElement.dataset.view = new URLSearchParams(window.location.search).get('view') === 'cv'
+      ? 'cv'
+      : 'library';
+  </script>
+  <style>
+    html[data-view="library"] #cv-start { display: none !important; }
+    html[data-view="cv"] #work-library,
+    html[data-view="cv"] .pl-cv-jump { display: none !important; }
+  </style>
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       TOKENS
+       ═══════════════════════════════════════════════════════════ */
+    :root {
+      color-scheme: light;
+      --bg: #f6f5f2;          /* warm off-white ground, never pure white */
+      --bg2: #fbfaf8;
+      --surface: #ffffff;
+      --text: #17181b;
+      --muted: #55575e;
+      --soft: #6a6d75;        /* darkened for AA on the light ground */
+      --line: rgba(23,24,27,0.12);
+      --line-strong: rgba(23,24,27,0.26);
+      --shadow: 0 1px 2px rgba(23,24,27,0.04), 0 6px 20px rgba(23,24,27,0.05);
+      --ink-accent: #2b4b7c;  /* the single accent: a muted steel blue */
+      --brand-linkedin: #2b4b7c;
+      --brand-scholar: #1a5fa8;
+      --brand-orcid: #5c7a12;
+      --brand-email: #a05a12;
+      --wrap: 1180px;
+      --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+      --ease-spring: cubic-bezier(0.34, 1.4, 0.44, 1);
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-    <meta property="og:type" content="profile" />
-    <meta
-      property="og:title"
-      content="Jihun Chae — Human-Centered AI, Built for the Real World"
-    />
-    <meta
-      property="og:description"
-      content="Field evidence → testable systems → measured findings."
-    />
-    <meta property="og:url" content="https://ji-hun-git.github.io/" />
-    <meta property="og:site_name" content="Jihun Chae" />
-    <meta
-      property="og:image"
-      content="https://ji-hun-git.github.io/assets/og-jihun-chae.png"
-    />
-    <meta property="og:image:width" content="1731" />
-    <meta property="og:image:height" content="909" />
-    <meta
-      property="og:image:alt"
-      content="Jihun Chae — Human-Centered AI — Field Evidence to Testable Systems"
-    />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Jihun Chae — Human-Centered AI, Built for the Real World"
-    />
-    <meta
-      name="twitter:description"
-      content="Field evidence → testable systems → measured findings."
-    />
-    <meta
-      name="twitter:image"
-      content="https://ji-hun-git.github.io/assets/og-jihun-chae.png"
-    />
+      /* Section accent colors */
+      --c-education: 146, 88, 8;
+      --c-projects:  43, 75, 124;
+      --c-awards:    154, 30, 79;
+      --c-pubs:      13, 90, 68;
+      --c-patents:   82, 44, 130;
+    }
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Jihun Chae",
-        "alternateName": "채지훈",
-        "jobTitle": "Ph.D. Student in Culture Technology",
-        "affiliation": {
-          "@type": "CollegeOrUniversity",
-          "name": "Korea Advanced Institute of Science and Technology"
-        },
-        "email": "mailto:chaejihun@kaist.ac.kr",
-        "image": "https://ji-hun-git.github.io/assets/profile/jihun-chae-og.jpg",
-        "url": "https://ji-hun-git.github.io/",
-        "sameAs": [
-          "https://www.linkedin.com/in/jihun-chae-15457756/",
-          "https://scholar.google.com/citations?user=OjxItRUAAAAJ",
-          "https://orcid.org/0009-0005-7425-3806"
-        ],
-        "knowsAbout": [
-          "Human-centered artificial intelligence",
-          "AI product strategy",
-          "Accessibility research",
-          "AI agents",
-          "Retrieval-augmented generation",
-          "Extended reality",
-          "Data quality automation"
-        ]
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      position: relative;
+      font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'ss01' 1;
+    }
+    body.ko {
+      font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    }
+
+    ::selection {
+      background: rgba(43,75,124,0.16);
+      color: var(--text);
+      text-shadow: none;
+    }
+
+    *:focus { outline: none; }
+    *:focus-visible {
+      outline: 2px solid rgba(96,165,250,0.75);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    a:focus-visible { outline-offset: 4px; }
+
+    h1, h2, h3, h4, .section-title, .name, .item-title { text-wrap: balance; }
+    p, .item-desc { text-wrap: pretty; }
+
+    /* ═══════════════════════════════════════════════════════════
+       LANGUAGE TOGGLE (CSS-only visibility)
+       ═══════════════════════════════════════════════════════════ */
+    body [lang="ko"] { display: none; }
+    body.ko [lang="en"] { display: none; }
+
+    body.ko span[lang="ko"],
+    body.ko em[lang="ko"],
+    body.ko a[lang="ko"],
+    body.ko strong[lang="ko"],
+    body.ko code[lang="ko"]   { display: inline; }
+
+    body.ko p[lang="ko"],
+    body.ko div[lang="ko"],
+    body.ko h1[lang="ko"],
+    body.ko h2[lang="ko"],
+    body.ko h3[lang="ko"],
+    body.ko h4[lang="ko"],
+    body.ko ul[lang="ko"],
+    body.ko ol[lang="ko"],
+    body.ko section[lang="ko"] { display: block; }
+
+    body.ko li[lang="ko"]      { display: list-item; }
+
+    body.ko .side-list[lang="ko"],
+    body.ko .contact-list[lang="ko"] { display: grid; }
+
+    body:not(.reader) { background: var(--bg); }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--ink-accent);
+      z-index: 100;
+      transition: width 0.08s linear;
+    }
+
+    @keyframes page-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .layout { animation: page-in 0.55s var(--ease-out) both; }
+    @media (prefers-reduced-motion: reduce) {
+      .layout { animation: none; }
+      .profile-image:hover img { transform: none; }
+    }
+
+    .page { transition: opacity 0.16s var(--ease-out); }
+    body.lang-fading .page { opacity: 0.3; }
+
+    a { color: inherit; text-decoration: none; }
+    .skip-link {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 200;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: var(--text);
+      color: #fff;
+      font-size: 0.85rem;
+      transform: translateY(-64px);
+      transition: transform 0.2s var(--ease-out);
+    }
+    .skip-link:focus-visible { transform: translateY(0); }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--ink-accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    img { display: block; max-width: 100%; }
+
+    /* ═══════════════════════════════════════════════════════════
+       TOP CONTROLS (Reader + Lang)
+       ═══════════════════════════════════════════════════════════ */
+    .top-controls {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 110;
+      display: inline-flex;
+      gap: 8px;
+    }
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--text);
+      font: 600 0.82rem/1 'Inter', 'Pretendard', sans-serif;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: transform 0.25s var(--ease-spring), border-color 0.22s ease, background 0.22s ease, color 0.22s ease;
+    }
+    .pill-btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+      background: #ffffff;
+    }
+    .pill-btn:active { transform: translateY(0) scale(0.97); }
+    .pill-btn .icon {
+      width: 14px;
+      height: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-accent);
+    }
+    .pill-btn .icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      shape-rendering: geometricPrecision;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(var(--wrap), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 36px 0 0;
+    }
+
+    .mobile-nav { display: none; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 330px minmax(0, 1fr);
+      gap: 68px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 28px;
+      width: 330px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       PROFILE CARD
+       ═══════════════════════════════════════════════════════════ */
+    .profile-card {
+      position: relative;
+      padding: 20px;
+      border-radius: 28px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      transform-style: preserve-3d;
+      transition: transform 0.4s var(--ease-out), border-color 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+      will-change: transform;
+    }
+    .profile-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(43,75,124,0.10), transparent 55%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .profile-card:hover::before { opacity: 1; }
+    .profile-card:hover {
+      border-color: var(--line-strong);
+      box-shadow: 0 2px 4px rgba(23,24,27,0.05), 0 14px 40px rgba(23,24,27,0.08);
+    }
+
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+      transition: transform 0.6s var(--ease-out), filter 0.6s ease;
+    }
+    .profile-image:hover img {
+      transform: scale(1.03);
+      filter: grayscale(70%);
+    }
+
+    .profile-image {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      aspect-ratio: 4 / 5;
+      margin-bottom: 20px;
+      border: 1px solid var(--line);
+      background: rgba(23,24,27,0.03);
+    }
+    .profile-card:hover .profile-image img {
+      transform: scale(1.025);
+      filter: grayscale(70%) saturate(1.05);
+    }
+
+    .name {
+      margin: 0 0 8px;
+      font-size: 2.3rem;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      color: var(--text);
+    }
+    body.ko .name {
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .role, .org { margin: 0; color: var(--muted); font-size: 0.96rem; }
+    .org { margin-top: 4px; }
+
+    .divider {
+      height: 1px;
+      margin: 20px 0;
+      background: var(--line);
+    }
+
+    .side-label {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--soft);
+    }
+    body.ko .side-label {
+      text-transform: none;
+      letter-spacing: 0.04em;
+      font-size: 0.85rem;
+    }
+
+    .side-list {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .side-list > div {
+      position: relative;
+      padding-left: 14px;
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+    .side-list > div::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 6px;
+      height: 1px;
+      background: rgba(23,24,27,0.28);
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+    .side-list > div:hover { color: var(--text); transform: translateX(2px); }
+    .side-list > div:hover::before { width: 10px; background: var(--ink-accent); }
+
+    .contact-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+    .contact-list a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      /* Floor only. The touch-sized target is set in project-library.css,
+         which scopes these under #cv-start and would outrank anything here. */
+      min-height: 24px;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+    .contact-list a::after {
+      content: "↗";
+      opacity: 0.68;
+      transform: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      font-size: 0.85em;
+      color: var(--soft);
+    }
+    .contact-list a:hover {
+      transform: translateX(2px);
+      color: var(--text);
+    }
+    .contact-list a[href*="linkedin"]           { color: var(--brand-linkedin); }
+    .contact-list a[href*="scholar"]            { color: var(--brand-scholar); }
+    .contact-list a[href*="orcid"]              { color: var(--brand-orcid); }
+    .contact-list a[href^="mailto"]             { color: var(--brand-email); }
+    .contact-list a:hover::after {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    .contact-list a.copied::after {
+      content: "✓";
+      opacity: 1;
+      transform: translate(0,0);
+      color: #17683a;
+    }
+
+
+    .button .arrow { transition: transform 0.25s var(--ease-spring); display: inline-block; }
+    .button:hover .arrow { transform: translateX(4px); }
+    .button:active { transform: scale(0.98); }
+    .button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid var(--text);
+      background: var(--text);
+      color: #ffffff;
+      font-size: 0.93rem;
+      font-weight: 700;
+      margin-top: 24px;
+      box-shadow: none;
+      transition: box-shadow 0.22s ease, filter 0.22s ease;
+      overflow: hidden;
+    }
+    .button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -80%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,0.22), transparent);
+      transform: skewX(-18deg);
+      transition: left 0.6s var(--ease-out);
+    }
+    .button:hover::before { left: 130%; }
+    .button:hover {
+      box-shadow: 0 6px 18px rgba(23,24,27,0.16);
+      filter: brightness(1.02);
+    }
+    .button .arrow {
+      display: inline-block;
+      margin-left: 8px;
+      transition: transform 0.25s var(--ease-spring);
+    }
+    .button:hover .arrow { transform: translateX(4px); }
+
+    /* ═══════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════════════════════ */
+    .content {
+      min-width: 0;
+      width: 100%;
+      padding-top: 8px;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* ── Capabilities: build / ship / prove, as scannable chips ── */
+    .caps {
+      margin: 0 0 46px;
+      padding: 16px 0 18px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 6px;
+    }
+    .caps-row {
+      display: grid;
+      grid-template-columns: 62px 1fr;
+      gap: 16px;
+      align-items: baseline;
+    }
+    .caps-row .k {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--soft);
+      line-height: 1.85;
+    }
+    body.ko .caps-row .k {
+      font-family: 'Pretendard', sans-serif;
+      text-transform: none;
+      letter-spacing: 0.03em;
+      font-size: 0.76rem;
+    }
+    /* Specificity note: the global `body [lang="ko"] { display: none }` switch is
+       0-1-1, so the visible state has to be qualified the same way or the hidden
+       language would win the cascade and both scripts would render at once. */
+    body:not(.ko) [lang="en"].v,
+    body.ko [lang="ko"].v { display: block; }
+    .caps-row .v {
+      font-size: 0.82rem;
+      line-height: 1.8;
+      letter-spacing: 0.005em;
+      color: var(--muted);
+    }
+    body.ko .caps-row .v {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0;
+    }
+    .caps-row .v .sep { color: var(--line-strong); margin: 0 8px; }
+    @media (max-width: 700px) {
+      .caps-row { grid-template-columns: 1fr; gap: 7px; }
+      .caps-row .k { padding-top: 0; }
+    }
+
+    .section { margin-top: 68px; scroll-margin-top: 24px; }
+    .section:first-of-type { margin-top: 0; }
+
+    .section-title {
+      position: relative;
+      margin: 0 0 22px;
+      padding-bottom: 14px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      border-bottom: 1px solid var(--line);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+    body.ko .section-title {
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+    .title-aside {
+      margin-left: auto;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0;
+      color: var(--ink-accent);
+      white-space: nowrap;
+    }
+    .title-aside:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .section-title .num {
+      display: inline-block;
+      color: var(--soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.65em;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      font-style: normal;
+      font-variant-numeric: tabular-nums;
+      transition: color 1.2s var(--ease-out),
+                  text-shadow 1.2s var(--ease-out),
+                  transform 0.6s var(--ease-out);
+    }
+    .section.in-view .section-title .num {
+      color: rgb(var(--accent, 23 24 27));
+    }
+    .section-title.pulsed .num {
+      animation: num-pulse 1.4s ease-out;
+    }
+    @keyframes num-pulse {
+      0%   { text-shadow: 0 0 0 rgba(var(--accent), 0); transform: scale(1); }
+      18%  { text-shadow: 0 0 18px rgba(var(--accent), 0.65); transform: scale(1.08); }
+      100% { text-shadow: 0 0 0 rgba(var(--accent), 0); transform: scale(1); }
+    }
+    .section-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(var(--accent, 23 24 27), 0.85), transparent);
+      transition: width 0.9s var(--ease-out-expo);
+    }
+    .section.in-view .section-title::after { width: 120px; }
+
+    #education    { --accent: var(--c-education); }
+    #projects     { --accent: var(--c-projects); }
+    #awards       { --accent: var(--c-awards); }
+    #publications { --accent: var(--c-pubs); }
+    #patents      { --accent: var(--c-patents); }
+
+    .filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 0 0 22px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      background: rgba(23,24,27,0.03);
+      border-radius: 999px;
+      width: fit-content;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .filter button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.84rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.25s ease, transform 0.2s var(--ease-spring);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter button:hover { color: var(--text); }
+    .filter button:active { transform: scale(0.95); }
+    .filter button .count {
+      font-size: 0.7rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-variant-numeric: tabular-nums;
+      color: var(--soft);
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      line-height: 1.5;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .filter button:active { transform: scale(0.94); }
+    .filter button.active {
+      color: #ffffff;
+      background: var(--text);
+      font-weight: 600;
+    }
+    .filter button.active .count {
+      color: #ffffff;
+      border-color: rgba(255,255,255,0.34);
+    }
+
+    .items { display: grid; gap: 14px; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(4px);
+      transition:
+        opacity 0.7s var(--ease-out-expo),
+        transform 0.7s var(--ease-out-expo),
+        filter 0.7s var(--ease-out-expo);
+    }
+    /* Follow-through: the card lands first, its content settles in three
+       overlapping beats just behind it. */
+    .reveal > * {
+      opacity: 0;
+      transform: translateY(7px);
+      transition: opacity 0.55s var(--ease-out-expo), transform 0.55s var(--ease-out-expo);
+    }
+    .reveal.visible > * { opacity: 1; transform: none; }
+    .reveal.visible > *:nth-child(1) { transition-delay: 0.06s; }
+    .reveal.visible > *:nth-child(2) { transition-delay: 0.13s; }
+    .reveal.visible > *:nth-child(n+3) { transition-delay: 0.2s; }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .item {
+      position: relative;
+      padding: 20px 22px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.3s var(--ease-spring),
+                  border-color 0.28s ease,
+                  background 0.28s ease,
+                  box-shadow 0.28s ease;
+    }
+    .item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 18px;
+      bottom: 18px;
+      width: 2px;
+      border-radius: 999px;
+      background: rgba(var(--accent, 23 24 27), 0.45);
+      transition: background 0.3s ease, top 0.3s ease, bottom 0.3s ease, width 0.3s ease;
+    }
+    .item::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(var(--accent, 255 255 255), 0.10), transparent 45%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    .item:hover {
+      transform: translateY(-3px);
+      border-color: rgba(var(--accent, 23 24 27), 0.42);
+      background: var(--surface);
+      box-shadow: 0 2px 4px rgba(23,24,27,0.05), 0 12px 30px rgba(23,24,27,0.09);
+    }
+    .item:hover::before {
+      background: linear-gradient(180deg,
+        rgba(var(--accent, 255 255 255), 0.9),
+        rgba(var(--accent, 255 255 255), 0.18));
+      top: 12px;
+      bottom: 12px;
+      width: 3px;
+    }
+    .item:hover::after { opacity: 1; }
+
+    .item.hidden { display: none; }
+
+    .item-title {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.18rem;
+      line-height: 1.35;
+      letter-spacing: -0.018em;
+      font-weight: 700;
+      color: var(--text);
+    }
+    body.ko .item-title { font-size: 1.12rem; letter-spacing: -0.01em; }
+    .item-meta {
+      margin-bottom: 10px;
+      color: var(--soft);
+      font-size: 0.78rem;
+      letter-spacing: 0.01em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: 'tnum' 1, 'kern' 1;
+    }
+    body.ko .item-meta {
+      font-family: 'Pretendard', ui-monospace, monospace;
+      font-size: 0.85rem;
+    }
+    .item-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      max-width: 66ch;   /* keep the reading measure near 65 characters */
+      text-wrap: pretty;
+    }
+    ul.item-desc { padding-left: 18px; }
+    ul.item-desc li + li { margin-top: 8px; }
+
+    .paper-title,
+    .pub-author-me { color: var(--text); font-weight: 600; }
+    .paper-title {
+      font-size: 1.04rem;
+      line-height: 1.4;
+      letter-spacing: -0.012em;
+    }
+    #pubItems .item-desc { font-size: 0.85rem; line-height: 1.65; }
+    #pubItems .venue { font-size: 0.85rem; }
+    .paper-title { font-weight: 600; }
+    .pub-author-me {
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .venue { color: var(--muted); font-style: italic; }
+
+    /* Partner row: orgs as chips with monogram dots, visually distinct
+       from the prose bullets. */
+    .partners {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding-top: 11px;
+      border-top: 1px dashed var(--line);
+    }
+    .p-label {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--soft);
+      margin-right: 6px;
+    }
+    body.ko .p-label {
+      font-family: 'Pretendard', sans-serif;
+      text-transform: none;
+      letter-spacing: 0.05em;
+      font-size: 0.72rem;
+    }
+    body:not(.ko) .p-set[lang="en"],
+    body.ko .p-set[lang="ko"] { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+    .p-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      padding: 2px 10px 2px 7px;
+      border: 1px solid rgba(var(--accent, 43 75 124), 0.28);
+      border-radius: 999px;
+      color: var(--text);
+      transition: border-color 0.18s ease, color 0.18s ease;
+    }
+    .p-chip[data-m]::before {
+      content: attr(data-m);
+      display: inline-grid;
+      place-items: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 1px solid rgba(var(--accent, 43 75 124), 0.34);
+      background: rgba(var(--accent, 43 75 124), 0.16);
+      color: rgb(var(--accent, 43 75 124));
+      box-sizing: border-box;
+      font-size: 0.56rem;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .p-chip:hover { border-color: rgba(var(--accent, 43 75 124), 0.45); color: var(--text); }
+    .p-logo {
+      width: auto;
+      /* 20px matches .p-brand-stage and .p-brand-wordmark. These were 18px,
+         so 14 plain marks sat 2px shorter than the 6 staged ones inside the
+         same 28px chip - the mismatch read as inconsistent icon sizing. */
+      max-width: 40px;
+      height: 20px;
+      border-radius: 0;
+      object-fit: contain;
+      filter: none;
+      opacity: 1;
+      image-rendering: auto;
+      transition: transform 0.2s ease;
+    }
+    .p-chip:hover .p-logo { transform: scale(1.04); }
+
+    /* Only use reviewed, transparent institutional marks. Opaque or
+       permission-restricted files fall back to the organization name. */
+    /* Every shipped mark renders. krafton.svg is the 512x454 mark from
+       Wikimedia Commons (CC BY-SA 4.0, credited to KRAFTON, Inc.), replacing
+       the unusable 16x16 favicon. Attribution is in README.md. */
+
+    /* Partner marks use one predictable, plate-free stage. When an approved
+       transparent asset is unavailable, a text wordmark keeps the partner
+       visible without recreating or distorting a protected logo. */
+    .p-brand-stage {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 20px;
+      flex: 0 0 46px;
+    }
+    .p-brand-stage .p-logo {
+      display: block;
+      width: 100%;
+      max-width: 46px;
+      height: 20px;
+      max-height: 20px;
+    }
+    .p-brand-stage--fraunhofer { width: 64px; flex-basis: 64px; }
+    .p-brand-stage--fraunhofer .p-logo { max-width: 64px; }
+    .p-brand-stage--kai { width: 52px; flex-basis: 52px; }
+    .p-brand-stage--kai .p-logo { max-width: 52px; }
+    .p-brand-wordmark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 20px;
+      padding: 0 4px;
+      border-radius: 2px;
+      box-sizing: border-box;
+      /* Was `Inter, Arial` - the only two elements on the page that asked for
+         Inter first. Inter never loaded (Geist wins the body stack), so these
+         were already rendering in Arial; naming the site stack keeps them
+         consistent and lets the Google Fonts request go away entirely. */
+      font-family: "Geist Portfolio", Geist, -apple-system, Arial, sans-serif;
+      font-size: 0.68rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.035em;
+      white-space: nowrap;
+    }
+    .p-brand-wordmark--nyu { background: #57068c; color: #fff; }
+    .p-brand-wordmark--bhaptics {
+      min-width: 50px;
+      padding-inline: 2px;
+      background: transparent;
+      color: var(--text);
+      font-size: 0.7rem;
+      letter-spacing: -0.045em;
+    }
+
+    /* A block of positional `::before` rules used to paint five partner marks as
+       background-images. Every one of them was invisible on the live page and had
+       been for a while, for two independent reasons:
+
+         1. Two later layers won on !important. logos.css:91 sets
+            `background: transparent !important` on `.p-chip[data-m]::before` (the
+            shorthand also resets background-image to none), and layout.css:386
+            pins the same pseudo to a 20px box. The index.html rules carry higher
+            specificity but no !important, so they lost both races. The marks
+            still reserved their `content: ""` box — an empty 20px gap where a
+            logo should be, with the monogram letter suppressed too.
+         2. The selectors were positional. `#projects .item:nth-child(4)` and
+            `:nth-child(5)` matched nothing at all once those two chips moved to
+            `.p-brand-stage` markup, and `.p-chip[data-m="P"]:nth-child(2|3)`
+            depended on KT staying the first chip in the row.
+
+       Marks now ship the same way as every other chip on the page: an
+       `<img class="p-logo">` in the markup, sized by the one rule in logos.css
+       that owns logo sizing. Nothing here is left to re-break. */
+
+
+    /* Publications read as an academic list, not a stack of cards */
+    #pubItems { gap: 0; }
+    .pub-summary {
+      margin: 0 0 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: var(--soft);
+    }
+    body.ko .pub-summary { font-family: 'Pretendard', sans-serif; font-size: 0.78rem; }
+    .cv-summary {
+      position: relative;
+      z-index: 1;
+    }
+    .pub-value {
+      margin: 8px 0 0;
+      padding-left: calc(1.6em + 4px);
+      max-width: 72ch;
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.62;
+      text-wrap: pretty;
+    }
+    body.ko .pub-value {
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+      font-size: 0.84rem;
+      line-height: 1.72;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+    .pub-group + .pub-group { margin-top: 22px; }
+    .pub-group-title {
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+      margin: 0 0 2px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--soft);
+    }
+    .pub-group-n {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: rgb(var(--accent, 23 24 27));
+    }
+    .pub-n {
+      display: inline-block;
+      min-width: 1.6em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--soft);
+    }
+    .pub-role {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: rgb(var(--accent, 23 24 27));
+      white-space: nowrap;
+    }
+    .pub-tag {
+      display: inline-block;
+      margin-left: 4px;
+      padding: 1px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      color: var(--soft);
+      white-space: nowrap;
+    }
+    #pubItems .item {
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      border-bottom: 1px solid var(--line);
+      padding: 15px 6px;
+      overflow: visible;
+    }
+    #pubItems .item::before,
+    #pubItems .item::after { display: none; }
+    #pubItems .item {
+      transition: background 0.25s ease, padding-left 0.25s var(--ease-out);
+    }
+    #pubItems .item:hover {
+      transform: none;
+      background: rgba(23,24,27,0.02);
+      border-color: var(--line);
+      box-shadow: none;
+      padding-left: 12px;
+    }
+    .item-desc a { color: var(--ink-accent); font-weight: 600; }
+    /* Citation chips are the primary outbound action on this page, so the hit
+       area is held at >= 24x24 (WCAG 2.2 SC 2.5.8) with inline-flex centring
+       rather than padding alone - the visual weight stays as tight as before. */
+    .pub-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      min-height: 24px;
+      min-width: 24px;
+      margin-left: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      white-space: nowrap;
+      transition: border-color 0.18s ease, transform 0.18s var(--ease-out);
+    }
+    /* Touch pointers get a full 44px target - on a phone these are thumb-sized
+       actions, not mouse-sized ones. */
+    @media (pointer: coarse) {
+      .pub-link { min-height: 44px; padding: 2px 14px; }
+    }
+    .pub-link:hover {
+      border-color: var(--ink-accent);
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+    .item-desc a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    body.ko .venue { font-style: normal; color: var(--soft); }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════ */
+    .site-footer {
+      margin-top: 34px;
+      padding: 26px 0 34px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--soft);
+      font-size: 0.82rem;
+    }
+    .site-footer .ft-mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.04em;
+    }
+    .site-footer a {
+      color: var(--muted);
+      border-bottom: 1px solid var(--line-strong);
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .site-footer a:hover { color: var(--text); border-color: var(--text); }
+
+    /* ═══════════════════════════════════════════════════════════
+       TOAST + KBD HINT
+       ═══════════════════════════════════════════════════════════ */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translate(-50%, 14px) scale(0.96);
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(20,20,24,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: #fff;
+      font-size: 0.86rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s var(--ease-spring);
+      z-index: 200;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+      transition: opacity 0.3s ease, transform 0.4s var(--ease-spring);
+    }
+
+    .kbd-hint {
+      position: fixed;
+      bottom: 18px;
+      left: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--soft);
+      font-size: 0.76rem;
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .kbd-hint.show { opacity: 1; transform: translateY(0); }
+    .kbd-hint kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 5px;
+      border: 1px solid var(--line);
+      background: rgba(23,24,27,0.04);
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.72rem;
+      line-height: 1;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════════════ */
+    @media (max-width: 980px) {
+      .page {
+        width: min(var(--wrap), calc(100% - 24px));
+        padding-top: 18px;
       }
-    </script>
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .sidebar {
+        position: static;
+        width: 100%;
+      }
+      .profile-image { max-width: 280px; }
+      .content { padding-top: 0; }
+      .kbd-hint { display: none; }
+      .top-controls {
+        top: 10px;
+        right: 10px;
+      }
+      .pill-btn {
+        padding: 7px 12px;
+        font-size: 0.78rem;
+      }
+    }
 
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0f'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23f4f1e9' text-anchor='middle'%3EJC%3C/text%3E%3C/svg%3E"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css?v=20260815-sanity1" />
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    @media (max-width: 700px) {
+      html[data-view="cv"] {
+        scroll-padding-top: 122px;
+      }
+      html[data-view="cv"] body::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 100;
+        height: 54px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(246,245,242,0.94);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        pointer-events: none;
+      }
+      .page {
+        width: calc(100% - 18px);
+      }
+      .mobile-nav {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        white-space: nowrap;
+        position: sticky;
+        top: 54px;
+        z-index: 20;
+        padding: 12px 4px 14px;
+        margin-top: 54px;
+        margin-bottom: 8px;
+        background: rgba(246,245,242,0.92);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--line);
+        -webkit-overflow-scrolling: touch;
+      }
+      .mobile-nav::-webkit-scrollbar { display: none; }
+      .mobile-nav a {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;   /* WCAG 2.2 target size */
+        color: var(--muted);
+        font-size: 0.88rem;
+        transition: color 0.2s ease;
+        flex-shrink: 0;
+      }
+      .mobile-nav a.active {
+        color: var(--text);
+      }
+      .mobile-nav a.active::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 1.5px;
+        background: var(--ink-accent);
+        border-radius: 2px;
+      }
 
-    <header class="site-header" id="top">
-      <a class="brand" href="#top" aria-label="Jihun Chae, home">
-        <span class="brand-mark" aria-hidden="true">JC</span>
-        <span class="brand-name">Jihun Chae</span>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="#work">Work</a>
-        <a href="#evidence">Evidence</a>
-        <a href="#recognition">Recognition</a>
-        <a href="#publications">Publications</a>
-      </nav>
-      <a class="header-cta" href="mailto:chaejihun@kaist.ac.kr"
-        >Start a conversation <span aria-hidden="true">↗</span></a
-      >
+      .item-desc { font-size: 0.88rem; }
+      .item-title { font-size: 1.16rem; }
+      .two-col { grid-template-columns: 1fr; }
+      .item { padding: 16px 16px 16px 18px; }
+      .section { margin-top: 48px; }
+      .section { scroll-margin-top: 12px; }
+      .caps { margin-bottom: 36px; }
+      .site-footer { margin-top: 56px; }
+
+      .top-controls { gap: 6px; }
+      .pill-btn .label-text { display: none; }
+      .tts-toggle .label-text { display: none !important; }
+      .pill-btn {
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+      }
+      .lang-toggle .label-text { display: inline !important; font-size: 0.78rem; }
+      .lang-toggle {
+        width: auto;
+        padding: 8px 12px;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       READER (TTS) MODE
+       ═══════════════════════════════════════════════════════════ */
+    body.reader {
+      background: #f7f4ec !important;
+      color: #1a1a1a !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-size: 18px;
+      line-height: 1.78;
+    }
+    body.reader.ko {
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif !important;
+      line-height: 1.85;
+    }
+    body.reader .scroll-progress,
+    body.reader .kbd-hint,
+    body.reader .mobile-nav,
+    body.reader .filter,
+    body.reader .profile-image,
+    body.reader .divider,
+    body.reader .button {
+      display: none !important;
+    }
+    body.reader .page {
+      max-width: 700px;
+      padding: 80px 20px 60px;
+    }
+    body.reader .layout {
+      display: block;
+    }
+    body.reader .sidebar {
+      position: static;
+      width: 100%;
+      margin-bottom: 36px;
+    }
+    body.reader .profile-card {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      padding: 0 !important;
+      transform: none !important;
+    }
+    body.reader .profile-card::before { display: none !important; }
+    body.reader .name {
+      color: #111 !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-size: 2.4rem !important;
+      font-weight: 600;
+      margin-bottom: 10px !important;
+    }
+    body.reader.ko .name {
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif !important;
+    }
+    body.reader .role,
+    body.reader .org {
+      color: #555 !important;
+      font-style: italic;
+    }
+    body.reader.ko .role,
+    body.reader.ko .org { font-style: normal; }
+    body.reader .side-label {
+      color: #111 !important;
+      margin-top: 28px;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      font-size: 0.95rem;
+    }
+    body.reader .side-list > div {
+      padding-left: 0 !important;
+      color: #333 !important;
+    }
+    body.reader .side-list > div::before { display: none !important; }
+    body.reader .contact-list {
+      gap: 4px;
+    }
+    body.reader .contact-list a {
+      color: #1a1a1a !important;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    body.reader .contact-list a::after { display: none !important; }
+    body.reader .section-title {
+      color: #111 !important;
+      border-bottom: 1px solid rgba(0,0,0,0.18) !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-weight: 600;
+      font-size: 1.55rem !important;
+    }
+    body.reader.ko .section-title {
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif !important;
+    }
+    body.reader .section-title .num {
+      color: #777 !important;
+    }
+    body.reader .section-title::after { display: none !important; }
+    body.reader .items {
+      gap: 0;
+    }
+    body.reader .item,
+    body.reader .two-col .item {
+      background: transparent !important;
+      border: 0 !important;
+      border-bottom: 1px solid rgba(0,0,0,0.10) !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      padding: 16px 0 !important;
+      transform: none !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+    body.reader .two-col {
+      grid-template-columns: 1fr !important;
+      gap: 0 !important;
+    }
+    body.reader .item::before,
+    body.reader .item::after { display: none !important; }
+    body.reader .item-title {
+      color: #111 !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-weight: 600;
+      font-size: 1.1rem !important;
+    }
+    body.reader.ko .item-title {
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif !important;
+    }
+    body.reader .item-meta {
+      color: #555 !important;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem !important;
+    }
+    body.reader.ko .item-meta {
+      font-family: 'Pretendard', monospace;
+    }
+    body.reader .item-desc,
+    body.reader ul.item-desc {
+      color: #2a2a2a !important;
+      font-size: 1rem !important;
+    }
+    body.reader .pub-author-me,
+    body.reader .paper-title {
+      color: #111 !important;
+    }
+    body.reader .pub-author-me {
+      text-decoration: underline;
+      font-weight: 700;
+    }
+    body.reader .venue {
+      color: #555 !important;
+    }
+    body.reader .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+    body.reader .site-footer {
+      border-top-color: rgba(0,0,0,0.14);
+      color: #555 !important;
+    }
+    body.reader .site-footer a { color: #333 !important; border-color: rgba(0,0,0,0.3); }
+    body.reader .pill-btn {
+      background: rgba(255,255,255,0.95) !important;
+      color: #111 !important;
+      border-color: rgba(0,0,0,0.15) !important;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+    body.reader * {
+      animation: none !important;
+    }
+
+    /* Mobile: scale the whole page down so it fits smaller screens */
+    @media (max-width: 760px) {
+      html { font-size: 15px; }
+      .page { width: calc(100% - 22px); padding-top: 16px; }
+      .name { font-size: 1.7rem; }
+      .profile-image { max-width: 200px; margin-left: auto; margin-right: auto; }
+      .section { margin-top: 40px; }
+      .caps { margin-bottom: 28px; }
+      .item { padding: 13px 14px 13px 16px; }
+      .item-title { font-size: 1.14rem; }
+      .item-desc { font-size: 0.9rem; }
+      .section-title { font-size: 1.3rem; }
+    }
+    @media (max-width: 440px) {
+      html { font-size: 13.5px; }
+      .name { font-size: 1.5rem; }
+      .profile-image { max-width: 168px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .reveal, .reveal > * { opacity: 1; transform: none; filter: none; }
+    }
+    /* Night mode removed 2026-08-14 (owner's decision). The dark route caused
+       four defects — white-on-white cards, invisible reader text, wrong icon
+       and font rendering — and it forced archive.css to load light-only, which
+       left the site wearing two identities. One light identity now. */
+
+    /* ── Print: the page doubles as a paper CV ── */
+    @media print {
+      :root {
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --text: #17181b;
+        --muted: #55575e;
+        --soft: #6a6d75;
+        --line: rgba(23,24,27,0.14);
+        --line-strong: rgba(23,24,27,0.3);
+        --ink-accent: #2b4b7c;
+      }
+      .skip-link, .top-controls, .kbd-hint, .mobile-nav, .scroll-progress,
+      .button, .filter, .toast { display: none !important; }
+      body, body:not(.reader) { background: #fff !important; }
+      body::before { content: none !important; display: none !important; }
+      .reveal, .reveal > * {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        transition: none !important;
+        animation: none !important;
+      }
+      :focus, :focus-visible { outline: none !important; }
+      .layout { display: block; }
+      .sidebar { position: static; width: auto; margin-bottom: 24px; }
+      .profile-card, .item {
+        box-shadow: none !important;
+        border-color: #ddd !important;
+        break-inside: avoid;
+      }
+      .section { margin-top: 28px; }
+      #pubItems .item { border-color: #ddd !important; }
+      body:not(.ko) [lang="ko"] { display: none !important; }
+      body.ko [lang="en"] { display: none !important; }
+      a::after { content: none !important; }
+    }
+  </style>
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=86-20260815a" />
+  <!-- Loaded last: restores the paper identity the inline tokens declare but
+       never got to render. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/archive.css?v=86-20260815a" />
+  <!-- Last: partner-mark sizing has to outrank project-library.css, which
+       loads above it. Source order, not specificity, was the problem. -->
+  <link rel="stylesheet" href="assets/interior/logos.css?v=86-20260815a" />
+  <!-- Last: the open/close was switching non-animatable layout properties, so
+       there was nothing to interpolate. This drives it on transform+opacity. -->
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=86-20260815a" />
+  <!-- After archive.css: archive.css scopes the display serif by language in
+       one selector and not the next, which handed Hangul a Latin-only serif
+       stack and dropped the Korean name into Batang. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/typography.css?v=86-20260815a" />
+  <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
+       in project-library.css can never take effect. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=86-20260815a" />
+  <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
+       page frame both views consume. It has to outrank the base layers, which
+       reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
+       shorthands, so source order is load-bearing here. -->
+  <link rel="stylesheet" href="assets/interior/layout.css?v=86-20260815a" />
+  <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
+       inside a max-width query, so it cannot reach desktop, and it declares
+       no theme tokens, so it cannot outrank light-only.css. -->
+  <!-- media attribute added after measuring: every rule in this file sits inside
+       `@media (max-width: 700px)` (two top-level blocks, zero rules outside
+       them), and CDP rule-usage tracking at 1440px reports 0 of 4,614 bytes
+       matched. Declaring that same query on the link takes it out of the
+       render-blocking set on desktop without changing a single computed style -
+       the sheet still loads, and on phones it applies exactly as before. -->
+  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=86-20260815a" />
+  <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
+       label off its plate, an overlay parked on the contact links). No theme
+       tokens, so it cannot outrank light-only.css's colour pins. -->
+  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=86-20260815a" />
+  <!-- Loaded LAST, after fit-desktop.css: the Tools row under Capabilities. The
+       block it joins is styled from four layers that all reach
+       `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
+       this file both mirrors that weight and loads after them. Glyphs are inline
+       path data — no icon font, no sprite, no second third-party origin. -->
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=86-20260815a" />
+  <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
+       moved out of the book to flank it. They are styled from four layers of
+       project-library.css, three of them with !important on the same
+       properties, so this file has to both carry that weight and arrive after
+       them. It declares no theme tokens and no transform on the animated
+       elements, so it cannot outrank light-only.css or collide with
+       book-motion.css. See the file header. -->
+  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=86-20260815a" />
+
+  <!-- Ghost bookcase behind the library. Declares one class on one element
+       it creates itself, at z-index -1 inside a section that already owns a
+       stacking context — it cannot collide with any library layer, so load
+       order against them does not matter. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=86-20260815a" />
+
+  <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
+       works ([data-state="turning-forward"|"turning-backward"]), and nothing
+       else. Six version tiers of project-library.css reach that same leaf with
+       !important, so source order is what makes this file reachable at all. It
+       animates `transform` only on an element the script leaves alone in those
+       two states, so it cannot collide with animateStableBookOpen or with
+       book-motion.css's rotate/translate split. See the file header. -->
+  <link rel="stylesheet" href="assets/interior/page-turn.css?v=86-20260815a" />
+  <style media="print">
+    html[data-view="cv"] .page#cv-start:focus-visible .name,
+    html[data-view="cv"] [id^="cv-work-"]:focus {
+      outline: 0 !important;
+      outline-offset: 0 !important;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" data-cv-jump href="?view=cv#cv-start"><span lang="en">Skip to the full CV</span><span lang="ko">전체 이력서로 건너뛰기</span></a>
+
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <div class="top-controls">
+    <a class="pill-btn library-return" href="./"><span lang="en">Library</span><span lang="ko">라이브러리</span></a>
+    <button class="pill-btn lang-toggle" id="langToggle" aria-label="Toggle Korean / English">
+      <span class="label-text" id="langLabel">한국어</span>
+    </button>
+    <button class="pill-btn tts-toggle" id="ttsToggle" aria-pressed="false" aria-label="Toggle Reader Mode">
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20"><path d="M4 6h12M4 10h12M4 14h7"/></svg>
+      </span>
+      <span class="label-text" id="ttsLabel" lang="en">Reader</span>
+      <span class="label-text" lang="ko">읽기 모드</span>
+    </button>
+  </div>
+
+  <!-- Simulations hub temporarily disabled. laboratory.html + lab/ still ship;
+       restore this button and the two nav links to re-enable. -->
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
+
+  <section class="work-library pl-embedded pl-library-v3 pl-library-v5 pl-library-v6 pl-library-v7 pl-library-v8 pl-library-v9 pl-library-v10 pl-library-v11 pl-library-v12 pl-library-v13 pl-library-v14 pl-library-v15 pl-library-v16 pl-library-v17 pl-library-v18 pl-library-v19 pl-library-v20 pl-library-v21 pl-library-v22 pl-library-v23 pl-library-v24 pl-library-v25 pl-library-v26" id="work-library" aria-labelledby="library-title">
+    <header class="pl-site-header">
+      <div class="pl-brand-lockup">
+        <div class="pl-brand-copy">
+          <h1 class="pl-wordmark" id="site-title">Jihun Chae<span aria-hidden="true">.</span></h1>
+          <p class="pl-hero-role">
+            <span lang="en">Human-centered AI research, product strategy, and systems built around human agency.</span>
+            <span lang="ko">사람의 주체성을 중심에 둔 인간 중심 AI 연구, 제품 전략, 시스템.</span>
+          </p>
+        </div>
+      </div>
     </header>
 
-    <main id="main" tabindex="-1">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-grid" aria-hidden="true"></div>
-        <div class="hero-copy">
-          <p class="eyebrow">
-            <span class="status-dot"></span
-            ><span class="eyebrow-name">Jihun Chae · </span>Human-centered AI ·
-            Product strategy · Systems
-          </p>
-          <h1 id="hero-title">
-            AI has to survive contact with <em>people.</em>
-          </h1>
-          <p class="hero-lede">
-            I turn field evidence into testable AI systems—scoped to the people,
-            decisions, and constraints that define success.
-          </p>
-          <p class="hero-edge">
-            <strong>My edge is end-to-end range:</strong> I frame the real
-            constraint, translate it into a product requirement, build the right
-            artifact, and design the evidence that tests it.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#work"
-              >Explore selected systems <span aria-hidden="true">↓</span></a
-            >
-            <a
-              class="button button-ghost"
-              href="https://scholar.google.com/citations?user=OjxItRUAAAAJ&amp;hl=en"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Research record <span aria-hidden="true">↗</span></a
-            >
-          </div>
+    <h2 class="pl-sr-only" id="library-title"><span lang="en">Work Library</span><span lang="ko">작업 라이브러리</span></h2>
+    <p class="pl-sr-only" id="plShelfHint">
+      <span lang="en">All works are visible in one chronological bookcase. Use the arrow keys to browse, Enter to open a volume, and Escape to close it.</span>
+      <span lang="ko">모든 작업이 하나의 연대기 책장에 표시됩니다. 방향키로 탐색하고 Enter로 열며 Escape로 닫습니다.</span>
+    </p>
+    <div class="pl-shell">
+      <div class="pl-stage">
+        <div class="pl-shelf-viewport" id="plShelfViewport" role="region" aria-label="Chronological project, publication, and award bookcase" aria-describedby="plShelfHint" tabindex="-1">
+          <ol class="pl-shelf" id="plShelf"></ol>
         </div>
-
-        <aside class="hero-profile" aria-label="Profile of Jihun Chae">
-          <div class="portrait-frame">
-            <picture>
-              <source
-                srcset="assets/profile/jihun-chae.webp"
-                type="image/webp"
-              />
-              <img
-                src="assets/profile/jihun-chae.jpg"
-                width="572"
-                height="735"
-                alt="Jihun Chae"
-                fetchpriority="high"
-              />
-            </picture>
-            <span class="portrait-index" aria-hidden="true">01 / JC</span>
-          </div>
-          <div class="profile-readout">
-            <p class="readout-label">Current position</p>
-            <p>Ph.D. Student · KAIST Graduate School of Culture Technology</p>
-            <p class="readout-location">
-              Daejeon, Republic of Korea · Available for high-impact AI research
-              and product work
-            </p>
-          </div>
-        </aside>
-      </section>
-
-      <section class="signal-bar" aria-label="Career highlights">
-        <div class="signal">
-          <strong>21</strong><span>Research outputs</span>
-        </div>
-        <div class="signal">
-          <strong>10</strong
-          ><span>Lead or equal-contribution research outputs</span>
-        </div>
-        <div class="signal">
-          <strong>01</strong><span>Granted AI patent</span>
-        </div>
-        <div class="signal">
-          <strong>112</strong><span>Participants in the largest study</span>
-        </div>
-      </section>
-
-      <section
-        class="section thesis"
-        id="strengths"
-        aria-labelledby="thesis-title"
-      >
-        <div class="section-kicker">Operating thesis / 01</div>
-        <div class="thesis-grid">
-          <h2 id="thesis-title">
-            Start with the human decision. Build backward to the data, model,
-            and interface.
-          </h2>
-          <div class="thesis-copy">
-            <p>
-              Research that stops at insight is incomplete. Technology that
-              starts with a model is usually solving the wrong problem. I
-              connect the two.
-            </p>
-            <p>
-              My work moves through a closed loop: observe reality, encode the
-              requirement, build the artifact, test what changes, and feed the
-              evidence back into the next decision.
-            </p>
-          </div>
-        </div>
-
-        <ol class="operating-model">
-          <li>
-            <span class="step">01</span>
-            <p class="step-label">Discover</p>
-            <h3>Find the real constraint.</h3>
-            <p>
-              Field research, stakeholder interviews, accessibility studies, and
-              participatory design expose what the system must actually do.
-            </p>
-          </li>
-          <li>
-            <span class="step">02</span>
-            <p class="step-label">Encode</p>
-            <h3>Turn evidence into rules.</h3>
-            <p>
-              I translate needs into interaction logic, data structures,
-              evaluation criteria, and human-in-the-loop controls.
-            </p>
-          </li>
-          <li>
-            <span class="step">03</span>
-            <p class="step-label">Build</p>
-            <h3>Build the right artifact.</h3>
-            <p>
-              Agents, retrieval workflows, data automation, XR interfaces, and
-              physical prototypes move the idea into a testable form.
-            </p>
-          </li>
-          <li>
-            <span class="step">04</span>
-            <p class="step-label">Evaluate</p>
-            <h3>Make the outcome legible.</h3>
-            <p>
-              Usability studies, field evaluation, baseline comparison, and
-              third-party testing show what changed and what remains unproven.
-            </p>
-          </li>
-        </ol>
-      </section>
-
-      <section class="section work" id="work" aria-labelledby="work-title">
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker">Selected systems / 02</div>
-            <h2 id="work-title">Work built around consequential problems.</h2>
-          </div>
-          <p>
-            Each case begins with a real operating environment—not a demo
-            prompt—and its evidence is scoped to what the project actually
-            established.
-          </p>
-        </div>
-
-        <div class="case-grid">
-          <article class="case case-featured">
-            <div class="case-topline">
-              <span>Accessible AI</span>
-              <span>2024—2027</span>
-            </div>
-            <div class="case-body">
-              <p class="case-index">SYSTEM / 01</p>
-              <h3>AI assistance that preserves player agency.</h3>
-              <p>
-                Led research and prototype development for a conversational AI
-                assistant supporting players with disabilities. Converted
-                interviews, surveys, and participatory workshops into concrete
-                rules for intervention timing, modality, personalization, and
-                automation.
-              </p>
-              <ul class="case-signals">
-                <li>
-                  <strong>112</strong> survey responses mapped to requirements
-                </li>
-                <li>
-                  <strong>12</strong> players in a mixed-method evaluation
-                </li>
-                <li>
-                  <strong>ACM IUI 2026</strong> design principles published
-                </li>
-              </ul>
-            </div>
-            <div class="case-footer">
-              <span>Role · Lead Student Researcher</span>
-              <span
-                >Project funding · National Research Foundation of Korea</span
-              >
-            </div>
-          </article>
-
-          <article class="case case-dark">
-            <div class="case-topline">
-              <span>Enterprise Data</span>
-              <span>2024—2026</span>
-            </div>
-            <div class="case-body">
-              <p class="case-index">SYSTEM / 02</p>
-              <h3>From unreliable tables to testable data assets.</h3>
-              <p>
-                Sole developer of the data-quality engine within a broader
-                2024—2026 R&amp;D project. Built software that detects and
-                corrects table-level quality errors, infers schema
-                relationships, and generates column-level validation rules.
-              </p>
-              <p class="case-proof">
-                Submitted in August 2026 for independent testing against four
-                predefined performance criteria.
-              </p>
-            </div>
-            <div class="case-footer">
-              <span>Role · Sole Developer, Data-Quality Engine</span>
-              <span>Broader government-funded R&amp;D project</span>
-            </div>
-          </article>
-
-          <article class="case">
-            <div class="case-topline">
-              <span>Cultural Systems</span>
-              <span>2025</span>
-            </div>
-            <div class="case-body">
-              <p class="case-index">SYSTEM / 03</p>
-              <h3>A field-derived serious-game concept for living heritage.</h3>
-              <p>
-                Contributed to game concepts, mechanics, and narrative
-                structures connecting Jeju Haenyeo diving practice,
-                environmental change, and community knowledge for
-                intergenerational learning.
-              </p>
-            </div>
-            <div class="case-footer">
-              <span>Role · Student Researcher</span>
-              <span>International Fellowship scheme</span>
-            </div>
-          </article>
-
-          <article class="case">
-            <div class="case-topline">
-              <span>Adaptive XR</span>
-              <span>2024—2025</span>
-            </div>
-            <div class="case-body">
-              <p class="case-index">SYSTEM / 04</p>
-              <h3>Virtual content that responds to the physical world.</h3>
-              <p>
-                Contributed to the design and implementation of interaction
-                concepts for real-time spatial adaptation, including adaptive
-                virtual objects and multimodal visual-haptic feedback.
-              </p>
-            </div>
-            <div class="case-footer">
-              <span>Role · Student Researcher</span>
-              <span>XR · Multimodal interaction</span>
-            </div>
-          </article>
-
-          <article class="case">
-            <div class="case-topline">
-              <span>Defense Simulation</span>
-              <span>2023—2024</span>
-            </div>
-            <div class="case-body">
-              <p class="case-index">SYSTEM / 05</p>
-              <h3>Camouflage evaluated against operational conditions.</h3>
-              <p>
-                Processed environmental imagery and simulation data across
-                altitude, terrain, and weather. Developed colorways and pattern
-                configurations, with selected proposals incorporated into
-                project outputs.
-              </p>
-            </div>
-            <div class="case-footer">
-              <span>Role · Student Researcher</span>
-              <span>Computer vision · Simulation</span>
-            </div>
-          </article>
-
-          <article class="case">
-            <div class="case-topline">
-              <span>Smart-City Infrastructure</span>
-              <span>2023—2024</span>
-            </div>
-            <div class="case-body">
-              <p class="case-index">SYSTEM / 06</p>
-              <h3>Roadside sensing from enclosure to AI pipeline.</h3>
-              <p>
-                Integrated IoT sensing hardware, 3D-printed housings, data
-                preprocessing, and detector tuning into a traffic-tracking
-                research prototype for dense road scenes.
-              </p>
-            </div>
-            <div class="case-footer">
-              <span>Role · Student Researcher</span>
-              <span>IoT · AI tracking · Hardware</span>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="section evidence"
-        id="evidence"
-        aria-labelledby="evidence-title"
-      >
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker">
-              Funding &amp; programme context / 03
-            </div>
-            <h2 id="evidence-title">
-              Institutional context for the work above.
-            </h2>
-          </div>
-          <p>
-            These marks identify the funding or programme context of the
-            projects above. They are evidence of project context, not
-            endorsements of this portfolio.
-          </p>
-        </div>
-
-        <div class="funder-grid">
-          <a
-            class="funder"
-            href="https://www.mss.go.kr/site/eng/main.do"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div class="funder-logo funder-logo-mss">
-              <img
-                src="assets/logos/mss.jpg"
-                alt="Ministry of SMEs and Startups"
-                loading="lazy"
-              />
-            </div>
-            <div class="funder-copy">
-              <span>Government-funded R&amp;D context</span>
-              <strong
-                >Data-quality engine within a broader R&amp;D project</strong
-              >
-            </div>
-            <span class="funder-arrow" aria-hidden="true">↗</span>
-          </a>
-
-          <a
-            class="funder"
-            href="https://eng.nrf.re.kr/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div class="funder-logo">
-              <img
-                src="assets/logos/nrf.svg"
-                alt="National Research Foundation of Korea"
-                loading="lazy"
-              />
-            </div>
-            <div class="funder-copy">
-              <span
-                >Project funding · National Research Foundation of Korea</span
-              >
-              <strong
-                >Inclusive conversational AI for game accessibility</strong
-              >
-            </div>
-            <span class="funder-arrow" aria-hidden="true">↗</span>
-          </a>
-
-          <a
-            class="funder"
-            href="https://www.leverhulme.ac.uk/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div class="funder-logo funder-text">The Leverhulme Trust</div>
-            <div class="funder-copy">
-              <span>International Fellowship scheme</span>
-              <strong>Serious games for Haenyeo heritage</strong>
-            </div>
-            <span class="funder-arrow" aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </section>
-
-      <section
-        class="section toolkit"
-        id="toolkit"
-        aria-labelledby="toolkit-title"
-      >
-        <div class="section-kicker">Capability stack / 04</div>
-        <div class="toolkit-grid">
-          <h2 id="toolkit-title">
-            Research depth. Product judgment. Builder velocity.
-          </h2>
-          <div class="capability-list">
-            <article>
-              <span>01 / Research</span>
-              <h3>
-                Field research · Stakeholder interviews · Participatory design ·
-                Mixed methods · Accessibility research
-              </h3>
-            </article>
-            <article>
-              <span>02 / Systems</span>
-              <h3>
-                Agent architecture · Retrieval-augmented generation (RAG) ·
-                Context engineering · APIs · Human-in-the-loop workflows · Data
-                automation
-              </h3>
-            </article>
-            <article>
-              <span>03 / Interfaces</span>
-              <h3>
-                Interaction flows · Multimodal feedback · XR · Physical
-                prototypes · Inclusive design
-              </h3>
-            </article>
-            <article>
-              <span>04 / Evaluation</span>
-              <h3>
-                Usability studies · Field evaluation · Baseline comparison ·
-                Third-party test preparation · Evaluation planning
-              </h3>
-            </article>
-          </div>
-        </div>
-
-        <ul class="tech-stack">
-          <li>Python</li>
-          <li>TypeScript</li>
-          <li>C++</li>
-          <li>C#</li>
-          <li>R</li>
-          <li>Java</li>
-          <li>Unity</li>
-          <li>Unreal Engine</li>
-          <li>OptiTrack</li>
-          <li>Meta Quest Pro</li>
-          <li>HoloLens 2</li>
-        </ul>
-      </section>
-
-      <section
-        class="section recognition"
-        id="recognition"
-        aria-labelledby="recognition-title"
-      >
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker">External signal / 05</div>
-            <h2 id="recognition-title">External recognition.</h2>
-          </div>
-          <p>
-            Awards matter when they confirm the quality of the system, research,
-            or delivery—not when they become the story.
-          </p>
-        </div>
-
-        <div class="recognition-list">
-          <article>
-            <time datetime="2026-03">2026.03</time>
-            <div>
-              <h3>Excellence · Question-Centered Teaching Report</h3>
-              <p>
-                Authored the recognized report on planning, operating, and
-                reflecting on teaching-assistant work.
-              </p>
-            </div>
-            <span>KAIST</span>
-          </article>
-          <article>
-            <time datetime="2024-03">2024.03</time>
-            <div>
-              <h3>Selected Venture · Climate-Tech Track</h3>
-              <p>
-                Named representative; led venture coordination, AI modeling, and
-                patent work.
-              </p>
-            </div>
-            <span>Venture Development</span>
-          </article>
-          <article>
-            <time datetime="2023-10">2023.10</time>
-            <div>
-              <h3>Team Excellence Award · Metaverse Developer Contest</h3>
-              <p>
-                Contributed VR content research and experience design to an
-                eye-tracked VR rehabilitation game prototype.
-              </p>
-            </div>
-            <span>XR Product</span>
-          </article>
-          <article>
-            <time datetime="2023-11">2023.11</time>
-            <div>
-              <h3>Team Excellence Award · Undergraduate Paper</h3>
-              <p>
-                Fourth author on recognized research into an eye-tracked VR game
-                for eye exercises.
-              </p>
-            </div>
-            <span>Research</span>
-          </article>
-          <article>
-            <time datetime="2022-11">2022.11</time>
-            <div>
-              <h3>Team Encouragement Prize · Startup Competition</h3>
-              <p>
-                Named representative for a circular-design venture proposal
-                using XR and AR rewards.
-              </p>
-            </div>
-            <span>Climate Tech</span>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="section publications"
-        id="publications"
-        aria-labelledby="publications-title"
-      >
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker">Published evidence / 06</div>
-            <h2 id="publications-title">Research that changes the build.</h2>
-          </div>
-          <p>
-            21 research outputs across human-centered AI, game accessibility,
-            XR, machine learning, and technology strategy. I led seven as first
-            or sole author and shared lead or equal contribution on three more.
-          </p>
-        </div>
-
-        <div class="featured-pubs">
-          <article>
-            <div class="pub-meta">
-              <span>2026 · Sole author</span><span>Master's thesis</span>
-            </div>
-            <h3>
-              <a
-                href="https://library.kaist.ac.kr/search/detail/view.do?bibCtrlNo=1152515&amp;flag=dissertation"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Designing and evaluating an AI assistant for players with
-                disabilities: Empirical findings and future design
-                implications</a
-              >
-            </h3>
-            <p>
-              A 12-player mixed-method study shows that useful AI accessibility
-              must align information, perception, and execution support with
-              each player's abilities.
-            </p>
-          </article>
-          <article>
-            <div class="pub-meta">
-              <span>2026 · First author</span><span>ACM IUI</span>
-            </div>
-            <h3>
-              <a
-                href="https://doi.org/10.1145/3742413.3789155"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Design principles of Game AI Assistant (GAIA) for players with
-                disabilities: Accessibility needs and ethical concerns</a
-              >
-            </h3>
-            <p>
-              Intervention timing, modality, customization, and automation
-              determine whether assistance protects flow, agency, and ownership
-              of accomplishment.
-            </p>
-          </article>
-          <article>
-            <div class="pub-meta">
-              <span>2026 · First author</span><span>Digital Game Research</span>
-            </div>
-            <h3>
-              <a
-                href="https://doi.org/10.64145/kjdgs.2026.2.1.29"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Toward Ludic AI: Proposing an evaluation framework for the
-                ludic competence of game-playing AI</a
-              >
-            </h3>
-            <p>
-              Operationalizes play theory into three behavioral dimensions for
-              judging whether game-playing AI sustains shared play—not merely
-              whether it wins.
-            </p>
-          </article>
-          <article>
-            <div class="pub-meta">
-              <span>2026 · First author</span><span>Journal article</span>
-            </div>
-            <h3>
-              <a
-                href="https://doi.org/10.9717/kmms.2026.29.6.885"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Patterns of preference for AI assistants in game accessibility
-                among players with disabilities: An exploratory analysis of
-                functional barriers and intervention timing</a
-              >
-            </h3>
-            <p>
-              A 112-person survey links functional barriers to preferred
-              assistance and identifies setup and automation as the
-              highest-rated opportunity.
-            </p>
-          </article>
-          <article>
-            <div class="pub-meta">
-              <span>2025 · Co-first author</span><span>CHI EA</span>
-            </div>
-            <h3>
-              <a
-                href="https://doi.org/10.1145/3706599.3719723"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Press start to continue: A thematic analysis of the iterative
-                process of hardcore players with disabilities adapting to
-                gameplay difficulties</a
-              >
-            </h3>
-            <p>
-              Identifies the repeating loop of personal strategy, assistive
-              tools, social support, and game resources that shapes continued
-              play.
-            </p>
-          </article>
-          <article>
-            <div class="pub-meta">
-              <span>2023 · First author</span><span>Journal article</span>
-            </div>
-            <h3>
-              <a
-                href="https://doi.org/10.15701/kcgs.2023.29.3.137"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Analysis of the effects of positive and negative VR game
-                contents on enhancing environmental awareness based on
-                self-reliant and team-based play styles</a
-              >
-            </h3>
-            <p>
-              A 65-person, four-condition experiment finds that sequence and
-              social play format shaped short-term awareness more than positive
-              or negative framing.
-            </p>
-          </article>
-        </div>
-
-        <details class="publication-archive">
-          <summary>
-            <span>Complete publication record</span>
-            <span>21 works · 2022—2026</span>
-          </summary>
-          <ol class="publication-list">
-            <li>
-              <span class="pub-number">01</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2026 · Jihun Chae · Sole author · Master's thesis,
-                  KAIST</span
-                ><a
-                  href="https://library.kaist.ac.kr/search/detail/view.do?bibCtrlNo=1152515&amp;flag=dissertation"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Designing and evaluating an AI assistant for players with
-                  disabilities: Empirical findings and future design
-                  implications.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">02</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2026 · Jihun Chae · First author · Digital Game Research,
-                  2(1), 29–59</span
-                ><a
-                  href="https://doi.org/10.64145/kjdgs.2026.2.1.29"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Toward Ludic AI: Proposing an evaluation framework for the
-                  ludic competence of game-playing AI.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">03</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2026 · Jihun Chae · First author · Journal of Korea
-                  Multimedia Society, 29(6), 885–904</span
-                ><a
-                  href="https://doi.org/10.9717/kmms.2026.29.6.885"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Patterns of preference for AI assistants in game
-                  accessibility among players with disabilities: An exploratory
-                  analysis of functional barriers and intervention timing.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">04</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2026 · Jihun Chae · First author · ACM IUI, 144–155</span
-                ><a
-                  href="https://doi.org/10.1145/3742413.3789155"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Design principles of Game AI Assistant (GAIA) for players
-                  with disabilities: Accessibility needs and ethical
-                  concerns.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">05</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2026 · Jihun Chae · Second author · Korea Game Society Spring
-                  Conference, 83–88</span
-                ><span
-                  >Design principles for game AI assistant: Analyzing functional
-                  barriers and accessibility requirements of players with
-                  disabilities.</span
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">06</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2025 · Jihun Chae · Co-first author · CHI EA, Paper 446</span
-                ><a
-                  href="https://doi.org/10.1145/3706599.3719723"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Press start to continue: A thematic analysis of the iterative
-                  process of hardcore players with disabilities adapting to
-                  gameplay difficulties.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">07</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2025 · Jihun Chae · First author · DiGRA Korea, 1–39</span
-                ><a
-                  href="https://scholar.kyobobook.co.kr/article/detail/4010070894847"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >The identity and role of game NPCs: Past, present, and
-                  future.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">08</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2025 · Jihun Chae · Equal-contribution coauthor · HCI Korea,
-                  254–259</span
-                ><a
-                  href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12131622"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >RAG-enhanced LLM chatbot for game accessibility: Development
-                  and evaluation of GAIA.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">09</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2024 · Jihun Chae · Second author · Korean Artificial
-                  Intelligence Association</span
-                ><span
-                  >Prompting-based LLM framework for ethical decision-making in
-                  the trolley dilemma: Embedding Hofstede's cultural dimensions
-                  theory (PLETH).</span
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">10</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2024 · Jihun Chae · One of the first three equal contributors
-                  · Korea Computer Graphics Society, 103–104</span
-                ><a
-                  href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >GAIA: A game AI assistant service framework integrating
-                  problem-solving and emotion regulation strategies.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">11</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2024 · Jihun Chae · Second author · Korea Game Society,
-                  165–170</span
-                ><span
-                  >Challenges and opportunities of game NPC research using LLM:
-                  A scoping review.</span
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">12</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2024 · Jihun Chae · Second author · Korea Society of
-                  Technology Innovation</span
-                ><span
-                  >A technical literature review of distributed management
-                  structure: Focusing on the multi-label system of HYBE Co.,
-                  Ltd.</span
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">13</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2024 · Jihun Chae · Corresponding author · Korea Society for
-                  Innovation Management &amp; Economics</span
-                ><span
-                  >From BigHit to HYBE: Sentiment analysis and strategic
-                  transition through news data.</span
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">14</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2023 · Jihun Chae · First author · Journal of the Korea
-                  Computer Graphics Society, 29(3), 137–147</span
-                ><a
-                  href="https://doi.org/10.15701/kcgs.2023.29.3.137"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Analysis of the effects of positive and negative VR game
-                  contents on enhancing environmental awareness based on
-                  self-reliant and team-based play styles.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">15</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2023 · Jihun Chae · Coauthor · Research Square preprint</span
-                ><a
-                  href="https://doi.org/10.21203/rs.3.rs-2637740/v1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Methodology for improving the performance of demand
-                  forecasting through machine learning.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">16</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2023 · Jihun Chae · First author · HCI Korea, 626–630</span
-                ><a
-                  href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11229723"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >A study on the effect of group commitment on improving
-                  awareness of recycling through gamification.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">17</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2023 · Jihun Chae · Second author · Korea Computer Graphics
-                  Society, 149–150</span
-                ><a
-                  href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11492794"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Enhancing participation in rehabilitation for diplopia
-                  through gamification.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">18</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2023 · Jihun Chae · Coauthor · Korea Multimedia Society,
-                  26(2), 21–23</span
-                ><span
-                  >Eye-tracking-based VR interactive game for eye
-                  exercises.</span
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">19</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2022 · Jihun Chae · Second author · Korea Multimedia Society,
-                  25(1), 17</span
-                ><span
-                  >A study on systematic exposure with space and distance
-                  factors in VR therapy of cynophobia.</span
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">20</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2022 · Jihun Chae · Coauthor · Korean Society of Management
-                  Information Systems, 267–273</span
-                ><a
-                  href="https://m.earticle.net/Article/A416325?lt=4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Enhancing predictive-model performance through clustering.</a
-                >
-              </div>
-            </li>
-            <li>
-              <span class="pub-number">21</span>
-              <div>
-                <span class="pub-record-meta"
-                  >2022 · Jihun Chae · Coauthor · Korea Intelligent Information
-                  Systems Society</span
-                ><a
-                  href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11207562"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >A method for enhancing demand forecasting performance by
-                  combining regression coefficient shrinkage, clustering, and
-                  LSTM.</a
-                >
-              </div>
-            </li>
-          </ol>
-        </details>
-
-        <a
-          class="record-link"
-          href="https://scholar.google.com/citations?user=OjxItRUAAAAJ&amp;hl=en"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Open the live Google Scholar record
-          <span aria-hidden="true">↗</span></a
-        >
-      </section>
-
-      <section
-        class="section credentials"
-        id="credentials"
-        aria-labelledby="credentials-title"
-      >
-        <div class="section-kicker">Credentials / 07</div>
-        <div class="credentials-grid">
-          <h2 id="credentials-title">
-            A foundation across research, engineering, and design.
-          </h2>
-          <div class="credential-columns">
-            <div>
-              <h3>Education</h3>
-              <article>
-                <span>Current</span
-                ><strong>Ph.D. Student, Culture Technology</strong>
-                <p>
-                  Korea Advanced Institute of Science and Technology (KAIST)
-                </p>
-              </article>
-              <article>
-                <span>Completed</span><strong>M.S., Culture Technology</strong>
-                <p>
-                  Korea Advanced Institute of Science and Technology (KAIST)
-                </p>
-              </article>
-              <article>
-                <span>Completed</span
-                ><strong>B.A., ICT Convergence &amp; Product Design</strong>
-                <p>Handong Global University</p>
-              </article>
-              <article>
-                <span>Additional study</span
-                ><strong>Management of Applied Chemistry</strong>
-                <p>Ateneo de Manila University</p>
-              </article>
-            </div>
-            <div>
-              <h3>Patent</h3>
-              <article>
-                <span>Granted 2025</span
-                ><strong
-                  >Method, Program, and Apparatus for Demand Prediction Based on
-                  Artificial Intelligence</strong
-                >
-                <p>Registered Patent No. 10-2867922 · Co-inventor</p>
-                <a
-                  href="https://patents.google.com/patent/KR102867922B1/en"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Patent record ↗</a
-                >
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="contact" aria-labelledby="contact-title">
-        <div class="contact-grid" aria-hidden="true"></div>
-        <p class="section-kicker">Next mission / 08</p>
-        <h2 id="contact-title">
-          Bring me the problem that does not fit neatly inside one discipline.
-        </h2>
-        <p>
-          I am most useful where human behavior, AI systems, product decisions,
-          and real-world constraints collide.
-        </p>
-        <a href="mailto:chaejihun@kaist.ac.kr"
-          >chaejihun@kaist.ac.kr <span aria-hidden="true">↗</span></a
-        >
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div>
-        <strong>Jihun Chae</strong>
-        <span>Human-Centered AI Researcher · Product Strategist · Builder</span>
+        <p class="pl-book-caption" id="plBookCaption" aria-hidden="true"></p>
       </div>
-      <nav aria-label="Profile links">
-        <a
-          href="https://www.linkedin.com/in/jihun-chae-15457756/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >LinkedIn ↗</a
-        >
-        <a
-          href="https://scholar.google.com/citations?user=OjxItRUAAAAJ&amp;hl=en"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Scholar ↗</a
-        >
-        <a
-          href="https://orcid.org/0009-0005-7425-3806"
-          target="_blank"
-          rel="noopener noreferrer"
-          >ORCID ↗</a
-        >
-        <a href="laboratory.html">Simulations ↗</a>
-      </nav>
-      <p>© 2026 Jihun Chae · Updated August 2026</p>
-    </footer>
 
-    <script src="app.js?v=20260815" defer></script>
-  </body>
+      <div class="pl-reading-dock" id="plReadingDock" aria-label="Open book"></div>
+      <p class="pl-status" id="plStatus" role="status" aria-live="polite"></p>
+      <noscript>
+        <p class="pl-noscript"><span lang="en">Enable JavaScript to open the work library. Every project and publication remains available in the full CV below.</span><span lang="ko">작업 라이브러리를 열려면 JavaScript를 활성화하세요. 모든 프로젝트와 출판물은 아래의 전체 이력서에서 확인할 수 있습니다.</span></p>
+      </noscript>
+    </div>
+  </section>
+
+  <a class="pl-cv-jump pl-cv-jump--arrow pl-cv-jump--primary" data-cv-jump href="?view=cv#cv-start">
+    <span class="pl-cv-jump__label" lang="en">Explore the full CV</span>
+    <span class="pl-cv-jump__label" lang="ko">전체 이력서 보기</span>
+    <span class="pl-cv-jump__icon" aria-hidden="true">
+      <svg class="pl-cv-jump__glyph" viewBox="0 0 24 24" focusable="false">
+        <path d="M12 4v14"></path>
+        <path d="m6.5 12.5 5.5 5.5 5.5-5.5"></path>
+      </svg>
+    </span>
+  </a>
+
+  <div class="page" id="cv-start" tabindex="-1">
+    <nav class="mobile-nav" aria-label="Sections">
+      <a href="#projects"><span lang="en">R&amp;D</span><span lang="ko">연구·개발</span></a>
+      <a href="#awards"><span lang="en">Awards</span><span lang="ko">수상</span></a>
+      <a href="#education"><span lang="en">Education</span><span lang="ko">학력</span></a>
+      <a href="#publications"><span lang="en">Publications</span><span lang="ko">논문</span></a>
+    </nav>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="profile-card" id="profileCard">
+          <div class="profile-image">
+            <picture>
+              <source srcset="assets/profile/jihun-chae.webp" type="image/webp" />
+              <img src="assets/profile/jihun-chae.jpg" alt="Jihun Chae"
+                   width="572" height="735" fetchpriority="high" decoding="async" />
+            </picture>
+          </div>
+
+          <h1 class="name"><span lang="en">Jihun Chae</span><span lang="ko">채지훈</span></h1>
+          <p class="role"><span lang="en">Human-Centered AI Researcher &amp; Product Strategist · Ph.D. Student</span><span lang="ko">인간 중심 AI 연구자·프로덕트 전략가 · 박사과정</span></p>
+          <p class="org"><span lang="en">KAIST Graduate School of Culture Technology</span><span lang="ko">KAIST 문화기술대학원</span></p>
+
+          <div class="divider"></div>
+
+          <p class="side-label"><span lang="en">Focus</span><span lang="ko">전문 분야</span></p>
+          <div class="side-list" lang="en">
+            <div>Human-centered AI systems</div>
+            <div>Agentic adaptation design</div>
+            <div>On-site requirements discovery</div>
+            <div>Rapid prototype-to-production delivery</div>
+            <div>AI transformation &amp; enterprise adoption (AX)</div>
+          </div>
+          <div class="side-list" lang="ko">
+            <div>인간 중심 AI 시스템</div>
+            <div>에이전트 적응 설계</div>
+            <div>현장 요구사항 발굴</div>
+            <div>프로토타입의 신속한 실전 전환</div>
+            <div>AI 트랜스포메이션 · 사내 내재화 (AX)</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <ul class="contact-list">
+            <li><a href="mailto:chaejihun@kaist.ac.kr" data-copy="chaejihun@kaist.ac.kr">✉ <span lang="en">Email</span><span lang="ko">이메일</span></a></li>
+            <li><a href="https://www.linkedin.com/in/jihun-chae-15457756/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="https://scholar.google.com/citations?user=OjxItRUAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer"><span lang="en">Google Scholar</span><span lang="ko">구글 스칼라</span></a></li>
+            <li><a href="https://orcid.org/0009-0005-7425-3806" target="_blank" rel="noopener noreferrer">ORCID</a></li>
+            <!-- laboratory.html linked back to this page from two places but had
+                 no inbound link of its own, leaving 26 simulations unreachable. -->
+            <li><a href="laboratory.html"><span lang="en">Simulations</span><span lang="ko">시뮬레이션</span></a></li>
+          </ul>
+
+          <div class="divider"></div>
+
+          <a href="mailto:chaejihun@kaist.ac.kr" data-copy="chaejihun@kaist.ac.kr" class="button" id="ctaButton">
+            <span lang="en">Get in touch</span><span lang="ko">연락하기</span> <span class="arrow">→</span>
+          </a>
+        </div>
+      </aside>
+
+      <main class="content" id="cv-content" tabindex="-1">
+        <section class="caps" aria-labelledby="capabilities-title">
+          <h2 class="pl-sr-only" id="capabilities-title"><span lang="en">Capabilities</span><span lang="ko">역량</span></h2>
+          <div class="caps-row">
+            <span class="k"><span lang="en">Discover</span><span lang="ko">발견</span></span>
+            <span class="v" lang="en">Field Research<span class="sep">·</span>Stakeholder Interviews<span class="sep">·</span>Accessibility Research<span class="sep">·</span>Requirements Synthesis</span>
+            <span class="v" lang="ko">현장 연구<span class="sep">·</span>이해관계자 인터뷰<span class="sep">·</span>접근성 연구<span class="sep">·</span>요구사항 종합</span>
+          </div>
+          <div class="caps-row">
+            <span class="k"><span lang="en">Design</span><span lang="ko">설계</span></span>
+            <span class="v" lang="en">Interaction Flows<span class="sep">·</span>Inclusive Design<span class="sep">·</span>Multimodal Interfaces<span class="sep">·</span>Rapid Prototyping<span class="sep">·</span>Human-in-the-Loop Design</span>
+            <span class="v" lang="ko">인터랙션 플로우<span class="sep">·</span>포용적 디자인<span class="sep">·</span>멀티모달 인터페이스<span class="sep">·</span>신속 프로토타이핑<span class="sep">·</span>사람 개입 설계</span>
+          </div>
+          <div class="caps-row">
+            <span class="k"><span lang="en">Build</span><span lang="ko">구축</span></span>
+            <span class="v" lang="en">Agent Architecture<span class="sep">·</span>RAG &amp; Context Engineering<span class="sep">·</span>Tool &amp; API Integration<span class="sep">·</span>XR &amp; Physical Prototypes<span class="sep">·</span>Python &amp; TypeScript</span>
+            <span class="v" lang="ko">에이전트 아키텍처<span class="sep">·</span>RAG · 컨텍스트 엔지니어링<span class="sep">·</span>툴 · API 연동<span class="sep">·</span>XR · 피지컬 프로토타입<span class="sep">·</span>Python · TypeScript</span>
+          </div>
+          <div class="caps-row">
+            <span class="k"><span lang="en">Validate</span><span lang="ko">검증</span></span>
+            <span class="v" lang="en">Usability Studies<span class="sep">·</span>Field Evaluation<span class="sep">·</span>Baseline Comparison<span class="sep">·</span>Observability<span class="sep">·</span>Adoption Measurement</span>
+            <span class="v" lang="ko">사용성 연구<span class="sep">·</span>현장 평가<span class="sep">·</span>기준선 비교<span class="sep">·</span>관측성<span class="sep">·</span>내재화 측정</span>
+          </div>
+
+          <!-- Two rows, because one row of nine was a wall: what he writes in
+               (Code) and what he builds on (Tools). The split reuses `.caps-row`
+               exactly as the four stage rows above do, so it adds a label, not a
+               new structure.
+
+               Provenance for every entry — page evidence first, then owner:
+                 Python, TypeScript  — the Build row directly above.
+                 Unreal Engine       — Awards: "Led technical implementation of a
+                                       large-scale Unreal Engine media-façade
+                                       prototype" (Pohang media-façade hackathon).
+                 Meta Quest Pro      — Experience: the Watchers digital therapeutic,
+                                       and again in Publications.
+                 Unity               — assets/project-library/work-content.js:431,
+                                       "Unity with Oculus and Meta Movement SDKs on
+                                       Meta Quest Pro" (the Watchers method note).
+                 C++, C#, R, Java    — supplied by the owner 2026-08-14 as his own
+                                       skills. Not evidenced in page prose; he is
+                                       the authority on his own CV, and he noted
+                                       there are "lots and lots more" to come.
+                 HoloLens 2          — supplied by the owner 2026-08-14, the only
+                                       tool he named explicitly this round. It has
+                                       zero hits anywhere in the repo, so it rests
+                                       on his word alone exactly as C++/C#/R/Java
+                                       do — which is a sufficient ground here, not
+                                       a weak one. He says there is "so much more".
+                 OptiTrack           — work-content.js:375, "a projection-based VR
+                                       recycling game using 12 OptiTrack Prime17W
+                                       cameras", and again at :403, "an OptiTrack
+                                       recycling task"; summarised in
+                                       work-designs.js:811. Both are his own
+                                       published studies, listed on this page at
+                                       :2101 and :2109. That is page evidence of
+                                       the same kind that carried Unity, only
+                                       named three times instead of once.
+
+               Found in the repo and deliberately NOT added, recorded so the next
+               pass does not spend the search again:
+                 Oculus SDK, Meta Movement SDK — work-content.js:431, the same
+                   sentence that evidences Unity, so the evidence is real. Held
+                   because both are components of the Meta Quest Pro entry already
+                   in this row: three items drawn from one method note would make
+                   the Tools row read as one project rather than a career.
+                 Discord (work-content.js:235, :290), FAISS and GPT-4 Turbo (:290),
+                   GPT-4o (:305, and this page at :2079) — all genuinely his work.
+                   Held because a chat platform, a vector index and a model are a
+                   different kind of object from an engine or a headset. This row
+                   is what he builds ON, and a named model carries a version that
+                   goes stale on the page faster than the CV around it.
+                 Microsoft Azure (:2149) — that entry is the AI-900 certification.
+                   It evidences study, not something he built with.
+               Each is one `.tech-item` line whenever the owner says the word.
+
+               React and FastAPI were REQUESTED for this row on the stated ground
+               that the CV already evidences them. It does not, and neither does
+               any other file: repo-wide, the only `React` hits are ripple.js
+               saying this site is *not* React and lab/experiments.js saying a
+               renderer could move into React later, and `FastAPI` has zero hits
+               anywhere. They are also absent from the owner's own list. Held out
+               pending his confirmation rather than asserted on his CV — adding
+               either is one `.tech-item` line, and they need a Build-row mention
+               to stay consistent with the rule above. "Computer vision" was
+               dropped earlier on the same test and stays dropped. Re-checked on
+               the 2026-08-14 expansion pass: both still have exactly the hits
+               described above and nothing else. They stay out.
+
+               The glyphs are category marks drawn as path data, not vendor logos
+               — see the header of tech-icons.css for why, and note the same
+               decision already made for KRAFTON/NYU/bHaptics in logos.css. The
+               visible text carries the name, so the SVGs are aria-hidden; saying
+               "Python Python" is the failure mode if they are not.
+
+               The `caps-row` class is load-bearing: layout.css:287 makes
+               `.caps-row` `display: contents` above 761px so labels and content
+               share one grid. Dropping it puts this whole row in the 62px label
+               column. -->
+          <div class="caps-row tech-row">
+            <span class="k"><span lang="en">Code</span><span lang="ko">코드</span></span>
+            <!-- No aria-labelledby on either list. Pointing it at the `.k` span
+                 was measured in the Chrome AX tree and gave the list the name
+                 "CODE" — uppercased, because `.k` carries text-transform and
+                 Chrome computes the name from rendered text. The label is
+                 already a StaticText node immediately before the list in
+                 reading order, so the result was "CODE … CODE, list, 6 items",
+                 and several screen readers spell all-caps names out letter by
+                 letter. Unnamed, it reads "CODE … list, 6 items".
+
+                 The label is "Code" and not "Languages" for a measured reason:
+                 `.caps` is `grid-template-columns: max-content minmax(0,1fr)`
+                 (layout.css:289), so the label column is sized by the longest
+                 label in the whole block — currently DISCOVER/VALIDATE at
+                 59.48px. "LANGUAGES" is one character longer and would push
+                 every one of the five content columns ~7.4px to the right. -->
+            <span class="tech-set" role="list">
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.8 3 9.4 10 2.8 17"/><path d="M11.6 17h6"/></svg><span class="tech-n">Python</span></span>
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8.6 2.8c-1.8 0-2.7.9-2.7 2.7v2.1c0 1.6-.9 2.4-2.7 2.4 1.8 0 2.7.8 2.7 2.4v2.1c0 1.8.9 2.7 2.7 2.7"/><path d="M11.4 2.8c1.8 0 2.7.9 2.7 2.7v2.1c0 1.6.9 2.4 2.7 2.4-1.8 0-2.7.8-2.7 2.4v2.1c0 1.8-.9 2.7-2.7 2.7"/></svg><span class="tech-n">TypeScript</span></span>
+              <!-- C++, C# and R carry no glyph and no second label: the name is
+                   already the mark. A drawn "C++" beside the words "C++" is a
+                   stutter, and there is no non-name pictogram for any of the
+                   three (C++ has no logo at all — it is an ISO standard, not a
+                   product). Set in the mono face at the glyph's optical size,
+                   the token reads as a mark and stays real selectable text, so
+                   it needs no aria-hidden and no accessible-name patch. -->
+              <span class="tech-item" role="listitem"><span class="tech-w">C++</span></span>
+              <span class="tech-item" role="listitem"><span class="tech-w">C#</span></span>
+              <span class="tech-item" role="listitem"><span class="tech-w">R</span></span>
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3.6 8.2h8.8v4.4a3.4 3.4 0 0 1-3.4 3.4H7a3.4 3.4 0 0 1-3.4-3.4Z"/><path d="M12.4 9.4h1.5a2.1 2.1 0 0 1 0 4.2h-1.5"/><path d="M6.6 3c-.8.9-.8 1.8 0 2.7M9.6 3c-.8.9-.8 1.8 0 2.7"/></svg><span class="tech-n">Java</span></span>
+            </span>
+          </div>
+          <div class="caps-row tech-row">
+            <span class="k"><span lang="en">Tools</span><span lang="ko">도구</span></span>
+            <span class="tech-set" role="list">
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 2.8 17.4 16.2H2.6Z"/><path d="M6.3 9.5H13.7L10 16.2Z"/></svg><span class="tech-n">Unity</span></span>
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.7 17.2 5.85v8.3L10 18.3l-7.2-4.15v-8.3Z"/><path d="M10 10 2.8 5.85M10 10l7.2-4.15M10 10v8.3"/></svg><span class="tech-n">Unreal Engine</span></span>
+              <!-- The order below is measured rather than tasteful. At 375
+                   `.tech-set` is a 328px column, and Unity + Unreal Engine + Meta
+                   Quest Pro measure 326.09px of it in Geist — 1.91px of slack. A
+                   fourth item was always going to wrap; the question was where.
+                   Left in name order the break fell 3 + 2 on that 1.91px, so any
+                   metric wobble (a Geist revision, the jsdelivr @font-face failing
+                   to the Inter fallback, a user minimum font size) would have
+                   dropped Meta Quest Pro to line 2 and pushed OptiTrack alone onto
+                   line 3 — the single-word orphan. Putting OptiTrack third breaks
+                   line 1 at Unity + Unreal Engine + OptiTrack = 294.30px, 33.70px
+                   of slack, and lands the two headsets together on line 2 at
+                   230.44px. Same five items, a break that survives a font change,
+                   and the pair that belongs together no longer split across lines.
+                   Reading order stays coherent on one line above 761px: the two
+                   engines, the camera that captures into them, the two headsets
+                   they play out on. Verified 320/375/761/961/1280 in both
+                   languages. -->
+              <!-- OptiTrack is the tracking camera: a housing, the LED ring, the
+                   lens. The first draft filled the 20px box the way a real Prime
+                   camera fills its housing and came out visibly denser than the
+                   line-drawn cube and visor next to it, so the body was pulled in
+                   to 14x11.2 and the centre lens to r1.2 — same silhouette, same
+                   ink as its neighbours. A mount stub was drawn and dropped: it
+                   turned the camera into a desktop monitor at this size. -->
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 4.4h10a2 2 0 0 1 2 2v7.2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6.4a2 2 0 0 1 2-2Z"/><path d="M10 6.4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2Z"/><path d="M10 8.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z"/></svg><span class="tech-n">OptiTrack</span></span>
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.2 6.8h11.6a2.6 2.6 0 0 1 2.6 2.6v2.8a2.6 2.6 0 0 1-2.6 2.6h-2.1a1.6 1.6 0 0 1-1.3-.7l-.9-1.3a1.6 1.6 0 0 0-2.6 0l-.9 1.3a1.6 1.6 0 0 1-1.3.7H4.2a2.6 2.6 0 0 1-2.6-2.6V9.4a2.6 2.6 0 0 1 2.6-2.6Z"/><path d="M2.6 7.6C3.4 4 6.4 2 10 2s6.6 2 7.4 5.6"/></svg><span class="tech-n">Meta Quest Pro</span></span>
+              <!-- HoloLens 2 gets glasses, not a second visor. The Quest Pro mark
+                   beside it is a closed block with a nose notch — the VR silhouette
+                   — and drawing the HoloLens as another block would put two marks
+                   in one row that a reader has to compare letter-labels to tell
+                   apart. Four other drawings were tried first (band-and-visor, the
+                   halo ring, a see-through stack, a ring-and-plate) and at 20px
+                   every one of them read as a hat or a stack of plates, not a
+                   headset. Glasses is the honest kind-mark anyway: the difference
+                   that matters between these two devices is that you see the room
+                   through one and not the other, and this file's rule is that the
+                   glyph names the kind while the text names the tool. -->
+              <span class="tech-item" role="listitem"><svg class="tech-i" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M1.5 8.1h6.3v3.2a2 2 0 0 1-2 2H3.5a2 2 0 0 1-2-2Z"/><path d="M12.2 8.1h6.3v3.2a2 2 0 0 1-2 2h-2.3a2 2 0 0 1-2-2Z"/><path d="M7.8 9.2a3 3 0 0 1 4.4 0"/><path d="M1.5 8.1 3.6 6.2a2.2 2.2 0 0 1 1.5-.6h9.8a2.2 2.2 0 0 1 1.5.6l2.1 1.9"/></svg><span class="tech-n">HoloLens 2</span></span>
+            </span>
+          </div>
+        </section>
+
+        <section class="section" id="projects">
+          <h2 class="section-title"><span class="num">01</span><span lang="en">Research &amp; Development Projects</span><span lang="ko">연구·개발 프로젝트</span></h2>
+          <div class="items">
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Development and Evaluation of the Inclusive Conversational AI Service for Game Accessibility Enhancement</span><span lang="ko">게임 접근성 향상을 위한 포용적 대화형 AI 서비스의 개발 및 평가</span></span>
+              <div class="item-meta"><span lang="en">2024.05 – 2027.04 | KAIST | National Research Foundation of Korea (NRF) | Lead Student Researcher</span><span lang="ko">2024.05 ~ 2027.04 | KAIST | 한국연구재단 (NRF) | 학생연구원 (총괄)</span></div>
+              <p class="item-desc cv-summary" lang="en">Led user research and prototype development for a conversational AI assistant supporting players with disabilities, turning accessibility needs into interaction scenarios through interviews and participatory design workshops. Contributed to a framework connecting academia, industry, and rehabilitation, with design principles published at ACM IUI 2026.</p>
+              <p class="item-desc cv-summary" lang="ko">장애가 있는 플레이어를 지원하는 대화형 AI 어시스턴트의 사용자 연구와 프로토타입 개발을 주도했으며, 인터뷰와 참여적 디자인 워크숍을 통해 접근성 요구를 상호작용 시나리오로 전환했습니다. 학계·산업계·재활 분야를 잇는 프레임워크에 기여했고, 설계 원칙은 ACM IUI 2026에 게재되었습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/samsung.png" alt="" onerror="this.remove()" />Samsung Electronics (Corporate Design Center)</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nexon.png" alt="" onerror="this.remove()" />Nexon Intelligence Labs</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/smilegate.png" alt="" onerror="this.remove()" />Smilegate D&amp;I</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nrc.png" alt="" onerror="this.remove()" />Korea National Rehabilitation Center</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/specialeffect.png" alt="" onerror="this.remove()" />SpecialEffect (UK)</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/samsung.png" alt="" onerror="this.remove()" />삼성전자 디자인경영센터</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nexon.png" alt="" onerror="this.remove()" />넥슨 인텔리전스 랩</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/smilegate.png" alt="" onerror="this.remove()" />스마일게이트 D&amp;I</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nrc.png" alt="" onerror="this.remove()" />국립재활원</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/specialeffect.png" alt="" onerror="this.remove()" />SpecialEffect (영국)</span></span></div>
+            </div>
+
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Automated Data-Quality Measurement &amp; Verification Engine (Industry Contract)</span><span lang="ko">데이터 품질 측정·검증 자동화 엔진 (산업체 용역)</span></span>
+              <div class="item-meta"><span lang="en">2024 – 2026 | SKAIWORLDWIDE | Ministry of SMEs and Startups | Sole developer, DQM v1.0 engine</span><span lang="ko">2024 ~ 2026 | SKAIWORLDWIDE | 중소벤처기업부 | DQM v1.0 엔진 단독 개발</span></div>
+              <p class="item-desc cv-summary" lang="en">Sole developer of DQM v1.0: software that detects and corrects data-quality errors in enterprise tables, then infers their primary keys, foreign keys, indexes and column-level rules. Built within a government-funded R&amp;D project and submitted to an accredited Korean laboratory for verification against four KPIs, August 2026.</p>
+              <p class="item-desc cv-summary" lang="ko">데이터를 자동으로 분석해 품질 오류를 탐지·보정하고, 구조 메타정보(PK·FK·Index)와 컬럼별 품질 기준(도메인·코드·형식)을 자동 추론·생성하는 데이터 품질 관리 자동화 소프트웨어 DQM v1.0을 단독 개발했습니다. 정부 지원 R&amp;D 과제의 일환이며, 2026년 8월 공인 소프트웨어 시험기관에 4개 KPI에 대한 독립 검증을 의뢰했습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />SKAIWORLDWIDE</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />스카이월드와이드</span></span></div>
+            </div>
+
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Preserving the Haenyeo Legacy: Serious Games for Social Impact</span><span lang="ko">해녀 유산의 보존: 사회적 임팩트를 위한 시리어스 게임</span></span>
+              <div class="item-meta"><span lang="en">2025.06 – 2025.09 | KAIST | Leverhulme Trust International Fellowship | Student Researcher</span><span lang="ko">2025.06 ~ 2025.09 | KAIST | Leverhulme Trust International Fellowship | 학생연구원</span></div>
+              <p class="item-desc cv-summary" lang="en">Contributed to the design of a serious game preserving Jeju Haenyeo heritage, developing game concepts and narrative structures linking diving practice, environmental change, and women's community knowledge. Supported field-based international collaboration on serious games for intergenerational learning, cultural sustainability, and community resilience.</p>
+              <p class="item-desc cv-summary" lang="ko">제주 해녀 유산을 보존하는 시리어스 게임 설계에 기여하며, 잠수 실천과 환경 변화, 여성 공동체 지식을 잇는 게임 콘셉트와 서사 구조를 개발했습니다. 세대 간 학습과 문화적 지속가능성, 공동체 회복력을 위한 시리어스 게임의 현장 기반 국제 협력을 지원했습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/brunel.png" alt="" onerror="this.remove()" />Brunel University London (Games Research Lab)</span><span class="p-chip" data-m="J">Jeju Haenyeo Museum</span><span class="p-chip" data-m="H">Haenyeo communities of Sinrye · Daepyeong · Yeongnak</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/brunel.png" alt="" onerror="this.remove()" />브루넬 대학교 런던 (게임 연구실)</span><span class="p-chip" data-m="제">제주 해녀박물관</span><span class="p-chip" data-m="해">신례리·대평리·영락리 해녀 공동체</span></span></div>
+            </div>
+
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Real-Time XR Interface Technology for Environmental Adaptation</span><span lang="ko">환경 적응을 위한 실시간 XR 인터페이스 기술</span></span>
+              <div class="item-meta"><span lang="en">2024.04 – 2025.06 | KAIST | Institute for Information &amp; Communication Technology Planning &amp; Evaluation (IITP) | Student Researcher</span><span lang="ko">2024.04 ~ 2025.06 | KAIST | 정보통신기획평가원 (IITP) | 학생연구원</span></div>
+              <p class="item-desc cv-summary" lang="en">Participated in developing an XR interface system that adapts virtual content to real-world spatial and environmental conditions in real time. Contributed to the design and implementation of interaction concepts involving adaptive virtual objects and multimodal visual-haptic feedback for presence and environmental responsiveness.</p>
+              <p class="item-desc cv-summary" lang="ko">가상 콘텐츠를 실제 공간·환경 조건에 실시간으로 적응시키는 XR 인터페이스 시스템 개발에 참여했습니다. 적응형 가상 객체와 멀티모달 시각·햅틱 피드백을 활용해 현존감과 환경 반응성을 높이는 상호작용 개념의 설계·구현에 기여했습니다.</p>
+              <div class="partners">
+                <span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span>
+                <span class="p-set" lang="en">
+                  <span class="p-chip"><span class="p-brand-stage p-brand-stage--fraunhofer" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/fraunhofer-fit.svg" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>Fraunhofer FIT</span>
+                  <span class="p-chip"><span class="p-brand-wordmark p-brand-wordmark--nyu" aria-hidden="true">NYU</span>NYU</span>
+                  <span class="p-chip"><span class="p-brand-stage" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/unisa.png" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>UniSA</span>
+                  <span class="p-chip"><span class="p-brand-stage" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/anipen.svg" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>Anipen</span>
+                  <span class="p-chip"><span class="p-brand-wordmark p-brand-wordmark--bhaptics" aria-hidden="true">bHaptics</span>bHaptics</span>
+                </span>
+                <span class="p-set" lang="ko">
+                  <span class="p-chip"><span class="p-brand-stage p-brand-stage--fraunhofer" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/fraunhofer-fit.svg" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>프라운호퍼 FIT</span>
+                  <span class="p-chip"><span class="p-brand-wordmark p-brand-wordmark--nyu" aria-hidden="true">NYU</span>NYU</span>
+                  <span class="p-chip"><span class="p-brand-stage" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/unisa.png" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>UniSA</span>
+                  <span class="p-chip"><span class="p-brand-stage" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/anipen.svg" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>Anipen</span>
+                  <span class="p-chip"><span class="p-brand-wordmark p-brand-wordmark--bhaptics" aria-hidden="true">bHaptics</span>bHaptics</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Defense Technology Research: Camouflage Effectiveness</span><span lang="ko">국방 기술 연구: 위장 효과성</span></span>
+              <div class="item-meta"><span lang="en">2023.04 – 2024.02 | Handong Global University | Korea Aerospace Industries (KAI) | Student Researcher</span><span lang="ko">2023.04 ~ 2024.02 | 한동대학교 | 한국항공우주산업 (KAI) | 학생연구원</span></div>
+              <p class="item-desc cv-summary" lang="en">Evaluated KF-21 Boramae camouflage effectiveness across altitude, terrain, and meteorological conditions, processing environmental imagery and simulation datasets to analyze how surface patterns interact with background context and visibility. Developed colorways and pattern configurations, with selected proposals incorporated into real project outputs.</p>
+              <p class="item-desc cv-summary" lang="ko">고도·지형·기상 조건 전반에서 KF-21 보라매의 위장 효과를 평가하고, 환경 이미지와 시뮬레이션 데이터를 처리해 표면 패턴과 배경 맥락, 피탐지성의 상호작용을 분석했습니다. 컬러웨이와 패턴 구성을 개발했으며, 선정된 제안은 실제 프로젝트 산출물에 반영되었습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><span class="p-brand-stage p-brand-stage--kai" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kai.svg" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>Korea Aerospace Industries (KAI)</span></span><span class="p-set" lang="ko"><span class="p-chip"><span class="p-brand-stage p-brand-stage--kai" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kai.svg" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>한국항공우주산업 (KAI)</span></span></div>
+            </div>
+
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Smart City Infrastructure &amp; AI Object Tracking</span><span lang="ko">스마트시티 인프라 및 AI 객체 추적</span></span>
+              <div class="item-meta"><span lang="en">2023.01 – 2024.02 | Handong Global University | Student Researcher</span><span lang="ko">2023.01 ~ 2024.02 | 한동대학교 | 학생연구원</span></div>
+              <p class="item-desc cv-summary" lang="en">Engineered IoT-based roadside sensing hardware for real road scenes, including enclosure design and 3D-printed housings. Supported AI traffic object-tracking pipelines through data preprocessing, detection workflow refinement, and model-level anchor-box optimization, improving detection robustness in dense urban environments.</p>
+              <p class="item-desc cv-summary" lang="ko">실제 도로 환경을 위한 IoT 기반 노변 센싱 하드웨어를 인클로저 설계와 3D 프린팅 하우징을 포함해 제작했습니다. 데이터 전처리, 탐지 워크플로 개선, 모델 수준의 앵커박스 최적화로 AI 교통 객체 추적 파이프라인을 지원해 혼잡한 도심 환경에서 탐지 견고성을 높였습니다.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="awards">
+          <h2 class="section-title"><span class="num">02</span><span lang="en">Recognition &amp; External Validation</span><span lang="ko">외부 인정 및 검증</span></h2>
+          <div class="items">
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Top 3 Finish – Rapid AI Product Build</span><span lang="ko">상위 3팀 – AI 제품 신속 개발</span></span>
+              <div class="item-meta"><span lang="en">2026.07 | Cofathon: AI Native Battlegrounds</span><span lang="ko">2026.07 | 코파톤 (Cofathon): AI Native Battlegrounds</span></div>
+              <p class="item-desc cv-summary" lang="en">Placed in the top 3 through a roughly 25-to-6-to-3 selection funnel, building an AI application in under four hours from agent-led requirement discovery through blind-review handoff. Official material documents the one-day final and its recruitment fast-track.</p>
+              <p class="item-desc cv-summary" lang="ko">약 25개 팀에서 6팀을 거쳐 최종 3팀에 들었으며, 에이전트 기반 요구사항 발굴부터 블라인드 심사 인계까지 4시간 이내에 AI 애플리케이션을 구현했습니다. 공식 자료가 1일 결선과 채용 우대를 확인합니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/krafton.svg" alt="" onerror="this.remove()" />KRAFTON</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/oliveyoung.png" alt="" onerror="this.remove()" />CJ Olive Young</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/openai.png" alt="" onerror="this.remove()" />OpenAI</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/krafton.svg" alt="" onerror="this.remove()" />크래프톤</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/oliveyoung.png" alt="" onerror="this.remove()" />CJ올리브영</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/openai.png" alt="" onerror="this.remove()" />OpenAI</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Paper-Level Best Presentation Award</span><span lang="ko">논문 단위 우수발표논문상</span></span>
+              <div class="item-meta"><span lang="en">2026.05 | Korea Game Society Spring Conference 2026</span><span lang="ko">2026.05 | 한국게임학회 2026 춘계학술발표대회</span></div>
+              <p class="item-desc cv-summary" lang="en">Contributed the accessibility-AI framing, barrier interpretation, and design synthesis to this recognized paper as second author. The award is recorded in Professor Young Yim Doh's July 2026 CV.</p>
+              <p class="item-desc cv-summary" lang="ko">제2저자로서 수상 논문의 접근성 AI 프레이밍, 장벽 해석, 설계 종합에 기여했습니다. 수상은 도영임 교수의 2026년 7월 CV에 기록되어 있습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip" data-m="K">Korea Game Society</span></span><span class="p-set" lang="ko"><span class="p-chip" data-m="게">한국게임학회</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Grand Prize – Education4.0 Q TA Activities</span><span lang="ko">대상 – Education4.0 Q 조교 활동</span></span>
+              <div class="item-meta"><span lang="en">2026.03 | Certificate EC-2026-0001</span><span lang="ko">2026.03 | 증서번호 EC-2026-0001</span></div>
+              <p class="item-desc cv-summary" lang="en">Received the Grand Prize for teaching-assistant work under KAIST's Education4.0 Q teaching and learning model. The award recognised both the quality of the activity report and its presentation.</p>
+              <p class="item-desc cv-summary" lang="ko">2026년 3월 23일 Education4.0 Q 모형의 조교 활동으로 KAIST 우수상 증서를 받았습니다. 활동보고서의 완성도와 그 발표를 함께 인정한 수상입니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kaist.png" alt="" onerror="this.remove()" />KAIST</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kaist.png" alt="" onerror="this.remove()" />KAIST</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Selected Entrepreneurial Team – Climate Tech Track</span><span lang="ko">선정 창업팀 – 기후테크 부문</span></span>
+              <div class="item-meta"><span lang="en">2024.03 | Asan UniverCT · KAIST</span><span lang="ko">2024.03 | 아산 UniverCT · KAIST</span></div>
+              <p class="item-desc cv-summary" lang="en">Led venture coordination, AI modeling, and patent work as named representative of Glean, selected as a climate-tech team in the Asan UniverCT programme. The selection secured early-stage funding and mentorship through KAIST and Asan Nanum Foundation.</p>
+              <p class="item-desc cv-summary" lang="ko">아산 UniverCT 프로그램에 기후테크 창업팀으로 선정된 Glean의 명시된 대표로서 사업 총괄, AI 모델링, 특허 업무를 이끌었습니다. 이 선정으로 KAIST와 아산나눔재단을 통해 초기 자금과 멘토링을 확보했습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/asan.png" alt="" onerror="this.remove()" />Asan Nanum Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/asan.png" alt="" onerror="this.remove()" />아산나눔재단</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Grand Prize – Handong Global University President's Award</span><span lang="ko">대상 – 한동대학교 총장상</span></span>
+              <div class="item-meta"><span lang="en">2024.01 | Pohang Culture &amp; Arts Factory Hackathon</span><span lang="ko">2024.01 | 포항문화예술공장 해커톤</span></div>
+              <p class="item-desc cv-summary" lang="en">Led technical implementation of a large-scale Unreal Engine media-façade prototype demonstrating a smart-city experience concept. The hackathon, co-hosted by Pohang City, the Pohang Cultural Foundation, KT, and Handong Global University, awarded it the Grand Prize.</p>
+              <p class="item-desc cv-summary" lang="ko">스마트시티 경험 콘셉트를 구현한 대규모 Unreal Engine 미디어파사드 프로토타입의 기술 구현을 총괄했습니다. 포항시, 포항문화재단, KT, 한동대학교가 공동 주최한 해커톤에서 대상을 받았습니다.</p>
+              <!-- Pohang Cultural Foundation keeps the monogram. The only official
+                   file the foundation publishes is the reversed (white) lockup in
+                   its site footer — assets/logos/pohang-cultural-foundation.svg is
+                   that file, kept for when a positive version can be obtained. On
+                   this light-only page it is white on cream, i.e. invisible, so the
+                   monogram is the honest fallback rather than a recoloured mark. -->
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kt.png" alt="" onerror="this.remove()" />KT</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/pohang-city.svg" alt="" onerror="this.remove()" />Pohang City</span><span class="p-chip" data-m="P">Pohang Cultural Foundation</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />Handong Global University</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kt.png" alt="" onerror="this.remove()" />KT</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/pohang-city.svg" alt="" onerror="this.remove()" />포항시</span><span class="p-chip" data-m="포">포항문화재단</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />한동대학교</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Excellence Award – Undergraduate Paper Competition</span><span lang="ko">우수상 – 추계학부생논문경진대회</span></span>
+              <div class="item-meta"><span lang="en">2023.11 | Korea Multimedia Society Fall Conference</span><span lang="ko">2023.11 | 한국멀티미디어학회 추계학술대회</span></div>
+              <p class="item-desc cv-summary" lang="en">Co-authored and presented <em>Eye-Tracking-Based VR Interactive Games</em>, analyzing oculomotor responses to strengthen immersion and accessibility. The Korea Multimedia Society awarded the seven-author paper an Excellence Award on 17 November 2023.</p>
+              <p class="item-desc cv-summary" lang="ko">「시선 추적 기반 VR 인터랙티브 게임」을 공동 저술·발표하며 몰입과 접근성을 높이기 위한 안구 운동 반응을 분석했습니다. 한국멀티미디어학회가 2023년 11월 17일 7인 공저 논문에 우수상을 수여했습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kmms-official.svg" alt="" onerror="this.remove()" />Korea Multimedia Society (KMMS)</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kmms-official.svg" alt="" onerror="this.remove()" />한국멀티미디어학회</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Excellence Award</span><span lang="ko">우수상</span></span>
+              <div class="item-meta"><span lang="en">2023.10 | 2023 Metaverse Developer Contest</span><span lang="ko">2023.10 | 2023 메타버스 개발자 경진대회</span></div>
+              <p class="item-desc cv-summary" lang="en">Designed the VR content and experience for <em>Watchers</em>, a Meta Quest Pro digital therapeutic turning eye-muscle rehabilitation into gameplay through eye tracking. The CEO of Skonec Entertainment presented the award at this contest sponsored by MSIT.</p>
+              <p class="item-desc cv-summary" lang="ko">시선 추적으로 안구 근육 재활을 플레이로 전환한 Meta Quest Pro 디지털 치료제 <em>Watchers</em>의 VR 콘텐츠와 경험을 설계했습니다. 과학기술정보통신부가 후원한 이 대회에서 스코넥엔터테인먼트 대표가 시상했습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />MSIT</span><span class="p-chip" data-m="K">Korea Metaverse Industry Association</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa-mark.png" alt="" onerror="this.remove()" />NIPA</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />Skonec Entertainment</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />과학기술정보통신부</span><span class="p-chip" data-m="메">한국메타버스산업협회</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa-mark.png" alt="" onerror="this.remove()" />정보통신산업진흥원</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />스코넥엔터테인먼트</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Handong Global University President's Award</span><span lang="ko">한동대학교 총장상</span></span>
+              <div class="item-meta"><span lang="en">2022.11 | Handong Global University Startup Idea Competition</span><span lang="ko">2022.11 | 한동대학교 창업아이디어 경진대회</span></div>
+              <p class="item-desc cv-summary" lang="en">Represented Team CGreen with Glean, a startup model integrating ESG principles with XR and AR recycling rewards. Judged the top proposal for technical feasibility and social impact, winning the Handong Global University President's Award.</p>
+              <p class="item-desc cv-summary" lang="ko">2022년 11월 24일 본선에서 ESG 원칙과 XR·AR 재활용 리워드를 결합한 창업 모델 Glean으로 Team CGreen을 대표했습니다. 이 벤처는 한동대학교 총장상을 받았습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />Handong Global University</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />한동대학교</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Presentation Award – Selected for Excellence</span><span lang="ko">발표상 – 우수상 선정</span></span>
+              <div class="item-meta"><span lang="en">2022.05 | KMMS Spring Undergraduate Paper Competition</span><span lang="ko">2022.05 | 한국멀티미디어학회 춘계학부생논문경진대회</span></div>
+              <p class="item-desc cv-summary" lang="en">Contributed as second author to experimental research on VR exposure therapy for cynophobia, recognized by the Korea Multimedia Society on 13 May 2022. The paper proposed novel spatiotemporal design factors intended to improve treatment efficacy.</p>
+              <p class="item-desc cv-summary" lang="ko">제2저자로 개 공포증 VR 노출 치료 실험 연구에 참여했으며, 한국멀티미디어학회가 2022년 5월 13일 이를 인정했습니다. 이 논문은 치료 효과를 높이기 위한 새로운 시공간 설계 요인을 제안했습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kmms-official.svg" alt="" onerror="this.remove()" />Korea Multimedia Society (KMMS)</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kmms-official.svg" alt="" onerror="this.remove()" />한국멀티미디어학회</span></span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Top 14 Finalist</span><span lang="ko">본선 14팀 진출</span></span>
+              <div class="item-meta"><span lang="en">2021.07 | DB-SNUbiz Global Startup Challenge</span><span lang="ko">2021.07 | DB-SNUbiz 글로벌 창업 챌린지</span></div>
+              <p class="item-desc cv-summary" lang="en">Pitched a blockchain venture to a panel of venture capitalists and industry experts, reaching the final 14 teams from a field of 152 applicants. The challenge carried a $91,000 prize pool.</p>
+              <p class="item-desc cv-summary" lang="ko">152개 지원팀 가운데 본선 14팀에 올라 벤처캐피털과 산업 전문가 심사단 앞에서 블록체인 벤처를 피칭했습니다. 이 챌린지의 총상금 규모는 9만 1천 달러였습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />SNU Business School</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/db-foundation.svg" alt="" onerror="this.remove()" />DB Kim Jun-gi Culture Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />서울대학교 경영대학</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/db-foundation.svg" alt="" onerror="this.remove()" />DB김준기문화재단</span></span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="education">
+          <h2 class="section-title"><span class="num">03</span><span lang="en">Education</span><span lang="ko">학력</span></h2>
+          <div class="items">
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Korea Advanced Institute of Science and Technology (KAIST)</span><span lang="ko">한국과학기술원 (KAIST)</span></span>
+              <div class="item-meta"><span lang="en"> | Ph.D. Student, Graduate School of Culture Technology</span><span lang="ko"> | 박사과정, 문화기술대학원</span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Korea Advanced Institute of Science and Technology (KAIST)</span><span lang="ko">한국과학기술원 (KAIST)</span></span>
+              <div class="item-meta"><span lang="en"> | M.S., Graduate School of Culture Technology</span><span lang="ko"> | 석사, 문화기술대학원</span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Handong Global University</span><span lang="ko">한동대학교</span></span>
+              <div class="item-meta"><span lang="en"> | B.A. in ICT Convergence &amp; Product Design</span><span lang="ko"> | ICT융합 및 제품디자인 학사</span></div>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">Ateneo de Manila University</span><span lang="ko">아테네오 데 마닐라 대학교</span></span>
+              <div class="item-meta"><span lang="en"> | Management of Applied Chemistry</span><span lang="ko"> | 응용화학 경영 전공</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="publications">
+          <h2 class="section-title"><span class="num">04</span><span lang="en">Publications</span><span lang="ko">논문</span><a class="title-aside" href="https://scholar.google.com/citations?user=OjxItRUAAAAJ" target="_blank" rel="noopener noreferrer"><span lang="en">Google Scholar ↗</span><span lang="ko">Google Scholar ↗</span></a></h2>
+          <div class="filter" role="tablist" aria-label="Filter publications by year" id="pubFilter">
+            <button class="active" data-year="all" role="tab" aria-selected="true"><span lang="en">All</span><span lang="ko">전체</span></button>
+            <button data-year="2026" role="tab" aria-selected="false">2026</button>
+            <button data-year="2025" role="tab" aria-selected="false">2025</button>
+            <button data-year="2024" role="tab" aria-selected="false">2024</button>
+            <button data-year="2023" role="tab" aria-selected="false">2023</button>
+            <button data-year="2022" role="tab" aria-selected="false">2022</button>
+          </div>
+          <p class="pub-summary">
+            <span lang="en">21 publications · Led 7 as first or sole author · Shared lead or equal contribution on 3 · Coauthored 11</span>
+            <span lang="ko">총 21편 · 제1·단독 저자로 7편 주도 · 공동 주도·동등기여 3편 · 공저 11편</span>
+          </p>
+          <div class="items" id="pubItems">
+            <div class="pub-group">
+              <h3 class="pub-group-title">2026<span class="pub-group-n" aria-hidden="true">5</span></h3>
+            <div class="item reveal" data-year="2026">
+              <p class="item-desc"><span class="pub-n">1</span><span class="pub-author-me">Chae, J.</span> (2026). <a href="https://library.kaist.ac.kr/search/detail/view.do?bibCtrlNo=1152515&amp;flag=dissertation" target="_blank" rel="noopener noreferrer"><span class="paper-title">Designing and evaluating an AI assistant for players with disabilities: Empirical findings and future design implications.</span></a> <span class="venue">Master's thesis, Korea Advanced Institute of Science and Technology. Advisor: Young Yim Doh.</span> <span class="pub-role"><span lang="en">(Sole author)</span><span lang="ko">(단독 저자)</span></span> <span class="pub-tag">MGCT 26010</span> <a class="pub-link" href="https://library.kaist.ac.kr/search/detail/view.do?bibCtrlNo=1152515&amp;flag=dissertation" target="_blank" rel="noopener noreferrer">KAIST Library ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">AI accessibility helps only when information, perception, and execution support match each player's abilities, a mixed-method Minecraft study with 12 players with disabilities finds.</span><span lang="ko">AI 접근성은 정보·지각·실행 지원을 각 플레이어의 능력에 맞출 때만 유효하다는 점을, 장애가 있는 플레이어 12명의 혼합방법 Minecraft 연구가 확인했습니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2026">
+              <p class="item-desc"><span class="pub-n">2</span><span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2026). <a href="https://doi.org/10.64145/kjdgs.2026.2.1.29" target="_blank" rel="noopener noreferrer"><span class="paper-title">Toward Ludic AI: Proposing an evaluation framework for the ludic competence of game-playing AI.</span></a> <span class="venue">Digital Game Research, 2(1), 29–59.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.64145/kjdgs.2026.2.1.29" target="_blank" rel="noopener noreferrer">DOI ↗</a> <a class="pub-link" href="https://www.researchgate.net/publication/408515882_Toward_Ludic_AI_Proposing_an_Evaluation_Framework_for_the_Ludic_Competence_of_Game-Playing_AI" target="_blank" rel="noopener noreferrer">Article ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Game-playing AI should be judged on whether it sustains shared play, not just wins, so this framework operationalizes play theory as three behavioral dimensions.</span><span lang="ko">게임 AI는 승리 최적화가 아니라 공동 놀이를 지속하는 능력으로 평가되어야 하며, 이 프레임워크는 놀이 이론을 세 가지 행동 차원으로 조작화합니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2026">
+              <p class="item-desc"><span class="pub-n">3</span><span class="pub-author-me">Chae, J.</span>, Lee, S., Jeong, S., &amp; Doh, Y. Y. (2026). <a href="https://doi.org/10.9717/kmms.2026.29.6.885" target="_blank" rel="noopener noreferrer"><span class="paper-title">Patterns of preference for AI assistants in game accessibility among players with disabilities: An exploratory analysis of functional barriers and intervention timing.</span></a> <span class="venue">Journal of Korea Multimedia Society, 29(6), 885–904.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.9717/kmms.2026.29.6.885" target="_blank" rel="noopener noreferrer">DOI ↗</a> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12890914" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Setup and automation rank as the highest-rated AI support opportunity in a survey of 112 players with disabilities that links functional barriers to preferred assistance.</span><span lang="ko">초기 설정과 자동화가 가장 높은 평가를 받은 AI 지원 기회로 나타났으며, 장애가 있는 플레이어 112명 설문이 기능적 장벽과 선호 지원을 연결했습니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2026">
+              <p class="item-desc"><span class="pub-n">4</span><span class="pub-author-me">Chae, J.</span>, Seo, G., Jeong, S., &amp; Doh, Y. Y. (2026). <a href="https://doi.org/10.1145/3742413.3789155" target="_blank" rel="noopener noreferrer"><span class="paper-title">Design principles of Game AI Assistant (GAIA) for players with disabilities: Accessibility needs and ethical concerns.</span></a> <span class="venue">Proceedings of the 31st International Conference on Intelligent User Interfaces (IUI '26), 144–155. ACM.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.1145/3742413.3789155" target="_blank" rel="noopener noreferrer">DOI ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Timing, modality, customization, and automation determine whether assistance preserves flow, agency, and ownership of accomplishment, interviews with seven professional accessibility playtesters show.</span><span lang="ko">개입 시점, 모달리티, 개인화, 자동화가 몰입·주체성·성취의 소유권을 지키는지를 좌우한다는 점을 전문 접근성 플레이테스터 7명의 인터뷰가 보여줍니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2026">
+              <p class="item-desc"><span class="pub-n">5</span>Lee, S., <span class="pub-author-me">Chae, J.</span>, Jeong, S., &amp; Doh, Y. Y. (2026). <span class="paper-title">Design principles for game AI assistant: Analyzing functional barriers and accessibility requirements of players with disabilities.</span> <span class="venue">Korea Game Society Spring Conference 2026, 83–88.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">A three-level requirements framework from 112 open-ended responses by players with disabilities puts baseline access first, ahead of workload reduction and personalized assistance.</span><span lang="ko">장애가 있는 플레이어 112명의 서술 응답으로 구축한 3단계 요구사항 프레임워크는 부담 완화와 개인화 지원보다 기본 접근 보장을 우선합니다.</span></p>
+            </div>
+            </div>
+            <div class="pub-group">
+              <h3 class="pub-group-title">2025<span class="pub-group-n" aria-hidden="true">3</span></h3>
+            <div class="item reveal" data-year="2025">
+              <p class="item-desc"><span class="pub-n">6</span>Park, E., <span class="pub-author-me">Chae, J.</span>, Eum, K., Choi, E., Oh, H., &amp; Doh, Y. Y. (2025). <a href="https://doi.org/10.1145/3706599.3719723" target="_blank" rel="noopener noreferrer"><span class="paper-title">Press start to continue: A thematic analysis of the iterative process of hardcore players with disabilities adapting to gameplay difficulties.</span></a> <span class="venue">Extended Abstracts of the CHI Conference on Human Factors in Computing Systems (CHI EA '25), Paper 446, 7 pp. ACM.</span> <span class="pub-role"><span lang="en">(Co-first author)</span><span lang="ko">(공동 제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.1145/3706599.3719723" target="_blank" rel="noopener noreferrer">DOI ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Hardcore players with disabilities adapt through a repeating loop of personal strategy, assistive tools, social support, and game resources; five interviews identify when they disengage.</span><span lang="ko">장애가 있는 하드코어 플레이어는 개인 전략, 보조 도구, 사회적 지원, 게임 자원의 반복 순환으로 적응하며, 5명의 인터뷰가 이탈 시점을 규명했습니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2025">
+              <p class="item-desc"><span class="pub-n">7</span><span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2025). <a href="https://scholar.kyobobook.co.kr/article/detail/4010070894847" target="_blank" rel="noopener noreferrer"><span class="paper-title">The identity and role of game NPCs: Past, present, and future.</span></a> <span class="venue">[Conference presentation]. Proceedings of the 1st DiGRA Korea Conference, 1–39.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://scholar.kyobobook.co.kr/article/detail/4010070894847" target="_blank" rel="noopener noreferrer">Source ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Greater NPC autonomy is not inherently better and must stay bounded by game rules, character identity, and player agency, this conceptual history of NPC roles argues.</span><span lang="ko">NPC의 자율성 확대가 곧 개선은 아니며 게임 규칙, 캐릭터 정체성, 플레이어 주체성 안에 머물러야 한다고 NPC 역할의 개념사가 주장합니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2025">
+              <p class="item-desc"><span class="pub-n">8</span>Oh, H., Eum, K., Park, E., <span class="pub-author-me">Chae, J.</span>, Seo, J., Choi, E., &amp; Doh, Y. Y. (2025). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12131622" target="_blank" rel="noopener noreferrer"><span class="paper-title">RAG-enhanced LLM chatbot for game accessibility: Development and evaluation of GAIA.</span></a> <span class="venue">HCI Korea 2025, 254–259.</span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12131622" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">High retrieval similarity can still conceal incorrect, unusable in-game guidance, an evaluation of a Street Fighter 6 RAG assistant across 19 questions reveals.</span><span lang="ko">높은 검색 유사도도 틀리거나 실행 불가능한 게임 내 안내를 가릴 수 있음을, Street Fighter 6용 RAG 어시스턴트의 19개 질문 평가가 보여줍니다.</span></p>
+            </div>
+            </div>
+            <div class="pub-group">
+              <h3 class="pub-group-title">2024<span class="pub-group-n" aria-hidden="true">5</span></h3>
+            <div class="item reveal" data-year="2024">
+              <p class="item-desc"><span class="pub-n">9</span>Choi, E., <span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2024). <span class="paper-title">Prompting-based LLM framework for ethical decision-making in the trolley dilemma: Embedding Hofstede's cultural dimensions theory (PLETH).</span> <span class="venue">Korean Artificial Intelligence Association Fall Conference 2024, Poster 38.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">PLETH embeds Hofstede's cultural dimensions in GPT-4o trolley decisions across 12 profiles and nine scenarios, scoring cultural relevance apart from coherence, consistency, and ethical acceptability.</span><span lang="ko">PLETH는 Hofstede 문화 차원을 GPT-4o의 트롤리 판단에 반영해 12개 프로필과 9개 시나리오에서 문화적 관련성을 정합성·일관성·윤리적 수용성과 분리해 평가합니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2024">
+              <p class="item-desc"><span class="pub-n">10</span>Eum, K., Park, E., <span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2024). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034" target="_blank" rel="noopener noreferrer"><span class="paper-title">GAIA: A game AI assistant service framework integrating problem-solving and emotion regulation strategies.</span></a> <span class="venue">Korea Computer Graphics Society Conference 2024, 103–104.</span> <span class="pub-role"><span lang="en">(One of the first three equal contributors)</span><span lang="ko">(앞의 세 동등기여 저자 중 한 명)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">One retrieval pipeline cannot serve every kind of player struggle, so this conceptual GAIA framework routes difficulty into separate problem-solving and emotion-regulation pathways.</span><span lang="ko">하나의 검색 파이프라인이 모든 상황을 감당할 수 없기에, 개념적 GAIA 프레임워크는 플레이어의 어려움을 문제 해결과 감정 조절 경로로 분리합니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2024">
+              <p class="item-desc"><span class="pub-n">11</span>Park, E., <span class="pub-author-me">Chae, J.</span>, Kim, K., Yi, H. W., Lootah, M. K., &amp; Doh, Y. Y. (2024). <span class="paper-title">Challenges and opportunities of game NPC research using LLM: A scoping review.</span> <span class="venue">Korea Game Society Spring Conference 2024, 165–170.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">Hallucination, latency, memory, design rationale, and weak game-specific evaluation define the research agenda that a scoping review of six early LLM-NPC studies sets out.</span><span lang="ko">환각, 지연, 기억, 설계 근거, 게임 특화 평가 부족이 초기 LLM-NPC 연구 6편에 대한 범위 검토가 제시한 연구 의제를 구성합니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2024">
+              <p class="item-desc"><span class="pub-n">12</span>Kim, Y. B., &amp; <span class="pub-author-me">Chae, J.</span> (2024). <span class="paper-title">A technical literature review of distributed management structure: Focusing on the multi-label system of HYBE Co., Ltd.</span> <span class="venue">Korea Society of Technology Innovation Spring Conference 2024, Abstract Book, 69.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">HYBE's multi-label structure reads as a decentralized operating model whose open questions are decision rights, creative autonomy, shared infrastructure, and coordination, this one-page review argues.</span><span lang="ko">이 한 페이지 검토는 HYBE 멀티레이블 구조를 분권형 운영모델로 해석하며, 의사결정권·창작 자율성·공유 인프라·조정을 미해결 과제로 제시합니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2024">
+              <p class="item-desc"><span class="pub-n">13</span>Kim, Y. B., &amp; <span class="pub-author-me">Chae, J.</span> (2024). <span class="paper-title">From BigHit to HYBE: Sentiment analysis and strategic transition through news data.</span> <span class="venue">Korea Society for Innovation Management &amp; Economics Summer Conference 2024, Abstract Book, 73.</span> <span class="pub-role"><span lang="en">(Corresponding author)</span><span lang="ko">(교신저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">Innovation narratives and organizational conflict shifted media sentiment through BigHit's transition to HYBE, an analysis of 45,393 Korean news articles shows.</span><span lang="ko">혁신 서사와 조직 갈등이 BigHit에서 HYBE로의 전환 과정에서 미디어 감성을 이동시켰음을 한국 뉴스 45,393건 분석이 보여줍니다.</span></p>
+            </div>
+            </div>
+            <div class="pub-group">
+              <h3 class="pub-group-title">2023<span class="pub-group-n" aria-hidden="true">5</span></h3>
+            <div class="item reveal" data-year="2023">
+              <p class="item-desc"><span class="pub-n">14</span><span class="pub-author-me">Chae, J.</span>, Yoo, S., Lee, Y., Kim, Y., Kim, H., &amp; Han, D. (2023). <a href="https://doi.org/10.15701/kcgs.2023.29.3.137" target="_blank" rel="noopener noreferrer"><span class="paper-title">Analysis of the effects of positive and negative VR game contents on enhancing environmental awareness based on self-reliant and team-based play styles.</span></a> <span class="venue">Journal of the Korea Computer Graphics Society, 29(3), 137–147.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.15701/kcgs.2023.29.3.137" target="_blank" rel="noopener noreferrer">DOI ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Content sequence and social play format shaped short-term environmental awareness more than positive or negative framing, a four-condition VR recycling study with 65 students shows.</span><span lang="ko">콘텐츠의 긍정·부정 성격보다 제시 순서와 사회적 플레이 형식이 단기 환경 인식에 더 크게 작용함을 학생 65명의 4조건 VR 재활용 연구가 보여줍니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2023">
+              <p class="item-desc"><span class="pub-n">15</span>Yoon, D., Park, S., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2023). <a href="https://doi.org/10.21203/rs.3.rs-2637740/v1" target="_blank" rel="noopener noreferrer"><span class="paper-title">Methodology for improving the performance of demand forecasting through machine learning.</span></a> <span class="venue">Research Square [Preprint; not peer reviewed].</span> <a class="pub-link" href="https://doi.org/10.21203/rs.3.rs-2637740/v1" target="_blank" rel="noopener noreferrer">Preprint ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Combining clustering, LASSO, and LSTM outperformed plain and partial alternatives on the reported forecast metrics across 2,548 retail products, though this preprint remains unreviewed.</span><span lang="ko">군집화·LASSO·LSTM 결합이 2,548개 소매 상품에서 단일·부분 모델보다 나은 예측 지표를 보고했으나, 이 프리프린트는 동료심사를 거치지 않았습니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2023">
+              <p class="item-desc"><span class="pub-n">16</span><span class="pub-author-me">Chae, J.</span>, Kim, H., Kim, Y., Kim, M., Kim, S., &amp; Han, D. (2023). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11229723" target="_blank" rel="noopener noreferrer"><span class="paper-title">A study on the effect of group commitment on improving awareness of recycling through gamification.</span></a> <span class="venue">HCI Korea 2023, 626–630.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11229723" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Cooperative play completed a recycling task that solo players could not, though the resulting attitude change stayed behavior-specific and short term across 48 participants.</span><span lang="ko">협동 플레이는 개인 플레이어가 완료하지 못한 재활용 과업을 완수했지만, 참여자 48명의 태도 변화는 특정 행동과 단기간에 머물렀습니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2023">
+              <p class="item-desc"><span class="pub-n">17</span>Kim, Y., <span class="pub-author-me">Chae, J.</span>, Lee, Y., Kim, H., Lee, Y., &amp; Han, D. (2023). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11492794" target="_blank" rel="noopener noreferrer"><span class="paper-title">Enhancing participation in rehabilitation for diplopia through gamification.</span></a> <span class="venue">Korea Computer Graphics Society Conference 2023, 149–150.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11492794" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Turning diplopia eye exercises into game mechanics drew promising engagement from seven pilot participants, none of them diagnosed patients, and clinical efficacy went untested.</span><span lang="ko">복시 안구 운동을 게임 메커니즘으로 전환하자 파일럿 참여자 7명에게서 유망한 참여 반응이 나타났으나, 이들은 진단 환자가 아니었고 임상 효과는 검증되지 않았습니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2023">
+              <p class="item-desc"><span class="pub-n">18</span>Lee, Y., Kim, Y., Kim, H., <span class="pub-author-me">Chae, J.</span>, Lee, Y., Im, J., &amp; Han, D. (2023). <span class="paper-title">Eye-tracking-based VR interactive game for eye exercises.</span> <span class="venue">Proceedings of the Korea Multimedia Society Fall Conference, 26(2), 21–23.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Saccade and smooth-pursuit exercises run as gaze-controlled play on Meta Quest Pro, and feedback from 24 students supports feasibility rather than therapeutic effectiveness.</span><span lang="ko">단속성·원활추종 안구 운동을 Meta Quest Pro의 시선 제어 플레이로 구현했고, 학생 24명의 반응은 치료 효과가 아니라 구현 가능성을 뒷받침합니다.</span></p>
+            </div>
+            </div>
+            <div class="pub-group">
+              <h3 class="pub-group-title">2022<span class="pub-group-n" aria-hidden="true">3</span></h3>
+            <div class="item reveal" data-year="2022">
+              <p class="item-desc"><span class="pub-n">19</span>Yoo, S., <span class="pub-author-me">Chae, J.</span>, Kim, H., Lee, Y., Kim, S., Kim, Y., Han, S., &amp; Han, D. (2022). <span class="paper-title">A study on systematic exposure with space and distance factors in VR therapy of cynophobia.</span> <span class="venue">Proceedings of the Korea Multimedia Society Spring Conference, 25(1), 17.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">Exposure distance becomes a controllable design parameter in this preliminary VR study, which stages spatial proximity as the progression axis for cynophobia exposure therapy.</span><span lang="ko">이 예비 VR 연구에서 노출 거리는 조절 가능한 설계 변수가 되며, 공간적 근접도를 개 공포증 노출 치료의 진행 축으로 설계합니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2022">
+              <p class="item-desc"><span class="pub-n">20</span>Park, S., Yoon, D., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2022). <a href="https://m.earticle.net/Article/A416325?lt=4" target="_blank" rel="noopener noreferrer"><span class="paper-title">Enhancing predictive-model performance through clustering.</span></a> <span class="venue">Korean Society of Management Information Systems Spring Joint Conference, 267–273.</span> <a class="pub-link" href="https://m.earticle.net/Article/A416325?lt=4" target="_blank" rel="noopener noreferrer">eArticle ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Clustering before five forecasting models supports segment-first architecture as a promising direction across 1,624 retail products, though the conference paper publishes no gain figures.</span><span lang="ko">1,624개 소매 상품에서 5개 예측 모델에 앞선 군집화가 분할 우선 아키텍처의 가능성을 뒷받침하지만, 개선 폭은 수치로 공개되지 않았습니다.</span></p>
+            </div>
+            <div class="item reveal" data-year="2022">
+              <p class="item-desc"><span class="pub-n">21</span>Yoon, D., Park, S., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2022). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11207562" target="_blank" rel="noopener noreferrer"><span class="paper-title">A method for enhancing demand forecasting performance by combining regression coefficient shrinkage, clustering, and LSTM.</span></a> <span class="venue">Korea Intelligent Information Systems Society Fall Conference 2022, Abstract, 35.</span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11207562" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">K-means, cluster-specific LASSO, and LSTM combine into an auditable forecasting pipeline over 2,693 products, though this one-page abstract reports no numerical advantage.</span><span lang="ko">K-means·군집별 LASSO·LSTM이 2,693개 상품에 대한 감사 가능한 예측 파이프라인으로 결합되지만, 이 한 페이지 초록은 수치적 우위를 보고하지 않습니다.</span></p>
+            </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="patents">
+          <h2 class="section-title"><span class="num">05</span><span lang="en">Patents &amp; Certifications</span><span lang="ko">특허 및 자격증</span></h2>
+          <div class="two-col">
+            <div class="item reveal">
+              <span class="item-title"><a href="https://patents.google.com/patent/KR20240081703A" target="_blank" rel="noopener noreferrer"><span lang="en">Artificial Intelligence-Based Demand Prediction Method, Program, and Device</span><span lang="ko">인공지능 기반 수요 예측 방법, 프로그램 및 장치</span></a></span>
+              <div class="item-meta"><span lang="en">2025.10 | Korean Intellectual Property Office | Registered Patent No. 10-2867922</span><span lang="ko">2025.10 | 특허청 | 등록특허 10-2867922</span></div>
+              <p class="item-desc" lang="en">Co-inventor. Applicant: Impactive AI Corp. Filed November 2022 (Application No. 10-2022-0165017), granted October 14, 2025. <a class="pub-link" href="https://patents.google.com/patent/KR20240081703A" target="_blank" rel="noopener noreferrer">Google Patents ↗</a></p>
+              <p class="item-desc" lang="ko">공동 발명자. 출원인: (주)임팩티브에이아이. 2022년 11월 출원 (출원번호 10-2022-0165017), 2025년 10월 14일 등록. <a class="pub-link" href="https://patents.google.com/patent/KR20240081703A" target="_blank" rel="noopener noreferrer">Google Patents ↗</a></p>
+            </div>
+            <div class="item reveal">
+              <span class="item-title"><span lang="en">AI-900: Microsoft Azure, Machine Learning, and AI</span><span lang="ko">AI-900: Microsoft Azure, 머신러닝 및 AI</span></span>
+              <div class="item-meta"><span lang="en">Certification | Microsoft</span><span lang="ko">자격증 | Microsoft</span></div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="site-footer">
+          <span>
+            <span lang="en">© 2026 Jihun Chae · KAIST Graduate School of Culture Technology</span>
+            <span lang="ko">© 2026 채지훈 · KAIST 문화기술대학원</span>
+          </span>
+          <span class="ft-mono">
+            <span lang="en">Daejeon, Republic of Korea · Updated 2026.08</span>
+            <span lang="ko">대한민국 대전 · 2026.08 갱신</span>
+          </span>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <div class="kbd-hint" id="kbdHint">
+    <kbd>J</kbd><kbd>K</kbd> sections · <kbd>L</kbd> lang · <kbd>R</kbd> reader
+  </div>
+
+  <script>
+    (function () {
+      const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const isTouch = matchMedia('(hover: none)').matches;
+
+      // ── Ambient grid follows cursor ────────────────────────
+      let usedTouch = false;
+      window.addEventListener('touchstart', () => {
+        if (!usedTouch) {
+          usedTouch = true;
+          document.body.classList.add('no-cursor');
+        }
+      }, { passive: true });
+
+      // ── Cursor spotlight on cards ──────────────────────────
+      document.querySelectorAll('.item, .profile-card, .button').forEach((el) => {
+        el.addEventListener('pointermove', (e) => {
+          const rect = el.getBoundingClientRect();
+          el.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width) * 100 + '%');
+          el.style.setProperty('--my', ((e.clientY - rect.top) / rect.height) * 100 + '%');
+        }, { passive: true });
+      });
+
+      // ── Magnetic CTA button ────────────────────────────────
+      const cta = document.getElementById('ctaButton');
+      if (cta && !reducedMotionQuery.matches && !isTouch) {
+        cta.addEventListener('pointermove', (e) => {
+          const rect = cta.getBoundingClientRect();
+          const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.15;
+          const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.25;
+          cta.style.transform = `translate(${dx}px, ${dy - 2}px)`;
+        });
+        cta.addEventListener('pointerleave', () => { cta.style.transform = ''; });
+      }
+
+      // ── Scroll progress bar ────────────────────────────────
+      const progress = document.getElementById('scrollProgress');
+      const updateProgress = () => {
+        const h = document.documentElement;
+        const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+        progress.style.width = Math.max(0, Math.min(1, scrolled)) * 100 + '%';
+      };
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('site:layoutchange', updateProgress);
+      updateProgress();
+
+      // ── Reveal + Section in-view ───────────────────────────
+      const revealEls = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window && !reducedMotionQuery.matches) {
+        const revealIO = new IntersectionObserver((entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              entry.target.style.transitionDelay = (i * 60) + 'ms';
+              entry.target.classList.add('visible');
+              revealIO.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach((el) => revealIO.observe(el));
+      } else {
+        revealEls.forEach((el) => el.classList.add('visible'));
+      }
+
+      const sections = document.querySelectorAll('.section');
+      if ('IntersectionObserver' in window) {
+        const sectionIO = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add('in-view');
+          });
+        }, { threshold: 0.05 });
+        sections.forEach((s) => sectionIO.observe(s));
+
+        const navLinks = document.querySelectorAll('.section-nav a, .mobile-nav a');
+        const setActive = (id) => {
+          navLinks.forEach((a) => {
+            const href = a.getAttribute('href');
+            a.classList.toggle('active', href === '#' + id);
+          });
+        };
+        const spyIO = new IntersectionObserver((entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          if (visible[0]) setActive(visible[0].target.id);
+        }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+        sections.forEach((s) => spyIO.observe(s));
+      }
+
+      // ── Copy email + toast ─────────────────────────────────
+      const toast = document.getElementById('toast');
+      let toastTimer = null;
+      const showToast = (msg) => {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+      };
+      document.querySelectorAll('[data-copy]').forEach((el) => {
+        el.addEventListener('click', async (e) => {
+          const value = el.getAttribute('data-copy');
+          try {
+            e.preventDefault();
+            await navigator.clipboard.writeText(value);
+            el.classList.add('copied');
+            const isKo = document.body.classList.contains('ko');
+            showToast((isKo ? '이메일 복사됨 - ' : 'Email copied - ') + value);
+            setTimeout(() => el.classList.remove('copied'), 1800);
+          } catch {
+            window.location.href = el.getAttribute('href');
+          }
+        });
+      });
+
+      // ── Publication filter (+ per-year counts) ─────────────
+      const filter = document.getElementById('pubFilter');
+      const pubItems = document.querySelectorAll('#pubItems .item');
+      if (filter) {
+        // Counts encode real information: how many entries each tab holds.
+        filter.querySelectorAll('button').forEach((btn) => {
+          const year = btn.dataset.year;
+          const n = year === 'all'
+            ? pubItems.length
+            : [...pubItems].filter((it) => it.dataset.year === year).length;
+          const badge = document.createElement('span');
+          badge.className = 'count';
+          badge.textContent = n;
+          btn.appendChild(badge);
+        });
+
+        filter.addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if (!btn) return;
+          filter.querySelectorAll('button').forEach((b) => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          const year = btn.dataset.year;
+          pubItems.forEach((it) => {
+            it.classList.toggle('hidden', !(year === 'all' || it.dataset.year === year));
+          });
+          // A typed group with nothing left in it should not leave a stray header.
+          document.querySelectorAll('.pub-group').forEach((g) => {
+            const any = g.querySelector('.item:not(.hidden)');
+            g.classList.toggle('hidden', !any);
+          });
+        });
+      }
+
+      // ── Reader / TTS toggle ────────────────────────────────
+      const ttsBtn = document.getElementById('ttsToggle');
+      const setReader = (on) => {
+        document.body.classList.toggle('reader', on);
+        ttsBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        const enLabel = ttsBtn.querySelector('[lang="en"]');
+        const koLabel = ttsBtn.querySelector('[lang="ko"]');
+        if (enLabel) enLabel.textContent = on ? 'Visual' : 'Reader';
+        if (koLabel) koLabel.textContent = on ? '시각 모드' : '읽기 모드';
+        try { localStorage.setItem('reader-mode', on ? '1' : '0'); } catch {}
+      };
+      try {
+        if (localStorage.getItem('reader-mode') === '1') setReader(true);
+      } catch {}
+      ttsBtn.addEventListener('click', () => {
+        setReader(!document.body.classList.contains('reader'));
+      });
+
+      // ── Language toggle ───────────────────────────────────
+      // English is always the default on first landing - no persistence.
+      const langBtn = document.getElementById('langToggle');
+      const langLabel = document.getElementById('langLabel');
+      const setLang = (ko) => {
+        const apply = () => {
+          document.body.classList.toggle('ko', ko);
+          document.documentElement.lang = ko ? 'ko' : 'en';
+          langLabel.textContent = ko ? 'English' : '한국어';
+        };
+        if (reducedMotionQuery.matches) { apply(); return; }
+        // Crossfade: dim, swap language mid-fade, restore. One shared
+        // transformation instead of a hard DOM flip.
+        document.body.classList.add('lang-fading');
+        setTimeout(() => {
+          apply();
+          document.body.classList.remove('lang-fading');
+        }, 160);
+      };
+      langBtn.addEventListener('click', () => {
+        setLang(!document.body.classList.contains('ko'));
+      });
+
+      // ── Keyboard shortcuts ─────────────────────────────────
+      const sectionIds = ['projects', 'awards', 'education', 'publications', 'patents'];
+      const shortcutScrollBehavior = () => reducedMotionQuery.matches ? 'auto' : 'smooth';
+      const currentSectionIndex = () => {
+        const y = window.scrollY + window.innerHeight * 0.35;
+        let best = 0;
+        sectionIds.forEach((id, i) => {
+          const el = document.getElementById(id);
+          if (el && el.offsetTop <= y) best = i;
+        });
+        return best;
+      };
+      window.addEventListener('keydown', (e) => {
+        const target = e.target instanceof Element ? e.target : null;
+        const isInteractive = target && target.closest(
+          '.work-library, input, textarea, select, button, a[href], [role="button"], [role="tab"], [contenteditable]:not([contenteditable="false"])'
+        );
+        if (e.defaultPrevented || e.isComposing || isInteractive || e.metaKey || e.ctrlKey || e.altKey) return;
+        const k = e.key.toLowerCase();
+        if (k === 'j') {
+          const idx = Math.min(sectionIds.length - 1, currentSectionIndex() + 1);
+          document.getElementById(sectionIds[idx]).scrollIntoView({ behavior: shortcutScrollBehavior(), block: 'start' });
+        } else if (k === 'k') {
+          const idx = Math.max(0, currentSectionIndex() - 1);
+          document.getElementById(sectionIds[idx]).scrollIntoView({ behavior: shortcutScrollBehavior(), block: 'start' });
+        } else if (k === 'g') {
+          window.scrollTo({ top: 0, behavior: shortcutScrollBehavior() });
+        } else if (k === 'r') {
+          setReader(!document.body.classList.contains('reader'));
+        } else if (k === 'l') {
+          setLang(!document.body.classList.contains('ko'));
+        }
+      });
+
+      const hint = document.getElementById('kbdHint');
+      if (hint && !isTouch && window.innerWidth > 980) {
+        setTimeout(() => hint.classList.add('show'), 1200);
+        setTimeout(() => hint.classList.remove('show'), 6800);
+      }
+
+      // ── Anchor click → pulse destination section title ────
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener('click', () => {
+          const id = a.getAttribute('href').slice(1);
+          if (!id) return;
+          const section = document.getElementById(id);
+          if (!section) return;
+          const title = section.querySelector('.section-title');
+          if (!title) return;
+          setTimeout(() => {
+            title.classList.remove('pulsed');
+            void title.offsetWidth;
+            title.classList.add('pulsed');
+            setTimeout(() => title.classList.remove('pulsed'), 1500);
+          }, 500);
+        });
+      });
+
+    })();
+  </script>
+  <script defer src="assets/project-library/work-designs.js?v=86-20260815a"></script>
+  <script defer src="assets/project-library/work-content.js?v=86-20260815a"></script>
+  <script defer src="assets/interior/ripple.js?v=86-20260815a"></script>
+  <script defer src="assets/project-library/project-library.js?v=86-20260815a"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=86-20260815a"></script>
+  <script defer src="assets/interior/shelf-field.js?v=86-20260815a"></script>
+  <script defer>
+    // Touch feedback from the pointer origin, on the controls that are actually
+    // pressed. The book spines get max:2 - a shelf tap is a single deliberate
+    // pick, not a drum roll - while the chrome buttons keep the stock ceiling.
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.Ripple) return;
+      window.Ripple
+        .attach('.pl-volume__trigger', { max: 2 })
+        .attach('.pill-btn')
+        .attach('.pl-cv-jump');
+    });
+  </script>
+</body>
 </html>

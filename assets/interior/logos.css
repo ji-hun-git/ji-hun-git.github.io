@@ -1,0 +1,164 @@
+/* ============================================================================
+   Partner marks — one optical height, natural width
+   assets/interior/logos.css
+
+   First attempt forced every mark into a 52px box. That made the *boxes*
+   identical and the *marks* look wrong: a square logo rendered 22px wide inside
+   52px of stage, so it floated with 30px of dead space before its label while a
+   wordmark filled the box edge to edge. Equal boxes is the wrong invariant for
+   marks of different proportions.
+
+   What actually reads as "same size" is a shared cap height. Every mark is set
+   to the same 20px height and takes whatever width its own proportions need,
+   capped so no single wordmark can dominate the row. The gap to the label is
+   then constant because the mark ends where it ends.
+   ========================================================================== */
+
+:root { --logo-h: 20px; --logo-max-w: 46px; }
+
+html .p-chip img.p-logo {
+  height: var(--logo-h) !important;
+  max-height: var(--logo-h) !important;
+  width: auto !important;
+  max-width: var(--logo-max-w) !important;
+  object-fit: contain !important;
+  flex: 0 0 auto !important;
+}
+
+/* The per-brand stages collapse to the same rule so nothing keeps a fixed box. */
+html .p-chip .p-brand-stage,
+html .p-chip .p-brand-stage--fraunhofer,
+html .p-chip .p-brand-stage--kai {
+  width: auto !important;
+  flex: 0 0 auto !important;
+  height: var(--logo-h) !important;
+}
+
+html .p-chip .p-brand-stage img.p-logo {
+  width: auto !important;
+  max-width: var(--logo-max-w) !important;
+}
+
+html .p-chip .p-brand-wordmark {
+  min-width: 0 !important;
+  height: var(--logo-h) !important;
+}
+
+/* The ::before pseudo-elements are left alone: the same selector carries the
+   monogram letter badge on chips with no logo. The four that paint a mark have
+   their widths set individually in index.html. */
+
+/* ════════════════════════════════════════════════════════════════════════
+   One level of enclosure
+   ──────────────────────────────────────────────────────────────────────────
+   A single project entry was drawing six boxes inside the card: the .partners
+   container plus an outline around every chip. Three nested levels of border
+   for metadata, which is why the rows read as clutter rather than information.
+
+   The card is the container. Inside it, partners are separated by space and by
+   their own marks — the logo or the monogram badge already delimits where one
+   partner ends and the next begins, so the outline was doing nothing the eye
+   needed. Chips keep their full hit area; only the border and fill are gone.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html .p-chip {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+html .p-chip:hover {
+  border: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* Space now does the separating that borders were doing, so it has to be
+   unambiguous: a clear column gap, and a comfortable row gap when they wrap. */
+html .p-set {
+  gap: 8px 20px !important;
+}
+
+html .partners {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* The monogram badge is the delimiter for partners with no mark, so it stays -
+   but quieted to a filled dot of type rather than a ringed chip. */
+html .p-chip[data-m]::before {
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--soft, #6a6d75) !important;
+  font-weight: 700 !important;
+  padding: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+/* The border removal above lost a specificity race: the chip outline is set at
+   `html[data-view="cv"].ui-v23 #cv-start .p-chip` (1,3,1), which outranks a
+   plain `html .p-chip` (0,1,1). Mirror that weight so the rule actually lands. */
+html[data-view="cv"].ui-v23 #cv-start .p-chip,
+html[data-view="cv"].ui-v23 #cv-start .p-chip:hover,
+html[data-view="library"].ui-v23 .p-chip {
+  border: 0 !important;
+  border-width: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* KRAFTON has no usable file (16x16 favicon only) and its brand terms require
+   prior approval for the real asset, so it uses the wordmark device already
+   built for NYU and bHaptics. Tracked slightly tighter because the name is
+   longer than either of those. */
+html .p-brand-wordmark--krafton {
+  letter-spacing: -0.02em !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Capabilities block: no box, warm separators
+   ──────────────────────────────────────────────────────────────────────────
+   The rows themselves carry no borders — what read as "table lines" was the
+   .caps container's own 1px box plus the dot separators, which were left at
+   zinc #d4d4d8 and sit cold against the warm paper.
+
+   Same rule as the partner chips: the page already provides the enclosure, so
+   the block loses its box and keeps a single hairline above it to mark where
+   the section starts. Separators warm to the paper palette and drop back so
+   the terms read as a list, not a grid.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html[data-view="cv"].ui-v23 #cv-start .caps {
+  border: 0 !important;
+  border-top: 1px solid var(--ar-rule, #ded8cb) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 14px 0 0 !important;
+}
+
+html[data-view="cv"].ui-v23 #cv-start .caps-row {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+/* The dot is a breath between terms, not a rule.
+   --ar-rule-strong is a hairline colour and measured 1.87:1 on the paper — an
+   AA failure on a character that is really rendered text (30 of them). Moved
+   to --ar-ink-faint (4.77:1), the ink the stage label already uses, rather
+   than minting a fourth grey. The dot still sits below the terms themselves
+   (6.79:1), so it reads as a breath and not as a divider. */
+html[data-view="cv"].ui-v23 #cv-start .caps .sep,
+html[data-view="cv"].ui-v23 #cv-start .caps-row .sep {
+  color: var(--ar-ink-faint, #6f6a5e) !important;
+  padding: 0 2px !important;
+}
+
+/* The stage label anchors each row, so it carries the weight instead. */
+html[data-view="cv"].ui-v23 #cv-start .caps-row .k {
+  color: var(--ar-ink-faint, #6f6a5e) !important;
+}

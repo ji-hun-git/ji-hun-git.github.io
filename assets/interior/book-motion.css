@@ -1,0 +1,327 @@
+/* ============================================================================
+   Book motion — opening a volume as a physical object
+   assets/interior/book-motion.css   ·  loaded last
+
+   ---------------------------------------------------------------------------
+   WHAT WAS WRONG, AND WHY "MAKE IT SLOWER" WOULD HAVE MADE IT WORSE
+   ---------------------------------------------------------------------------
+
+   The choppiness was never a dropped frame. It was two animation systems
+   driving the same elements and handing off mid-flight.
+
+   `animateStableBookOpen()` in project-library.js drives the open with script
+   (WAAPI) animations on #work-detail, .pl-detail__spread and .pl-page-turn.
+   The previous version of this file layered a second, independent set of CSS
+   keyframes (bookOpen, bookSpreadSettle) onto the same three elements, on the
+   same `transform` property. Script animations outrank CSS animations, so for
+   the first ~200ms this file's choreography was computed and thrown away — the
+   3D pose it described never rendered at all. Then `runWaapi` writes its final
+   frame to *inline style* and cancels its own animation; inline style ranks
+   below a still-running CSS animation, so `bookOpen` seized the element back at
+   ~95% of its own curve and dragged it through a small reversal before easing
+   to rest a second time.
+
+   Measured per frame on #work-detail during a real pointer open at 1440x900:
+     t = 15.8 .. 210.9ms   matrix(0.985 … ) -> matrix(1,0,0,1,0,0)   2D, the JS
+     t = 227.4ms           matrix3d(0.998313, 0, 0.0181815, … -6.0863, 1)
+     t = 227 .. 470ms      eases back to identity
+   That matrix3d is `bookOpen` at 95.6% on all four of its channels at once. It
+   is the "settles twice" the reader was showing.
+
+   Lengthening the CSS animation would have moved that seizure *earlier* on its
+   curve, so the reversal would have grown. The seam had to go before any
+   duration could be touched.
+
+   ---------------------------------------------------------------------------
+   THE RULE THIS FILE NOW FOLLOWS: one owner per property
+   ---------------------------------------------------------------------------
+
+     #work-detail  `transform`, `opacity`   ->  project-library.js
+     #work-detail  `rotate`, `translate`    ->  THIS FILE
+     .pl-detail__spread                     ->  project-library.js
+     .pl-page-turn                          ->  project-library.js (spine hinge)
+                                                during [data-state="opening"]
+                                                and [data-state="closing-cover"]
+                                            ->  page-turn.css during
+                                                [data-state="turning-forward"]
+                                                and [data-state="turning-backward"]
+     #plReadingDock `opacity`               ->  THIS FILE (the scrim)
+
+   The leaf has two owners because it plays two parts, and the state sets they
+   answer to are disjoint: the script's rigid cover hinge never runs in a
+   turning-* state, and page-turn.css never runs in an opening/closing-cover
+   one. So there is still exactly one owner of `transform` on .pl-page-turn at
+   any instant, which is the only thing the rule below actually requires.
+   assets/interior/page-turn.css loads last of all the stylesheets and carries
+   the reasoning for the turn; read its header before touching the leaf.
+
+   `rotate` and `translate` are separate properties from `transform` (CSS
+   Transforms 2), and the browser composes them as translate -> rotate -> scale
+   -> transform into one matrix. So the script keeps its fade-and-settle on
+   `transform`, this file owns the 3D swing on `rotate`/`translate`, and the two
+   can no longer collide in the cascade: nothing is computed and discarded,
+   nothing is seized back, and the panel settles exactly once.
+
+   That split is also the only way in. project-library.css:7789 pins the dock
+   with `transform: none !important` on the anchored layout, and an important
+   author declaration outranks *all* animation declarations — a CSS keyframe
+   animation of `transform` on the dock is silently dead on arrival. The
+   individual transform properties are untouched by that rule (nothing in the
+   codebase uses them), so the swing goes on the panel instead, where it wanted
+   to be anyway.
+
+   ---------------------------------------------------------------------------
+   THE PHYSICAL MODEL
+   ---------------------------------------------------------------------------
+
+   A book pulled off a shelf comes out spine-first: you see the spine square-on,
+   the cover still angled away to the right, and the whole thing further from
+   the eye than it ends up. It turns about the spine and comes forward until it
+   faces you. So the panel enters at rotate: y 14deg about its left edge, pushed
+   100px back in Z, and turns to flat. Because the hinge is the spine, the right
+   edge travels far further than the left — which is the thing that sells "a
+   book opening" rather than "a card being spun".
+
+   Two surfaces move, which is the whole choreography:
+     the book turns square about its spine   (here, 760ms)
+     the cover swings open about that spine  (the JS rigid hinge, 560ms)
+
+   ---------------------------------------------------------------------------
+   TIMINGS
+   ---------------------------------------------------------------------------
+
+   Open 760ms on cubic-bezier(.42, 0, .18, 1) — an ease-in-out, not the
+   front-loaded ease-out that was here before. That matters more than the
+   duration: the script fades the panel in over its first 240ms, and a
+   front-loaded curve spends ~60% of the swing underneath that fade, so the
+   motion reads as short no matter how long you make it. With a soft start the
+   panel is still at ~9.5deg when the fade finishes, and the swing is what you
+   actually watch. No overshoot: a panel this size wobbles if you give it
+   rebound.
+
+   Close 500ms on a plain ease-in — a book shutting has no bounce — with the
+   scrim taking the last of the opacity so the reader recedes instead of
+   blinking out when the dock is hidden.
+
+   ---------------------------------------------------------------------------
+   THE 3D CHAIN — flat at every level except the hinge
+   ---------------------------------------------------------------------------
+
+     #plReadingDock   perspective: 1600px (base), transform-style: flat
+                      -> the lens. Flat, so the projected panel rasterises into
+                         a single quad instead of a live 3D scene.
+     #work-detail     rotate/translate, transform-origin: left center,
+                      perspective: 1400px, transform-style: flat
+                      -> the book. Its own perspective is a local 3D scene for
+                         the cover, rendered onto the panel's surface.
+     .pl-page-turn    preserve-3d (v26) + rotateY from the script
+                      -> the cover, with real depth from #work-detail.
+
+   This also disarms a bug that hid from DOM inspection. The dock used to fade
+   its own opacity while being the element that carried `perspective` *and*
+   `preserve-3d` for a grandchild. Per CSS Transforms 2 an opacity other than 1
+   forces the used value of transform-style to flat, so the 3D context collapsed
+   for the first ~330ms of every open while getComputedStyle still cheerfully
+   reported "preserve-3d". Now the only 3D transform under the dock is on its
+   direct child, and perspective applies to direct children regardless of
+   opacity — so the scrim can fade without flattening anything.
+
+   ---------------------------------------------------------------------------
+   TWO TRAPS WORTH KEEPING IN MIND IF YOU EDIT THIS
+   ---------------------------------------------------------------------------
+
+   1. Retriggering is keyed to `data-state`, never to `:not(:empty)`.
+      `:not(:empty)` on the dock becomes true once — when the script first parks
+      #work-detail inside it — and then never changes again. The old animation
+      only appeared to restart per open because the dock happened to flip
+      display:none in between; below 1100px v26's `display: grid !important`
+      means it never does, so there the old fade fired once per page load and
+      never again. A CSS animation restarts only when its name leaves and
+      re-enters the list, which is exactly what the state attribute gives us.
+
+   2. Every resting and page-turning state is listed next to the opening ones
+      on purpose. Drop `open` or `turning-*` from that list and the swing
+      replays every time a page is turned.
+
+   Selectors carry the dock and the panel by id. The base layers reach
+   specificity (1,4,0) with !important; ids outrank that without naming a
+   version class that may be retired.
+   ========================================================================== */
+
+
+/* ---------------------------------------------------------------------------
+   1. Static scaffolding. No animation here.
+   ------------------------------------------------------------------------ */
+
+#work-library #plReadingDock {
+  /* The lens is flat: its one child is projected, then rasterised as a single
+     quad. preserve-3d here would buy nothing (there is no 3D sibling to hold a
+     shared space for) and would stop the panel from flattening. */
+  transform-style: flat !important;
+}
+
+#work-library #work-detail {
+  /* The spine. v26 sets `center center`; the swing needs the left edge, and so
+     does the script's own scale(.985) -> scale(1) reveal, which now grows the
+     panel out of its spine instead of out of its middle. */
+  transform-origin: left center !important;
+  /* A local 3D scene for the cover hinge. Without this the panel is flat and
+     .pl-page-turn's rotateY renders orthographically — a horizontal squash with
+     no depth. The old file got this by making the panel preserve-3d and
+     borrowing the dock's perspective, which is the arrangement the opacity trap
+     above bites. */
+  perspective: 1400px !important;
+  transform-style: flat !important;
+  backface-visibility: hidden;
+}
+
+
+/* ---------------------------------------------------------------------------
+   2. The swing. `rotate` and `translate` only — never `transform`, which
+      belongs to animateStableBookOpen().
+   ------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  #work-library #plReadingDock:is(
+    [data-state="preparing-open"],
+    [data-state="opening"],
+    [data-state="filling"],
+    [data-state="flicking"],
+    [data-state="open"],
+    [data-state="turning-forward"],
+    [data-state="turning-backward"]
+  ) #work-detail {
+    animation: bookOpen 760ms cubic-bezier(.42, 0, .18, 1) both;
+  }
+
+  #work-library #plReadingDock:is(
+    [data-state="closing"],
+    [data-state="closing-cover"],
+    [data-state="returning"]
+  ) #work-detail {
+    animation: bookClose 500ms cubic-bezier(.4, 0, .8, .45) both !important;
+  }
+
+  /* The scrim. Opacity only, and on the dock rather than the panel, because the
+     panel's opacity is the script's. Above 1100px the dock is transparent, so
+     this simply carries the reader out on close; below 1100px it is also the
+     full-viewport backdrop, so it fades in as well. */
+  #work-library #plReadingDock:is(
+    [data-state="closing"],
+    [data-state="closing-cover"],
+    [data-state="returning"]
+  ) {
+    animation: bookScrimOut 500ms cubic-bezier(.4, 0, .8, .45) both;
+  }
+
+  @media screen and (max-width: 1100px) {
+    #work-library #plReadingDock:is(
+      [data-state="preparing-open"],
+      [data-state="opening"],
+      [data-state="filling"],
+      [data-state="flicking"],
+      [data-state="open"],
+      [data-state="turning-forward"],
+      [data-state="turning-backward"]
+    ) {
+      animation: bookScrimIn 300ms cubic-bezier(.32, .72, 0, 1) both;
+    }
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
+   3. Keyframes. Compositable properties only.
+
+      Both ends resolve to `none` rather than an identity matrix so that a
+      finished animation leaves no stacking context or fixed-position
+      containing block parked on the panel, and the resting reader gets subpixel
+      text antialiasing back instead of being stuck on a composited layer.
+   ------------------------------------------------------------------------ */
+
+@keyframes bookOpen {
+  from {
+    translate: 0 0 -100px;
+    rotate: y 14deg;
+  }
+  to {
+    translate: none;
+    rotate: none;
+  }
+}
+
+/* Shutting is the same move, shallower and quicker. */
+@keyframes bookClose {
+  from {
+    translate: none;
+    rotate: none;
+  }
+  to {
+    translate: 0 0 -80px;
+    rotate: y 10deg;
+  }
+}
+
+/* Held opaque for the first 45% so the recede is visible before the fade takes
+   over — the script's own close keyframes stop at opacity .96 and rely on the
+   dock being hidden, which reads as a blink if nothing carries the last of it. */
+@keyframes bookScrimOut {
+  0%   { opacity: 1; }
+  45%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes bookScrimIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   4. Small screens: do not blur a full-viewport fixed overlay.
+      v26 puts `backdrop-filter: blur(18px) saturate(115%)` on the dock at
+      <=1100px, over a `position: fixed; inset: 0` element — a full-screen
+      backdrop blur re-read every frame of the animation running on top of it.
+      A plain translucent fill composites far cheaper and, over a shelf of dark
+      spines, looks the same. Two ids to outrank v26's !important.
+   ------------------------------------------------------------------------ */
+
+@media screen and (max-width: 1100px) {
+  #work-library #plReadingDock:not(:empty) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(245, 245, 247, .965) !important;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
+   5. Reduced motion and forced colours. The script disables its own animations
+      for both (motionDisabled() reads reducedMotion and forcedColors) and takes
+      the instant path, so this file must not reintroduce one — including via
+      the individual transform properties, which a plain `transform: none`
+      reset would not catch.
+   ------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  #work-library #plReadingDock,
+  #work-library #work-detail {
+    animation: none !important;
+    transform: none !important;
+    rotate: none !important;
+    translate: none !important;
+    scale: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  #work-library #plReadingDock,
+  #work-library #work-detail {
+    animation: none !important;
+    transform: none !important;
+    rotate: none !important;
+    translate: none !important;
+    scale: none !important;
+  }
+}
