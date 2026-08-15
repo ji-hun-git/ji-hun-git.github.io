@@ -13,30 +13,15 @@ No build step: this is static HTML, CSS and JS served directly by GitHub Pages.
 After editing anything under `assets/`, bump the `?v=` stamp in `index.html` or
 browsers will keep serving the cached copy.
 
-## Funding and programme attribution
-
-Funding marks identify documented project-level support or programme context;
-they do not imply endorsement of this portfolio or personal sponsorship. The
-marks remain the property of their respective owners and are excluded from the
-CC0 dedication below.
-
-| File | Source | Treatment |
-| --- | --- | --- |
-| `mss.jpg` | [Ministry of SMEs and Startups](https://www.mss.go.kr/site/eng/main.do) | Official artwork, displayed unmodified beside the broader R&D-project context. |
-| `nrf.svg` | [National Research Foundation of Korea](https://eng.nrf.re.kr/) | Official English SVG, displayed unmodified beside the funded accessibility-AI project. |
-
-The Leverhulme acknowledgement is rendered as ordinary text instead of
-distributing an unaudited logo file: “Project supported by The Leverhulme Trust
-through its International Fellowship scheme.”
-
 ## Licence
 
 Released under **CC0 1.0 Universal** (see `LICENSE`) — copyright waived, no
 permission needed, attribution welcome but not required.
 
-Other organisation logos in `assets/logos/` identify partners and hosts of the
-work described and are not covered by the CC0 dedication above. Marks with a
-documented source:
+Note that the organisation logos in `assets/logos/` are the trademarks of their
+respective owners. They appear here to identify partners, funders and hosts of
+the work described, and are not covered by the CC0 dedication above. Marks with
+a documented source:
 
 | File | Source | Terms |
 | --- | --- | --- |

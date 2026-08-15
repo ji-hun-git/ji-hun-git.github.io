@@ -782,7 +782,7 @@
     ["official-program", { en: "Official program", ko: "공식 과제명" }, work.title],
     ["problem", { en: "The problem", ko: "문제" }, work.editorial?.problem || work.story?.research],
     ["responsibility", { en: "My responsibility", ko: "나의 책임" }, work.editorial?.responsibility],
-    ["build", { en: "What I built", ko: "내가 구축한 것" }, work.editorial?.build || work.story?.artifact],
+    ["build", { en: "What we built", ko: "구축한 것" }, work.editorial?.build || work.story?.artifact],
     ["decision", { en: "Key decision", ko: "핵심 의사결정" }, work.editorial?.decision || work.story?.design],
     ["validation", { en: "Validation", ko: "검증" }, work.editorial?.validation || work.editorial?.evaluation],
     ["outcome-system", { en: "Outcome / System & delivery", ko: "성과 / 시스템·납품" }, work.editorial?.outcomeSystem],
@@ -794,60 +794,56 @@
   const authorshipSummaryFor = (work) => {
     if (work.slug === "rag-enhanced-gaia") {
       return {
-        en: "I shared responsibility for building and evaluating the accessible AI chatbot.",
-        ko: "접근성 AI 챗봇의 구축과 평가를 함께 책임졌습니다."
+        en: "Jihun shared responsibility for building and evaluating the accessible AI chatbot.",
+        ko: "채지훈이 접근성 AI 챗봇의 구축과 평가를 함께 책임졌습니다."
       };
     }
     if (work.slug === "gaia-service-framework") {
       return {
-        en: "I was one of the first three equal contributors to the AI assistant architecture.",
-        ko: "AI 어시스턴트 아키텍처의 앞의 세 동등기여자 중 한 명으로 참여했습니다."
+        en: "Jihun was one of the first three equal contributors to the AI assistant architecture.",
+        ko: "채지훈이 AI 어시스턴트 아키텍처의 앞의 세 동등기여자 중 한 명으로 참여했습니다."
       };
     }
     const role = clean(work.role?.en).replace(/^\(|\)$/g, "").toLowerCase();
     const summaries = {
       "sole author": {
-        en: "I led and authored this work independently.",
-        ko: "이 연구를 독립적으로 주도하고 집필했습니다."
+        en: "Jihun led and authored this work independently.",
+        ko: "채지훈이 이 연구를 독립적으로 주도하고 집필했습니다."
       },
       "first author": {
-        en: "I led the research and writing as first author.",
-        ko: "제1저자로 연구와 집필을 주도했습니다."
+        en: "Jihun led the research and writing as first author.",
+        ko: "채지훈이 제1저자로 연구와 집필을 주도했습니다."
       },
       "second author": {
-        en: "I contributed to the research and writing as second author.",
-        ko: "제2저자로 연구와 집필에 기여했습니다."
+        en: "Jihun contributed to the research and writing as second author.",
+        ko: "채지훈이 제2저자로 연구와 집필에 기여했습니다."
       },
       "co-first author": {
-        en: "I shared first-author responsibility for the research and writing.",
-        ko: "공동 제1저자로 연구와 집필 책임을 함께 맡았습니다."
+        en: "Jihun shared first-author responsibility for the research and writing.",
+        ko: "채지훈이 공동 제1저자로 연구와 집필 책임을 함께 맡았습니다."
       },
       "equal-contribution co-author": {
-        en: "I shared equal responsibility for the research contribution.",
-        ko: "동등기여 공저자로 연구 기여를 함께 책임졌습니다."
+        en: "Jihun shared equal responsibility for the research contribution.",
+        ko: "채지훈이 동등기여 공저자로 연구 기여를 함께 책임졌습니다."
       },
       "second-listed author": {
-        en: "I contributed to the work as the second-listed author.",
-        ko: "두 번째 기재 저자로 연구에 기여했습니다."
+        en: "Jihun contributed to the work as the second-listed author.",
+        ko: "채지훈이 두 번째 기재 저자로 연구에 기여했습니다."
       },
       "corresponding author": {
-        en: "I served as corresponding author and contributed to the research.",
-        ko: "교신저자로 연구에 기여했습니다."
+        en: "Jihun served as corresponding author and contributed to the research.",
+        ko: "채지훈이 교신저자로 연구에 기여했습니다."
       },
       "fourth author": {
-        en: "I contributed to the research and writing as fourth author.",
-        ko: "제4저자로 연구와 집필에 기여했습니다."
-      },
-      "coauthor": {
-        en: "I contributed to this work as a coauthor.",
-        ko: "공저자로 이 연구에 기여했습니다."
+        en: "Jihun contributed to the research and writing as fourth author.",
+        ko: "채지훈이 제4저자로 연구와 집필에 기여했습니다."
       }
     };
     return summaries[role] || work.role;
   };
 
   const publicationEditorial = (work) => [
-    ["jihun-role", { en: "My role", ko: "나의 역할" }, authorshipSummaryFor(work)],
+    ["jihun-role", { en: "Jihun's role", ko: "채지훈의 역할" }, authorshipSummaryFor(work)],
     ["question", { en: "Research question", ko: "연구 질문" }, work.editorial?.question],
     ["gap", { en: "Knowledge gap", ko: "지식 공백" }, work.editorial?.gap],
     ["contribution", { en: "Research contribution", ko: "연구 기여" }, work.editorial?.contribution],

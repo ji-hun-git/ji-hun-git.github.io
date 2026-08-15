@@ -81,11 +81,11 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "LLM의 변동성이 감사 가능성을 약화하는 구간에는 결정론적 규칙과 통계를 선택했습니다."
         },
         artifact: {
-          en: "A version-controlled engine for auditable data-quality measurement and test preparation.",
+          en: "A version-controlled, production-oriented engine for automated data-quality measurement and verification.",
           ko: "데이터 품질 측정·검증을 자동화하는 버전 관리형 운영 지향 엔진입니다."
         },
         evidence: {
-          en: "The engine was submitted in August 2026 for independent testing against four predefined criteria; results and client acceptance are not claimed.",
+          en: "A formal verification report documents module- and test-level validation; client acceptance is outside the available evidence.",
           ko: "공식 검증 보고서는 모듈·테스트 단위 검증을 기록하며 고객 인수 여부는 확보된 근거 범위 밖입니다."
         }
       },
@@ -95,15 +95,15 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "감사 가능성과 재현성을 유지하면서 기업 데이터를 어떻게 자동 검증할 수 있을까?"
         },
         responsibility: {
-          en: "I was sole developer of the data-quality engine, covering rule interpretation, architecture, implementation, version control, and test preparation within a broader Ministry of SMEs and Startups R&D project.",
-          ko: "더 큰 중소벤처기업부 R&D 과제 안에서 데이터 품질 엔진을 단독 개발하며 규칙 해석, 아키텍처, 구현, 버전 관리, 시험 준비를 담당했습니다."
+          en: "I was sole developer of the DQM v1.0 engine — which detects and corrects data-quality errors and infers primary keys, foreign keys, indexes and column-level rules — covering rule interpretation, architecture, implementation, version control, and verification, within SKAIWORLDWIDE's Ministry of SMEs and Startups R&D project.",
+          ko: "스카이월드와이드가 수행한 중소벤처기업부 R&D 과제 안에서 DQM v1.0 엔진을 단독 개발하며 규칙 해석, 아키텍처, 구현, 버전 관리, 검증을 담당했습니다."
         },
         evaluation: {
-          en: "I tested the release with enterprise datasets and prepared it for independent testing against four predefined criteria.",
+          en: "The release was checked against real enterprise data and documented in a formal verification report.",
           ko: "실제 기업 데이터로 릴리스를 검증하고 공식 검증 보고서에 기록했습니다."
         },
         outcome: {
-          en: "I prepared a version-controlled engine and test package for independent evaluation; results and client acceptance are not claimed.",
+          en: "A version-controlled, production-oriented engine and formal results package were prepared for handoff; client acceptance is not claimed.",
           ko: "버전 관리형 운영 지향 엔진과 공식 결과 패키지를 인수인계용으로 준비했으며 고객 인수 완료는 주장하지 않습니다."
         },
         lesson: {
@@ -115,7 +115,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       pattern: "grid",
       height: "standard",
       width: "regular",
-      mark: "DQ",
+      mark: "DQM",
       spineVenue: "IND"
     },
     {
@@ -197,8 +197,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "물리 조건에 맞춰 가상 콘텐츠를 재배치하는 실시간 XR 인터페이스입니다."
         },
         evidence: {
-          en: "Built within an international consortium; available records do not document an individual user-study result for my contribution.",
-          ko: "국제 컨소시엄에서 개발했으며, 현재 자료에는 제 개인 단위의 사용자 연구 결과가 기록되어 있지 않습니다."
+          en: "Built within an international consortium; available records do not document a Jihun-specific user-study result.",
+          ko: "국제 컨소시엄에서 개발했으며, 현재 자료에는 지훈 개인 단위의 사용자 연구 결과가 기록되어 있지 않습니다."
         }
       },
       editorial: {
@@ -567,8 +567,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "역사적·개념적 시대 구분과 미래 설계 의제를 정리했습니다."
         },
         evidence: {
-          en: "As first author, I synthesized eight sources and selected game examples into a conceptual history and future design agenda for game characters.",
-          ko: "제1저자로 문헌 8편과 게임 사례를 종합해 게임 캐릭터의 역사와 미래 설계 의제를 정리했습니다."
+          en: "As first author, Jihun synthesized eight sources and selected game examples into a conceptual history and future design agenda for game characters.",
+          ko: "제1저자 채지훈은 문헌 8편과 게임 사례를 종합해 게임 캐릭터의 역사와 미래 설계 의제를 정리했습니다."
         }
       },
       palette: "sand",
@@ -602,8 +602,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "멀티모달 Discord GAIA 프로토타입과 답변 19개의 검색 평가를 구현했습니다."
         },
         evidence: {
-          en: "I contributed equally with the other authors listed after the first author. The study evaluated 19 answers with mean ROUGE-1 of 0.210 and RDASS of 0.214.",
-          ko: "제1저자 다음에 기재된 다른 저자들과 동등하게 기여했습니다. 연구는 19개 답변을 평가해 평균 ROUGE-1 0.210, RDASS 0.214를 보고했습니다."
+          en: "Jihun contributed equally with the other authors listed after the first author. The team evaluated 19 answers with mean ROUGE-1 of 0.210 and RDASS of 0.214.",
+          ko: "채지훈은 제1저자 다음에 기재된 다른 저자들과 동등하게 기여했습니다. 연구팀은 19개 답변을 평가해 평균 ROUGE-1 0.210, RDASS 0.214를 보고했습니다."
         }
       },
       palette: "oxide",
@@ -637,8 +637,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "PLETH는 12개 문화 프로필과 9개 도덕 시나리오를 네 기준으로 평가합니다."
         },
         evidence: {
-          en: "As the second-listed author, I contributed to an exploratory AI-ethics framework comparing 12 cultural profiles across nine moral scenarios. Decisions and scoring were model-generated, so the results remain exploratory.",
-          ko: "두 번째 기재 저자로 12개 문화 프로필과 9개 도덕 시나리오를 비교한 탐색적 AI 윤리 프레임워크에 기여했습니다. 의사결정과 평가는 모두 모델이 수행했으므로 결과는 탐색적 근거로 해석합니다."
+          en: "As the second-listed author, Jihun contributed to an exploratory AI-ethics framework comparing 12 cultural profiles across nine moral scenarios. Decisions and scoring were model-generated, so the results remain exploratory.",
+          ko: "두 번째 기재 저자인 채지훈은 12개 문화 프로필과 9개 도덕 시나리오를 비교한 탐색적 AI 윤리 프레임워크에 기여했습니다. 의사결정과 평가는 모두 모델이 수행했으므로 결과는 탐색적 근거로 해석합니다."
         }
       },
       palette: "plum",
@@ -672,8 +672,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "두 경로의 개념적 GAIA 서비스 아키텍처와 UX 시나리오를 제안했습니다."
         },
         evidence: {
-          en: "I was one of the first three equal contributors to a two-page service-architecture proposal; implementation and user evaluation are the next research phase.",
-          ko: "2쪽 분량의 서비스 아키텍처 제안에 참여한 앞의 세 명의 동등기여 저자 중 한 명이며, 구현과 사용자 평가는 다음 연구 단계입니다."
+          en: "Jihun was one of the first three equal contributors to a two-page service-architecture proposal; implementation and user evaluation are the next research phase.",
+          ko: "채지훈은 2쪽 분량의 서비스 아키텍처 제안에 참여한 앞의 세 명의 동등기여 저자 중 한 명이며, 구현과 사용자 평가는 다음 연구 단계입니다."
         }
       },
       palette: "cobalt",
@@ -707,8 +707,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "기술·설계·평가 의사결정 프레임워크와 연구 의제를 정리했습니다."
         },
         evidence: {
-          en: "As second author, I helped synthesize six early LLM-NPC studies into a practical technical, design, and evaluation agenda.",
-          ko: "제2저자로 초기 LLM-NPC 연구 6편을 종합해 기술·설계·평가를 아우르는 실무적 연구 의제를 정리했습니다."
+          en: "As second author, Jihun helped synthesize six early LLM-NPC studies into a practical technical, design, and evaluation agenda.",
+          ko: "제2저자 채지훈은 초기 LLM-NPC 연구 6편을 종합해 기술·설계·평가를 아우르는 실무적 연구 의제를 정리했습니다."
         }
       },
       palette: "ink",
@@ -742,8 +742,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "자율성·공유 인프라·조정을 다룬 한 페이지 기술 문헌검토 초록입니다."
         },
         evidence: {
-          en: "As second author, I helped analyze HYBE's multi-label structure as a decentralized management strategy; the available record is a conference abstract.",
-          ko: "제2저자로 HYBE의 멀티레이블 구조를 분권형 경영 전략으로 분석하는 데 기여했으며, 확보된 결과물은 학술대회 초록입니다."
+          en: "As second author, Jihun helped analyze HYBE's multi-label structure as a decentralized management strategy; the available record is a conference abstract.",
+          ko: "제2저자 채지훈은 HYBE의 멀티레이블 구조를 분권형 경영 전략으로 분석하는 데 기여했으며, 확보된 결과물은 학술대회 초록입니다."
         }
       },
       palette: "moss",
@@ -777,8 +777,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "2005년부터 2024년까지의 종단 감성·키워드 분석을 수행했습니다."
         },
         evidence: {
-          en: "An abstract-book record only; media sentiment is not stakeholder attitude or business performance. I am the corresponding author.",
-          ko: "초록집 기록만 존재하며 미디어 감성은 이해관계자 태도나 사업 성과가 아닙니다. 저는 교신저자입니다."
+          en: "An abstract-book record only; media sentiment is not stakeholder attitude or business performance. Jihun is corresponding author.",
+          ko: "초록집 기록만 존재하며 미디어 감성은 이해관계자 태도나 사업 성과가 아닙니다. 지훈은 교신저자입니다."
         }
       },
       palette: "oxide",
@@ -952,8 +952,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "Meta Quest Pro 기반 시선추적 VR 게임 프로토타입입니다."
         },
         evidence: {
-          en: "Feedback from 24 elementary students supports feasibility only, not diagnosis or therapeutic effectiveness; I am the fourth author.",
-          ko: "초등학생 24명의 피드백은 구현 가능성만 뒷받침하며 진단이나 치료 효과의 근거가 아닙니다. 저는 제4저자입니다."
+          en: "Feedback from 24 elementary students supports feasibility only, not diagnosis or therapeutic effectiveness; Jihun is fourth author.",
+          ko: "초등학생 24명의 피드백은 구현 가능성만 뒷받침하며 진단이나 치료 효과의 근거가 아닙니다. 지훈은 제4저자입니다."
         }
       },
       palette: "cobalt",
@@ -1057,8 +1057,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "상품 2,693개에 적용한 초기 감사 가능 결합 파이프라인입니다."
         },
         evidence: {
-          en: "A one-page abstract without numerical results or uncertainty; the later preprint provides stronger evidence. I am the fourth author.",
-          ko: "수치 결과나 불확실성이 없는 한 페이지 초록이며 후속 프리프린트가 더 강한 근거를 제공합니다. 저는 제4저자입니다."
+          en: "A one-page abstract without numerical results or uncertainty; the later preprint provides stronger evidence. Jihun is fourth author.",
+          ko: "수치 결과나 불확실성이 없는 한 페이지 초록이며 후속 프리프린트가 더 강한 근거를 제공합니다. 지훈은 제4저자입니다."
         }
       },
       palette: "ink",
@@ -1114,12 +1114,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "장벽 해석과 To Play·Easy Play·Better Play 설계 위계를 종합했습니다."
         },
         artifact: {
-          en: "A six-page Korea Game Society conference paper that I coauthored.",
-          ko: "제가 공동저자로 참여한 6쪽 분량의 한국게임학회 학술대회 논문입니다."
+          en: "A six-page Korea Game Society conference paper coauthored by Jihun.",
+          ko: "지훈이 공동저자로 참여한 6쪽 분량의 한국게임학회 학술대회 논문입니다."
         },
         evidence: {
-          en: "As second author, I contributed accessibility-AI framing and design synthesis. Available project records support paper-level recognition; no organizer-issued certificate is available.",
-          ko: "제2저자로 접근성 AI 프레이밍과 설계 종합에 기여했습니다. 확보된 과제 기록은 논문 단위 인정을 뒷받침하지만 주최 측 발행 증서는 확보되지 않았습니다."
+          en: "As second author, Jihun contributed accessibility-AI framing and design synthesis to the recognized paper. A professor's CV records the award; no organizer-issued certificate is available.",
+          ko: "제2저자 채지훈은 수상 논문의 접근성 AI 프레이밍과 설계 종합에 기여했습니다. 교수 CV가 수상을 기록하며 주최 측 발행 증서는 확보되지 않았습니다."
         }
       },
       palette: "award",
@@ -1144,8 +1144,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "교육 운영과 성찰을 기관 검토와 재사용이 가능한 구조로 정리했습니다."
         },
         artifact: {
-          en: "An Education4.0 Q teaching-assistant activity report that I authored.",
-          ko: "제가 작성한 Education4.0 Q 조교 활동 보고서입니다."
+          en: "An Education4.0 Q teaching-assistant activity report authored by Jihun.",
+          ko: "지훈이 작성한 Education4.0 Q 조교 활동 보고서입니다."
         },
         evidence: {
           en: "Certificate EC-2026-0001 verifies Excellence for the Education4.0 Q TA Report.",
@@ -1174,8 +1174,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "AR 스캔·인센티브·환경 데이터·AI 모델링·지식재산 계획을 통합했습니다."
         },
         artifact: {
-          en: "A venture submission I led as the named team representative.",
-          ko: "명시된 팀 대표로서 제가 주도한 벤처 지원서입니다."
+          en: "A venture submission led by Jihun as the named team representative.",
+          ko: "팀 대표로 명시된 지훈이 주도한 벤처 지원서입니다."
         },
         evidence: {
           en: "Asan UniverCT selected the team; this was a program selection, and no paid-support amount is claimed.",
@@ -1238,8 +1238,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "저자 7명의 시선추적 기반 VR 안구 운동 게임 논문입니다."
         },
         evidence: {
-          en: "The society certificate verifies a paper-level team Excellence Award; I am the fourth author, with no individual task or clinical efficacy certified.",
-          ko: "학회 상장은 논문 단위 팀 우수상을 확인하며 저는 제4저자입니다. 개인 업무나 임상 효과는 인증하지 않습니다."
+          en: "The society certificate verifies a paper-level Excellence Award; Jihun is fourth author, with no individual task or clinical efficacy certified.",
+          ko: "학회 상장은 논문 단위 우수상을 확인하며 지훈은 제4저자입니다. 개인 업무나 임상 효과는 인증하지 않습니다."
         }
       },
       palette: "award",
@@ -1260,16 +1260,16 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "팀은 안구 근육 운동 요구를 일관된 Meta Quest Pro 경험으로 전환했습니다."
         },
         design: {
-          en: "I contributed VR content research and experience design as a project-team member.",
-          ko: "프로젝트 팀 구성원으로 VR 콘텐츠 조사와 경험 설계에 기여했습니다."
+          en: "Jihun contributed VR content research and experience design; Youngsung Lee served as team lead.",
+          ko: "채지훈은 VR 콘텐츠 조사와 경험 설계에 기여했으며, 이영성이 팀 리드를 맡았습니다."
         },
         artifact: {
           en: "Watchers, an integrated demonstrable XR experience by Team EyeCU.",
           ko: "Team EyeCU가 구현한 통합형 XR 경험 Watchers입니다."
         },
         evidence: {
-          en: "The verified team-level recognition included KRW 5 million and a recruitment benefit.",
-          ko: "확인된 팀 단위 인정에는 상금 500만원과 채용 혜택이 포함됐습니다."
+          en: "Verified Excellence and Skonec CEO Awards included KRW 5 million and a recruitment benefit; Youngsung Lee was team leader.",
+          ko: "우수상과 스코넥 대표이사상, 상금 500만원과 채용 혜택이 확인됐으며 팀 리더는 이영성이었습니다."
         }
       },
       palette: "award",
@@ -1290,16 +1290,16 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "CGreen은 재활용 행동·사용자 인센티브·XR 참여를 하나의 벤처 문제로 정의했습니다."
         },
         design: {
-          en: "I integrated the ESG problem, service concept, incentive model, and competition narrative.",
-          ko: "저는 ESG 문제·서비스 콘셉트·인센티브 모델·대회 서사를 통합했습니다."
+          en: "Jihun integrated the ESG problem, service concept, incentive model, and competition narrative.",
+          ko: "지훈은 ESG 문제·서비스 콘셉트·인센티브 모델·대회 서사를 통합했습니다."
         },
         artifact: {
-          en: "The venture proposal I led as named team representative.",
-          ko: "명시된 팀 대표로서 제가 주도한 벤처 제안서입니다."
+          en: "The Glean venture proposal led by Jihun as named team representative.",
+          ko: "팀 대표로 명시된 지훈이 주도한 Glean 벤처 제안서입니다."
         },
         evidence: {
-          en: "The certificate verifies a team Encouragement Prize; I was the named representative.",
-          ko: "상장은 팀 장려상을 확인하며 저는 명시된 대표였습니다."
+          en: "The certificate verifies the Encouragement Prize for Team CGreen, represented by Jihun Chae.",
+          ko: "상장은 채지훈이 대표한 Team CGreen의 장려상을 확인합니다."
         }
       },
       palette: "award",
@@ -1324,12 +1324,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "단계적 공간 진행과 즉시 근접 노출을 비교했습니다."
         },
         artifact: {
-          en: "A one-page preliminary conference paper that I coauthored.",
-          ko: "제가 공동저자로 참여한 한 페이지 예비 학술대회 논문입니다."
+          en: "A one-page preliminary conference paper coauthored by Jihun.",
+          ko: "지훈이 공동저자로 참여한 한 페이지 예비 학술대회 논문입니다."
         },
         evidence: {
-          en: "The certificate verifies a shared paper-level Presentation Award; I am the second author, and the result does not validate clinical efficacy.",
-          ko: "상장은 논문 단위 공동 발표상을 확인하며 저는 제2저자입니다. 이 결과는 임상 효과를 입증하지 않습니다."
+          en: "The certificate verifies a shared paper-level Presentation Award; Jihun is second author, and the result does not validate clinical efficacy.",
+          ko: "상장은 논문 단위 공동 발표상을 확인하며 지훈은 제2저자입니다. 이 결과는 임상 효과를 입증하지 않습니다."
         }
       },
       palette: "award",
@@ -1350,8 +1350,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "글로벌 창업대회는 지원 152팀을 38팀, 다시 결선 14팀으로 좁혔습니다."
         },
         design: {
-          en: "Project records describe my contribution to developing and pitching a blockchain venture proposition.",
-          ko: "과제 기록은 블록체인 벤처 제안 개발과 피칭에 대한 제 기여를 설명합니다."
+          en: "Project records describe Jihun's contribution to developing and pitching a blockchain venture proposition.",
+          ko: "과제 기록은 블록체인 벤처 제안 개발과 피칭에 대한 지훈의 기여를 설명합니다."
         },
         artifact: {
           en: "A documented competition pitch; no independent team roster or organizer record is available.",
