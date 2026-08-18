@@ -27,8 +27,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "게임 지식 기반 RAG, 텍스트·음성 상호작용, 선택형 시각 맥락, 기록, 운영 워크플로를 갖춘 에이전트입니다."
         },
         evidence: {
-          en: "The program triangulated controlled tasks, professional playtester interviews, and an N=112 survey; design principles were published at ACM IUI '26.",
-          ko: "통제 과업, 전문 접근성 플레이테스터 인터뷰, N=112 설문을 종합했으며 설계 원칙은 ACM IUI '26에 게재되었습니다."
+          en: "Across the project, we conducted in-depth interviews with approximately 30 participants and surveys of approximately 200 participants recruited through partner organizations; design principles were published at ACM IUI '26.",
+          ko: "프로젝트 전반 약 30명 심층 인터뷰와 협력단체를 통한 약 200명 설문을 진행했으며, 설계 원칙은 ACM IUI '26에 게재되었습니다."
         }
       },
       editorial: {
@@ -41,8 +41,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "현장 인터뷰와 요구사항 도출부터 에이전트 개발, 프로토타입 평가, 분석, 연구 확산까지 주도했습니다."
         },
         evaluation: {
-          en: "We triangulated a controlled Minecraft study, professional accessibility-playtester interviews, and a survey of 112 players with disabilities.",
-          ko: "통제된 Minecraft 연구, 전문 접근성 플레이테스터 인터뷰, 장애인 플레이어 112명 설문을 종합했습니다."
+          en: "Across the project, we conducted in-depth interviews with approximately 30 participants and surveys of approximately 200 participants recruited through partner organizations.",
+          ko: "프로젝트 전반 약 30명 심층 인터뷰와 협력단체를 통한 약 200명 설문을 진행했습니다."
         },
         outcome: {
           en: "The resulting timing, modality, customization, and automation principles were published at ACM IUI '26.",

@@ -45,8 +45,8 @@
             "진단명이 아니라 순간의 장벽을 기준으로 정보는 Explainer, 지각은 Reader, 사용자 승인 실행은 Surrogate로 역할을 나눴습니다. 지원 모달리티와 주체성을 설계의 핵심에 둔 결정입니다."
           ),
           validation: p(
-            "The program includes a 12-participant, counterbalanced Minecraft study with task outcomes, logs, questionnaires, and 30-60 minute interviews; a seven-participant lead-user interview study with professional accessibility playtesters; and a 112-person preference survey.",
-            "12명 대상 Minecraft 교차조건 과업·로그·설문·30~60분 인터뷰, 전문 접근성 플레이테스터 7명 대상 리드유저 인터뷰, 장애인 플레이어 112명 선호 설문으로 검증했습니다."
+            "Across the project, we conducted in-depth interviews with approximately 30 participants and surveys of approximately 200 participants recruited through partner organizations.",
+            "프로젝트 전반 약 30명 심층 인터뷰와 협력단체를 통한 약 200명 설문을 진행했습니다."
           ),
           outcomeSystem: p(
             "A working GAIA research platform and a modular Explainer-Reader-Surrogate roadmap were handed forward for continued development.",
