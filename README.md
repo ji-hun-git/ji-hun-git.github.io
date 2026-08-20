@@ -13,6 +13,24 @@ No build step: this is static HTML, CSS and JS served directly by GitHub Pages.
 After editing anything under `assets/`, bump the `?v=` stamp in `index.html` or
 browsers will keep serving the cached copy.
 
+## Checking your work
+
+`tools/harness/` is a regression net for exactly the failures this site makes
+silently - a reference that resolves to nothing, a stale cache stamp, a rule
+that loses a specificity contest inside the 463 KB stylesheet, a personal
+address in commit metadata, or a control that highlights without doing anything.
+
+```
+python tools/harness/static_checks.py     # files only; stdlib, no browser, no network
+python tools/harness/run_browser.py       # a real Chromium over all 10 view states
+```
+
+Both exit non-zero on failure, so either works as a pre-commit hook. After
+bumping a `?v=` stamp, run `static_checks.py --update-stamps` and commit the
+refreshed baseline. `tools/harness/README.md` says what each check exists to
+catch, and records the three measurement mistakes that make a harness report
+clean while the page is broken.
+
 ## Licence
 
 Released under **CC0 1.0 Universal** (see `LICENSE`) — copyright waived, no

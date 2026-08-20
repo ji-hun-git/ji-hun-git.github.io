@@ -1,0 +1,17 @@
+{
+  "index.html": {
+    "n_assets": 21,
+    "sha256": "29524057f37b47cb",
+    "stamp": "94-20260820g"
+  },
+  "lab/lab.js": {
+    "n_assets": 29,
+    "sha256": "57ce1ba2ac979b08",
+    "stamp": "20260820c"
+  },
+  "laboratory.html": {
+    "n_assets": 2,
+    "sha256": "6f3ec6003023df38",
+    "stamp": "20260820c"
+  }
+}

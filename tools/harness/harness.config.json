@@ -1,0 +1,118 @@
+{
+  "_comment": [
+    "Configuration for tools/harness/static_checks.py.",
+    "Edit this file, not the script, when the site legitimately gains a new",
+    "external origin or a new public contact address."
+  ],
+
+  "public_contacts": {
+    "_comment": "Addresses that are SUPPOSED to be on a public professional site. Anything else that looks like an email is reported.",
+    "emails": [
+      "chaejihun@kaist.ac.kr"
+    ]
+  },
+
+  "external_origins": {
+    "_comment": [
+      "Every non-local origin the SHIPPED pages may reference.",
+      "'assets' = origins that serve CSS/JS/fonts into the page and therefore see",
+      "every visitor's IP address on every page load. Keep this list as short as",
+      "possible; index.html dropped Google Fonts in Aug 2026 for exactly this reason.",
+      "'links' = destinations a visitor only reaches by clicking. These cost the",
+      "visitor nothing until they choose to go."
+    ],
+    "assets": [
+      "cdn.jsdelivr.net"
+    ],
+    "links": [
+      "ji-hun-git.github.io",
+      "doi.org",
+      "orcid.org",
+      "scholar.google.com",
+      "patents.google.com",
+      "www.linkedin.com",
+      "www.dbpia.co.kr",
+      "www.researchgate.net",
+      "scholar.kyobobook.co.kr",
+      "m.earticle.net",
+      "library.kaist.ac.kr",
+      "www.w3.org",
+      "schema.org"
+    ]
+  },
+
+  "tracker_signatures": {
+    "_comment": "Substrings that indicate an analytics/telemetry beacon. None of these belong on this site.",
+    "patterns": [
+      "google-analytics.com",
+      "googletagmanager.com",
+      "gtag(",
+      "connect.facebook.net",
+      "fbq(",
+      "static.hotjar.com",
+      "clarity.ms",
+      "plausible.io",
+      "matomo.js",
+      "cdn.segment.com",
+      "api.mixpanel.com",
+      "sentry.io",
+      "newrelic.com",
+      "doubleclick.net"
+    ]
+  },
+
+  "git_identities": {
+    "_comment": [
+      "Author/committer identities allowed to appear in git history.",
+      "A personal mailbox in commit metadata is permanently public once pushed:",
+      "GitHub serves it via the .patch endpoint and the commits API to anyone.",
+      "Prefer the GitHub noreply address."
+    ],
+    "allowed_emails": [
+      "90397147+ji-hun-git@users.noreply.github.com",
+      "noreply@github.com"
+    ]
+  },
+
+  "stamped_files": {
+    "_comment": [
+      "Pages whose local asset links carry a ?v= cache stamp. The harness asserts",
+      "that (a) each page uses ONE stamp value, and (b) the stamp changed whenever",
+      "the bytes behind it changed. README.md warns that a stale stamp serves",
+      "returning visitors a broken mix of old and new files."
+    ],
+    "files": [
+      "index.html",
+      "laboratory.html",
+      "lab/lab.js"
+    ]
+  },
+
+  "site_origin": {
+    "_comment": [
+      "The site's own public origin. Absolute URLs pointing here are resolved",
+      "back to local files, so an og:image referenced as a full https:// URL",
+      "still counts as 'referenced' and is still checked for existence."
+    ],
+    "hosts": [
+      "ji-hun-git.github.io"
+    ]
+  },
+
+  "expected_unreferenced": {
+    "_comment": "Files that are deliberately in the tree without being wired up. Each needs a reason.",
+    "paths": {
+      "assets/logos/pohang-cultural-foundation.svg": "README: reversed/white-only version, invisible on this light page. Kept until the foundation publishes a positive version.",
+      "assets/profile/jihun-chae-master.jpg": "Master source image. tools/build-profile-images.py derives the shipped .jpg/.webp/-og.jpg from it."
+    }
+  },
+
+  "ignore_paths": {
+    "_comment": "Not part of the shipped site; excluded from reference and PII scans.",
+    "prefixes": [
+      ".git/",
+      "tools/__pycache__/",
+      "tools/harness/"
+    ]
+  }
+}
