@@ -27,14 +27,14 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "게임 지식 기반 RAG, 텍스트·음성 상호작용, 선택형 시각 맥락, 기록, 운영 워크플로를 갖춘 에이전트입니다."
         },
         evidence: {
-          en: "Across the project, we conducted in-depth interviews with approximately 30 participants and surveys of approximately 200 participants recruited through partner organizations; design principles were published at ACM IUI '26.",
-          ko: "프로젝트 전반 약 30명 심층 인터뷰와 협력단체를 통한 약 200명 설문을 진행했으며, 설계 원칙은 ACM IUI '26에 게재되었습니다."
+          en: "Across the project, we conducted in-depth interviews with approximately 30 participants and surveys of approximately 200 participants recruited through partner organizations; design principles were published at ACM IUI 2026.",
+          ko: "프로젝트 전반 약 30명 심층 인터뷰와 협력단체를 통한 약 200명 설문을 진행했으며, 설계 원칙은 ACM IUI 2026에 게재되었습니다."
         }
       },
       editorial: {
         question: {
           en: "How can an AI assistant help players overcome context-dependent barriers without taking away control over play?",
-          ko: "AI 어시스턴트는 플레이의 통제권을 빼앗지 않으면서 장애 플레이어의 맥락 의존적 장벽 해결을 어떻게 도울 수 있을까?"
+          ko: "AI 어시스턴트는 플레이의 통제권을 빼앗지 않으면서 장애인 플레이어의 맥락 의존적 장벽 해결을 어떻게 도울 수 있을까?"
         },
         responsibility: {
           en: "I led field interviews, requirements discovery, agent development, prototype evaluation, analysis, and research dissemination.",
@@ -45,8 +45,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "프로젝트 전반 약 30명 심층 인터뷰와 협력단체를 통한 약 200명 설문을 진행했습니다."
         },
         outcome: {
-          en: "The resulting timing, modality, customization, and automation principles were published at ACM IUI '26.",
-          ko: "도출된 개입 시점, 모달리티, 개인화, 자동화 원칙은 ACM IUI '26에 게재되었습니다."
+          en: "The resulting timing, modality, customization, and automation principles were published at ACM IUI 2026.",
+          ko: "도출된 개입 시점, 모달리티, 개인화, 자동화 원칙은 ACM IUI 2026에 게재되었습니다."
         },
         lesson: {
           en: "Useful assistance must match the active barrier and preserve player agency.",
@@ -95,8 +95,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "감사 가능성과 재현성을 유지하면서 기업 데이터를 어떻게 자동 검증할 수 있을까?"
         },
         responsibility: {
-          en: "I was sole developer of the DQM v1.0 engine — which detects and corrects data-quality errors and infers primary keys, foreign keys, indexes and column-level rules — covering rule interpretation, architecture, implementation, version control, and verification, within SKAIWORLDWIDE's Ministry of SMEs and Startups R&D project.",
-          ko: "스카이월드와이드가 수행한 중소벤처기업부 R&D 과제 안에서 DQM v1.0 엔진을 단독 개발하며 규칙 해석, 아키텍처, 구현, 버전 관리, 검증을 담당했습니다."
+          en: "As sole developer I built DQM v1.0 — a Data Quality Management engine that detects and corrects errors in enterprise tables and infers their primary keys, foreign keys, indexes, and column-level rules — covering rule interpretation, architecture, implementation, version control, and verification within SKAIWORLDWIDE's Ministry of SMEs and Startups R&D project, not the project itself.",
+          ko: "스카이월드와이드가 수행한 중소벤처기업부 R&D 과제 안에서, 기업 데이터의 품질 오류를 탐지·보정하고 기본키·외래키·인덱스와 컬럼 단위 규칙을 추론하는 데이터 품질 관리(Data Quality Management) 엔진 DQM v1.0을 단독 개발하며 규칙 해석, 아키텍처, 구현, 버전 관리, 검증을 담당했습니다. 과제 전체가 아니라 엔진이 제 범위입니다."
         },
         evaluation: {
           en: "The release was checked against real enterprise data and documented in a formal verification report.",
@@ -290,7 +290,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       story: {
         research: {
           en: "Framed dense-traffic detection around road scenes and roadside sensing constraints.",
-          ko: "도로 장면과 노변 센싱 제약을 중심으로 고밀도 교통 탐지 문제를 정의했습니다."
+          ko: "도로 장면과 도로변 센싱 제약을 중심으로 고밀도 교통 탐지 문제를 정의했습니다."
         },
         design: {
           en: "Optimized preprocessing, detection flow, anchor boxes, and the physical sensor enclosure.",
@@ -345,7 +345,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       },
       story: {
         research: {
-          en: "Twelve disabled players exposed information, perception, and execution barriers in Minecraft tasks.",
+          en: "Twelve players with disabilities exposed information, perception, and execution barriers in Minecraft tasks.",
           ko: "장애인 플레이어 12명의 Minecraft 과업에서 정보·지각·실행 장벽이 드러났습니다."
         },
         design: {
@@ -415,7 +415,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       },
       story: {
         research: {
-          en: "Responses from 112 disabled players showed that diagnoses and functional barriers are not interchangeable.",
+          en: "Responses from 112 players with disabilities showed that diagnoses and functional barriers are not interchangeable.",
           ko: "장애인 플레이어 112명의 응답에서 진단 범주와 기능적 장벽이 동일하지 않음이 드러났습니다."
         },
         design: {
@@ -485,7 +485,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       },
       story: {
         research: {
-          en: "Open responses from 112 disabled players mapped barriers across five functional domains.",
+          en: "Open responses from 112 players with disabilities mapped barriers across five functional domains.",
           ko: "장애인 플레이어 112명의 서술 응답에서 다섯 기능 영역의 장벽을 구조화했습니다."
         },
         design: {
@@ -520,7 +520,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       },
       story: {
         research: {
-          en: "Five hardcore disabled players described iterative adaptation across personal, social, cultural, and game resources.",
+          en: "Five hardcore players with disabilities described iterative adaptation across personal, social, cultural, and game resources.",
           ko: "장애인 하드코어 플레이어 5명은 개인·사회·문화·게임 자원을 넘나드는 반복적 적응을 설명했습니다."
         },
         design: {
@@ -1088,8 +1088,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "4시간 이내에 구현했다고 기록된 작동형 애플리케이션과 블라인드 심사 인계물입니다."
         },
         evidence: {
-          en: "Official materials verify the event and prize context; this entry does not claim a competition placement.",
-          ko: "공식 자료는 행사와 상금 맥락을 확인하며 이 항목은 대회 순위를 주장하지 않습니다."
+          en: "Official materials verify the event and prize context, and the team's top-3 placement in the one-day final.",
+          ko: "공식 자료는 행사와 상금 맥락, 그리고 1일 결선에서의 최종 3팀 진출을 확인합니다."
         }
       },
       palette: "award",
@@ -1106,7 +1106,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       category: { en: "Research Recognition", ko: "연구 성과 인정" },
       story: {
         research: {
-          en: "The team converted open responses from 112 disabled players into defensible accessibility requirements.",
+          en: "The team converted open responses from 112 players with disabilities into defensible accessibility requirements.",
           ko: "팀은 장애인 플레이어 112명의 서술 응답을 근거 있는 접근성 요구사항으로 전환했습니다."
         },
         design: {
@@ -1208,8 +1208,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "구현 기록이 있는 Unreal Engine 기반 미디어파사드입니다."
         },
         evidence: {
-          en: "The camp and award context are verified; no named result currently confirms an individual award placement or team role.",
-          ko: "캠프와 시상 맥락은 확인됐지만 개인 수상 등급이나 팀 역할을 확인하는 실명 결과는 확보되지 않았습니다."
+          en: "The hackathon and its award are verified: the co-hosts gave the media-façade prototype the Grand Prize, with technical implementation led by Jihun Chae.",
+          ko: "해커톤과 시상이 확인됩니다. 공동 주최 기관이 미디어파사드 프로토타입에 대상을 수여했으며 기술 구현은 채지훈이 총괄했습니다."
         }
       },
       palette: "award",
@@ -1298,8 +1298,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "팀 대표로 명시된 지훈이 주도한 Glean 벤처 제안서입니다."
         },
         evidence: {
-          en: "The certificate verifies the Encouragement Prize for Team CGreen, represented by Jihun Chae.",
-          ko: "상장은 채지훈이 대표한 Team CGreen의 장려상을 확인합니다."
+          en: "The certificate verifies the Handong Global University President's Award for Team CGreen, represented by Jihun Chae.",
+          ko: "상장은 채지훈이 대표한 Team CGreen의 한동대학교 총장상을 확인합니다."
         }
       },
       palette: "award",
@@ -1358,8 +1358,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "기록된 대회 피치이며 독립적인 팀 명단이나 주최 측 기록은 확보되지 않았습니다."
         },
         evidence: {
-          en: "The competition funnel is verified; this entry does not claim independently verified finalist placement.",
-          ko: "대회 선발 구조는 확인됐으며 이 항목은 독립 검증된 본선 진출을 주장하지 않습니다."
+          en: "The competition funnel is verified, and the team is among the 14 finalists it selected.",
+          ko: "대회 선발 구조가 확인되며, 팀은 그 선발을 통과한 본선 14팀에 포함됩니다."
         }
       },
       palette: "award",

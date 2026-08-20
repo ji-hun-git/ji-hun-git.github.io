@@ -50,7 +50,7 @@
           ),
           outcomeSystem: p(
             "A working GAIA research platform and a modular Explainer-Reader-Surrogate roadmap were handed forward for continued development.",
-            "작동하는 GAIA 연구 플랫폼과 Explainer-Reader-Surrogate 모듈형 발전 로드맵을 구축했습니다."
+            "작동하는 GAIA 연구 플랫폼과 Explainer-Reader-Surrogate 모듈형 발전 로드맵을 구축해 후속 개발로 인계했습니다."
           ),
           outcomeEvidence: p(
             "The studies showed strong value for information gaps, but exposed modality mismatch for perception and input burden for execution. The work produced peer-reviewed outputs at CHI, IUI, HCI Korea, and Korean journals and conferences.",
@@ -81,8 +81,8 @@
             "운영 조직은 실제 데이터에 많은 품질 규칙을 적용해야 하지만 수작업 검사는 느리고 재현하기 어렵습니다. 확률적 모델은 그럴듯한 설명을 만들 수 있어도 고객이 필요로 하는 정확한 감사 추적성을 약화시킬 수 있습니다."
           ),
           responsibility: p(
-            "As sole developer of the DQM v1.0 engine, I owned rule translation, architecture, implementation, versioning, and verification — the engine detects and corrects data-quality errors, then infers primary keys, foreign keys, indexes and column-level rules. The engine is my scope within SKAIWORLDWIDE's 2024-2026 Ministry of SMEs and Startups R&D project, not the project itself.",
-            "DQM v1.0 엔진의 단독 개발자로서 규칙 해석, 아키텍처, 구현, 버전 관리, 검증을 맡았습니다. 이 엔진은 스카이월드와이드가 수행한 2024~2026년 중소벤처기업부 R&D 과제 안에서 제가 맡은 범위이며, 과제 전체가 아닙니다."
+            "I built DQM v1.0 as sole developer — a Data Quality Management engine that detects and corrects errors in enterprise tables, then infers their primary keys, foreign keys, indexes, and column-level rules — owning rule translation, architecture, implementation, versioning, and verification. The engine is my scope within SKAIWORLDWIDE's 2024–2026 Ministry of SMEs and Startups R&D project, not the project itself.",
+            "기업 데이터의 품질 오류를 탐지·보정하고 기본키·외래키·인덱스와 컬럼 단위 품질 기준을 추론하는 데이터 품질 관리(Data Quality Management) 엔진 DQM v1.0을 단독 개발하며 규칙 해석, 아키텍처, 구현, 버전 관리, 검증을 맡았습니다. 이 엔진은 스카이월드와이드가 수행한 2024~2026년 중소벤처기업부 R&D 과제 안에서 제가 맡은 범위이며, 과제 전체가 아닙니다."
           ),
           build: p(
             "A versioned data-quality engine that applies deterministic rules and statistical checks to production datasets and records reviewable outputs for delivery.",
@@ -177,7 +177,7 @@
           build: p("An integrated roadside prototype combining sensing hardware, a custom enclosure, and an object-tracking pipeline for dense traffic scenes.", "센싱 하드웨어, 맞춤형 하우징, 고밀도 교통 장면 객체 추적 파이프라인을 결합한 도로변 프로토타입입니다."),
           decision: p("We co-designed the physical and model layers so camera placement, protection, preprocessing, and detection behavior could be tuned as one system.", "카메라 배치·보호·전처리·탐지 동작을 하나의 시스템으로 조정하도록 물리 계층과 모델 계층을 함께 설계했습니다."),
           validation: p("Project records document integration of sensing, enclosure fabrication, and road-scene detection. No independent benchmark or deployment study is available.", "과제 기록은 센싱, 하우징 제작, 도로 장면 탐지의 통합을 문서화합니다. 독립 벤치마크나 배치 연구는 확보되지 않았습니다."),
-          outcomeSystem: p("An IoT roadside-sensing and object-tracking research prototype with a fabricated enclosure.", "제작 하우징을 포함한 IoT 노변 센싱·객체 추적 연구 프로토타입입니다."),
+          outcomeSystem: p("An IoT roadside-sensing and object-tracking research prototype with a fabricated enclosure.", "제작 하우징을 포함한 IoT 도로변 센싱·객체 추적 연구 프로토타입입니다."),
           outcomeEvidence: p("Project records document end-to-end integration from physical sensing to the detection workflow; deployment performance is not claimed.", "과제 기록은 물리 센싱부터 탐지 워크플로까지의 종단 간 통합을 문서화하며 배치 성능은 주장하지 않습니다."),
           outcomeValue: p("The prototype was developed as a smart-city traffic-sensing research platform at Handong Global University.", "한동대학교에서 스마트시티 교통 센싱 연구 플랫폼으로 프로토타입을 개발했습니다."),
           lesson: p("The challenge was not tuning a detector in isolation. It was making model behavior answerable to the realities of the sensor that produces its data.", "핵심은 탐지기를 따로 조정하는 일이 아니라 모델 동작을 데이터를 만드는 센서의 현실 조건에 연결하는 일이었습니다.")
@@ -188,9 +188,9 @@
       "ai-assistant-disabilities-thesis": {
         editorial: {
           question: p("When, how, and for whom does a domain-specific AI assistant reduce or reproduce accessibility barriers during mainstream gameplay?", "도메인 특화 AI 어시스턴트는 주류 게임 플레이에서 언제·어떻게·누구에게 접근성 장벽을 줄이거나 재생산하는가?"),
-          gap: p("Game AI assistants are usually judged by answer quality or model capability; evidence is limited on how an overlay coexists with disabled players' assistive tools, perception, motor capacity, and live play practices.", "게임 AI 어시스턴트는 주로 답변 품질이나 모델 능력으로 평가됐으며, 오버레이가 장애인 플레이어의 보조 기술·지각·운동 능력·실제 플레이 관행과 어떻게 공존하는지에 대한 근거는 부족했습니다."),
-          contribution: p("A mixed-methods account of AI-assisted Minecraft play, the Information-Perception-Execution gap framework, and three corresponding assistant roles: Explainer, Reader, and Surrogate.", "AI 보조 Minecraft 플레이의 혼합방법 연구, 정보·지각·실행 간극 프레임, 그리고 Explainer·Reader·Surrogate 세 역할을 제시합니다."),
-          method: p("12 players with disabilities, ages 23-53; six configuration and early-game tasks under counterbalanced baseline and GAIA conditions; task outcomes, interaction logs, post-task questionnaires, 30-60 minute interviews, and reflexive thematic analysis. Six participants completed both questionnaires, so quantitative comparisons are exploratory.", "장애인 플레이어 12명(23~53세), 기준선과 GAIA 조건을 교차 배치한 설정·초반 플레이 과업 6개, 과업 결과·상호작용 로그·사후 설문·30~60분 인터뷰, 성찰적 주제 분석을 사용했습니다. 양 조건 설문을 완료한 6명의 정량 비교는 탐색적입니다."),
+          gap: p("Game AI assistants are usually judged by answer quality or model capability; evidence is limited on how an overlay coexists with assistive tools of players with disabilities, perception, motor capacity, and live play practices.", "게임 AI 어시스턴트는 주로 답변 품질이나 모델 능력으로 평가됐으며, 오버레이가 장애인 플레이어의 보조 기술·지각·운동 능력·실제 플레이 관행과 어떻게 공존하는지에 대한 근거는 부족했습니다."),
+          contribution: p("A mixed-methods account of AI-assisted Minecraft play, the Information-Perception-Execution gap framework, and three corresponding assistant roles: Explainer, Reader, and Surrogate.", "AI 보조 Minecraft 플레이의 혼합방법 연구, 정보·지각·실행 간극 프레임워크, 그리고 Explainer·Reader·Surrogate 세 역할을 제시합니다."),
+          method: p("12 players with disabilities, ages 23–53; six configuration and early-game tasks under counterbalanced baseline and GAIA conditions; task outcomes, interaction logs, post-task questionnaires, 30–60 minute interviews, and reflexive thematic analysis. Six participants completed both questionnaires, so quantitative comparisons are exploratory.", "장애인 플레이어 12명(23~53세), 기준선과 GAIA 조건을 교차 배치한 설정·초반 플레이 과업 6개, 과업 결과·상호작용 로그·사후 설문·30~60분 인터뷰, 성찰적 주제 분석을 사용했습니다. 양 조건 설문을 완료한 6명의 정량 비교는 탐색적입니다."),
           takeaway: p("Accessibility depends less on raw AI capability than on alignment between the assistant's modalities and the player's ability to perceive and act.", "접근성은 AI의 원초적 능력보다 어시스턴트의 모달리티와 플레이어의 지각·행동 능력 간 정합성에 달려 있습니다."),
           finding1: p("Information gaps were tractable. For players who could see the overlay and execute inputs, GAIA reduced search and memory burden while preserving agency.", "정보 간극은 해결 가능했습니다. 오버레이를 보고 입력을 수행할 수 있는 플레이어에게 GAIA는 탐색·기억 부담을 줄이면서 주체성을 유지했습니다."),
           finding2: p("Perception gaps exposed output mismatch. A visual text overlay was inaccessible to blind and low-vision players and could conflict with trusted screen-reader workflows.", "지각 간극은 출력 불일치를 드러냈습니다. 시각 텍스트 오버레이는 전맹·저시력 플레이어에게 접근 불가능했고 기존 스크린 리더와 충돌할 수 있었습니다."),
@@ -203,19 +203,19 @@
         editorial: {
           question: p("How can game-playing AI be evaluated for the competence to play with others, not only for winning efficiently?", "게임 AI를 효율적 승리뿐 아니라 다른 존재와 함께 노는 역량으로 어떻게 평가할 수 있을까?"),
           gap: p("Win rate, sample efficiency, and completion metrics capture achievement but miss voluntary constraint, recognition of rule boundaries, and adjustment to a co-player's frame.", "승률·표본 효율·완료율은 성취를 포착하지만 자발적 제약, 규칙 경계 인식, 함께 노는 상대의 틀에 대한 조율을 놓칩니다."),
-          contribution: p("A behavioral evaluation framework with three dimensions: intentional inefficiency, epistemic boundary awareness, and relational attunement, linked to measurable indicators and AI-alignment problems.", "의도적 비효율성, 인식론적 경계 자각, 관계적 조율의 세 차원을 행동 지표와 AI 정렬 문제에 연결한 평가 프레임을 제안합니다."),
+          contribution: p("A behavioral evaluation framework with three dimensions: intentional inefficiency, epistemic boundary awareness, and relational attunement, linked to measurable indicators and AI-alignment problems.", "의도적 비효율성, 인식론적 경계 자각, 관계적 조율의 세 차원을 행동 지표와 AI 정렬 문제에 연결한 평가 프레임워크를 제안합니다."),
           method: p("Theoretical synthesis and critical analysis: Suits, Sicart, Galloway, and Bateson are translated into observable behavior; benchmark cases are reread through the framework; the history and politics of win-rate measurement are examined.", "이론 종합과 비판 분석을 사용합니다. Suits·Sicart·Galloway·Bateson을 관찰 가능한 행동으로 번역하고 벤치마크 사례와 승률 측정의 역사·정치를 재검토합니다."),
           takeaway: p("An AI that only optimizes victory can be highly capable while remaining unable to recognize what makes an interaction play.", "승리만 최적화하는 AI는 매우 유능할 수 있지만 상호작용을 놀이로 만드는 조건은 인식하지 못할 수 있습니다."),
           finding1: p("Intentional inefficiency measures whether a system can accept meaningful self-constraint when efficiency is not the point of the shared activity.", "의도적 비효율성은 효율이 공동 활동의 목적이 아닐 때 시스템이 의미 있는 자기 제약을 수용하는지 측정합니다."),
           finding2: p("Epistemic boundary awareness tests behavior, not verbal disclaimers: the system must detect and change course at the gap between specified rules and intended play.", "인식론적 경계 자각은 말이 아니라 행동을 봅니다. 명시 규칙과 의도된 놀이의 간극을 감지하고 행동을 바꿔야 합니다."),
           finding3: p("Relational attunement asks whether the system adapts signals, challenge, and surplus interaction to sustain a mutually accepted play frame.", "관계적 조율은 시스템이 상호 수용된 놀이 틀을 유지하도록 신호·도전·잉여 상호작용을 조정하는지 묻습니다."),
           implication: p("Pair achievement metrics with constraint cost, boundary and reward-hacking diagnostics, relational surplus, and human judgment when evaluating cooperative game AI.", "협력형 게임 AI 평가에서 성취 지표에 제약 비용, 경계·보상 해킹 진단, 관계적 잉여, 인간 평가를 함께 사용해야 합니다."),
-          scope: p("A conceptual and measurement proposal, not an empirical validation. It cannot establish inner experience, solve the politics of player labor, or prevent the framework itself from becoming a target for metric gaming.", "경험적 검증이 아닌 개념·측정 제안입니다. 내적 경험을 판정하거나 플레이어 노동의 정치 문제를 해결하거나 프레임 자체의 지표 게임화를 막을 수 없습니다.")
+          scope: p("A conceptual and measurement proposal, not an empirical validation. It cannot establish inner experience, solve the politics of player labor, or prevent the framework itself from becoming a target for metric gaming.", "경험적 검증이 아닌 개념·측정 제안입니다. 내적 경험을 판정하거나 플레이어 노동의 정치 문제를 해결하거나 프레임워크 자체의 지표 게임화를 막을 수 없습니다.")
         }
       },
       "game-accessibility-preferences": {
         editorial: {
-          question: p("How do disabled players' preferences for AI support differ by support type and intervention timing, and how are those preferences related to functional barriers?", "장애인 플레이어의 AI 지원 선호는 지원 유형·개입 시점에 따라 어떻게 달라지며 기능적 장벽과 어떤 관련이 있는가?"),
+          question: p("How do the AI-support preferences of players with disabilities differ by support type and intervention timing, and how are those preferences related to functional barriers?", "장애인 플레이어의 AI 지원 선호는 지원 유형·개입 시점에 따라 어떻게 달라지며 기능적 장벽과 어떤 관련이 있는가?"),
           gap: p("Accessibility is often designed from diagnosis labels or feature availability, with limited quantitative evidence separating setup, in-play guidance, assistive recommendation, and timing or reflection.", "접근성은 진단 범주나 기능 제공 여부를 중심으로 설계되어 왔으며, 초기 설정·플레이 중 안내·보조 추천·개입 시점과 성찰을 구분한 정량 근거는 부족했습니다."),
           contribution: p("A 112-person exploratory map of disability identity, functional barriers, play motivations, and four design-oriented AI preference units, with multiple-comparison correction.", "장애인 플레이어 112명의 장애 정체성·기능적 장벽·플레이 동기·4개 AI 선호 단위를 다중비교 보정과 함께 탐색적으로 지도화했습니다."),
           method: p("Online survey of 112 players with disabilities; descriptive analysis, identity-barrier association tests, maximum-likelihood exploratory factor analysis with oblimin rotation, Friedman and Holm comparisons, Spearman correlations, multiple regression, and Benjamini-Hochberg FDR correction.", "장애인 플레이어 112명 온라인 설문, 기술통계, 정체성-장벽 연관 검정, 최대우도·oblimin 탐색적 요인분석, Friedman·Holm 비교, Spearman 상관, 다중회귀, Benjamini-Hochberg FDR 보정을 사용했습니다."),
@@ -245,7 +245,7 @@
         editorial: {
           question: p("What functional barriers do players with different disabilities encounter, and what do they require from a game AI assistant?", "서로 다른 장애를 가진 플레이어가 경험하는 기능적 장벽은 무엇이며 게임 AI 어시스턴트에 무엇을 요구하는가?"),
           gap: p("Diagnosis-based settings and single-modality AI aids cannot capture the mismatch between a game's demands and a player's remaining abilities across a live play journey.", "진단명 기반 설정과 단일 모달리티 AI 보조는 실제 플레이 여정에서 게임 요구와 플레이어 잔존 능력 사이의 불일치를 충분히 포착하지 못합니다."),
-          contribution: p("A barrier-centered requirements map and three-level design framework: To Play for basic access, Easy Play for reduced load, and Better Play for personalized strategy and experience.", "장벽 중심 요구사항 지도와 기본 접근의 To Play, 부담 감소의 Easy Play, 개인화된 전략·경험의 Better Play 3단계 프레임을 제시합니다."),
+          contribution: p("A barrier-centered requirements map and three-level design framework: To Play for basic access, Easy Play for reduced load, and Better Play for personalized strategy and experience.", "장벽 중심 요구사항 지도와 기본 접근의 To Play, 부담 감소의 Easy Play, 개인화된 전략·경험의 Better Play 3단계 프레임워크를 제시합니다."),
           method: p("Ethics-approved online survey of 112 players with disabilities; five functional-barrier domains; open-ended AI support preferences; inductive thematic coding by disability group and organization of requirements into three accessibility levels.", "장애인 플레이어 112명 대상 윤리 승인 온라인 설문, 5개 기능적 장벽 영역, 개방형 AI 지원 선호, 장애 유형별 귀납적 주제 코딩과 3개 접근성 수준 구조화를 사용했습니다."),
           takeaway: p("Accessible game AI must filter and translate the right information, adapt its intrusiveness to context, and let the player choose how much help is allowed.", "접근 가능한 게임 AI는 필요한 정보만 선별·변환하고 맥락에 따라 침습도를 조절하며 조력 강도를 플레이어가 선택하게 해야 합니다."),
           finding1: p("Disability category did not determine one fixed barrier. Visual, auditory, motor, cognitive, and communication difficulties crossed diagnostic boundaries and combined differently by context.", "장애 범주는 하나의 고정 장벽을 결정하지 않았습니다. 시각·청각·운동·인지·의사소통 어려움은 진단 경계를 넘어 맥락별로 다르게 결합했습니다."),
@@ -301,11 +301,11 @@
         editorial: {
           question: p("Can cultural dimensions be embedded in LLM prompts so ethical decisions reflect specific cultural contexts without losing coherence and ethical acceptability?", "문화 차원을 LLM 프롬프트에 삽입해 정합성과 윤리적 수용성을 잃지 않으면서 문화별 윤리 판단을 반영할 수 있는가?"),
           gap: p("LLMs can describe cultural values, but static evaluations weakly connect cultural profiles to behavior in complex moral decisions.", "LLM은 문화 가치를 설명할 수 있지만 정적 평가는 문화 프로필을 복잡한 도덕 판단 행동과 약하게 연결합니다."),
-          contribution: p("PLETH, a few-shot prompting and LLM-as-a-judge framework combining twelve Hofstede-derived profiles, nine Moral Machine trolley scenarios, and four evaluation criteria.", "Hofstede 기반 12개 프로필, Moral Machine 트롤리 딜레마 9개, 4개 평가 기준을 결합한 few-shot·LLM-as-a-judge 프레임 PLETH를 제안합니다."),
+          contribution: p("PLETH, a few-shot prompting and LLM-as-a-judge framework combining twelve Hofstede-derived profiles, nine Moral Machine trolley scenarios, and four evaluation criteria.", "Hofstede 기반 12개 프로필, Moral Machine 트롤리 딜레마 9개, 4개 평가 기준을 결합한 few-shot·LLM-as-a-judge 프레임워크 PLETH를 제안합니다."),
           method: p("GPT-4o generated decisions for one neutral control and twelve cultural profiles across nine scenarios; another LLM scored coherence, ethical acceptability, cultural relevance, and consistency from 1 to 5.", "GPT-4o가 중립 대조군 1개와 문화 프로필 12개로 9개 시나리오를 판단하고 다른 LLM이 정합성·윤리적 수용성·문화 관련성·일관성을 1~5점으로 평가했습니다."),
           takeaway: p("Cultural prompting improved cultural relevance and consistency, but made visible a real tension between context-sensitive norms and universal ethical principles.", "문화 프롬프팅은 문화 관련성과 일관성을 높였지만 맥락적 규범과 보편 윤리 원칙의 실제 긴장을 드러냈습니다."),
           finding1: p("Culturally embedded profiles generally scored high in coherence and cultural relevance; the neutral profile was weakest on cultural relevance.", "문화 삽입 프로필은 대체로 정합성과 문화 관련성이 높았고 중립 프로필은 문화 관련성이 가장 낮았습니다."),
-          finding2: p("Most embedded profiles maintained consistency around 4-5, while the control varied more on culturally charged scenarios.", "대부분의 문화 프로필은 일관성 4~5 수준을 유지했고 대조군은 문화적으로 민감한 시나리오에서 더 흔들렸습니다."),
+          finding2: p("Most embedded profiles maintained consistency around 4–5, while the control varied more on culturally charged scenarios.", "대부분의 문화 프로필은 일관성 4~5 수준을 유지했고 대조군은 문화적으로 민감한 시나리오에서 더 흔들렸습니다."),
           finding3: p("Some strongly framed profiles scored lower on ethical acceptability when cultural priorities conflicted with generalized human-rights norms; the control often scored higher there.", "강한 문화 프로필 일부는 문화 우선순위가 일반적 인권 규범과 충돌할 때 윤리 수용성이 낮았고 이 지점에서는 대조군이 더 높았습니다."),
           implication: p("Culturally aware ethical systems need independent human review and an explicit method for negotiating cultural specificity against non-negotiable safeguards.", "문화 인식 윤리 시스템에는 독립적 인간 검토와 문화 특수성을 비협상 안전 원칙과 조율하는 명시적 방법이 필요합니다."),
           scope: p("LLMs both decided and judged, creating shared-model bias; few-shot prompting was basic; trolley dilemmas simplify real ethics; no human evaluator or real-world outcome was included.", "LLM이 판단과 평가를 모두 수행해 공유 모델 편향이 있고 few-shot 기법은 기초적이며 트롤리 딜레마는 실제 윤리를 단순화합니다. 인간 평가자나 실제 결과가 없습니다.")
@@ -315,7 +315,7 @@
         editorial: {
           question: p("How can a game AI assistant support both problem solving and emotion regulation when players struggle during play?", "플레이어가 게임 중 어려움을 겪을 때 게임 AI 어시스턴트는 문제 해결과 감정 조절을 함께 어떻게 지원할 수 있는가?"),
           gap: p("Existing game assistants emphasize information and technique while often ignoring frustration, conflict, and other affective barriers that determine whether play continues.", "기존 게임 어시스턴트는 정보·기술 지원에 집중하고 플레이 지속을 좌우하는 좌절·갈등 같은 정서 장벽을 놓칩니다."),
-          contribution: p("A hybrid GAIA service framework and UX scenario that routes player difficulty to either a problem-solving strategy or an emotion-regulation strategy using game context and dialogue state.", "게임 맥락과 대화 상태로 어려움을 문제 해결 전략 또는 감정 조절 전략으로 라우팅하는 하이브리드 GAIA 서비스 프레임과 UX 시나리오를 제시합니다."),
+          contribution: p("A hybrid GAIA service framework and UX scenario that routes player difficulty to either a problem-solving strategy or an emotion-regulation strategy using game context and dialogue state.", "게임 맥락과 대화 상태로 어려움을 문제 해결 전략 또는 감정 조절 전략으로 라우팅하는 하이브리드 GAIA 서비스 프레임워크와 UX 시나리오를 제시합니다."),
           method: p("Conceptual architecture and scenario design: an overlaid chat interface, real-time gameplay context, LLM classification, separate strategy databases, and long-term memory for high-intensity emotional episodes.", "개념 아키텍처·시나리오 설계로 오버레이 채팅, 실시간 게임 맥락, LLM 분류, 분리된 전략 DB, 고강도 감정 에피소드 장기 기억을 구성했습니다."),
           takeaway: p("Useful game assistance must address both the obstacle and the player's state, then route each to a different kind of support.", "유용한 게임 지원은 장애물과 플레이어 상태를 함께 다루고 각각 다른 지원 경로로 보내야 합니다."),
           finding1: p("Information and skill difficulties require settings, rules, or strategy retrieval grounded in the current game context.", "정보·기술 어려움에는 현재 게임 맥락에 근거한 설정·규칙·전략 검색이 필요합니다."),
@@ -358,7 +358,7 @@
           question: p("How did the tone and strategic vocabulary of Korean news coverage change as BigHit evolved into HYBE?", "BigHit이 HYBE로 전환하는 동안 한국 뉴스 보도의 감성과 전략 언어는 어떻게 변했는가?"),
           gap: p("Corporate-transition narratives are often retrospective and selective; large-scale longitudinal news analysis can reveal how sentiment and strategic themes moved across the transition.", "기업 전환 서사는 회고적·선택적인 경우가 많으며 대규모 장기 뉴스 분석은 전환 전후 감성과 전략 주제의 변화를 드러낼 수 있습니다."),
           contribution: p("A longitudinal news-data analysis connecting sentiment and keyword patterns to the strategic transition from BigHit to HYBE.", "감성·키워드 패턴을 BigHit에서 HYBE로의 전략 전환과 연결한 장기 뉴스 데이터 분석입니다."),
-          method: p("45,393 Korean news articles from 2005-2024; lexicon-based analysis plus NLTK/TextBlob sentiment and keyword analysis; comparison of BigHit and HYBE eras.", "2005~2024년 한국 뉴스 45,393건, 사전 기반 분석과 NLTK/TextBlob 감성·키워드 분석, BigHit·HYBE 시기 비교를 사용했습니다."),
+          method: p("45,393 Korean news articles from 2005–2024; lexicon-based analysis plus NLTK/TextBlob sentiment and keyword analysis; comparison of BigHit and HYBE eras.", "2005~2024년 한국 뉴스 45,393건, 사전 기반 분석과 NLTK/TextBlob 감성·키워드 분석, BigHit·HYBE 시기 비교를 사용했습니다."),
           takeaway: p("HYBE's expansion broadened the strategic story, but average news sentiment was lower and more exposed to conflict than in the BigHit era.", "HYBE의 확장은 전략 서사를 넓혔지만 평균 뉴스 감성은 BigHit 시기보다 낮고 갈등에 더 노출됐습니다."),
           finding1: p("Mean sentiment was 0.0243 in the BigHit era and 0.0076 in the HYBE era.", "평균 감성은 BigHit 시기 0.0243, HYBE 시기 0.0076이었습니다."),
           finding2: p("Growth and success language was associated with more positive BigHit-era coverage.", "성장·성공 언어는 BigHit 시기의 더 긍정적인 보도와 연결됐습니다."),
@@ -372,7 +372,7 @@
           question: p("How do positive and negative VR content, their sequence, and individual versus cooperative play shape environmental awareness?", "긍정·부정 VR 콘텐츠와 제시 순서, 개인·협력 플레이가 환경 인식에 어떤 영향을 주는가?"),
           gap: p("VR environmental studies suggest attitude effects, but rarely separate content valence from social play format and presentation order.", "VR 환경 연구는 태도 효과를 제시하지만 콘텐츠 정서가, 사회적 플레이 방식, 제시 순서를 분리해 다룬 경우는 드뭅니다."),
           contribution: p("A four-condition study showing that environmental-awareness outcomes depend on the interaction between content sequence and individual or team-based play.", "환경 인식 결과가 콘텐츠 순서와 개인·팀 플레이의 결합에 따라 달라짐을 보인 4조건 연구입니다."),
-          method: p("65 university students ages 19-27; a projection-based VR recycling game using 12 OptiTrack Prime17W cameras; individual or three-person cooperative play with positive and negative content sequences; pre, mid, and post surveys; paired and independent-sample t-tests.", "19~27세 대학생 65명, OptiTrack Prime17W 12대 기반 프로젝션 VR 재활용 게임, 개인 또는 3인 협력 플레이와 긍정·부정 콘텐츠 순서, 사전·중간·사후 설문, 대응·독립표본 t검정을 사용했습니다."),
+          method: p("65 university students ages 19–27; a projection-based VR recycling game using 12 OptiTrack Prime17W cameras; individual or three-person cooperative play with positive and negative content sequences; pre, mid, and post surveys; paired and independent-sample t-tests.", "19~27세 대학생 65명, OptiTrack Prime17W 12대 기반 프로젝션 VR 재활용 게임, 개인 또는 3인 협력 플레이와 긍정·부정 콘텐츠 순서, 사전·중간·사후 설문, 대응·독립표본 t검정을 사용했습니다."),
           takeaway: p("Environmental impact in VR came from the sequence and social form of play, not from positive or negative content alone.", "VR의 환경 인식 효과는 긍정·부정 콘텐츠 하나가 아니라 제시 순서와 사회적 플레이 형식에서 나왔습니다."),
           finding1: p("Positive content in individual play increased perceived importance of recycling.", "개인 플레이의 긍정 콘텐츠는 재활용 중요성 인식을 높였습니다."),
           finding2: p("Positive team play and negative individual play increased perceived seriousness of pollution, showing different routes to concern.", "긍정 팀 플레이와 부정 개인 플레이는 오염 심각성 인식을 높여 서로 다른 경로의 우려 형성을 보였습니다."),
@@ -414,7 +414,7 @@
           question: p("Can gamifying eye-movement exercises sustain anticipation, continuation, and interest better than conventional repetition?", "안구 운동을 게임화하면 기존 반복 운동보다 기대·지속 의향·흥미를 유지할 수 있는가?"),
           gap: p("Diplopia exercises can be repetitive and monotonous, creating an adherence problem even when the movement protocol itself is available.", "복시 운동은 반복적이고 단조로워 운동 프로토콜이 있어도 지속 참여 문제가 생깁니다."),
           contribution: p("An early gamified exercise design spanning saccade, smooth pursuit, and optokinetic nystagmus, with a preliminary engagement comparison.", "단속성 안구운동·원활 추종·시운동성 안진을 아우르는 초기 게임형 운동 설계와 예비 참여 비교를 제시합니다."),
-          method: p("Seven participants: four in a gamified condition and three controls; two exercise sessions 24 hours apart; 1-5 self-report ratings of anticipation, desire to continue, and interest.", "참여자 7명(게임형 4명, 대조 3명), 24시간 간격 2회 운동, 기대·지속 의향·흥미 1~5점 자기보고를 사용했습니다."),
+          method: p("Seven participants: four in a gamified condition and three controls; two exercise sessions 24 hours apart; 1–5 self-report ratings of anticipation, desire to continue, and interest.", "참여자 7명(게임형 4명, 대조 3명), 24시간 간격 2회 운동, 기대·지속 의향·흥미 1~5점 자기보고를 사용했습니다."),
           takeaway: p("Gamification showed a promising adherence signal, but this pilot did not establish rehabilitation efficacy.", "게임화는 지속 참여의 가능성을 보였지만 이 예비 연구는 재활 효과를 입증하지 않았습니다."),
           finding1: p("Anticipation for the next exercise increased in the gamified group while it declined in the control group.", "다음 운동 기대는 게임형 집단에서 증가하고 대조 집단에서 감소했습니다."),
           finding2: p("Desire to continue rose in the gamified group while the control group remained at the floor.", "지속 의향은 게임형 집단에서 상승했고 대조 집단은 최저 수준에 머물렀습니다."),
@@ -458,7 +458,7 @@
           contribution: p("A hybrid clustering approach that segments products before applying and comparing DNN, MLP, LSTM, random forest, and XGBoost demand models.", "제품을 먼저 세분화한 뒤 DNN·MLP·LSTM·랜덤포레스트·XGBoost 수요 모델을 적용·비교하는 결합 군집화 접근입니다."),
           method: p("1,624 retail products with three years of weekly demand; K-means over combined time-series and demand-pattern features; five forecasting model families compared with and without clustering.", "제품 1,624개의 3년 주간 수요, 시계열·수요 패턴 결합 특징의 K-means, 군집화 전후 5개 예측 모델군 비교를 사용했습니다."),
           takeaway: p("Segmenting heterogeneous demand before prediction can improve the fit of downstream models, but the accessible record does not expose exact gains.", "예측 전에 이질적 수요를 세분화하면 후속 모델의 적합도를 높일 수 있지만 공개 기록에는 정확한 향상값이 없습니다."),
-          finding1: p("The framework groups products by both temporal shape and demand characteristics rather than by category labels alone.", "프레임은 범주 라벨만이 아니라 시간적 형태와 수요 특성을 함께 사용해 제품을 묶습니다."),
+          finding1: p("The framework groups products by both temporal shape and demand characteristics rather than by category labels alone.", "프레임워크는 범주 라벨만이 아니라 시간적 형태와 수요 특성을 함께 사용해 제품을 묶습니다."),
           finding2: p("Multiple neural and tree-based forecasters were tested under clustered and unclustered conditions.", "여러 신경망·트리 기반 예측기를 군집화 조건과 비군집 조건에서 비교했습니다."),
           finding3: p("The official abstract reports performance enhancement from clustering but does not provide extractable effect values.", "공식 초록은 군집화에 따른 성능 향상을 보고하지만 추출 가능한 효과 값은 제시하지 않습니다."),
           implication: p("Use clustering as a model-selection and specialization layer, then publish cluster stability and per-model effect sizes for operational decisions.", "군집화를 모델 선택·특화 계층으로 사용하고 운영 판단을 위해 군집 안정성과 모델별 효과크기를 보고해야 합니다."),
@@ -486,20 +486,20 @@
         category: p("AI Product Challenge", "AI 제품 챌린지"),
         awardName: p("KRAFTON Cofathon: AI Native Battlegrounds, Forward Deployed Engineer Track", "KRAFTON 코파톤: AI Native Battlegrounds, Forward Deployed Engineer 트랙"),
         editorial: {
-          verifiedResult: p("Official materials verify the one-day final, KRW 10 million prize pool, and recruiting benefit. Project records document a rapid AI application and blind-review handoff; this entry does not claim a competition placement.", "공식 자료는 1일 결선, 총상금 1,000만원, 채용 우대를 확인합니다. 과제 기록은 신속한 AI 애플리케이션 구현과 블라인드 심사 인계를 문서화하며 이 항목은 대회 순위를 주장하지 않습니다."),
+          verifiedResult: p("Official materials verify the one-day final, KRW 10 million prize pool, and recruiting benefit. The team placed in the top 3 of a roughly 25-to-6-to-3 selection funnel, building a working AI application and completing a blind-review handoff in under four hours.", "공식 자료는 1일 결선, 총상금 1,000만원, 채용 우대를 확인합니다. 약 25개 팀에서 6팀을 거쳐 최종 3팀에 들었으며, 4시간 이내에 작동하는 AI 애플리케이션을 구현하고 블라인드 심사 인계를 완료했습니다."),
           selectionContext: p("The event compressed discovery, implementation, verification, and handoff into a one-day final with a documented prize pool and recruiting fast-track.", "행사는 요구 발굴, 구현, 검증, 인계를 공식 상금과 채용 우대가 있는 1일 결선에 압축했습니다."),
           challenge: p("Participants had to communicate with virtual stakeholders, define an unseen business problem, plan a solution, and implement a working application under a compressed event schedule.", "가상 이해관계자와 소통해 처음 보는 비즈니스 문제를 정의하고 압축된 일정 안에 해결안을 기획·구현해 작동형 애플리케이션을 제출해야 했습니다."),
           contribution: p("Project records document my requirements discovery with a scenario agent, translation into a build plan, implementation in under four hours, and preparation of a blind-review handoff.", "과제 기록은 시나리오 에이전트를 활용한 요구사항 발굴, 빌드 계획 전환, 4시간 이내 구현, 블라인드 심사 인계 준비를 제 기여로 문서화합니다."),
           criteria: p("Problem definition; direction and use of AI; iteration under constraint; verification and handoff quality.", "문제 정의; AI 지휘·활용; 제약 속 반복 개선; 검증·핸드오프 품질"),
-          validates: p("This entry documents the challenge format, compressed delivery constraint, and implemented workflow without claiming independently verified placement.", "이 항목은 챌린지 운영 방식, 압축된 개발 제약, 구현 워크플로를 기록하며 독립 검증된 순위는 주장하지 않습니다.")
+          validates: p("This entry documents the challenge format, the compressed delivery constraint, the implemented workflow, and the top-3 placement.", "이 항목은 챌린지 운영 방식, 압축된 개발 제약, 구현 워크플로, 최종 3팀 진출을 기록합니다.")
         }
       },
       "game-society-best-presentation": {
         category: p("Paper-Level Recognition", "논문 단위 인정"),
         awardName: p("Best Presentation Award, Korea Game Society Spring Conference 2026", "2026 한국게임학회 춘계학술발표대회 우수발표논문상"),
         editorial: {
-          verifiedResult: p("As second author, Jihun contributed the accessibility-AI framing, barrier interpretation, and design synthesis to this recognized paper. Professor Young Yim Doh's July 2026 CV records the award; no organizer-issued certificate is available.", "제2저자 채지훈은 수상 논문의 접근성 AI 프레이밍, 장벽 해석, 설계 종합에 기여했습니다. 도영임 교수의 2026년 7월 CV가 수상을 기록하며 주최 측 발행 증서는 확보되지 않았습니다."),
-          selectionContext: p("Conference paper, pp. 83-88, authored by Sojeong Lee, Jihun Chae, Seoyoon Jeong, and Young Yim Doh. The paper was scheduled on 30 May 2026 at Tech University of Korea; the registration record lists Jihun as a coauthor or related author and identifies the presenter separately.", "이소정·채지훈·정서윤·도영임 공저 학술대회 논문(83~88쪽)으로 2026년 5월 30일 한국공학대학교 세션에 편성됐습니다. 등록 기록은 채지훈을 공저자·논문 관계자로 기재하고 발표자를 별도로 명시합니다."),
+          verifiedResult: p("The paper received a Best Presentation Award, with Jihun Chae as second author. Professor Young Yim Doh's July 2026 CV records the award; no organizer-issued certificate is available.", "이 논문이 우수발표논문상을 받았으며 채지훈은 제2저자입니다. 도영임 교수의 2026년 7월 CV가 수상을 기록하며 주최 측 발행 증서는 확보되지 않았습니다."),
+          selectionContext: p("Conference paper, pp. 83–88, authored by Sojeong Lee, Jihun Chae, Seoyoon Jeong, and Young Yim Doh. The paper was scheduled on 30 May 2026 at Tech University of Korea; the registration record lists Jihun as a coauthor or related author and identifies the presenter separately.", "이소정·채지훈·정서윤·도영임 공저 학술대회 논문(83~88쪽)으로 2026년 5월 30일 한국공학대학교 세션에 편성됐습니다. 등록 기록은 채지훈을 공저자·논문 관계자로 기재하고 발표자를 별도로 명시합니다."),
           challenge: p("The team had to convert open-ended responses from 112 players with disabilities into defensible barrier categories, accessibility requirements, design principles, and a concise conference presentation.", "장애인 플레이어 112명의 개방형 응답을 방어 가능한 장벽 범주·접근성 요구사항·설계 원칙으로 전환해 간결한 학술 발표로 제시해야 했습니다."),
           contribution: p("As second author, I contributed accessibility-AI framing, barrier interpretation, design-principle synthesis, and preparation of the research output.", "제2저자로 접근성 AI 프레이밍, 장벽 해석, 설계 원칙 종합, 연구 결과물 준비에 기여했습니다."),
           criteria: p("The official rubric was not preserved in the available record. The evaluated artifact was the paper and its presentation, including research clarity, evidence, contribution, and delivery.", "공식 평가표는 확보 자료에 남아 있지 않습니다. 평가 대상은 연구 명료성·근거·기여·전달을 포함한 논문과 발표였습니다."),
@@ -525,7 +525,7 @@
           verifiedResult: p("Selected climate-tech student startup team in KAIST's Asan UniverCT program. The primary business plan names Glean and Jihun Chae as team representative; this was a program selection, not a Chung Ju-yung competition award.", "KAIST 아산 UniverCT 기후테크 학생 창업팀으로 선정됐습니다. 1차 사업계획서는 Glean과 팀 대표 채지훈을 명시하며, 정주영 창업경진대회 수상이 아니라 프로그램 선정입니다."),
           selectionContext: p("Asan Nanum Foundation supported selected climate-tech teams through mentoring and venture-development resources; no paid-support amount is claimed.", "아산나눔재단은 선정된 기후테크 팀에 멘토링과 창업 개발 자원을 지원했으며 지원금 지급액은 주장하지 않습니다."),
           challenge: p("Teams had to frame a climate problem as a viable venture and develop it through university-linked entrepreneurship support toward a demonstrable concept.", "기후 문제를 실행 가능한 벤처로 정의하고 대학 연계 창업 지원 안에서 시연 가능한 콘셉트로 발전시켜야 했습니다."),
-          contribution: p("As the named team representative, I owned overall venture coordination and the application assigns me AI-modeling and patent filing responsibilities. Glean framed an AR litter-scanning and reward service with environmental-data value for organizations.", "팀 대표로 사업 전반을 총괄했고 신청서는 AI 모델링과 특허 보유·출원 업무를 제 책임으로 배정합니다. Glean은 AR 쓰레기 스캔·리워드 서비스와 기관용 환경 데이터 가치를 제안했습니다."),
+          contribution: p("As the named team representative, I owned overall venture coordination and the application assigns me AI-modeling and patent filing responsibilities. Glean framed an AR litter-scanning and reward service with environmental-data value for organizations.", "팀 대표로 사업 전반을 총괄했고 신청서는 AI 모델링과 특허 출원 업무를 제 책임으로 배정합니다. Glean은 AR 쓰레기 스캔·리워드 서비스와 기관용 환경 데이터 가치를 제안했습니다."),
           criteria: p("Climate relevance; venture feasibility; team execution; potential for development within the university program. The exact selection rubric is not public in the evidence reviewed.", "기후 문제 적합성; 사업 실행 가능성; 팀 실행력; 대학 프로그램 내 발전 가능성. 검토 자료에는 정확한 선정 평가표가 공개되지 않았습니다."),
           validates: p("Verified selection into a structured climate-tech entrepreneurship program.", "구조화된 기후테크 창업 프로그램 선정 성과입니다.")
         }
@@ -533,21 +533,21 @@
       "pohang-media-facade-camp": {
         shortTitle: p("Underwater Media Art", "수중 미디어 아트"),
         category: p("Interactive Media Project", "인터랙티브 미디어 프로젝트"),
-        awardName: p("Pohang Culture and Arts Factory Responsive Media-Façade Education Camp", "포항시 문화예술팩토리 반응형 미디어파사드 교육 캠프"),
+        awardName: p("Handong Global University President's Award, Pohang Culture and Arts Factory Media-Façade Hackathon", "한동대학교 총장상, 포항문화예술공장 미디어파사드 해커톤"),
         editorial: {
-          verifiedResult: p("Project records describe technical leadership and an Unreal Engine underwater media-façade implementation. The camp is verified; no named result currently confirms an individual award or role.", "과제 기록은 수중 미디어파사드의 기술 리드와 Unreal Engine 구현을 설명합니다. 캠프는 확인되지만 개인 수상이나 역할을 확인하는 실명 결과는 확보되지 않았습니다."),
-          selectionContext: p("The five-day Unreal Engine camp was limited to 20 participants and advertised a KRW 5 million-equivalent reward pool, including an HGU President's Award. Independent reporting verifies the program, not an individual award placement.", "5일간 Unreal Engine 캠프는 20명 정원이며 한동대 총장상을 포함한 500만원 상당의 시상을 예고했습니다. 독립 보도는 프로그램을 확인하지만 개인 수상 등급은 입증하지 않습니다."),
+          verifiedResult: p("Project records describe technical leadership and an Unreal Engine underwater media-façade implementation. Pohang City, the Pohang Cultural Foundation, KT, and Handong Global University co-hosted the hackathon and awarded the prototype the Grand Prize.", "과제 기록은 수중 미디어파사드의 기술 리드와 Unreal Engine 구현을 설명합니다. 공동 주최한 포항시, 포항문화재단, KT, 한동대학교가 이 프로토타입에 대상을 수여했습니다."),
+          selectionContext: p("The five-day Unreal Engine program was limited to 20 participants and carried a KRW 5 million-equivalent reward pool topped by the HGU President's Award, which is the prize this prototype received.", "5일간 Unreal Engine 프로그램은 20명 정원이며 한동대 총장상을 최고상으로 하는 500만원 상당의 시상을 두었고, 이 프로토타입이 그 총장상을 받았습니다."),
           challenge: p("The team had to turn an environmental and smart-city theme into large-scale content that could run reliably on a real architectural media surface.", "환경·스마트시티 주제를 실제 건축 미디어 표면에서 안정적으로 구동되는 대형 콘텐츠로 구현해야 했습니다."),
-          contribution: p("Project records describe my technical-lead role and Unreal Engine implementation; no primary roster or submission artifact independently confirms that role.", "과제 기록은 기술 리드 역할과 Unreal Engine 구현을 설명하며 1차 명단이나 제출물로 해당 역할이 독립 확인되지는 않았습니다."),
-          criteria: p("Concept and public relevance; technical execution; fit to the media-facade format; completeness for exhibition. The exact scored rubric was not located.", "콘셉트·공공성; 기술 구현; 미디어 파사드 형식 적합성; 전시 완성도. 정확한 배점표는 확인되지 않았습니다."),
-          validates: p("Available evidence verifies the event context; this entry does not claim a personal award result or team role.", "확보된 근거는 행사 맥락을 확인하며 이 항목은 개인 수상 결과나 팀 역할을 주장하지 않습니다.")
+          contribution: p("Project records describe my technical-lead role and Unreal Engine implementation on the prototype the co-hosts awarded the Grand Prize.", "과제 기록은 공동 주최 기관이 대상을 수여한 프로토타입에서의 기술 리드 역할과 Unreal Engine 구현을 설명합니다."),
+          criteria: p("Concept and public relevance; technical execution; fit to the media-façade format; completeness for exhibition. The exact scored rubric was not located.", "콘셉트·공공성; 기술 구현; 미디어 파사드 형식 적합성; 전시 완성도. 정확한 배점표는 확인되지 않았습니다."),
+          validates: p("Available evidence verifies the hackathon context, the Grand Prize, and the technical-implementation lead role.", "확보된 근거는 해커톤 맥락과 대상 수상, 그리고 기술 구현 총괄 역할을 확인합니다.")
         }
       },
       "eye-tracking-vr-research-award": {
         shortTitle: p("Eye-Tracking VR Paper Award", "시선추적 VR 논문상"),
         awardName: p("2023 KMMS Fall Undergraduate Paper Competition", "2023 한국멀티미디어학회 추계학부생논문경진대회"),
         editorial: {
-          verifiedResult: p("Excellence Award for 'Eye-Tracking-Based VR Interactive Game for Eye Exercises,' dated 17 November 2023. Jihun Chae is the fourth author on the certificate.", "「안구 운동을 위한 시선 추적 기반 VR 인터랙티브 게임」으로 2023년 11월 17일 우수상 수상. 증서상 채지훈은 제4저자입니다."),
+          verifiedResult: p("Excellence Award for “Eye-tracking-based VR interactive game for eye exercises,” dated 17 November 2023. Jihun Chae is the fourth author on the certificate.", "「안구 운동을 위한 시선 추적 기반 VR 인터랙티브 게임」으로 2023년 11월 17일 우수상을 받았습니다. 증서상 채지훈은 제4저자입니다."),
           selectionContext: p("The award was issued in the society's fall undergraduate paper competition to a seven-author research team. It is a paper-level team result, not an individual first-author award.", "학회 추계학부생논문경진대회에서 7인 연구팀 논문에 수여된 팀 단위 결과이며 개인 제1저자상이 아닙니다."),
           challenge: p("The paper had to present a viable gaze-controlled VR game that translated eye exercises into interactive mechanics and a preliminary user-facing prototype.", "안구 운동을 상호작용 메커닉으로 전환한 시선 제어 VR 게임과 예비 사용자 프로토타입을 제시해야 했습니다."),
           contribution: p("As fourth author, I contributed to the team research and VR game work. The certificate does not break down individual tasks, so the contribution is stated at team level.", "제4저자로 팀 연구와 VR 게임 작업에 기여했습니다. 증서는 개인 업무를 구분하지 않아 팀 수준으로 기여를 서술합니다."),
@@ -569,14 +569,14 @@
       },
       "esg-ar-encouragement-prize": {
         shortTitle: p("Circular Design Startup Award", "순환 디자인 창업상"),
-        awardName: p("11th Handong Startup Competition Final", "제11회 한동창업경진대회 본선"),
+        awardName: p("Handong Global University President's Award, Startup Idea Competition", "한동대학교 총장상, 창업아이디어 경진대회"),
         editorial: {
-          verifiedResult: p("Team CGreen received the Encouragement Prize on 24 November 2022.", "Team CGreen은 2022년 11월 24일 장려상을 받았습니다."),
+          verifiedResult: p("Team CGreen, represented by Jihun Chae, received the Handong Global University President's Award on 24 November 2022.", "채지훈이 대표한 Team CGreen은 2022년 11월 24일 한동대학교 총장상을 받았습니다."),
           selectionContext: p("A campus startup final for student venture teams. The application names Jihun Chae as team representative; the available evidence does not report applicant, semifinalist, or finalist counts.", "학생 벤처팀 대상 교내 창업경진대회 본선입니다. 신청서에는 채지훈이 팀 대표로 기록되며 지원·예선·본선 팀 수는 확인되지 않습니다."),
           challenge: p("CGreen proposed Glean, an XR and metaverse recycling-reward application connecting environmentally responsible behavior with user incentives.", "CGreen은 환경 책임 행동을 사용자 보상과 연결한 XR·메타버스 재활용 리워드 앱 Glean을 제안했습니다."),
           contribution: p("As the named team representative, I led the venture submission and helped frame the ESG problem, XR service concept, and competition delivery.", "팀 대표로 창업 신청을 이끌고 ESG 문제, XR 서비스 콘셉트, 경진대회 결과물 구성을 주도했습니다."),
           criteria: p("Problem and social value; business-model feasibility; technical concept; team execution. The exact competition scorecard was not preserved.", "문제·사회적 가치; 비즈니스 모델 실행 가능성; 기술 콘셉트; 팀 실행력. 정확한 대회 배점표는 확보되지 않았습니다."),
-          validates: p("Early external evidence of venture leadership and the ability to connect immersive technology with an environmental behavior model, accurately represented as an Encouragement Prize.", "몰입형 기술을 환경 행동 모델과 연결한 초기 벤처 리더십의 외부 근거이며 정확히 장려상으로 표기합니다.")
+          validates: p("Early external evidence of venture leadership and the ability to connect immersive technology with an environmental behavior model, recognized with the university President's Award.", "몰입형 기술을 환경 행동 모델과 연결한 초기 벤처 리더십의 외부 근거이며 총장상으로 인정받았습니다.")
         }
       },
       "cynophobia-vr-research-award": {
@@ -596,12 +596,12 @@
         category: p("Startup Competition", "창업 경진대회"),
         awardName: p("DB-SNUbiz Global Startup Challenge", "DB-SNUbiz 글로벌 창업 챌린지"),
         editorial: {
-          verifiedResult: p("The organizer's retrospective verifies the 152-to-38-to-14 funnel and 21 July 2021 final. This entry documents the competition work without claiming independently verified finalist placement.", "주최 측 회고는 152→38→14 선발과 2021년 7월 21일 본선을 확인합니다. 이 항목은 독립 검증된 본선 진출을 주장하지 않고 대회 작업을 기록합니다."),
+          verifiedResult: p("The organizer's retrospective verifies the 152-to-38-to-14 funnel and the 21 July 2021 final, in which the team was one of the 14 finalists presenting live.", "주최 측 회고는 152→38→14 선발과 2021년 7월 21일 본선을 확인하며, 팀은 현장 발표에 오른 본선 14팀 중 하나였습니다."),
           selectionContext: p("152 applications, 33 domestic and 119 international, narrowed to 38 in the first selection and 14 final teams for live presentations.", "국내 33팀·해외 119팀, 총 152개 지원팀에서 1차 38팀을 거쳐 14개 본선팀으로 선발됐습니다."),
           challenge: p("Finalists had to present a global startup proposal live to business-school, venture-capital, and industry judges.", "본선팀은 경영대학·벤처투자·산업 전문가 심사자 앞에서 글로벌 창업안을 라이브로 발표해야 했습니다."),
           contribution: p("Project records document my contribution to developing and pitching the team's blockchain solution; no independent role record is available.", "과제 기록은 팀의 블록체인 솔루션 개발·피칭에 대한 제 기여를 설명하며 독립적인 역할 기록은 확보되지 않았습니다."),
           criteria: p("Global venture proposition; business feasibility; solution differentiation; live pitch and responses. The exact scored rubric was not located.", "글로벌 사업 제안; 사업 실행 가능성; 솔루션 차별성; 라이브 피칭·응답. 정확한 배점표는 확인되지 않았습니다."),
-          validates: p("The organizer-verified funnel establishes the competition's selectivity; this entry does not claim independently verified finalist status.", "주최 측이 확인한 선발 흐름은 대회의 경쟁도를 보여주며 이 항목은 독립 검증된 본선 진출을 주장하지 않습니다.")
+          validates: p("The organizer-verified funnel establishes the competition's selectivity, and places the team among its 14 finalists.", "주최 측이 확인한 선발 흐름은 대회의 경쟁도를 보여주며, 팀은 본선 14팀에 포함됩니다.")
         }
       }
     }

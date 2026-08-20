@@ -115,7 +115,7 @@
     "game-npc-identity": { en: "AI CHARACTERS", ko: "AI 캐릭터" },
     "rag-enhanced-gaia": { en: "AI CHATBOT", ko: "AI 챗봇" },
     "pleth-ethical-llm": { en: "AI ETHICS", ko: "AI 윤리" },
-    "gaia-service-framework": { en: "AI ASSISTANT", ko: "AI 지원" },
+    "gaia-service-framework": { en: "AI ASSISTANT", ko: "AI 도우미" },
     "llm-npc-scoping-review": { en: "AI CHARACTERS", ko: "AI 캐릭터" },
     "hybe-multilabel-review": { en: "STRATEGY", ko: "경영 전략" },
     "bighit-to-hybe": { en: "MEDIA ANALYSIS", ko: "미디어 분석" },
@@ -358,7 +358,7 @@
 
   const typeLabels = {
     project: { en: "Project", ko: "프로젝트" },
-    publication: { en: "Publication", ko: "출판물" },
+    publication: { en: "Publication", ko: "논문" },
     award: { en: "Award", ko: "수상" }
   };
 
