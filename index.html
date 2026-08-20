@@ -12,7 +12,10 @@
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://ji-hun-git.github.io/" />
   <meta property="og:site_name" content="Jihun Chae" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <!-- summary, not summary_large_image: og:image is a 1200x1543 portrait and a
+       large card is 1.91:1, so X cropped the middle band and cut off the face.
+       A summary card is square and keeps the head in frame. -->
+  <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Jihun Chae | Human-Centered AI Researcher &amp; Product Strategist" />
   <meta name="twitter:description" content="Projects, publications, and external validation presented through an interactive work library." />
   <meta property="og:image" content="https://ji-hun-git.github.io/assets/profile/jihun-chae-og.jpg" />
@@ -67,6 +70,8 @@
     html[data-view="library"] #cv-start { display: none !important; }
     html[data-view="cv"] #work-library,
     html[data-view="cv"] .pl-cv-jump { display: none !important; }
+    html[data-view="library"] [data-view-only="cv"],
+    html[data-view="cv"] [data-view-only="library"] { display: none !important; }
   </style>
   <style>
     /* ═══════════════════════════════════════════════════════════
@@ -128,7 +133,13 @@
 
     *:focus { outline: none; }
     *:focus-visible {
-      outline: 2px solid rgba(96,165,250,0.75);
+      /* Was rgba(96,165,250,0.75), a bright cornflower blue that composites to
+         1.98:1 against the #f6f5f2 ground. WCAG 2.2 1.4.11 asks 3:1 of a focus
+         indicator, so the one affordance a keyboard user depends on was the
+         faintest mark on the page - and the only cool blue in an otherwise warm
+         ink-and-paper palette. --ink-accent is the site's own accent token and
+         measures 8.1:1 here: the accessible choice and the in-system one at once. */
+      outline: 2px solid var(--ink-accent);
       outline-offset: 3px;
       border-radius: 4px;
     }
@@ -184,7 +195,10 @@
     .layout { animation: page-in 0.55s var(--ease-out) both; }
     @media (prefers-reduced-motion: reduce) {
       .layout { animation: none; }
-      .profile-image:hover img { transform: none; }
+      /* The scale is applied by `.profile-card:hover .profile-image img`
+         (0,3,1); this selector is (0,2,1) and never wins. Target the rule
+         that actually renders, with !important so source order is moot. */
+      .profile-card:hover .profile-image img { transform: none !important; }
     }
 
     .page { transition: opacity 0.16s var(--ease-out); }
@@ -475,7 +489,7 @@
       font-weight: 700;
       margin-top: 24px;
       box-shadow: none;
-      transition: box-shadow 0.22s ease, filter 0.22s ease;
+      transition: box-shadow 0.22s ease, filter 0.22s ease, transform 0.22s ease;
       overflow: hidden;
     }
     .button::before {
@@ -671,7 +685,6 @@
       gap: 6px;
     }
     .filter button:hover { color: var(--text); }
-    .filter button:active { transform: scale(0.95); }
     .filter button .count {
       font-size: 0.7rem;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -774,10 +787,29 @@
     .item:hover::after { opacity: 1; }
 
     .item.hidden { display: none; }
+    /* The line above is not enough, and the publication year filter was dead
+       because of it. project-library.css:13784 declares
+         html[data-view="cv"].ui-v25 body:not(.reader) #cv-start #pubItems .item
+         { display: grid !important; }
+       at specificity (2,4,2); `.item.hidden` is (0,2,0) with no !important, and
+       the stylesheet is linked at :1566 while this <style> block sits at :76, so
+       it lost on both counts. Measured before the fix: clicking a year added
+       .hidden to 16 of 21 rows and hid exactly none of them - the button
+       highlighted, the count updated, and the list did not move.
+       Restated below with .ui-v26 added to clear (2,4,2) on specificity rather
+       than relying on source order.
+       .pub-group.hidden is toggled by the same handler (:2368) and had no rule
+       anywhere in the repo, so filtering without it would leave four year
+       headings standing over empty space. */
+    html[data-view="cv"].ui-v26 body:not(.reader) #cv-start #pubItems .item.hidden,
+    html[data-view="cv"].ui-v26 body:not(.reader) #cv-start #pubItems .pub-group.hidden {
+      display: none !important;
+    }
 
     .item-title {
       display: block;
-      margin-bottom: 5px;
+      /* h3 since 2026-08-20; kill the UA heading margin */
+      margin: 0 0 5px;
       font-size: 1.18rem;
       line-height: 1.35;
       letter-spacing: -0.018em;
@@ -1316,7 +1348,7 @@
     body.reader {
       background: #f7f4ec !important;
       color: #1a1a1a !important;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-family: "Geist Portfolio", Geist, -apple-system, BlinkMacSystemFont, sans-serif !important;
       font-size: 18px;
       line-height: 1.78;
     }
@@ -1525,6 +1557,25 @@
         --line-strong: rgba(23,24,27,0.3);
         --ink-accent: #2b4b7c;
       }
+      /* Printing "/" - the URL people actually share - used to produce a
+         near-blank sheet. Two rules collide: index.html:70 hides #cv-start
+         whenever data-view is 'library' (unscoped, so it applies to print too),
+         and project-library.css:4023's own @media print hides .work-library.
+         On the default landing view that hides BOTH halves of the document at
+         once, and since the site footer lives inside #cv-start even the
+         copyright line disappeared. For a CV site that is a total, silent
+         failure of something people genuinely do.
+         Force the CV visible in print regardless of which view is on screen,
+         and keep the shelf hidden - a paper copy wants the CV, not a 3D
+         bookshelf. */
+      html[data-view="library"] #cv-start,
+      html[data-view="cv"] #cv-start {
+        display: block !important;
+      }
+      html[data-view="library"] #work-library,
+      html[data-view="cv"] #work-library,
+      .work-library, .pl-cv-transition, .pl-cv-jump { display: none !important; }
+
       .skip-link, .top-controls, .kbd-hint, .mobile-nav, .scroll-progress,
       .button, .filter, .toast { display: none !important; }
       body, body:not(.reader) { background: #fff !important; }
@@ -1551,30 +1602,30 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=86-20260815a" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=87-20260819a" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=87-20260819a" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=94-20260820g" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=94-20260820g" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=94-20260820g" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/archive.css?v=94-20260820g" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=94-20260820g" />
   <!-- Last: the open/close was switching non-animatable layout properties, so
        there was nothing to interpolate. This drives it on transform+opacity. -->
-  <link rel="stylesheet" href="assets/interior/book-motion.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=94-20260820g" />
   <!-- After archive.css: archive.css scopes the display serif by language in
        one selector and not the next, which handed Hangul a Latin-only serif
        stack and dropped the Korean name into Batang. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/typography.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/typography.css?v=94-20260820g" />
   <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
        in project-library.css can never take effect. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/light-only.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=94-20260820g" />
   <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
        page frame both views consume. It has to outrank the base layers, which
        reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
        shorthands, so source order is load-bearing here. -->
-  <link rel="stylesheet" href="assets/interior/layout.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/layout.css?v=94-20260820g" />
   <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
        inside a max-width query, so it cannot reach desktop, and it declares
        no theme tokens, so it cannot outrank light-only.css. -->
@@ -1584,17 +1635,17 @@
        matched. Declaring that same query on the link takes it out of the
        render-blocking set on desktop without changing a single computed style -
        the sheet still loads, and on phones it applies exactly as before. -->
-  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=86-20260815a" />
+  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=94-20260820g" />
   <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
        label off its plate, an overlay parked on the contact links). No theme
        tokens, so it cannot outrank light-only.css's colour pins. -->
-  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=94-20260820g" />
   <!-- Loaded LAST, after fit-desktop.css: the Tools row under Capabilities. The
        block it joins is styled from four layers that all reach
        `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
        this file both mirrors that weight and loads after them. Glyphs are inline
        path data — no icon font, no sprite, no second third-party origin. -->
-  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=94-20260820g" />
   <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
        moved out of the book to flank it. They are styled from four layers of
        project-library.css, three of them with !important on the same
@@ -1602,13 +1653,13 @@
        them. It declares no theme tokens and no transform on the animated
        elements, so it cannot outrank light-only.css or collide with
        book-motion.css. See the file header. -->
-  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=87-20260819a" />
+  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=94-20260820g" />
 
   <!-- Ghost bookcase behind the library. Declares one class on one element
        it creates itself, at z-index -1 inside a section that already owns a
        stacking context — it cannot collide with any library layer, so load
        order against them does not matter. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=94-20260820g" />
 
   <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
        works ([data-state="turning-forward"|"turning-backward"]), and nothing
@@ -1617,7 +1668,7 @@
        animates `transform` only on an element the script leaves alone in those
        two states, so it cannot collide with animateStableBookOpen or with
        book-motion.css's rotate/translate split. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/page-turn.css?v=86-20260815a" />
+  <link rel="stylesheet" href="assets/interior/page-turn.css?v=94-20260820g" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1627,7 +1678,8 @@
   </style>
 </head>
 <body>
-  <a class="skip-link" data-cv-jump href="?view=cv#cv-start"><span lang="en">Skip to the full CV</span><span lang="ko">전체 이력서로 건너뛰기</span></a>
+  <a class="skip-link" data-view-only="library" data-cv-jump href="?view=cv#cv-start"><span lang="en">Skip to the full CV</span><span lang="ko">전체 이력서로 건너뛰기</span></a>
+  <a class="skip-link" data-view-only="cv" href="#cv-content"><span lang="en">Skip to content</span><span lang="ko">본문으로 건너뛰기</span></a>
 
   <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
@@ -1650,7 +1702,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
 
-  <section class="work-library pl-embedded pl-library-v3 pl-library-v5 pl-library-v6 pl-library-v7 pl-library-v8 pl-library-v9 pl-library-v10 pl-library-v11 pl-library-v12 pl-library-v13 pl-library-v14 pl-library-v15 pl-library-v16 pl-library-v17 pl-library-v18 pl-library-v19 pl-library-v20 pl-library-v21 pl-library-v22 pl-library-v23 pl-library-v24 pl-library-v25 pl-library-v26" id="work-library" aria-labelledby="library-title">
+  <section role="main" class="work-library pl-embedded pl-library-v3 pl-library-v5 pl-library-v6 pl-library-v7 pl-library-v8 pl-library-v9 pl-library-v10 pl-library-v11 pl-library-v12 pl-library-v13 pl-library-v14 pl-library-v15 pl-library-v16 pl-library-v17 pl-library-v18 pl-library-v19 pl-library-v20 pl-library-v21 pl-library-v22 pl-library-v23 pl-library-v24 pl-library-v25 pl-library-v26" id="work-library" aria-labelledby="library-title">
     <header class="pl-site-header">
       <div class="pl-brand-lockup">
         <div class="pl-brand-copy">
@@ -1701,6 +1753,7 @@
       <a href="#awards"><span lang="en">Awards</span><span lang="ko">수상</span></a>
       <a href="#education"><span lang="en">Education</span><span lang="ko">학력</span></a>
       <a href="#publications"><span lang="en">Publications</span><span lang="ko">논문</span></a>
+      <a href="#patents"><span lang="en">Patents</span><span lang="ko">특허</span></a>
     </nav>
 
     <div class="layout">
@@ -1744,7 +1797,7 @@
             <li><a href="https://scholar.google.com/citations?user=OjxItRUAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer"><span lang="en">Google Scholar</span><span lang="ko">구글 스칼라</span></a></li>
             <li><a href="https://orcid.org/0009-0005-7425-3806" target="_blank" rel="noopener noreferrer">ORCID</a></li>
             <!-- laboratory.html linked back to this page from two places but had
-                 no inbound link of its own, leaving 26 simulations unreachable. -->
+                 no inbound link of its own, leaving 28 simulations unreachable. -->
             <li><a href="laboratory.html"><span lang="en">Simulations</span><span lang="ko">시뮬레이션</span></a></li>
           </ul>
 
@@ -1771,8 +1824,8 @@
           </div>
           <div class="caps-row">
             <span class="k"><span lang="en">Build</span><span lang="ko">구축</span></span>
-            <span class="v" lang="en">Agent Architecture<span class="sep">·</span>RAG &amp; Context Engineering<span class="sep">·</span>Tool &amp; API Integration<span class="sep">·</span>XR &amp; Physical Prototypes<span class="sep">·</span>Python &amp; TypeScript</span>
-            <span class="v" lang="ko">에이전트 아키텍처<span class="sep">·</span>RAG · 컨텍스트 엔지니어링<span class="sep">·</span>툴 · API 연동<span class="sep">·</span>XR · 피지컬 프로토타입<span class="sep">·</span>Python · TypeScript</span>
+            <span class="v" lang="en">Agent Architecture<span class="sep">·</span>Retrieval-Augmented Generation (RAG)<span class="sep">·</span>Context Engineering<span class="sep">·</span>Tool &amp; API Integration<span class="sep">·</span>Extended Reality (XR)<span class="sep">·</span>Physical Prototypes<span class="sep">·</span>Python &amp; TypeScript</span>
+            <span class="v" lang="ko">에이전트 아키텍처<span class="sep">·</span>검색 증강 생성(RAG)<span class="sep">·</span>컨텍스트 엔지니어링<span class="sep">·</span>툴·API 연동<span class="sep">·</span>확장현실(XR)<span class="sep">·</span>피지컬 프로토타입<span class="sep">·</span>Python·TypeScript</span>
           </div>
           <div class="caps-row">
             <span class="k"><span lang="en">Validate</span><span lang="ko">검증</span></span>
@@ -1785,68 +1838,8 @@
                exactly as the four stage rows above do, so it adds a label, not a
                new structure.
 
-               Provenance for every entry — page evidence first, then owner:
-                 Python, TypeScript  — the Build row directly above.
-                 Unreal Engine       — Awards: "Led technical implementation of a
-                                       large-scale Unreal Engine media-façade
-                                       prototype" (Pohang media-façade hackathon).
-                 Meta Quest Pro      — Experience: the Watchers digital therapeutic,
-                                       and again in Publications.
-                 Unity               — assets/project-library/work-content.js:431,
-                                       "Unity with Oculus and Meta Movement SDKs on
-                                       Meta Quest Pro" (the Watchers method note).
-                 C++, C#, R, Java    — supplied by the owner 2026-08-14 as his own
-                                       skills. Not evidenced in page prose; he is
-                                       the authority on his own CV, and he noted
-                                       there are "lots and lots more" to come.
-                 HoloLens 2          — supplied by the owner 2026-08-14, the only
-                                       tool he named explicitly this round. It has
-                                       zero hits anywhere in the repo, so it rests
-                                       on his word alone exactly as C++/C#/R/Java
-                                       do — which is a sufficient ground here, not
-                                       a weak one. He says there is "so much more".
-                 OptiTrack           — work-content.js:375, "a projection-based VR
-                                       recycling game using 12 OptiTrack Prime17W
-                                       cameras", and again at :403, "an OptiTrack
-                                       recycling task"; summarised in
-                                       work-designs.js:811. Both are his own
-                                       published studies, listed on this page at
-                                       :2101 and :2109. That is page evidence of
-                                       the same kind that carried Unity, only
-                                       named three times instead of once.
-
-               Found in the repo and deliberately NOT added, recorded so the next
-               pass does not spend the search again:
-                 Oculus SDK, Meta Movement SDK — work-content.js:431, the same
-                   sentence that evidences Unity, so the evidence is real. Held
-                   because both are components of the Meta Quest Pro entry already
-                   in this row: three items drawn from one method note would make
-                   the Tools row read as one project rather than a career.
-                 Discord (work-content.js:235, :290), FAISS and GPT-4 Turbo (:290),
-                   GPT-4o (:305, and this page at :2079) — all genuinely his work.
-                   Held because a chat platform, a vector index and a model are a
-                   different kind of object from an engine or a headset. This row
-                   is what he builds ON, and a named model carries a version that
-                   goes stale on the page faster than the CV around it.
-                 Microsoft Azure (:2149) — that entry is the AI-900 certification.
-                   It evidences study, not something he built with.
-               Each is one `.tech-item` line whenever the owner says the word.
-
-               React and FastAPI were REQUESTED for this row on the stated ground
-               that the CV already evidences them. It does not, and neither does
-               any other file: repo-wide, the only `React` hits are ripple.js
-               saying this site is *not* React and lab/experiments.js saying a
-               renderer could move into React later, and `FastAPI` has zero hits
-               anywhere. They are also absent from the owner's own list. Held out
-               pending his confirmation rather than asserted on his CV — adding
-               either is one `.tech-item` line, and they need a Build-row mention
-               to stay consistent with the rule above. "Computer vision" was
-               dropped earlier on the same test and stays dropped. Re-checked on
-               the 2026-08-14 expansion pass: both still have exactly the hits
-               described above and nothing else. They stay out.
-
                The glyphs are category marks drawn as path data, not vendor logos
-               — see the header of tech-icons.css for why, and note the same
+               - see the header of tech-icons.css for why, and note the same
                decision already made for KRAFTON/NYU/bHaptics in logos.css. The
                visible text carries the name, so the SVGs are aria-hidden; saying
                "Python Python" is the failure mode if they are not.
@@ -1854,7 +1847,16 @@
                The `caps-row` class is load-bearing: layout.css:287 makes
                `.caps-row` `display: contents` above 761px so labels and content
                share one grid. Dropping it puts this whole row in the 62px label
-               column. -->
+               column.
+
+               Adding or removing an entry is one `.tech-item` line. Which tools
+               belong here is the owner's call; this file is not the place to
+               argue it. (A 65-line provenance dossier used to live here, weighing
+               each entry's evidence and quoting the owner. It was removed on
+               2026-08-20: it shipped to every visitor who opened View Source, and
+               a public page is a poor place to keep notes that second-guess the
+               CV it is presenting. Reasoning of that kind belongs in the commit
+               message or an untracked note.) -->
           <div class="caps-row tech-row">
             <span class="k"><span lang="en">Code</span><span lang="ko">코드</span></span>
             <!-- No aria-labelledby on either list. Pointing it at the `.k` span
@@ -1939,7 +1941,7 @@
           <h2 class="section-title"><span class="num">01</span><span lang="en">Research &amp; Development Projects</span><span lang="ko">연구·개발 프로젝트</span></h2>
           <div class="items">
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Development and Evaluation of the Inclusive Conversational AI Service for Game Accessibility Enhancement</span><span lang="ko">게임 접근성 향상을 위한 포용적 대화형 AI 서비스의 개발 및 평가</span></span>
+              <h3 class="item-title"><span lang="en">Development and Evaluation of the Inclusive Conversational AI Service for Game Accessibility Enhancement</span><span lang="ko">게임 접근성 향상을 위한 포용적 대화형 AI 서비스의 개발 및 평가</span></h3>
               <div class="item-meta"><span lang="en">2024.05 – 2027.04 | KAIST | National Research Foundation of Korea (NRF) | Lead Student Researcher</span><span lang="ko">2024.05 ~ 2027.04 | KAIST | 한국연구재단 (NRF) | 학생연구원 (총괄)</span></div>
               <p class="item-desc cv-summary" lang="en">Led user research and prototype development for a conversational AI assistant supporting players with disabilities, conducting in-depth interviews with approximately 30 participants across the project and surveys of approximately 200 participants recruited through partner organizations. Translated accessibility needs into interaction scenarios, with design principles published at ACM IUI 2026.</p>
               <p class="item-desc cv-summary" lang="ko">장애가 있는 플레이어를 지원하는 대화형 AI 어시스턴트의 사용자 연구와 프로토타입 개발을 주도했으며, 프로젝트 전반 약 30명 심층 인터뷰와 협력단체를 통한 약 200명 설문을 진행했습니다. 확인한 접근성 요구를 상호작용 시나리오로 전환했고, 설계 원칙은 ACM IUI 2026에 게재되었습니다.</p>
@@ -1947,26 +1949,26 @@
             </div>
 
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Automated Data-Quality Measurement &amp; Verification Engine (Industry Contract)</span><span lang="ko">데이터 품질 측정·검증 자동화 엔진 (산업체 용역)</span></span>
-              <div class="item-meta"><span lang="en">2024 – 2026 | SKAIWORLDWIDE | Ministry of SMEs and Startups | Sole developer, DQM v1.0 engine</span><span lang="ko">2024 ~ 2026 | SKAIWORLDWIDE | 중소벤처기업부 | DQM v1.0 엔진 단독 개발</span></div>
-              <p class="item-desc cv-summary" lang="en">Sole developer of DQM v1.0: software that detects and corrects data-quality errors in enterprise tables, then infers their primary keys, foreign keys, indexes and column-level rules. Built within a government-funded R&amp;D project and submitted to an accredited Korean laboratory for verification against four KPIs, August 2026.</p>
-              <p class="item-desc cv-summary" lang="ko">데이터를 자동으로 분석해 품질 오류를 탐지·보정하고, 구조 메타정보(PK·FK·Index)와 컬럼별 품질 기준(도메인·코드·형식)을 자동 추론·생성하는 데이터 품질 관리 자동화 소프트웨어 DQM v1.0을 단독 개발했습니다. 정부 지원 R&amp;D 과제의 일환이며, 2026년 8월 공인 소프트웨어 시험기관에 4개 KPI에 대한 독립 검증을 의뢰했습니다.</p>
+              <h3 class="item-title"><span lang="en">Automated Data-Quality Measurement &amp; Verification Engine (Industry Contract)</span><span lang="ko">데이터 품질 측정·검증 자동화 엔진 (산업체 용역)</span></h3>
+              <div class="item-meta"><span lang="en">2024 – 2026 | SKAIWORLDWIDE | Ministry of SMEs and Startups | Sole developer, Data Quality Management (DQM) v1.0 engine</span><span lang="ko">2024 ~ 2026 | SKAIWORLDWIDE | 중소벤처기업부 | 데이터 품질 관리(DQM) v1.0 엔진 단독 개발</span></div>
+              <p class="item-desc cv-summary" lang="en">Built DQM v1.0 as sole developer: an engine that detects and corrects errors in enterprise tables, then infers their primary keys, foreign keys, indexes, and column-level rules. Delivered inside a government-funded R&amp;D project and submitted for accredited-laboratory verification against four performance indicators, August 2026.</p>
+              <p class="item-desc cv-summary" lang="ko">기업 데이터의 품질 오류를 탐지·보정하고 기본키·외래키·인덱스와 컬럼 단위 품질 기준을 자동 추론하는 엔진 DQM v1.0을 단독 개발했습니다. 정부 지원 R&amp;D 과제 안에서 개발·납품했으며, 2026년 8월 공인 시험기관에 4개 성능 지표에 대한 검증을 의뢰했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />SKAIWORLDWIDE</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skaiworldwide.png" alt="" onerror="this.remove()" />스카이월드와이드</span></span></div>
             </div>
 
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Preserving the Haenyeo Legacy: Serious Games for Social Impact</span><span lang="ko">해녀 유산의 보존: 사회적 임팩트를 위한 시리어스 게임</span></span>
+              <h3 class="item-title"><span lang="en">Preserving the Haenyeo Legacy: Serious Games for Social Impact</span><span lang="ko">해녀 유산의 보존: 사회적 임팩트를 위한 시리어스 게임</span></h3>
               <div class="item-meta"><span lang="en">2025.06 – 2025.09 | KAIST | Leverhulme Trust International Fellowship | Student Researcher</span><span lang="ko">2025.06 ~ 2025.09 | KAIST | Leverhulme Trust International Fellowship | 학생연구원</span></div>
-              <p class="item-desc cv-summary" lang="en">Contributed to the design of a serious game preserving Jeju Haenyeo heritage, developing game concepts and narrative structures linking diving practice, environmental change, and women's community knowledge. Supported field-based international collaboration on serious games for intergenerational learning, cultural sustainability, and community resilience.</p>
-              <p class="item-desc cv-summary" lang="ko">제주 해녀 유산을 보존하는 시리어스 게임 설계에 기여하며, 잠수 실천과 환경 변화, 여성 공동체 지식을 잇는 게임 콘셉트와 서사 구조를 개발했습니다. 세대 간 학습과 문화적 지속가능성, 공동체 회복력을 위한 시리어스 게임의 현장 기반 국제 협력을 지원했습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Turned diving practice, environmental change, and women's community knowledge into The Golden Tewak, a game concept developed in the field with Jeju Haenyeo communities. The Haenyeo Museum identified value for education and international interpretation; a playable prototype remains future work.</p>
+              <p class="item-desc cv-summary" lang="ko">잠수 실천과 환경 변화, 여성 공동체의 지식을 제주 해녀 공동체와 현장에서 함께 개발한 게임 콘셉트 The Golden Tewak으로 옮겼습니다. 해녀박물관은 교육과 국제 관람객 해설에서의 가치를 확인했으며, 플레이 가능한 프로토타입은 후속 과제로 남아 있습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/brunel.png" alt="" onerror="this.remove()" />Brunel University London (Games Research Lab)</span><span class="p-chip" data-m="J">Jeju Haenyeo Museum</span><span class="p-chip" data-m="H">Haenyeo communities of Sinrye · Daepyeong · Yeongnak</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/brunel.png" alt="" onerror="this.remove()" />브루넬 대학교 런던 (게임 연구실)</span><span class="p-chip" data-m="제">제주 해녀박물관</span><span class="p-chip" data-m="해">신례리·대평리·영락리 해녀 공동체</span></span></div>
             </div>
 
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Real-Time XR Interface Technology for Environmental Adaptation</span><span lang="ko">환경 적응을 위한 실시간 XR 인터페이스 기술</span></span>
+              <h3 class="item-title"><span lang="en">Real-Time XR Interface Technology for Environmental Adaptation</span><span lang="ko">환경 적응을 위한 실시간 XR 인터페이스 기술</span></h3>
               <div class="item-meta"><span lang="en">2024.04 – 2025.06 | KAIST | Institute for Information &amp; Communication Technology Planning &amp; Evaluation (IITP) | Student Researcher</span><span lang="ko">2024.04 ~ 2025.06 | KAIST | 정보통신기획평가원 (IITP) | 학생연구원</span></div>
-              <p class="item-desc cv-summary" lang="en">Participated in developing an XR interface system that adapts virtual content to real-world spatial and environmental conditions in real time. Contributed to the design and implementation of interaction concepts involving adaptive virtual objects and multimodal visual-haptic feedback for presence and environmental responsiveness.</p>
-              <p class="item-desc cv-summary" lang="ko">가상 콘텐츠를 실제 공간·환경 조건에 실시간으로 적응시키는 XR 인터페이스 시스템 개발에 참여했습니다. 적응형 가상 객체와 멀티모달 시각·햅틱 피드백을 활용해 현존감과 환경 반응성을 높이는 상호작용 개념의 설계·구현에 기여했습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Contributed adaptive spatial behavior and visual-haptic feedback to an extended reality (XR) interface that keeps virtual content coherent as room geometry, obstacles, and user position change. Built as research inside an international consortium; no individual efficacy result is claimed.</p>
+              <p class="item-desc cv-summary" lang="ko">방의 구조와 장애물, 사용자 위치가 변해도 가상 콘텐츠의 정합성을 유지하는 확장현실(XR) 인터페이스에 적응형 공간 동작과 시각·햅틱 피드백을 기여했습니다. 국제 컨소시엄의 연구로 수행했으며, 개인 단위의 효과 결과는 주장하지 않습니다.</p>
               <div class="partners">
                 <span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span>
                 <span class="p-set" lang="en">
@@ -1987,18 +1989,18 @@
             </div>
 
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Defense Technology Research: Camouflage Effectiveness</span><span lang="ko">국방 기술 연구: 위장 효과성</span></span>
+              <h3 class="item-title"><span lang="en">Defense Technology Research: Camouflage Effectiveness</span><span lang="ko">국방 기술 연구: 위장 효과성</span></h3>
               <div class="item-meta"><span lang="en">2023.04 – 2024.02 | Handong Global University | Korea Aerospace Industries (KAI) | Student Researcher</span><span lang="ko">2023.04 ~ 2024.02 | 한동대학교 | 한국항공우주산업 (KAI) | 학생연구원</span></div>
-              <p class="item-desc cv-summary" lang="en">Evaluated KF-21 Boramae camouflage effectiveness across altitude, terrain, and meteorological conditions, processing environmental imagery and simulation datasets to analyze how surface patterns interact with background context and visibility. Developed colorways and pattern configurations, with selected proposals incorporated into real project outputs.</p>
-              <p class="item-desc cv-summary" lang="ko">고도·지형·기상 조건 전반에서 KF-21 보라매의 위장 효과를 평가하고, 환경 이미지와 시뮬레이션 데이터를 처리해 표면 패턴과 배경 맥락, 피탐지성의 상호작용을 분석했습니다. 컬러웨이와 패턴 구성을 개발했으며, 선정된 제안은 실제 프로젝트 산출물에 반영되었습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Developed camouflage colorways and pattern configurations for the KF-21 Boramae, and selected proposals were incorporated into the sponsored project's outputs. Compared their detectability across altitude, terrain, and weather using environmental imagery and simulation rather than single-scene visual judgment.</p>
+              <p class="item-desc cv-summary" lang="ko">KF-21 보라매의 위장 컬러웨이와 패턴 구성을 개발했고, 선정된 제안은 산학 과제 산출물에 반영되었습니다. 단일 장면의 시각 판단 대신 환경 이미지와 시뮬레이션으로 고도·지형·기상 조건별 피탐성을 비교했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Partners</span><span lang="ko">협력</span></span><span class="p-set" lang="en"><span class="p-chip"><span class="p-brand-stage p-brand-stage--kai" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kai.svg" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>Korea Aerospace Industries (KAI)</span></span><span class="p-set" lang="ko"><span class="p-chip"><span class="p-brand-stage p-brand-stage--kai" aria-hidden="true"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kai.svg" alt="" onerror="this.closest('.p-brand-stage').remove()" /></span>한국항공우주산업 (KAI)</span></span></div>
             </div>
 
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Smart City Infrastructure &amp; AI Object Tracking</span><span lang="ko">스마트시티 인프라 및 AI 객체 추적</span></span>
+              <h3 class="item-title"><span lang="en">Smart City Infrastructure &amp; AI Object Tracking</span><span lang="ko">스마트시티 인프라 및 AI 객체 추적</span></h3>
               <div class="item-meta"><span lang="en">2023.01 – 2024.02 | Handong Global University | Student Researcher</span><span lang="ko">2023.01 ~ 2024.02 | 한동대학교 | 학생연구원</span></div>
-              <p class="item-desc cv-summary" lang="en">Engineered IoT-based roadside sensing hardware for real road scenes, including enclosure design and 3D-printed housings. Supported AI traffic object-tracking pipelines through data preprocessing, detection workflow refinement, and model-level anchor-box optimization, improving detection robustness in dense urban environments.</p>
-              <p class="item-desc cv-summary" lang="ko">실제 도로 환경을 위한 IoT 기반 노변 센싱 하드웨어를 인클로저 설계와 3D 프린팅 하우징을 포함해 제작했습니다. 데이터 전처리, 탐지 워크플로 개선, 모델 수준의 앵커박스 최적화로 AI 교통 객체 추적 파이프라인을 지원해 혼잡한 도심 환경에서 탐지 견고성을 높였습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Engineered Internet-of-Things (IoT) roadside sensing hardware for real road scenes, including enclosure design and 3D-printed housings. Tuned the AI traffic object-tracking pipeline running on it, covering preprocessing, detection flow, and anchor-box optimization, so sensing and detection were designed as one system.</p>
+              <p class="item-desc cv-summary" lang="ko">실제 도로 환경을 위한 사물인터넷(IoT) 기반 도로변 센싱 하드웨어를 인클로저 설계와 3D 프린팅 하우징을 포함해 제작했습니다. 그 위에서 동작하는 AI 교통 객체 추적 파이프라인을 데이터 전처리, 탐지 흐름, 앵커박스 최적화까지 조정해 센싱과 탐지를 하나의 시스템으로 설계했습니다.</p>
             </div>
           </div>
         </section>
@@ -2007,38 +2009,38 @@
           <h2 class="section-title"><span class="num">02</span><span lang="en">Recognition &amp; External Validation</span><span lang="ko">외부 인정 및 검증</span></h2>
           <div class="items">
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Top 3 Finish – Rapid AI Product Build</span><span lang="ko">상위 3팀 – AI 제품 신속 개발</span></span>
+              <h3 class="item-title"><span lang="en">Top 3 Finish – Rapid AI Product Build</span><span lang="ko">상위 3팀 – AI 제품 신속 개발</span></h3>
               <div class="item-meta"><span lang="en">2026.07 | Cofathon: AI Native Battlegrounds</span><span lang="ko">2026.07 | 코파톤 (Cofathon): AI Native Battlegrounds</span></div>
-              <p class="item-desc cv-summary" lang="en">Placed in the top 3 through a roughly 25-to-6-to-3 selection funnel, building an AI application in under four hours from agent-led requirement discovery through blind-review handoff. Official material documents the one-day final and its recruitment fast-track.</p>
-              <p class="item-desc cv-summary" lang="ko">약 25개 팀에서 6팀을 거쳐 최종 3팀에 들었으며, 에이전트 기반 요구사항 발굴부터 블라인드 심사 인계까지 4시간 이내에 AI 애플리케이션을 구현했습니다. 공식 자료가 1일 결선과 채용 우대를 확인합니다.</p>
+              <p class="item-desc cv-summary" lang="en">Placed in the top 3 of a roughly 25-to-6-to-3 selection funnel at a one-day final. Built a working AI application in under four hours, from agent-led requirement discovery to blind-review handoff.</p>
+              <p class="item-desc cv-summary" lang="ko">1일 결선에서 약 25개 팀에서 6팀을 거쳐 최종 3팀에 들었습니다. 에이전트 기반 요구사항 발굴부터 블라인드 심사 인계까지 4시간 이내에 작동하는 AI 애플리케이션을 구현했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/krafton.svg" alt="" onerror="this.remove()" />KRAFTON</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/oliveyoung.png" alt="" onerror="this.remove()" />CJ Olive Young</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/openai.png" alt="" onerror="this.remove()" />OpenAI</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/krafton.svg" alt="" onerror="this.remove()" />크래프톤</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/oliveyoung.png" alt="" onerror="this.remove()" />CJ올리브영</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/openai.png" alt="" onerror="this.remove()" />OpenAI</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Paper-Level Best Presentation Award</span><span lang="ko">논문 단위 우수발표논문상</span></span>
+              <h3 class="item-title"><span lang="en">Paper-Level Best Presentation Award</span><span lang="ko">논문 단위 우수발표논문상</span></h3>
               <div class="item-meta"><span lang="en">2026.05 | Korea Game Society Spring Conference 2026</span><span lang="ko">2026.05 | 한국게임학회 2026 춘계학술발표대회</span></div>
-              <p class="item-desc cv-summary" lang="en">Contributed the accessibility-AI framing, barrier interpretation, and design synthesis to this recognized paper as second author. The award is recorded in Professor Young Yim Doh's July 2026 CV.</p>
-              <p class="item-desc cv-summary" lang="ko">제2저자로서 수상 논문의 접근성 AI 프레이밍, 장벽 해석, 설계 종합에 기여했습니다. 수상은 도영임 교수의 2026년 7월 CV에 기록되어 있습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Contributed the accessibility-AI framing, barrier interpretation, and design synthesis to the award-winning paper as second author. Professor Young Yim Doh's July 2026 CV records the award.</p>
+              <p class="item-desc cv-summary" lang="ko">제2저자로서 수상 논문의 접근성 AI 프레이밍, 장벽 해석, 설계 종합에 기여했습니다. 도영임 교수의 2026년 7월 CV가 이 수상을 기록합니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip" data-m="K">Korea Game Society</span></span><span class="p-set" lang="ko"><span class="p-chip" data-m="게">한국게임학회</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Grand Prize – Education4.0 Q TA Activities</span><span lang="ko">대상 – Education4.0 Q 조교 활동</span></span>
+              <h3 class="item-title"><span lang="en">Grand Prize – Education4.0 Q TA Activities</span><span lang="ko">대상 – Education4.0 Q 조교 활동</span></h3>
               <div class="item-meta"><span lang="en">2026.03 | Certificate EC-2026-0001</span><span lang="ko">2026.03 | 증서번호 EC-2026-0001</span></div>
-              <p class="item-desc cv-summary" lang="en">Received the Grand Prize for teaching-assistant work under KAIST's Education4.0 Q teaching and learning model. The award recognised both the quality of the activity report and its presentation.</p>
-              <p class="item-desc cv-summary" lang="ko">2026년 3월 23일 Education4.0 Q 모형의 조교 활동으로 KAIST 우수상 증서를 받았습니다. 활동보고서의 완성도와 그 발표를 함께 인정한 수상입니다.</p>
+              <p class="item-desc cv-summary" lang="en">Wrote the teaching-assistant activity report for KAIST's Education4.0 Q teaching and learning model. The Grand Prize recognized both the report's quality and its presentation.</p>
+              <p class="item-desc cv-summary" lang="ko">KAIST Education4.0 Q 교수학습 모형의 조교 활동보고서를 작성했습니다. 대상은 보고서의 완성도와 그 발표를 함께 인정했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kaist.png" alt="" onerror="this.remove()" />KAIST</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kaist.png" alt="" onerror="this.remove()" />KAIST</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Selected Entrepreneurial Team – Climate Tech Track</span><span lang="ko">선정 창업팀 – 기후테크 부문</span></span>
+              <h3 class="item-title"><span lang="en">Selected Entrepreneurial Team – Climate Tech Track</span><span lang="ko">선정 창업팀 – 기후테크 부문</span></h3>
               <div class="item-meta"><span lang="en">2024.03 | Asan UniverCT · KAIST</span><span lang="ko">2024.03 | 아산 UniverCT · KAIST</span></div>
-              <p class="item-desc cv-summary" lang="en">Led venture coordination, AI modeling, and patent work as named representative of Glean, selected as a climate-tech team in the Asan UniverCT programme. The selection secured early-stage funding and mentorship through KAIST and Asan Nanum Foundation.</p>
-              <p class="item-desc cv-summary" lang="ko">아산 UniverCT 프로그램에 기후테크 창업팀으로 선정된 Glean의 명시된 대표로서 사업 총괄, AI 모델링, 특허 업무를 이끌었습니다. 이 선정으로 KAIST와 아산나눔재단을 통해 초기 자금과 멘토링을 확보했습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Led venture coordination, AI modeling, and patent work as named representative of Glean, a climate-tech team selected into KAIST's Asan UniverCT program. The selection carried mentorship and venture-development resources from Asan Nanum Foundation.</p>
+              <p class="item-desc cv-summary" lang="ko">KAIST 아산 UniverCT 프로그램에 기후테크 팀으로 선정된 Glean의 명시된 대표로서 사업 총괄, AI 모델링, 특허 업무를 이끌었습니다. 이 선정으로 아산나눔재단의 멘토링과 창업 개발 자원을 지원받았습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/asan.png" alt="" onerror="this.remove()" />Asan Nanum Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/asan.png" alt="" onerror="this.remove()" />아산나눔재단</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Grand Prize – Handong Global University President's Award</span><span lang="ko">대상 – 한동대학교 총장상</span></span>
+              <h3 class="item-title"><span lang="en">Grand Prize – Handong Global University President's Award</span><span lang="ko">대상 – 한동대학교 총장상</span></h3>
               <div class="item-meta"><span lang="en">2024.01 | Pohang Culture &amp; Arts Factory Hackathon</span><span lang="ko">2024.01 | 포항문화예술공장 해커톤</span></div>
-              <p class="item-desc cv-summary" lang="en">Led technical implementation of a large-scale Unreal Engine media-façade prototype demonstrating a smart-city experience concept. The hackathon, co-hosted by Pohang City, the Pohang Cultural Foundation, KT, and Handong Global University, awarded it the Grand Prize.</p>
-              <p class="item-desc cv-summary" lang="ko">스마트시티 경험 콘셉트를 구현한 대규모 Unreal Engine 미디어파사드 프로토타입의 기술 구현을 총괄했습니다. 포항시, 포항문화재단, KT, 한동대학교가 공동 주최한 해커톤에서 대상을 받았습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Led technical implementation of a large-scale Unreal Engine media-façade prototype demonstrating a smart-city experience concept. Pohang City, the Pohang Cultural Foundation, KT, and Handong Global University co-hosted the hackathon and awarded it the Grand Prize.</p>
+              <p class="item-desc cv-summary" lang="ko">스마트시티 경험 콘셉트를 구현한 대규모 Unreal Engine 미디어파사드 프로토타입의 기술 구현을 총괄했습니다. 해커톤을 공동 주최한 포항시, 포항문화재단, KT, 한동대학교가 이 프로토타입에 대상을 수여했습니다.</p>
               <!-- Pohang Cultural Foundation keeps the monogram. The only official
                    file the foundation publishes is the reversed (white) lockup in
                    its site footer — assets/logos/pohang-cultural-foundation.svg is
@@ -2048,39 +2050,39 @@
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kt.png" alt="" onerror="this.remove()" />KT</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/pohang-city.svg" alt="" onerror="this.remove()" />Pohang City</span><span class="p-chip" data-m="P">Pohang Cultural Foundation</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />Handong Global University</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kt.png" alt="" onerror="this.remove()" />KT</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/pohang-city.svg" alt="" onerror="this.remove()" />포항시</span><span class="p-chip" data-m="포">포항문화재단</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />한동대학교</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Excellence Award – Undergraduate Paper Competition</span><span lang="ko">우수상 – 추계학부생논문경진대회</span></span>
+              <h3 class="item-title"><span lang="en">Excellence Award – Undergraduate Paper Competition</span><span lang="ko">우수상 – 추계학부생논문경진대회</span></h3>
               <div class="item-meta"><span lang="en">2023.11 | Korea Multimedia Society Fall Conference</span><span lang="ko">2023.11 | 한국멀티미디어학회 추계학술대회</span></div>
-              <p class="item-desc cv-summary" lang="en">Co-authored and presented <em>Eye-Tracking-Based VR Interactive Games</em>, analyzing oculomotor responses to strengthen immersion and accessibility. The Korea Multimedia Society awarded the seven-author paper an Excellence Award on 17 November 2023.</p>
-              <p class="item-desc cv-summary" lang="ko">「시선 추적 기반 VR 인터랙티브 게임」을 공동 저술·발표하며 몰입과 접근성을 높이기 위한 안구 운동 반응을 분석했습니다. 한국멀티미디어학회가 2023년 11월 17일 7인 공저 논문에 우수상을 수여했습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Co-authored <em>Eye-tracking-based VR interactive game for eye exercises</em> as fourth author, analyzing oculomotor responses to strengthen immersion and accessibility. The Korea Multimedia Society awarded the seven-author paper an Excellence Award on 17 November 2023.</p>
+              <p class="item-desc cv-summary" lang="ko">제4저자로 「안구 운동을 위한 시선 추적 기반 VR 인터랙티브 게임」을 공동 저술하며 몰입과 접근성을 높이기 위한 안구 운동 반응을 분석했습니다. 한국멀티미디어학회가 2023년 11월 17일 7인 공저 논문에 우수상을 수여했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kmms-official.svg" alt="" onerror="this.remove()" />Korea Multimedia Society (KMMS)</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kmms-official.svg" alt="" onerror="this.remove()" />한국멀티미디어학회</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Excellence Award</span><span lang="ko">우수상</span></span>
+              <h3 class="item-title"><span lang="en">Excellence Award</span><span lang="ko">우수상</span></h3>
               <div class="item-meta"><span lang="en">2023.10 | 2023 Metaverse Developer Contest</span><span lang="ko">2023.10 | 2023 메타버스 개발자 경진대회</span></div>
-              <p class="item-desc cv-summary" lang="en">Designed the VR content and experience for <em>Watchers</em>, a Meta Quest Pro digital therapeutic turning eye-muscle rehabilitation into gameplay through eye tracking. The CEO of Skonec Entertainment presented the award at this contest sponsored by MSIT.</p>
-              <p class="item-desc cv-summary" lang="ko">시선 추적으로 안구 근육 재활을 플레이로 전환한 Meta Quest Pro 디지털 치료제 <em>Watchers</em>의 VR 콘텐츠와 경험을 설계했습니다. 과학기술정보통신부가 후원한 이 대회에서 스코넥엔터테인먼트 대표가 시상했습니다.</p>
-              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />MSIT</span><span class="p-chip" data-m="K">Korea Metaverse Industry Association</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa-mark.png" alt="" onerror="this.remove()" />NIPA</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />Skonec Entertainment</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />과학기술정보통신부</span><span class="p-chip" data-m="메">한국메타버스산업협회</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa-mark.png" alt="" onerror="this.remove()" />정보통신산업진흥원</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />스코넥엔터테인먼트</span></span></div>
+              <p class="item-desc cv-summary" lang="en">Designed the virtual reality (VR) content and experience for <em>Watchers</em>, a Meta Quest Pro application turning eye-muscle rehabilitation into eye-tracked gameplay. Skonec Entertainment's CEO presented the award at this contest sponsored by the Ministry of Science and ICT (MSIT).</p>
+              <p class="item-desc cv-summary" lang="ko">시선 추적으로 안구 근육 재활을 플레이로 전환한 Meta Quest Pro 애플리케이션 <em>Watchers</em>의 가상현실(VR) 콘텐츠와 경험을 설계했습니다. 과학기술정보통신부(MSIT)가 후원한 이 대회에서 스코넥엔터테인먼트 대표가 시상했습니다.</p>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />MSIT</span><span class="p-chip" data-m="K">Korea Metaverse Industry Association</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa-mark.png" alt="" onerror="this.remove()" />National IT Industry Promotion Agency</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />Skonec Entertainment</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/msit.png" alt="" onerror="this.remove()" />과학기술정보통신부</span><span class="p-chip" data-m="메">한국메타버스산업협회</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/nipa-mark.png" alt="" onerror="this.remove()" />정보통신산업진흥원</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/skonec.png" alt="" onerror="this.remove()" />스코넥엔터테인먼트</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Handong Global University President's Award</span><span lang="ko">한동대학교 총장상</span></span>
+              <h3 class="item-title"><span lang="en">Handong Global University President's Award</span><span lang="ko">한동대학교 총장상</span></h3>
               <div class="item-meta"><span lang="en">2022.11 | Handong Global University Startup Idea Competition</span><span lang="ko">2022.11 | 한동대학교 창업아이디어 경진대회</span></div>
-              <p class="item-desc cv-summary" lang="en">Represented Team CGreen with Glean, a startup model integrating ESG principles with XR and AR recycling rewards. Judged the top proposal for technical feasibility and social impact, winning the Handong Global University President's Award.</p>
-              <p class="item-desc cv-summary" lang="ko">2022년 11월 24일 본선에서 ESG 원칙과 XR·AR 재활용 리워드를 결합한 창업 모델 Glean으로 Team CGreen을 대표했습니다. 이 벤처는 한동대학교 총장상을 받았습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Represented Team CGreen with Glean at the 24 November 2022 final, a startup model pairing environmental, social, and governance (ESG) principles with XR and augmented reality (AR) recycling rewards. Judges ranked it the top proposal for technical feasibility and social impact.</p>
+              <p class="item-desc cv-summary" lang="ko">2022년 11월 24일 본선에서 환경·사회·지배구조(ESG) 원칙과 XR·증강현실(AR) 재활용 리워드를 결합한 창업 모델 Glean으로 Team CGreen을 대표했습니다. 심사진은 기술 실현 가능성과 사회적 영향에서 이를 최우수 제안으로 평가했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />Handong Global University</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/handong.png" alt="" onerror="this.remove()" />한동대학교</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Presentation Award – Selected for Excellence</span><span lang="ko">발표상 – 우수상 선정</span></span>
-              <div class="item-meta"><span lang="en">2022.05 | KMMS Spring Undergraduate Paper Competition</span><span lang="ko">2022.05 | 한국멀티미디어학회 춘계학부생논문경진대회</span></div>
-              <p class="item-desc cv-summary" lang="en">Contributed as second author to experimental research on VR exposure therapy for cynophobia, recognized by the Korea Multimedia Society on 13 May 2022. The paper proposed novel spatiotemporal design factors intended to improve treatment efficacy.</p>
-              <p class="item-desc cv-summary" lang="ko">제2저자로 개 공포증 VR 노출 치료 실험 연구에 참여했으며, 한국멀티미디어학회가 2022년 5월 13일 이를 인정했습니다. 이 논문은 치료 효과를 높이기 위한 새로운 시공간 설계 요인을 제안했습니다.</p>
+              <h3 class="item-title"><span lang="en">Presentation Award – Selected for Excellence</span><span lang="ko">발표상 – 우수상 선정</span></h3>
+              <div class="item-meta"><span lang="en">2022.05 | Korea Multimedia Society Spring Undergraduate Paper Competition</span><span lang="ko">2022.05 | 한국멀티미디어학회 춘계학부생논문경진대회</span></div>
+              <p class="item-desc cv-summary" lang="en">Contributed as second author to experimental research on VR exposure therapy for cynophobia that proposed novel spatiotemporal design factors intended to improve treatment efficacy. The Korea Multimedia Society recognized the paper on 13 May 2022.</p>
+              <p class="item-desc cv-summary" lang="ko">제2저자로 치료 효과를 높이기 위한 새로운 시공간 설계 요인을 제안한 개 공포증 VR 노출 치료 실험 연구에 참여했습니다. 한국멀티미디어학회가 2022년 5월 13일 이 논문을 인정했습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kmms-official.svg" alt="" onerror="this.remove()" />Korea Multimedia Society (KMMS)</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kmms-official.svg" alt="" onerror="this.remove()" />한국멀티미디어학회</span></span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Top 14 Finalist</span><span lang="ko">본선 14팀 진출</span></span>
+              <h3 class="item-title"><span lang="en">Top 14 Finalist</span><span lang="ko">본선 14팀 진출</span></h3>
               <div class="item-meta"><span lang="en">2021.07 | DB-SNUbiz Global Startup Challenge</span><span lang="ko">2021.07 | DB-SNUbiz 글로벌 창업 챌린지</span></div>
-              <p class="item-desc cv-summary" lang="en">Pitched a blockchain venture to a panel of venture capitalists and industry experts, reaching the final 14 teams from a field of 152 applicants. The challenge carried a $91,000 prize pool.</p>
+              <p class="item-desc cv-summary" lang="en">Reached the final 14 teams from a field of 152 applicants, pitching a blockchain venture to a panel of venture capitalists and industry experts. The challenge carried a $91,000 prize pool.</p>
               <p class="item-desc cv-summary" lang="ko">152개 지원팀 가운데 본선 14팀에 올라 벤처캐피털과 산업 전문가 심사단 앞에서 블록체인 벤처를 피칭했습니다. 이 챌린지의 총상금 규모는 9만 1천 달러였습니다.</p>
-              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />SNU Business School</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/db-foundation.svg" alt="" onerror="this.remove()" />DB Kim Jun-gi Culture Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />서울대학교 경영대학</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/db-foundation.svg" alt="" onerror="this.remove()" />DB김준기문화재단</span></span></div>
+              <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />Seoul National University Business School</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/db-foundation.svg" alt="" onerror="this.remove()" />DB Kim Jun-gi Culture Foundation</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/snu-mark.png" alt="" onerror="this.remove()" />서울대학교 경영대학</span><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/db-foundation.svg" alt="" onerror="this.remove()" />DB김준기문화재단</span></span></div>
             </div>
           </div>
         </section>
@@ -2089,33 +2091,33 @@
           <h2 class="section-title"><span class="num">03</span><span lang="en">Education</span><span lang="ko">학력</span></h2>
           <div class="items">
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Korea Advanced Institute of Science and Technology (KAIST)</span><span lang="ko">한국과학기술원 (KAIST)</span></span>
-              <div class="item-meta"><span lang="en"> | Ph.D. Student, Graduate School of Culture Technology</span><span lang="ko"> | 박사과정, 문화기술대학원</span></div>
+              <h3 class="item-title"><span lang="en">Korea Advanced Institute of Science and Technology (KAIST)</span><span lang="ko">한국과학기술원 (KAIST)</span></h3>
+              <div class="item-meta"><span lang="en">Ph.D. Student, Graduate School of Culture Technology</span><span lang="ko">박사과정, 문화기술대학원</span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Korea Advanced Institute of Science and Technology (KAIST)</span><span lang="ko">한국과학기술원 (KAIST)</span></span>
-              <div class="item-meta"><span lang="en"> | M.S., Graduate School of Culture Technology</span><span lang="ko"> | 석사, 문화기술대학원</span></div>
+              <h3 class="item-title"><span lang="en">Korea Advanced Institute of Science and Technology (KAIST)</span><span lang="ko">한국과학기술원 (KAIST)</span></h3>
+              <div class="item-meta"><span lang="en">M.S., Graduate School of Culture Technology</span><span lang="ko">석사, 문화기술대학원</span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Handong Global University</span><span lang="ko">한동대학교</span></span>
-              <div class="item-meta"><span lang="en"> | B.A. in ICT Convergence &amp; Product Design</span><span lang="ko"> | ICT융합 및 제품디자인 학사</span></div>
+              <h3 class="item-title"><span lang="en">Handong Global University</span><span lang="ko">한동대학교</span></h3>
+              <div class="item-meta"><span lang="en">B.A. in ICT Convergence &amp; Product Design</span><span lang="ko">ICT융합 및 제품디자인 학사</span></div>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">Ateneo de Manila University</span><span lang="ko">아테네오 데 마닐라 대학교</span></span>
-              <div class="item-meta"><span lang="en"> | Management of Applied Chemistry</span><span lang="ko"> | 응용화학 경영 전공</span></div>
+              <h3 class="item-title"><span lang="en">Ateneo de Manila University</span><span lang="ko">아테네오 데 마닐라 대학교</span></h3>
+              <div class="item-meta"><span lang="en">Management of Applied Chemistry</span><span lang="ko">응용화학 경영 전공</span></div>
             </div>
           </div>
         </section>
 
         <section class="section" id="publications">
           <h2 class="section-title"><span class="num">04</span><span lang="en">Publications</span><span lang="ko">논문</span><a class="title-aside" href="https://scholar.google.com/citations?user=OjxItRUAAAAJ" target="_blank" rel="noopener noreferrer"><span lang="en">Google Scholar ↗</span><span lang="ko">Google Scholar ↗</span></a></h2>
-          <div class="filter" role="tablist" aria-label="Filter publications by year" id="pubFilter">
-            <button class="active" data-year="all" role="tab" aria-selected="true"><span lang="en">All</span><span lang="ko">전체</span></button>
-            <button data-year="2026" role="tab" aria-selected="false">2026</button>
-            <button data-year="2025" role="tab" aria-selected="false">2025</button>
-            <button data-year="2024" role="tab" aria-selected="false">2024</button>
-            <button data-year="2023" role="tab" aria-selected="false">2023</button>
-            <button data-year="2022" role="tab" aria-selected="false">2022</button>
+          <div class="filter" role="group" aria-label="Filter publications by year" id="pubFilter">
+            <button class="active" data-year="all" aria-pressed="true"><span lang="en">All</span><span lang="ko">전체</span></button>
+            <button data-year="2026" aria-pressed="false">2026</button>
+            <button data-year="2025" aria-pressed="false">2025</button>
+            <button data-year="2024" aria-pressed="false">2024</button>
+            <button data-year="2023" aria-pressed="false">2023</button>
+            <button data-year="2022" aria-pressed="false">2022</button>
           </div>
           <p class="pub-summary">
             <span lang="en">21 publications · Led 7 as first or sole author · Shared lead or equal contribution on 3 · Coauthored 11</span>
@@ -2126,15 +2128,15 @@
               <h3 class="pub-group-title">2026<span class="pub-group-n" aria-hidden="true">5</span></h3>
             <div class="item reveal" data-year="2026">
               <p class="item-desc"><span class="pub-n">1</span><span class="pub-author-me">Chae, J.</span> (2026). <a href="https://library.kaist.ac.kr/search/detail/view.do?bibCtrlNo=1152515&amp;flag=dissertation" target="_blank" rel="noopener noreferrer"><span class="paper-title">Designing and evaluating an AI assistant for players with disabilities: Empirical findings and future design implications.</span></a> <span class="venue">Master's thesis, Korea Advanced Institute of Science and Technology. Advisor: Young Yim Doh.</span> <span class="pub-role"><span lang="en">(Sole author)</span><span lang="ko">(단독 저자)</span></span> <span class="pub-tag">MGCT 26010</span> <a class="pub-link" href="https://library.kaist.ac.kr/search/detail/view.do?bibCtrlNo=1152515&amp;flag=dissertation" target="_blank" rel="noopener noreferrer">KAIST Library ↗</a></p>
-              <p class="pub-value cv-summary"><span lang="en">AI accessibility helps only when information, perception, and execution support match each player's abilities, a mixed-method Minecraft study with 12 players with disabilities finds.</span><span lang="ko">AI 접근성은 정보·지각·실행 지원을 각 플레이어의 능력에 맞출 때만 유효하다는 점을, 장애가 있는 플레이어 12명의 혼합방법 Minecraft 연구가 확인했습니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">AI accessibility helps only when information, perception, and execution support match each player's abilities, one controlled Minecraft study of players with disabilities finds.</span><span lang="ko">AI 접근성은 정보·지각·실행 지원을 각 플레이어의 능력에 맞출 때만 유효하다는 점을, 장애가 있는 플레이어를 대상으로 한 통제된 Minecraft 단일 연구가 확인했습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2026">
               <p class="item-desc"><span class="pub-n">2</span><span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2026). <a href="https://doi.org/10.64145/kjdgs.2026.2.1.29" target="_blank" rel="noopener noreferrer"><span class="paper-title">Toward Ludic AI: Proposing an evaluation framework for the ludic competence of game-playing AI.</span></a> <span class="venue">Digital Game Research, 2(1), 29–59.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.64145/kjdgs.2026.2.1.29" target="_blank" rel="noopener noreferrer">DOI ↗</a> <a class="pub-link" href="https://www.researchgate.net/publication/408515882_Toward_Ludic_AI_Proposing_an_Evaluation_Framework_for_the_Ludic_Competence_of_Game-Playing_AI" target="_blank" rel="noopener noreferrer">Article ↗</a></p>
-              <p class="pub-value cv-summary"><span lang="en">Game-playing AI should be judged on whether it sustains shared play, not just wins, so this framework operationalizes play theory as three behavioral dimensions.</span><span lang="ko">게임 AI는 승리 최적화가 아니라 공동 놀이를 지속하는 능력으로 평가되어야 하며, 이 프레임워크는 놀이 이론을 세 가지 행동 차원으로 조작화합니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Game-playing AI should be judged on whether it sustains shared play, not on winning, argues this conceptual framework of three behavioral dimensions awaiting empirical test.</span><span lang="ko">게임 AI는 승리가 아니라 공동 놀이를 지속하는 능력으로 평가되어야 한다고 세 가지 행동 차원의 이 개념적 프레임워크가 주장하며, 실증 검증은 아직 남아 있습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2026">
               <p class="item-desc"><span class="pub-n">3</span><span class="pub-author-me">Chae, J.</span>, Lee, S., Jeong, S., &amp; Doh, Y. Y. (2026). <a href="https://doi.org/10.9717/kmms.2026.29.6.885" target="_blank" rel="noopener noreferrer"><span class="paper-title">Patterns of preference for AI assistants in game accessibility among players with disabilities: An exploratory analysis of functional barriers and intervention timing.</span></a> <span class="venue">Journal of Korea Multimedia Society, 29(6), 885–904.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.9717/kmms.2026.29.6.885" target="_blank" rel="noopener noreferrer">DOI ↗</a> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12890914" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
-              <p class="pub-value cv-summary"><span lang="en">Setup and automation rank as the highest-rated AI support opportunity in a survey of 112 players with disabilities that links functional barriers to preferred assistance.</span><span lang="ko">초기 설정과 자동화가 가장 높은 평가를 받은 AI 지원 기회로 나타났으며, 장애가 있는 플레이어 112명 설문이 기능적 장벽과 선호 지원을 연결했습니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Setup and automation outranked every other AI support type in a survey of 112 players with disabilities, though this exploratory self-report yields design hypotheses, not laws.</span><span lang="ko">초기 설정과 자동화가 다른 모든 AI 지원 유형보다 높은 평가를 받았지만, 장애가 있는 플레이어 112명의 탐색적 자기보고 설문은 보편 법칙이 아니라 설계 가설을 제시합니다.</span></p>
             </div>
             <div class="item reveal" data-year="2026">
               <p class="item-desc"><span class="pub-n">4</span><span class="pub-author-me">Chae, J.</span>, Seo, G., Jeong, S., &amp; Doh, Y. Y. (2026). <a href="https://doi.org/10.1145/3742413.3789155" target="_blank" rel="noopener noreferrer"><span class="paper-title">Design principles of Game AI Assistant (GAIA) for players with disabilities: Accessibility needs and ethical concerns.</span></a> <span class="venue">Proceedings of the 31st International Conference on Intelligent User Interfaces (IUI '26), 144–155. ACM.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.1145/3742413.3789155" target="_blank" rel="noopener noreferrer">DOI ↗</a></p>
@@ -2142,21 +2144,21 @@
             </div>
             <div class="item reveal" data-year="2026">
               <p class="item-desc"><span class="pub-n">5</span>Lee, S., <span class="pub-author-me">Chae, J.</span>, Jeong, S., &amp; Doh, Y. Y. (2026). <span class="paper-title">Design principles for game AI assistant: Analyzing functional barriers and accessibility requirements of players with disabilities.</span> <span class="venue">Korea Game Society Spring Conference 2026, 83–88.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
-              <p class="pub-value cv-summary"><span lang="en">A three-level requirements framework from 112 open-ended responses by players with disabilities puts baseline access first, ahead of workload reduction and personalized assistance.</span><span lang="ko">장애가 있는 플레이어 112명의 서술 응답으로 구축한 3단계 요구사항 프레임워크는 부담 완화와 개인화 지원보다 기본 접근 보장을 우선합니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Baseline access ranks ahead of workload reduction and personalized assistance in a three-level requirements framework built from 112 open-ended responses by players with disabilities.</span><span lang="ko">장애가 있는 플레이어 112명의 서술 응답으로 구축한 3단계 요구사항 프레임워크에서 기본 접근 보장이 부담 완화와 개인화 지원보다 앞섭니다.</span></p>
             </div>
             </div>
             <div class="pub-group">
               <h3 class="pub-group-title">2025<span class="pub-group-n" aria-hidden="true">3</span></h3>
             <div class="item reveal" data-year="2025">
               <p class="item-desc"><span class="pub-n">6</span>Park, E., <span class="pub-author-me">Chae, J.</span>, Eum, K., Choi, E., Oh, H., &amp; Doh, Y. Y. (2025). <a href="https://doi.org/10.1145/3706599.3719723" target="_blank" rel="noopener noreferrer"><span class="paper-title">Press start to continue: A thematic analysis of the iterative process of hardcore players with disabilities adapting to gameplay difficulties.</span></a> <span class="venue">Extended Abstracts of the CHI Conference on Human Factors in Computing Systems (CHI EA '25), Paper 446, 7 pp. ACM.</span> <span class="pub-role"><span lang="en">(Co-first author)</span><span lang="ko">(공동 제1저자)</span></span> <a class="pub-link" href="https://doi.org/10.1145/3706599.3719723" target="_blank" rel="noopener noreferrer">DOI ↗</a></p>
-              <p class="pub-value cv-summary"><span lang="en">Hardcore players with disabilities adapt through a repeating loop of personal strategy, assistive tools, social support, and game resources; five interviews identify when they disengage.</span><span lang="ko">장애가 있는 하드코어 플레이어는 개인 전략, 보조 도구, 사회적 지원, 게임 자원의 반복 순환으로 적응하며, 5명의 인터뷰가 이탈 시점을 규명했습니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Hardcore players with disabilities adapt by combining personal strategy, assistive tools, and social support, but leave when the game environment cannot be modified, five interviews show.</span><span lang="ko">장애가 있는 하드코어 플레이어는 개인 전략, 보조 도구, 사회적 지원을 결합해 적응하지만 게임 환경 자체를 바꿀 수 없으면 떠난다는 점을 5명의 인터뷰가 보여줍니다.</span></p>
             </div>
             <div class="item reveal" data-year="2025">
               <p class="item-desc"><span class="pub-n">7</span><span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2025). <a href="https://scholar.kyobobook.co.kr/article/detail/4010070894847" target="_blank" rel="noopener noreferrer"><span class="paper-title">The identity and role of game NPCs: Past, present, and future.</span></a> <span class="venue">[Conference presentation]. Proceedings of the 1st DiGRA Korea Conference, 1–39.</span> <span class="pub-role"><span lang="en">(First author)</span><span lang="ko">(제1저자)</span></span> <a class="pub-link" href="https://scholar.kyobobook.co.kr/article/detail/4010070894847" target="_blank" rel="noopener noreferrer">Source ↗</a></p>
               <p class="pub-value cv-summary"><span lang="en">Greater NPC autonomy is not inherently better and must stay bounded by game rules, character identity, and player agency, this conceptual history of NPC roles argues.</span><span lang="ko">NPC의 자율성 확대가 곧 개선은 아니며 게임 규칙, 캐릭터 정체성, 플레이어 주체성 안에 머물러야 한다고 NPC 역할의 개념사가 주장합니다.</span></p>
             </div>
             <div class="item reveal" data-year="2025">
-              <p class="item-desc"><span class="pub-n">8</span>Oh, H., Eum, K., Park, E., <span class="pub-author-me">Chae, J.</span>, Seo, J., Choi, E., &amp; Doh, Y. Y. (2025). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12131622" target="_blank" rel="noopener noreferrer"><span class="paper-title">RAG-enhanced LLM chatbot for game accessibility: Development and evaluation of GAIA.</span></a> <span class="venue">HCI Korea 2025, 254–259.</span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12131622" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="item-desc"><span class="pub-n">8</span>Oh, H., Eum, K., Park, E., <span class="pub-author-me">Chae, J.</span>, Seo, J., Choi, E., &amp; Doh, Y. Y. (2025). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12131622" target="_blank" rel="noopener noreferrer"><span class="paper-title">RAG-enhanced LLM chatbot for game accessibility: Development and evaluation of GAIA.</span></a> <span class="venue">HCI Korea 2025, 254–259.</span> <span class="pub-role"><span lang="en">(Fourth author)</span><span lang="ko">(제4저자)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12131622" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
               <p class="pub-value cv-summary"><span lang="en">High retrieval similarity can still conceal incorrect, unusable in-game guidance, an evaluation of a Street Fighter 6 RAG assistant across 19 questions reveals.</span><span lang="ko">높은 검색 유사도도 틀리거나 실행 불가능한 게임 내 안내를 가릴 수 있음을, Street Fighter 6용 RAG 어시스턴트의 19개 질문 평가가 보여줍니다.</span></p>
             </div>
             </div>
@@ -2164,15 +2166,15 @@
               <h3 class="pub-group-title">2024<span class="pub-group-n" aria-hidden="true">5</span></h3>
             <div class="item reveal" data-year="2024">
               <p class="item-desc"><span class="pub-n">9</span>Choi, E., <span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2024). <span class="paper-title">Prompting-based LLM framework for ethical decision-making in the trolley dilemma: Embedding Hofstede's cultural dimensions theory (PLETH).</span> <span class="venue">Korean Artificial Intelligence Association Fall Conference 2024, Poster 38.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
-              <p class="pub-value cv-summary"><span lang="en">PLETH embeds Hofstede's cultural dimensions in GPT-4o trolley decisions across 12 profiles and nine scenarios, scoring cultural relevance apart from coherence, consistency, and ethical acceptability.</span><span lang="ko">PLETH는 Hofstede 문화 차원을 GPT-4o의 트롤리 판단에 반영해 12개 프로필과 9개 시나리오에서 문화적 관련성을 정합성·일관성·윤리적 수용성과 분리해 평가합니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Cultural prompting raised cultural relevance and consistency but cost ethical acceptability where cultural priorities conflicted with human-rights norms, though language models both decided and judged.</span><span lang="ko">문화 프롬프팅은 문화 관련성과 일관성을 높였지만 문화 우선순위가 인권 규범과 충돌하는 지점에서 윤리적 수용성을 떨어뜨렸으며, 판단과 평가를 모두 언어모델이 수행했습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2024">
               <p class="item-desc"><span class="pub-n">10</span>Eum, K., Park, E., <span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2024). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034" target="_blank" rel="noopener noreferrer"><span class="paper-title">GAIA: A game AI assistant service framework integrating problem-solving and emotion regulation strategies.</span></a> <span class="venue">Korea Computer Graphics Society Conference 2024, 103–104.</span> <span class="pub-role"><span lang="en">(One of the first three equal contributors)</span><span lang="ko">(앞의 세 동등기여 저자 중 한 명)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
-              <p class="pub-value cv-summary"><span lang="en">One retrieval pipeline cannot serve every kind of player struggle, so this conceptual GAIA framework routes difficulty into separate problem-solving and emotion-regulation pathways.</span><span lang="ko">하나의 검색 파이프라인이 모든 상황을 감당할 수 없기에, 개념적 GAIA 프레임워크는 플레이어의 어려움을 문제 해결과 감정 조절 경로로 분리합니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">One retrieval pipeline cannot serve every player struggle, so this GAIA framework routes difficulty into separate problem-solving and emotion-regulation pathways, neither implemented nor user-tested.</span><span lang="ko">하나의 검색 파이프라인이 모든 어려움을 감당할 수 없기에 GAIA 프레임워크는 문제 해결과 감정 조절 경로를 분리하지만, 구현과 사용자 검증은 아직 이뤄지지 않았습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2024">
               <p class="item-desc"><span class="pub-n">11</span>Park, E., <span class="pub-author-me">Chae, J.</span>, Kim, K., Yi, H. W., Lootah, M. K., &amp; Doh, Y. Y. (2024). <span class="paper-title">Challenges and opportunities of game NPC research using LLM: A scoping review.</span> <span class="venue">Korea Game Society Spring Conference 2024, 165–170.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
-              <p class="pub-value cv-summary"><span lang="en">Hallucination, latency, memory, design rationale, and weak game-specific evaluation define the research agenda that a scoping review of six early LLM-NPC studies sets out.</span><span lang="ko">환각, 지연, 기억, 설계 근거, 게임 특화 평가 부족이 초기 LLM-NPC 연구 6편에 대한 범위 검토가 제시한 연구 의제를 구성합니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Adding a language model is not itself a design rationale: a scoping review of six early NPC studies finds hallucination, latency, memory, and evaluation gaps unresolved.</span><span lang="ko">언어모델을 넣는 것 자체는 설계 근거가 아니며, 초기 NPC 연구 6편의 주제범위 검토는 환각·지연·기억·평가 과제가 미해결로 남아 있음을 확인했습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2024">
               <p class="item-desc"><span class="pub-n">12</span>Kim, Y. B., &amp; <span class="pub-author-me">Chae, J.</span> (2024). <span class="paper-title">A technical literature review of distributed management structure: Focusing on the multi-label system of HYBE Co., Ltd.</span> <span class="venue">Korea Society of Technology Innovation Spring Conference 2024, Abstract Book, 69.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
@@ -2180,7 +2182,7 @@
             </div>
             <div class="item reveal" data-year="2024">
               <p class="item-desc"><span class="pub-n">13</span>Kim, Y. B., &amp; <span class="pub-author-me">Chae, J.</span> (2024). <span class="paper-title">From BigHit to HYBE: Sentiment analysis and strategic transition through news data.</span> <span class="venue">Korea Society for Innovation Management &amp; Economics Summer Conference 2024, Abstract Book, 73.</span> <span class="pub-role"><span lang="en">(Corresponding author)</span><span lang="ko">(교신저자)</span></span></p>
-              <p class="pub-value cv-summary"><span lang="en">Innovation narratives and organizational conflict shifted media sentiment through BigHit's transition to HYBE, an analysis of 45,393 Korean news articles shows.</span><span lang="ko">혁신 서사와 조직 갈등이 BigHit에서 HYBE로의 전환 과정에서 미디어 감성을 이동시켰음을 한국 뉴스 45,393건 분석이 보여줍니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Innovation narratives lifted and internal conflict depressed sentiment across BigHit's transition to HYBE, though 45,393 Korean news articles measure media framing, not stakeholder attitude.</span><span lang="ko">혁신 서사는 감성을 높이고 내부 갈등은 낮췄지만, 한국 뉴스 45,393건 분석은 이해관계자 태도가 아니라 미디어 프레이밍을 측정합니다.</span></p>
             </div>
             </div>
             <div class="pub-group">
@@ -2190,7 +2192,7 @@
               <p class="pub-value cv-summary"><span lang="en">Content sequence and social play format shaped short-term environmental awareness more than positive or negative framing, a four-condition VR recycling study with 65 students shows.</span><span lang="ko">콘텐츠의 긍정·부정 성격보다 제시 순서와 사회적 플레이 형식이 단기 환경 인식에 더 크게 작용함을 학생 65명의 4조건 VR 재활용 연구가 보여줍니다.</span></p>
             </div>
             <div class="item reveal" data-year="2023">
-              <p class="item-desc"><span class="pub-n">15</span>Yoon, D., Park, S., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2023). <a href="https://doi.org/10.21203/rs.3.rs-2637740/v1" target="_blank" rel="noopener noreferrer"><span class="paper-title">Methodology for improving the performance of demand forecasting through machine learning.</span></a> <span class="venue">Research Square [Preprint; not peer reviewed].</span> <a class="pub-link" href="https://doi.org/10.21203/rs.3.rs-2637740/v1" target="_blank" rel="noopener noreferrer">Preprint ↗</a></p>
+              <p class="item-desc"><span class="pub-n">15</span>Yoon, D., Park, S., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2023). <a href="https://doi.org/10.21203/rs.3.rs-2637740/v1" target="_blank" rel="noopener noreferrer"><span class="paper-title">Methodology for improving the performance of demand forecasting through machine learning.</span></a> <span class="venue">Research Square [Preprint; not peer reviewed].</span> <span class="pub-role"><span lang="en">(Fourth author)</span><span lang="ko">(제4저자)</span></span> <a class="pub-link" href="https://doi.org/10.21203/rs.3.rs-2637740/v1" target="_blank" rel="noopener noreferrer">Preprint ↗</a></p>
               <p class="pub-value cv-summary"><span lang="en">Combining clustering, LASSO, and LSTM outperformed plain and partial alternatives on the reported forecast metrics across 2,548 retail products, though this preprint remains unreviewed.</span><span lang="ko">군집화·LASSO·LSTM 결합이 2,548개 소매 상품에서 단일·부분 모델보다 나은 예측 지표를 보고했으나, 이 프리프린트는 동료심사를 거치지 않았습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2023">
@@ -2199,26 +2201,26 @@
             </div>
             <div class="item reveal" data-year="2023">
               <p class="item-desc"><span class="pub-n">17</span>Kim, Y., <span class="pub-author-me">Chae, J.</span>, Lee, Y., Kim, H., Lee, Y., &amp; Han, D. (2023). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11492794" target="_blank" rel="noopener noreferrer"><span class="paper-title">Enhancing participation in rehabilitation for diplopia through gamification.</span></a> <span class="venue">Korea Computer Graphics Society Conference 2023, 149–150.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11492794" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
-              <p class="pub-value cv-summary"><span lang="en">Turning diplopia eye exercises into game mechanics drew promising engagement from seven pilot participants, none of them diagnosed patients, and clinical efficacy went untested.</span><span lang="ko">복시 안구 운동을 게임 메커니즘으로 전환하자 파일럿 참여자 7명에게서 유망한 참여 반응이 나타났으나, 이들은 진단 환자가 아니었고 임상 효과는 검증되지 않았습니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Turning diplopia eye exercises into game mechanics drew promising engagement from seven pilot participants whose diagnoses were unconfirmed, and clinical efficacy went untested.</span><span lang="ko">복시 안구 운동을 게임 메커니즘으로 전환하자 파일럿 참여자 7명에게서 유망한 참여 반응이 나타났으나, 참여자의 진단은 확인되지 않았고 임상 효과는 검증되지 않았습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2023">
-              <p class="item-desc"><span class="pub-n">18</span>Lee, Y., Kim, Y., Kim, H., <span class="pub-author-me">Chae, J.</span>, Lee, Y., Im, J., &amp; Han, D. (2023). <span class="paper-title">Eye-tracking-based VR interactive game for eye exercises.</span> <span class="venue">Proceedings of the Korea Multimedia Society Fall Conference, 26(2), 21–23.</span></p>
-              <p class="pub-value cv-summary"><span lang="en">Saccade and smooth-pursuit exercises run as gaze-controlled play on Meta Quest Pro, and feedback from 24 students supports feasibility rather than therapeutic effectiveness.</span><span lang="ko">단속성·원활추종 안구 운동을 Meta Quest Pro의 시선 제어 플레이로 구현했고, 학생 24명의 반응은 치료 효과가 아니라 구현 가능성을 뒷받침합니다.</span></p>
+              <p class="item-desc"><span class="pub-n">18</span>Lee, Y., Kim, Y., Kim, H., <span class="pub-author-me">Chae, J.</span>, Lee, Y., Im, J., &amp; Han, D. (2023). <span class="paper-title">Eye-tracking-based VR interactive game for eye exercises.</span> <span class="venue">Proceedings of the Korea Multimedia Society Fall Conference, 26(2), 21–23.</span> <span class="pub-role"><span lang="en">(Fourth author)</span><span lang="ko">(제4저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">Gaze control can carry saccade and smooth-pursuit exercises as playable VR mechanics, though feedback from 24 schoolchildren supports feasibility, not therapeutic effect.</span><span lang="ko">시선 제어로 단속성·원활추종 운동을 플레이 가능한 VR 메커닉으로 구현했지만, 초등학생 24명의 반응은 치료 효과가 아니라 구현 가능성을 뒷받침합니다.</span></p>
             </div>
             </div>
             <div class="pub-group">
               <h3 class="pub-group-title">2022<span class="pub-group-n" aria-hidden="true">3</span></h3>
             <div class="item reveal" data-year="2022">
               <p class="item-desc"><span class="pub-n">19</span>Yoo, S., <span class="pub-author-me">Chae, J.</span>, Kim, H., Lee, Y., Kim, S., Kim, Y., Han, S., &amp; Han, D. (2022). <span class="paper-title">A study on systematic exposure with space and distance factors in VR therapy of cynophobia.</span> <span class="venue">Proceedings of the Korea Multimedia Society Spring Conference, 25(1), 17.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
-              <p class="pub-value cv-summary"><span lang="en">Exposure distance becomes a controllable design parameter in this preliminary VR study, which stages spatial proximity as the progression axis for cynophobia exposure therapy.</span><span lang="ko">이 예비 VR 연구에서 노출 거리는 조절 가능한 설계 변수가 되며, 공간적 근접도를 개 공포증 노출 치료의 진행 축으로 설계합니다.</span></p>
+              <p class="pub-value cv-summary"><span lang="en">Staging a virtual dog's approach by distance reduced reported fear, the authors state, though this one-page abstract reports no sample size, measure, or statistics.</span><span lang="ko">가상의 개가 단계적으로 접근하는 설계가 보고된 공포를 줄였다고 저자들은 밝혔으나, 이 1쪽 초록에는 표본 수·측정 도구·통계가 제시되지 않았습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2022">
-              <p class="item-desc"><span class="pub-n">20</span>Park, S., Yoon, D., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2022). <a href="https://m.earticle.net/Article/A416325?lt=4" target="_blank" rel="noopener noreferrer"><span class="paper-title">Enhancing predictive-model performance through clustering.</span></a> <span class="venue">Korean Society of Management Information Systems Spring Joint Conference, 267–273.</span> <a class="pub-link" href="https://m.earticle.net/Article/A416325?lt=4" target="_blank" rel="noopener noreferrer">eArticle ↗</a></p>
+              <p class="item-desc"><span class="pub-n">20</span>Park, S., Yoon, D., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2022). <a href="https://m.earticle.net/Article/A416325?lt=4" target="_blank" rel="noopener noreferrer"><span class="paper-title">Enhancing predictive-model performance through clustering.</span></a> <span class="venue">Korean Society of Management Information Systems Spring Joint Conference, 267–273.</span> <span class="pub-role"><span lang="en">(Fourth author)</span><span lang="ko">(제4저자)</span></span> <a class="pub-link" href="https://m.earticle.net/Article/A416325?lt=4" target="_blank" rel="noopener noreferrer">eArticle ↗</a></p>
               <p class="pub-value cv-summary"><span lang="en">Clustering before five forecasting models supports segment-first architecture as a promising direction across 1,624 retail products, though the conference paper publishes no gain figures.</span><span lang="ko">1,624개 소매 상품에서 5개 예측 모델에 앞선 군집화가 분할 우선 아키텍처의 가능성을 뒷받침하지만, 개선 폭은 수치로 공개되지 않았습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2022">
-              <p class="item-desc"><span class="pub-n">21</span>Yoon, D., Park, S., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2022). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11207562" target="_blank" rel="noopener noreferrer"><span class="paper-title">A method for enhancing demand forecasting performance by combining regression coefficient shrinkage, clustering, and LSTM.</span></a> <span class="venue">Korea Intelligent Information Systems Society Fall Conference 2022, Abstract, 35.</span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11207562" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
-              <p class="pub-value cv-summary"><span lang="en">K-means, cluster-specific LASSO, and LSTM combine into an auditable forecasting pipeline over 2,693 products, though this one-page abstract reports no numerical advantage.</span><span lang="ko">K-means·군집별 LASSO·LSTM이 2,693개 상품에 대한 감사 가능한 예측 파이프라인으로 결합되지만, 이 한 페이지 초록은 수치적 우위를 보고하지 않습니다.</span></p>
+              <p class="item-desc"><span class="pub-n">21</span>Yoon, D., Park, S., Song, Y., <span class="pub-author-me">Chae, J.</span>, &amp; Chung, D. (2022). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11207562" target="_blank" rel="noopener noreferrer"><span class="paper-title">A method for enhancing demand forecasting performance by combining regression coefficient shrinkage, clustering, and LSTM.</span></a> <span class="venue">Korea Intelligent Information Systems Society Fall Conference 2022, Abstract, 35.</span> <span class="pub-role"><span lang="en">(Fourth author)</span><span lang="ko">(제4저자)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11207562" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">Clustering, cluster-specific feature selection, and LSTM together outperformed benchmark demand models over 2,693 retail products, though this one-page abstract publishes no numerical values.</span><span lang="ko">군집화·군집별 변수 선택·LSTM 결합이 소매 상품 2,693개에서 기준 수요 모델보다 우수했다고 보고되지만, 이 한 페이지 초록은 수치를 제시하지 않습니다.</span></p>
             </div>
             </div>
           </div>
@@ -2228,13 +2230,13 @@
           <h2 class="section-title"><span class="num">05</span><span lang="en">Patents &amp; Certifications</span><span lang="ko">특허 및 자격증</span></h2>
           <div class="two-col">
             <div class="item reveal">
-              <span class="item-title"><a href="https://patents.google.com/patent/KR20240081703A" target="_blank" rel="noopener noreferrer"><span lang="en">Artificial Intelligence-Based Demand Prediction Method, Program, and Device</span><span lang="ko">인공지능 기반 수요 예측 방법, 프로그램 및 장치</span></a></span>
+              <h3 class="item-title"><a href="https://patents.google.com/patent/KR20240081703A" target="_blank" rel="noopener noreferrer"><span lang="en">Artificial Intelligence-Based Demand Prediction Method, Program, and Device</span><span lang="ko">인공지능 기반 수요 예측 방법, 프로그램 및 장치</span></a></h3>
               <div class="item-meta"><span lang="en">2025.10 | Korean Intellectual Property Office | Registered Patent No. 10-2867922</span><span lang="ko">2025.10 | 특허청 | 등록특허 10-2867922</span></div>
               <p class="item-desc" lang="en">Co-inventor. Applicant: Impactive AI Corp. Filed November 2022 (Application No. 10-2022-0165017), granted October 14, 2025. <a class="pub-link" href="https://patents.google.com/patent/KR20240081703A" target="_blank" rel="noopener noreferrer">Google Patents ↗</a></p>
               <p class="item-desc" lang="ko">공동 발명자. 출원인: (주)임팩티브에이아이. 2022년 11월 출원 (출원번호 10-2022-0165017), 2025년 10월 14일 등록. <a class="pub-link" href="https://patents.google.com/patent/KR20240081703A" target="_blank" rel="noopener noreferrer">Google Patents ↗</a></p>
             </div>
             <div class="item reveal">
-              <span class="item-title"><span lang="en">AI-900: Microsoft Azure, Machine Learning, and AI</span><span lang="ko">AI-900: Microsoft Azure, 머신러닝 및 AI</span></span>
+              <h3 class="item-title"><span lang="en">AI-900: Microsoft Azure, Machine Learning, and AI</span><span lang="ko">AI-900: Microsoft Azure, 머신러닝 및 AI</span></h3>
               <div class="item-meta"><span lang="en">Certification | Microsoft</span><span lang="ko">자격증 | Microsoft</span></div>
             </div>
           </div>
@@ -2392,10 +2394,10 @@
           if (!btn) return;
           filter.querySelectorAll('button').forEach((b) => {
             b.classList.remove('active');
-            b.setAttribute('aria-selected', 'false');
+            b.setAttribute('aria-pressed', 'false');
           });
           btn.classList.add('active');
-          btn.setAttribute('aria-selected', 'true');
+          btn.setAttribute('aria-pressed', 'true');
           const year = btn.dataset.year;
           pubItems.forEach((it) => {
             it.classList.toggle('hidden', !(year === 'all' || it.dataset.year === year));
@@ -2509,12 +2511,12 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=87-20260819a"></script>
-  <script defer src="assets/project-library/work-content.js?v=87-20260819a"></script>
-  <script defer src="assets/interior/ripple.js?v=86-20260815a"></script>
-  <script defer src="assets/project-library/project-library.js?v=87-20260819a"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=86-20260815a"></script>
-  <script defer src="assets/interior/shelf-field.js?v=86-20260815a"></script>
+  <script defer src="assets/project-library/work-designs.js?v=94-20260820g"></script>
+  <script defer src="assets/project-library/work-content.js?v=94-20260820g"></script>
+  <script defer src="assets/interior/ripple.js?v=94-20260820g"></script>
+  <script defer src="assets/project-library/project-library.js?v=94-20260820g"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=94-20260820g"></script>
+  <script defer src="assets/interior/shelf-field.js?v=94-20260820g"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate

@@ -111,7 +111,7 @@ html[data-view="cv"].ui-v23 #cv-start .caps .tech-item {
   align-items: center !important;
   gap: var(--sp-xs, 8px) !important;
   min-width: 0 !important;
-  font-size: 12px !important;
+  font-size: var(--ar-t-meta) !important;
   line-height: 18px !important;
   font-weight: 500 !important;
   letter-spacing: -0.005em !important;
@@ -273,4 +273,14 @@ html[data-view="cv"].ui-v23 #cv-start .caps .tech-w {
   html[data-view="cv"].ui-v23 #cv-start .caps .tech-set {
     column-gap: 12px !important;
   }
+}
+
+
+/* The four stage rows and the two tool rows are one list and must be one size.
+   archive.css:252-256 declares `.v` at the 12px meta step but only reaches
+   (1,3,1) via :is(); project-library.css:12845 is (1,4,1) and wins despite
+   loading earlier. Restated here at matching weight - tech-icons.css is the
+   last of the three to load. */
+html[data-view="cv"].ui-v23 #cv-start .caps-row .v {
+  font-size: var(--ar-t-meta) !important;
 }

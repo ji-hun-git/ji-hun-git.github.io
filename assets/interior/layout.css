@@ -426,3 +426,23 @@ html .p-chip[data-m]::before {
     background: var(--ar-paper, #f4f1ea) !important;
   }
 }
+
+
+@media (max-width: 700px) {
+  /* Mobile section nav: express the active state as the chip's own border and
+     ink rather than an underline drawn for text links that no longer exist.
+     project-library.css:12959 boxes these in an 8px-radius bordered chip, and
+     the ::after bar underneath it kept its square full-bleed ends, so the
+     selected item looked broken rather than selected. Reuses the accent-border
+     / accent-deep-text language archive.css:310-313 already uses for controls.
+     index.html:1285's `.mobile-nav a.active { color: var(--text) }` is dead for
+     the same reason - :12959 sets that colour on all of them - so the colour is
+     restated here too. */
+  html[data-view="cv"] #cv-start .mobile-nav a.active {
+    border-color: var(--ar-accent) !important;
+    color: var(--ar-accent-deep) !important;
+  }
+  html[data-view="cv"] #cv-start .mobile-nav a.active::after {
+    display: none !important;
+  }
+}

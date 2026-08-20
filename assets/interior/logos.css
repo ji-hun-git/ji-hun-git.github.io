@@ -111,13 +111,9 @@ html[data-view="library"].ui-v23 .p-chip {
   border-radius: 0 !important;
 }
 
-/* KRAFTON has no usable file (16x16 favicon only) and its brand terms require
-   prior approval for the real asset, so it uses the wordmark device already
-   built for NYU and bHaptics. Tracked slightly tighter because the name is
-   longer than either of those. */
-html .p-brand-wordmark--krafton {
-  letter-spacing: -0.02em !important;
-}
+/* KRAFTON now ships as krafton.svg (a 450x399 vector, README.md); the
+   wordmark device it used to share with NYU and bHaptics is retired, and the
+   --krafton variant that styled it matched nothing in any HTML or JS. */
 
 /* ════════════════════════════════════════════════════════════════════════
    Capabilities block: no box, warm separators
@@ -161,4 +157,16 @@ html[data-view="cv"].ui-v23 #cv-start .caps-row .sep {
 /* The stage label anchors each row, so it carries the weight instead. */
 html[data-view="cv"].ui-v23 #cv-start .caps-row .k {
   color: var(--ar-ink-faint, #6f6a5e) !important;
+}
+
+
+/* nrc.png is 16x16 - by far the smallest mark here, where the next smallest is
+   32x32 - so the unconditional `height: 20px` above resampled it up 125% (250%
+   on a 2x display) beside four crisp marks in the very first project card.
+   Render it at its native size: a sharp 16px reads better than a blurred 20px.
+   The right long-term fix is a >=40px source asset, at which point delete this.
+   (0,3,2) beats the base rule's (0,2,2), and `max-height: 20px` does not
+   constrain a 16px height. */
+html .p-chip img.p-logo[src$="nrc.png"] {
+  height: 16px !important;
 }
