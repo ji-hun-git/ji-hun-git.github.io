@@ -84,13 +84,19 @@ export function mountParticleField({ canvas, chartCanvas, controls, metrics, log
 
   function resize() {
     const rect = canvas.parentElement.getBoundingClientRect();
-    width = Math.max(320, rect.width);
+    // No 320px floor: the stage is ~294px wide at a 360px viewport, so a
+    // forced 320 pushed the grid column past the page and the right edge of
+    // every simulation was clipped with no scrollbar to recover it
+    // (.viewport-stage is overflow:hidden and body is overflow-x:hidden).
+    // The inline style.width/height that pinned it are gone too: lab.css
+    // sizes the canvas at width:100%, and an inline px value silently beat
+    // it. canvas.width/height (device pixels) and the dpr transform below
+    // are untouched, so rendering resolution is unchanged.
+    width = Math.max(1, rect.width);
     height = Math.max(260, rect.height);
     dpr = Math.min(2, window.devicePixelRatio || 1);
     canvas.width = Math.floor(width * dpr);
     canvas.height = Math.floor(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const chartRect = chartCanvas.parentElement.getBoundingClientRect();

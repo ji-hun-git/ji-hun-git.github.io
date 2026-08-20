@@ -1,32 +1,32 @@
-import { labArchitecture, labProjects } from "./experiments.js?v=20260615-lab8";
-import { mountAgentArena } from "./simulations/agent-arena.js?v=20260615-variations";
-import { mountLudicGeometry } from "./simulations/ludic-geometry.js?v=20260615-variations";
-import { mountParticleField } from "./simulations/particle-field.js?v=20260615-variations";
-import { mountGridworldPrompt } from "./simulations/gridworld-prompt.js?v=20260615-lab8";
-import { mountMazeChase } from "./simulations/maze-chase.js?v=20260615-lab8";
-import { mountSnakeSwarm } from "./simulations/snake-swarm.js?v=20260615-lab8";
-import { mountLightCycle } from "./simulations/light-cycle.js?v=20260615-lab8";
-import { mountFrozenLake } from "./simulations/frozen-lake.js?v=20260615-lab8";
-import { mountCartpole } from "./simulations/cartpole.js?v=20260615-lab8";
-import { mountBoids3d } from "./simulations/boids-3d.js?v=20260615-lab8";
-import { mountTerrainDescent3d } from "./simulations/terrain-descent-3d.js?v=20260615-lab8";
-import { mountReactionDiffusion } from "./simulations/reaction-diffusion.js?v=20260615-lab8";
-import { mountQLearning } from "./simulations/q-learning.js?v=20260615-lab8";
-import { mountPathfinding } from "./simulations/pathfinding.js?v=20260615-lab8";
-import { mountWumpus } from "./simulations/wumpus.js?v=20260615-lab8";
-import { mountNBody3d } from "./simulations/nbody-3d.js?v=20260615-lab8";
-import { mountNeuroFlappy } from "./simulations/neuroevolution-flappy.js?v=20260615-lab8";
-import { mountConnectFour } from "./simulations/connect-four.js?v=20260615-lab8";
-import { mountGame2048 } from "./simulations/game-2048.js?v=20260615-lab8";
-import { mountMinesweeper } from "./simulations/minesweeper.js?v=20260615-lab8";
-import { mountArcRobot } from "./simulations/arc-adaptive-robot.js?v=20260615-lab8";
-import { mountDoublePendulum } from "./simulations/double-pendulum.js?v=20260615-lab8";
-import { mountVerletCloth } from "./simulations/verlet-cloth.js?v=20260615-lab8";
-import { mountFallingSand } from "./simulations/falling-sand.js?v=20260615-lab8";
-import { mountPlinko } from "./simulations/plinko.js?v=20260615-lab8";
-import { mountLunarLander } from "./simulations/lunar-lander.js?v=20260615-lab8";
-import { mountBreakoutAI } from "./simulations/breakout-ai.js?v=20260615-lab8";
-import { mountTetrisAI } from "./simulations/tetris-ai.js?v=20260615-lab8";
+import { labArchitecture, labProjects } from "./experiments.js?v=20260820c";
+import { mountAgentArena } from "./simulations/agent-arena.js?v=20260820c";
+import { mountLudicGeometry } from "./simulations/ludic-geometry.js?v=20260820c";
+import { mountParticleField } from "./simulations/particle-field.js?v=20260820c";
+import { mountGridworldPrompt } from "./simulations/gridworld-prompt.js?v=20260820c";
+import { mountMazeChase } from "./simulations/maze-chase.js?v=20260820c";
+import { mountSnakeSwarm } from "./simulations/snake-swarm.js?v=20260820c";
+import { mountLightCycle } from "./simulations/light-cycle.js?v=20260820c";
+import { mountFrozenLake } from "./simulations/frozen-lake.js?v=20260820c";
+import { mountCartpole } from "./simulations/cartpole.js?v=20260820c";
+import { mountBoids3d } from "./simulations/boids-3d.js?v=20260820c";
+import { mountTerrainDescent3d } from "./simulations/terrain-descent-3d.js?v=20260820c";
+import { mountReactionDiffusion } from "./simulations/reaction-diffusion.js?v=20260820c";
+import { mountQLearning } from "./simulations/q-learning.js?v=20260820c";
+import { mountPathfinding } from "./simulations/pathfinding.js?v=20260820c";
+import { mountWumpus } from "./simulations/wumpus.js?v=20260820c";
+import { mountNBody3d } from "./simulations/nbody-3d.js?v=20260820c";
+import { mountNeuroFlappy } from "./simulations/neuroevolution-flappy.js?v=20260820c";
+import { mountConnectFour } from "./simulations/connect-four.js?v=20260820c";
+import { mountGame2048 } from "./simulations/game-2048.js?v=20260820c";
+import { mountMinesweeper } from "./simulations/minesweeper.js?v=20260820c";
+import { mountArcRobot } from "./simulations/arc-adaptive-robot.js?v=20260820c";
+import { mountDoublePendulum } from "./simulations/double-pendulum.js?v=20260820c";
+import { mountVerletCloth } from "./simulations/verlet-cloth.js?v=20260820c";
+import { mountFallingSand } from "./simulations/falling-sand.js?v=20260820c";
+import { mountPlinko } from "./simulations/plinko.js?v=20260820c";
+import { mountLunarLander } from "./simulations/lunar-lander.js?v=20260820c";
+import { mountBreakoutAI } from "./simulations/breakout-ai.js?v=20260820c";
+import { mountTetrisAI } from "./simulations/tetris-ai.js?v=20260820c";
 
 const rendererRegistry = {
   "behavior-prompt-gridworld": mountGridworldPrompt,
@@ -278,19 +278,24 @@ function controlsTemplate(project) {
       `).join("")}
     </div>
 
-    <label class="control">
+    <!-- for= is required here, not decorative. A <label> binds to its first
+         LABELABLE descendant, and <output> is labelable - so the <output> in
+         .control-row was claiming the label and every slider was reaching the
+         accessibility tree with no name at all ("slider", value only). An
+         explicit for= overrides that and points the name at the input. -->
+    <label class="control" for="countControl">
       <span class="control-row"><span>${labels.count}</span><output id="countValue">180</output></span>
       <input id="countControl" name="count" type="range" min="48" max="360" step="4" value="180" />
     </label>
-    <label class="control">
+    <label class="control" for="speedControl">
       <span class="control-row"><span>${labels.speed}</span><output id="speedValue">1.80</output></span>
       <input id="speedControl" name="speed" type="range" min="0.4" max="3.4" step="0.05" value="1.8" />
     </label>
-    <label class="control">
+    <label class="control" for="turbulenceControl">
       <span class="control-row"><span>${labels.turbulence}</span><output id="turbulenceValue">0.35</output></span>
       <input id="turbulenceControl" name="turbulence" type="range" min="0" max="1.2" step="0.01" value="0.35" />
     </label>
-    <label class="control">
+    <label class="control" for="attractionControl">
       <span class="control-row"><span>${labels.attraction}</span><output id="attractionValue">0.22</output></span>
       <input id="attractionControl" name="attraction" type="range" min="0" max="0.9" step="0.01" value="0.22" />
     </label>
@@ -298,7 +303,7 @@ function controlsTemplate(project) {
       <span>${labels.trails}</span>
       <input id="trailsControl" type="checkbox" checked />
     </label>
-    <label class="control">
+    <label class="control" for="seedControl">
       <span class="control-row"><span>Seed</span><output id="seedValue">42</output></span>
       <input id="seedControl" type="number" min="1" max="999999" value="42" />
     </label>
@@ -476,6 +481,10 @@ function highlightLoop(ts) {
 }
 
 function renderArchitecture() {
+  // #architectureTree / #addSteps are not in laboratory.html, so both
+  // consts are null and this would throw the moment anything called it.
+  // Fail soft rather than delete: experiments.js still exports the data.
+  if (!architectureTree || !addSteps) return;
   architectureTree.textContent = labArchitecture.folders.join("\n");
   addSteps.innerHTML = labArchitecture.addSteps.map((step) => `<li>${step}</li>`).join("");
 }

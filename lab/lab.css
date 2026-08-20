@@ -13,12 +13,26 @@
 
   --ink: #1c1b19;
   --ink-2: #57544d;
-  --ink-3: #8d897e;
+  /* --ink-3 was #8d897e, which measured 3.12:1 on --paper and 3.34:1 on
+     --paper-raised. It is a text colour in ~20 rules here (eyebrows, kickers,
+     card indices, stat labels, the footer), so that put most of the page's
+     small type below the 4.5:1 AA floor. Darkened along the same warm-grey
+     axis - same hue, more ink - to 4.77:1 on --paper and 5.11:1 on
+     --paper-raised. index.html made the identical correction to its own
+     --soft token, which its comment marks "darkened for AA on the light ground". */
+  --ink-3: #6f6b5e;
 
   --rule: rgba(28, 27, 25, 0.11);
   --rule-strong: rgba(28, 27, 25, 0.2);
 
-  --brand: 193, 95, 60;          /* clay - the single accent */
+  --brand: 193, 95, 60;          /* clay - the single accent, for fills and rules */
+  /* The clay accent as TEXT. #c15f3c is right for a 14%-alpha fill or a 2px
+     underline, but as small type it lands at 3.68-4.05:1 depending on which
+     paper is behind it - under the floor in every case. This is the same clay
+     carried to enough density to read at 11px: >=4.57:1 on all four paper
+     tokens and on the tinted rgba(var(--brand), .08) button ground.
+     Use rgb(var(--brand)) for anything that is not text; use this for text. */
+  --brand-ink: #a94d2b;
   --accent: 141, 137, 126;       /* per-sim category hue, set by lab.js */
 
   --shadow-sm: 0 1px 2px rgba(28, 27, 25, 0.05);
@@ -31,8 +45,13 @@
   --wrap: 1280px;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
-  --display: Fraunces, Georgia, "Times New Roman", serif;
-  --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* The "* Variable" names must come first: laboratory.html now loads the
+     @fontsource-variable builds from jsdelivr (weights 100-900 in one file)
+     instead of Google Fonts, and those register under these family names.
+     The plain names are kept as the next fallback so a locally installed
+     Fraunces or Inter still wins over Georgia / system sans. */
+  --display: "Fraunces Variable", Fraunces, Georgia, "Times New Roman", serif;
+  --sans: "Inter Variable", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 }
 
@@ -78,7 +97,10 @@ button { cursor: pointer; }
 button:focus-visible,
 a:focus-visible,
 input:focus-visible {
-  outline: 2px solid rgba(193, 95, 60, 0.55);
+  /* was rgba(..., 0.55) = 2.00:1 against the paper, i.e. a focus ring a
+     keyboard user cannot actually see. Solid clay is 3.77:1 and clears the
+     3:1 that WCAG 2.2 1.4.11 asks of a focus indicator, with no hue change. */
+  outline: 2px solid rgb(var(--brand));
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -134,7 +156,7 @@ p { margin: 0; text-wrap: pretty; }
 }
 .nav-readout i { font-style: normal; color: var(--ink-3); }
 .nav-readout .nav-rating { color: var(--ink-2); }
-.nav-readout .ok { color: rgb(var(--brand)); }
+.nav-readout .ok { color: var(--brand-ink); }
 .nav-readout .nav-aff { color: var(--ink-2); }
 
 .lab-actions { display: flex; align-items: center; gap: 14px; }
@@ -147,7 +169,7 @@ p { margin: 0; text-wrap: pretty; }
   border-bottom: 1px solid transparent;
   transition: color 0.18s var(--ease), border-color 0.18s var(--ease);
 }
-.text-link:hover { color: rgb(var(--brand)); border-color: rgba(193, 95, 60, 0.4); }
+.text-link:hover { color: var(--brand-ink); border-color: rgba(193, 95, 60, 0.4); }
 
 .text-button {
   padding: 4px 6px;
@@ -211,7 +233,8 @@ p { margin: 0; text-wrap: pretty; }
 .ghost-button.active {
   border-color: rgba(193, 95, 60, 0.55);
   background: rgba(193, 95, 60, 0.08);
-  color: rgb(var(--brand));
+  /* text on the tinted clay ground - measured 3.68:1 with the plain accent */
+  color: var(--brand-ink);
   font-weight: 600;
 }
 
@@ -387,7 +410,7 @@ p { margin: 0; text-wrap: pretty; }
   padding-top: 2px;
   font-variant-numeric: tabular-nums;
 }
-.project-card.active .card-index { color: rgb(var(--brand)); }
+.project-card.active .card-index { color: var(--brand-ink); }
 .card-body { min-width: 0; display: grid; gap: 3px; }
 
 .status-line { display: flex; align-items: center; gap: 8px; }
@@ -436,7 +459,7 @@ p { margin: 0; text-wrap: pretty; }
   text-transform: uppercase;
   color: var(--ink-3);
 }
-.badge.live { color: rgb(var(--brand)); }
+.badge.live { color: var(--brand-ink); }
 .badge.live::before {
   content: "";
   width: 6px;
@@ -549,12 +572,29 @@ p { margin: 0; text-wrap: pretty; }
 .chart-wrap {
   height: 220px;
   min-height: 220px;
+  /* min-width:0 is load-bearing, not tidiness. _shared.js sizes the chart canvas
+     by writing an inline `style.width` in pixels (resize(), ~line 190). An inline
+     width beats the `width: 100%` below, and a grid item defaults to
+     min-width:auto, which refuses to shrink below its content. So once the canvas
+     had been measured at a wide viewport it pinned the whole middle column open:
+     at a 375px viewport #viewportMount and #detailMount were both 434px, and the
+     page scrolled sideways. Letting the wrapper shrink lets the next resize()
+     measure the real width and write a correct one back. */
+  min-width: 0;
   border-radius: var(--r-sm);
   overflow: hidden;
   background: var(--screen);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
-.chart-wrap canvas { display: block; width: 100%; height: 220px; }
+/* max-width caps the inline pixel width _shared.js writes, so a stale measurement
+   from a wider layout can never push the column past its container again. */
+.chart-wrap canvas { display: block; width: 100%; max-width: 100%; height: 220px; }
+
+/* Same guard one level up: these two are grid items of .console-stage, and
+   .console-stage's own min-width:0 does not propagate to its children. */
+#viewportMount,
+#detailMount { min-width: 0; }
+.viewport-stage canvas { max-width: 100%; }
 
 /* metrics as a tidy table */
 .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--rule); }
@@ -714,14 +754,27 @@ input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
+  /* The element itself is the touch target, and it used to be the 3px line as
+     well - so on a phone the whole control was 3px tall, against the 24px
+     minimum WCAG 2.2 asks for (2.5.8). The visible 3px rail moves to the track
+     pseudo-elements below; nothing about how it looks changes, but the band you
+     can actually hit is now 24px. */
+  height: 24px;
+  background: transparent;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track {
   height: 3px;
   border-radius: 3px;
   background: var(--paper-sunken);
-  cursor: pointer;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
+  /* Centre the 16px thumb on the 3px track: (3 - 16) / 2 = -6.5px. Chrome
+     aligns the thumb to the top of the runnable track, so without this it
+     hangs below the rail. */
+  margin-top: -6.5px;
   width: 16px;
   height: 16px;
   border-radius: 50%;
