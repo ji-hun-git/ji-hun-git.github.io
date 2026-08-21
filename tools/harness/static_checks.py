@@ -905,6 +905,93 @@ def check_award_consistency(files, cfg):
     return findings
 
 
+def check_library_source_alignment(files, cfg):
+    """Every library book must map one-to-one to a CV row and detail record.
+
+    The reader inherits titles, dates, venues, and compact summaries from
+    index.html through sourceIndex. A missing, duplicated, or stale index can
+    therefore display the wrong CV record under an otherwise plausible cover.
+    """
+    findings = []
+    index_p = ROOT / "index.html"
+    designs_p = ROOT / "assets/project-library/work-designs.js"
+    content_p = ROOT / "assets/project-library/work-content.js"
+    if not (index_p.is_file() and designs_p.is_file() and content_p.is_file()):
+        return findings
+
+    index_text = index_p.read_text(encoding="utf-8", errors="replace")
+    designs_text = designs_p.read_text(encoding="utf-8", errors="replace")
+    content_text = content_p.read_text(encoding="utf-8", errors="replace")
+
+    def section(text, start_pattern, end_pattern):
+        start = re.search(start_pattern, text)
+        if not start:
+            return ""
+        end = re.search(end_pattern, text[start.end():])
+        return text[start.end():start.end() + end.start()] if end else text[start.end():]
+
+    cv_counts = {
+        "projects": len(re.findall(
+            r'<div class="item reveal">',
+            section(index_text, r'<section[^>]+id="projects"[^>]*>',
+                    r'<section[^>]+id="awards"[^>]*>'))),
+        "publications": len(re.findall(r'class="pub-n"', index_text)),
+        "awards": len(re.findall(
+            r'<div class="item reveal">',
+            section(index_text, r'<section[^>]+id="awards"[^>]*>',
+                    r'<section[^>]+id="education"[^>]*>'))),
+    }
+
+    design_starts = list(re.finditer(
+        r'^  (projects|publications|awards): \[$', designs_text, re.M))
+    design_records = {}
+    for pos, match in enumerate(design_starts):
+        end = design_starts[pos + 1].start() if pos + 1 < len(design_starts) else len(designs_text)
+        block = designs_text[match.end():end]
+        indices = [int(v) for v in re.findall(r'^      sourceIndex: (\d+),$', block, re.M)]
+        slugs = re.findall(r'^      slug: "([^"]+)",$', block, re.M)
+        design_records[match.group(1)] = (indices, slugs, match.start())
+
+    content_starts = list(re.finditer(
+        r'^    (projects|publications|awards): \{$', content_text, re.M))
+    content_slugs = {}
+    for pos, match in enumerate(content_starts):
+        end = content_starts[pos + 1].start() if pos + 1 < len(content_starts) else len(content_text)
+        block = content_text[match.end():end]
+        content_slugs[match.group(1)] = set(re.findall(
+            r'^      "([^"]+)": \{$', block, re.M))
+
+    for collection, cv_count in cv_counts.items():
+        indices, slugs, offset = design_records.get(collection, ([], [], 0))
+        expected = list(range(cv_count))
+        if indices != expected:
+            findings.append(Finding(
+                ERROR, "library-source-alignment", "assets/project-library/work-designs.js",
+                line_of(designs_text, offset),
+                "%s sourceIndex values are %r; CV requires %r" %
+                (collection, indices, expected),
+                "keep one ordered library design for every CV row",
+            ))
+        if len(slugs) != cv_count or len(set(slugs)) != len(slugs):
+            findings.append(Finding(
+                ERROR, "library-source-alignment", "assets/project-library/work-designs.js",
+                line_of(designs_text, offset),
+                "%s has %d CV rows but %d design slugs (%d unique)" %
+                (collection, cv_count, len(slugs), len(set(slugs))),
+                "add, remove, or deduplicate library records to match the CV",
+            ))
+        missing_detail = set(slugs) - content_slugs.get(collection, set())
+        stale_detail = content_slugs.get(collection, set()) - set(slugs)
+        if missing_detail or stale_detail:
+            findings.append(Finding(
+                ERROR, "library-source-alignment", "assets/project-library/work-content.js", 0,
+                "%s detail mismatch; missing=%r stale=%r" %
+                (collection, sorted(missing_detail), sorted(stale_detail)),
+                "use the same slugs in work-designs.js and work-content.js",
+            ))
+    return findings
+
+
 CLASS_TOGGLE = re.compile(r'classList\.(?:add|toggle|remove)\(\s*["\']([A-Za-z][\w-]*)["\']')
 
 
@@ -1087,6 +1174,7 @@ def run(update_stamps=False):
     findings += check_publication_roles(files, cfg)
     findings += check_bilingual_pairs(files, cfg)
     findings += check_award_consistency(files, cfg)
+    findings += check_library_source_alignment(files, cfg)
     findings += check_toggled_classes_are_styled(files, cfg)
 
     if update_stamps:

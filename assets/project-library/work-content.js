@@ -93,8 +93,8 @@
             "동일한 입력에 대해 동일하고 검토 가능한 결과가 필요한 구간에는 LLM 대신 명시적 규칙과 통계를 적용했습니다."
           ),
           validation: p(
-            "I tested the engine on enterprise datasets and documented its behavior in a formal results report. The documented scope covers technical implementation and verification; final client acceptance is not established by the available records.",
-            "기업 데이터셋으로 엔진을 시험하고 동작과 결과를 공식 보고서에 정리했습니다. 현재 확인 가능한 자료는 기술 구현과 검증까지를 다루며, 최종 고객 인수 여부는 확인되지 않습니다."
+            "I tested the engine on enterprise datasets and documented its behavior in a formal results report. My scope covered technical implementation and verification; final client acceptance was outside my role.",
+            "기업 데이터셋으로 엔진을 시험하고 동작과 결과를 공식 보고서에 정리했습니다. 제 역할은 기술 구현과 검증까지였으며 최종 고객 인수는 담당 범위 밖이었습니다."
           ),
           outcomeSystem: p("A production-oriented, versioned verification engine and a formal results report prepared for handoff.", "운영 지향 버전형 검증 엔진과 인수인계를 위해 작성한 공식 결과보고서"),
           outcomeEvidence: p("Each rule-level result can be reproduced and inspected instead of being accepted as an opaque model judgment.", "불투명한 모델 판단에 의존하지 않고 규칙별 결과를 재현하고 점검할 수 있도록 만들었습니다."),
@@ -499,7 +499,7 @@
         awardName: p("Best Presentation Award, Korea Game Society Spring Conference 2026", "2026 한국게임학회 춘계학술발표대회 우수발표논문상"),
         editorial: {
           verifiedResult: p("The paper received the Best Presentation Award, with me contributing as second author.", "제2저자로 참여한 논문이 우수발표논문상을 받았습니다."),
-          selectionContext: p("Conference paper, pp. 83–88, authored by Sojeong Lee, Jihun Chae, Seoyoon Jeong, and Young Yim Doh. The paper was scheduled on 30 May 2026 at Tech University of Korea; the registration record lists Jihun as a coauthor or related author and identifies the presenter separately.", "이소정·채지훈·정서윤·도영임 공저 학술대회 논문(83~88쪽)으로 2026년 5월 30일 한국공학대학교 세션에 편성됐습니다. 등록 기록은 채지훈을 공저자·논문 관계자로 기재하고 발표자를 별도로 명시합니다."),
+          selectionContext: p("I am second author of the six-page conference paper (pp. 83–88), presented in the 30 May 2026 session at Tech University of Korea. The presenter was listed separately from my coauthor role.", "2026년 5월 30일 한국공학대학교 세션에서 발표된 6쪽 분량의 학술대회 논문(83~88쪽)에 제2저자로 참여했습니다. 발표자는 제 공저자 역할과 별도로 지정되었습니다."),
           challenge: p("The team had to convert open-ended responses from 112 players with disabilities into defensible barrier categories, accessibility requirements, design principles, and a concise conference presentation.", "장애인 플레이어 112명의 개방형 응답을 방어 가능한 장벽 범주·접근성 요구사항·설계 원칙으로 전환해 간결한 학술 발표로 제시해야 했습니다."),
           contribution: p("As second author, I contributed accessibility-AI framing, barrier interpretation, design-principle synthesis, and preparation of the research output.", "제2저자로 접근성 AI 프레이밍, 장벽 해석, 설계 원칙 종합, 연구 결과물 준비에 기여했습니다."),
           criteria: p("Research clarity; strength of evidence; contribution; quality of the paper and presentation.", "연구의 명료성, 근거의 충실성, 연구 기여, 논문과 발표의 완성도"),
@@ -526,7 +526,7 @@
           selectionContext: p("Selected teams received mentorship and venture-development support from the Asan Nanum Foundation.", "선정팀은 아산나눔재단의 멘토링과 사업화 지원을 받았습니다."),
           challenge: p("Teams had to frame a climate problem as a viable venture and develop it through university-linked entrepreneurship support toward a demonstrable concept.", "기후 문제를 실행 가능한 벤처로 정의하고 대학 연계 창업 지원 안에서 시연 가능한 콘셉트로 발전시켜야 했습니다."),
           contribution: p("As team representative, I led venture coordination, AI modeling, and patent development for Glean's AR litter-scanning and recycling-reward service.", "팀 대표로 Glean의 AR 쓰레기 스캔·재활용 리워드 서비스에 대한 사업 총괄, AI 모델링, 특허 개발을 이끌었습니다."),
-          criteria: p("Climate relevance; venture feasibility; team execution; potential for development within the university program. The exact selection rubric is not public in the evidence reviewed.", "기후 문제 적합성; 사업 실행 가능성; 팀 실행력; 대학 프로그램 내 발전 가능성. 검토 자료에는 정확한 선정 평가표가 공개되지 않았습니다."),
+          criteria: p("Climate relevance; venture feasibility; team execution; and potential for development within the university program. The program did not publish its exact scoring rubric.", "기후 문제 적합성, 사업 실행 가능성, 팀 실행력, 대학 프로그램 내 발전 가능성이 평가의 중심이었습니다. 프로그램은 정확한 배점표를 공개하지 않았습니다."),
           validates: p("Verified selection into a structured climate-tech entrepreneurship program.", "구조화된 기후테크 창업 프로그램 선정 성과입니다.")
         }
       },
@@ -571,7 +571,7 @@
         shortTitle: p("Glean Startup Award", "Glean 창업 수상"),
         awardName: p("Handong Global University President's Award, Startup Idea Competition", "한동대학교 총장상, 창업아이디어 경진대회"),
         editorial: {
-          verifiedResult: p("Team CGreen, represented by Jihun Chae, received the Handong Global University President's Award on 24 November 2022.", "채지훈이 대표한 Team CGreen은 2022년 11월 24일 한동대학교 총장상을 받았습니다."),
+          verifiedResult: p("I represented Team CGreen when we received the Handong Global University President's Award on 24 November 2022.", "Team CGreen의 대표로 참여해 2022년 11월 24일 한동대학교 총장상을 받았습니다."),
           selectionContext: p("The award was presented in the university's final competition for student venture teams.", "학생 벤처팀을 대상으로 한 교내 창업아이디어 경진대회 본선에서 받은 상입니다."),
           challenge: p("CGreen proposed Glean, an XR and metaverse recycling-reward application connecting environmentally responsible behavior with user incentives.", "CGreen은 환경 책임 행동을 사용자 보상과 연결한 XR·메타버스 재활용 리워드 앱 Glean을 제안했습니다."),
           contribution: p("As the named team representative, I led the venture submission and helped frame the ESG problem, XR service concept, and competition delivery.", "팀 대표로 창업 신청을 이끌고 ESG 문제, XR 서비스 콘셉트, 경진대회 결과물 구성을 주도했습니다."),
