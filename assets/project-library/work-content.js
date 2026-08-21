@@ -146,7 +146,7 @@
           responsibility: p("As a student researcher, I contributed to adaptive spatial behavior and visual-haptic feedback within an international research and industry consortium.", "학생연구원으로서 국제 산학 컨소시엄의 적응형 공간 동작과 시각·햅틱 피드백 연구에 기여했습니다."),
           build: p("The team developed a research interface that senses physical conditions and adjusts the position or presentation of virtual content through visual and haptic feedback.", "현실 공간의 조건을 감지하고 가상 콘텐츠의 위치와 표현 방식을 시각·햅틱 피드백과 함께 조정하는 연구용 인터페이스를 개발했습니다."),
           decision: p("We treated environmental fit as a continuous interaction problem, not a one-time calibration step.", "환경 정합성을 일회성 보정이 아니라 지속적인 상호작용 문제로 다뤘습니다."),
-          validation: p("The interface was developed and reviewed within an international consortium. My documented role covers adaptive spatial behavior and visual-haptic feedback rather than an individually attributable user-study result.", "인터페이스는 국제 컨소시엄 안에서 개발하고 검토했습니다. 제 역할은 적응형 공간 동작과 시각·햅틱 피드백이며, 사용자 연구 결과를 개인 성과로 귀속하지 않습니다."),
+          validation: p("We developed and reviewed the interface within an international consortium. I focused on adaptive spatial behavior and visual-haptic feedback, while evaluation addressed the integrated system rather than isolating my module.", "국제 컨소시엄과 함께 인터페이스를 개발하고 검토했습니다. 저는 적응형 공간 동작과 시각·햅틱 피드백에 집중했으며, 평가는 제 모듈만 분리하지 않고 통합 시스템을 대상으로 진행했습니다."),
           outcomeSystem: p("Adaptive spatial and multimodal interaction components for the consortium's real-time XR research stack.", "컨소시엄 실시간 XR 연구 스택을 위한 적응형 공간·멀티모달 상호작용 구성요소"),
           outcomeEvidence: p("The project established an implemented direction for environment-responsive XR, with my contribution focused on component design and implementation.", "환경 변화에 반응하는 XR의 구현 방향을 구체화했으며, 저는 구성요소의 설계와 구현에 기여했습니다."),
           outcomeValue: p("Connected human-centered interface work across KAIST, Fraunhofer, NYU, UniSA, Anipen, and bHaptics.", "KAIST·Fraunhofer·NYU·UniSA·Anipen·bHaptics의 인간 중심 인터페이스 연구를 연결했습니다."),
@@ -344,7 +344,7 @@
           question: p("How can HYBE's multi-label structure be understood as a decentralized post-M&A management model, and where might that model transfer?", "HYBE의 멀티레이블 구조를 분산형 인수합병 후 경영 모델로 어떻게 이해하며 어디까지 전이할 수 있는가?"),
           gap: p("The multi-label model is visible as an industry strategy, but its organizational logic, flexibility, and transferability had not been systematically framed in the accessible conference record.", "멀티레이블 모델은 산업 전략으로 알려졌지만 조직 논리·유연성·전이 가능성을 체계적으로 구조화한 접근은 제한적이었습니다."),
           contribution: p("A technical literature-review framing of HYBE's independent-label system as a case of decentralized management and differentiated creative strategy.", "HYBE 독립 레이블 체계를 분산 경영과 차별화된 창작 전략 사례로 보는 기술적 문헌고찰 프레임을 제시합니다."),
-          method: p("Conference abstract describing a focused technical literature review of HYBE's multi-label management structure; the available record does not report databases, corpus size, or an appraisal protocol.", "HYBE 멀티레이블 경영 구조에 초점을 둔 기술적 문헌고찰 초록이며 확보 자료에는 DB·문헌 수·평가 절차가 보고되지 않았습니다."),
+          method: p("This conference abstract presents a focused technical literature review of HYBE's multi-label management structure; it does not report databases, corpus size, or an appraisal protocol.", "HYBE 멀티레이블 경영 구조에 초점을 둔 기술적 문헌고찰 초록이며 DB·문헌 수·평가 절차는 보고하지 않았습니다."),
           takeaway: p("Independent labels can preserve distinct artist strategies and identities inside a shared corporate portfolio, but that premise is not yet a validated cross-industry result.", "독립 레이블은 공동 기업 포트폴리오 안에서 서로 다른 아티스트 전략과 정체성을 유지할 수 있지만 산업 전반의 검증 결과는 아닙니다."),
           finding1: p("The structure separates label-level creative identity from group-level ownership and resource coordination.", "구조는 레이블 단위 창작 정체성을 그룹 단위 소유·자원 조정과 분리합니다."),
           finding2: p("Decentralization is presented as a mechanism for managerial and market flexibility after acquisition.", "분산화는 인수 이후 경영·시장 유연성을 위한 메커니즘으로 제시됩니다."),
@@ -551,7 +551,7 @@
           selectionContext: p("The award was issued in the society's fall undergraduate paper competition to a seven-author research team. It is a paper-level team result, not an individual first-author award.", "학회 추계학부생논문경진대회에서 7인 연구팀 논문에 수여된 팀 단위 결과이며 개인 제1저자상이 아닙니다."),
           challenge: p("The paper had to present a viable gaze-controlled VR game that translated eye exercises into interactive mechanics and a preliminary user-facing prototype.", "안구 운동을 상호작용 메커닉으로 전환한 시선 제어 VR 게임과 예비 사용자 프로토타입을 제시해야 했습니다."),
           contribution: p("As fourth author, I contributed to the research and development of the VR game prototype.", "제4저자로 VR 게임 프로토타입의 연구와 개발에 기여했습니다."),
-          criteria: p("The certificate verifies the paper-level result; no clinical efficacy or individual score is attributed.", "증서는 논문 단위 결과를 확인하며 임상 효능이나 개인 점수는 귀속하지 않습니다."),
+          criteria: p("This was a paper-level award; it does not attribute an individual score or establish clinical efficacy.", "논문 단위 수상이며 개인 점수를 부여하거나 임상 효능을 입증한 결과는 아닙니다."),
           validates: p("Society recognition for an implemented gaze-interaction research prototype, with authorship and clinical scope represented accurately.", "저자 역할과 임상 범위를 정확히 제한한 시선 상호작용 연구 프로토타입에 대한 학회 인정입니다.")
         }
       },
@@ -587,7 +587,7 @@
           selectionContext: p("A society undergraduate paper competition recognized the team's preliminary research on staged spatial exposure. The result is paper-level and shared across the author team.", "학회 학부생논문경진대회가 단계적 공간 노출 예비 연구를 인정한 팀 단위 논문 수상입니다."),
           challenge: p("The research had to turn distance and spatial progression into a controllable VR exposure design and communicate preliminary evidence within a one-page conference format.", "거리·공간 진행을 조절 가능한 VR 노출 설계로 만들고 1쪽 학술대회 형식에 예비 근거를 전달해야 했습니다."),
           contribution: p("As second author, I contributed to the VR exposure research and preparation of the paper.", "제2저자로 VR 노출 연구와 논문 작성에 기여했습니다."),
-          criteria: p("The certificate confirms the result. The paper presents preliminary design research and does not establish clinical treatment efficacy.", "증서는 수상 결과를 확인합니다. 논문은 예비 설계 연구이며 임상 치료 효능을 입증하지 않습니다."),
+          criteria: p("This presentation award recognized preliminary design research; it does not establish clinical treatment efficacy.", "예비 설계 연구를 인정한 발표상이며 임상 치료 효능을 입증한 결과는 아닙니다."),
           validates: p("Society recognition for converting a therapeutic-design question into a controllable VR exposure concept while retaining appropriate clinical caution.", "치료 설계 질문을 조절 가능한 VR 노출 콘셉트로 전환하면서 임상적 신중함을 유지한 연구에 대한 학회 인정입니다.")
         }
       },
