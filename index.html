@@ -1602,30 +1602,30 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=105-20260821j" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=105-20260821j" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=106-20260821k" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/archive.css?v=106-20260821k" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=106-20260821k" />
   <!-- Last: the open/close was switching non-animatable layout properties, so
        there was nothing to interpolate. This drives it on transform+opacity. -->
-  <link rel="stylesheet" href="assets/interior/book-motion.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=106-20260821k" />
   <!-- After archive.css: archive.css scopes the display serif by language in
        one selector and not the next, which handed Hangul a Latin-only serif
        stack and dropped the Korean name into Batang. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/typography.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/typography.css?v=106-20260821k" />
   <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
        in project-library.css can never take effect. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/light-only.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=106-20260821k" />
   <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
        page frame both views consume. It has to outrank the base layers, which
        reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
        shorthands, so source order is load-bearing here. -->
-  <link rel="stylesheet" href="assets/interior/layout.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/layout.css?v=106-20260821k" />
   <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
        inside a max-width query, so it cannot reach desktop, and it declares
        no theme tokens, so it cannot outrank light-only.css. -->
@@ -1635,17 +1635,17 @@
        matched. Declaring that same query on the link takes it out of the
        render-blocking set on desktop without changing a single computed style -
        the sheet still loads, and on phones it applies exactly as before. -->
-  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=105-20260821j" />
+  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=106-20260821k" />
   <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
        label off its plate, an overlay parked on the contact links). No theme
        tokens, so it cannot outrank light-only.css's colour pins. -->
-  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=106-20260821k" />
   <!-- Loaded LAST, after fit-desktop.css: the Tools row under Capabilities. The
        block it joins is styled from four layers that all reach
        `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
        this file both mirrors that weight and loads after them. Glyphs are inline
        path data — no icon font, no sprite, no second third-party origin. -->
-  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=106-20260821k" />
   <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
        moved out of the book to flank it. They are styled from four layers of
        project-library.css, three of them with !important on the same
@@ -1653,21 +1653,21 @@
        them. It declares no theme tokens and no transform on the animated
        elements, so it cannot outrank light-only.css or collide with
        book-motion.css. See the file header. -->
-  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=106-20260821k" />
 
   <!-- Ghost bookcase behind the library. Declares one class on one element
        it creates itself, at z-index -1 inside a section that already owns a
        stacking context — it cannot collide with any library layer, so load
        order against them does not matter. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=106-20260821k" />
 
   <!-- Monochrome SVG project marks. Loaded before page-turn.css so the book
        motion layer remains the final owner of cover transforms. -->
-  <link rel="stylesheet" href="assets/project-library/project-icons.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/project-library/project-icons.css?v=106-20260821k" />
 
-  <!-- Final presentation polish for clearer hierarchy and project scanning.
-       Loaded before page-turn.css so it never competes with book motion. -->
-  <link rel="stylesheet" href="assets/interior/design-clarity.css?v=105-20260821j" />
+  <!-- Dormant design study retained for future reuse. `media="not all"` keeps
+       it out of the public presentation without deleting the implementation. -->
+  <link rel="stylesheet" media="not all" data-dormant-design="clarity" href="assets/interior/design-clarity.css?v=106-20260821k" />
 
   <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
        works ([data-state="turning-forward"|"turning-backward"]), and nothing
@@ -1676,7 +1676,7 @@
        animates `transform` only on an element the script leaves alone in those
        two states, so it cannot collide with animateStableBookOpen or with
        book-motion.css's rotate/translate split. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/page-turn.css?v=105-20260821j" />
+  <link rel="stylesheet" href="assets/interior/page-turn.css?v=106-20260821k" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1720,7 +1720,7 @@
             <span lang="ko">사람의 주체성을 중심에 둔 인간 중심 AI 연구, 제품 전략, 시스템.</span>
           </p>
         </div>
-        <div class="pl-library-guide">
+        <div class="pl-library-guide" hidden data-dormant-design="clarity">
           <div class="pl-library-guide__line" lang="en">
             <span><strong>6</strong> Projects</span>
             <span><strong>21</strong> Publications</span>
@@ -1833,7 +1833,7 @@
 
       <main class="content" id="cv-content" tabindex="-1">
         <section class="caps" aria-labelledby="capabilities-title">
-          <h2 class="caps-title" id="capabilities-title"><span lang="en">Capabilities</span><span lang="ko">핵심 역량</span></h2>
+          <h2 class="pl-sr-only" id="capabilities-title"><span lang="en">Capabilities</span><span lang="ko">핵심 역량</span></h2>
           <div class="caps-row">
             <span class="k"><span lang="en">Discover</span><span lang="ko">발견</span></span>
             <span class="v" lang="en">Field Research<span class="sep">·</span>Stakeholder Interviews<span class="sep">·</span>Accessibility Research<span class="sep">·</span>Requirements Synthesis</span>
@@ -2533,13 +2533,13 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=105-20260821j"></script>
-  <script defer src="assets/project-library/work-content.js?v=105-20260821j"></script>
-  <script defer src="assets/project-library/project-icons.js?v=105-20260821j"></script>
-  <script defer src="assets/interior/ripple.js?v=105-20260821j"></script>
-  <script defer src="assets/project-library/project-library.js?v=105-20260821j"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=105-20260821j"></script>
-  <script defer src="assets/interior/shelf-field.js?v=105-20260821j"></script>
+  <script defer src="assets/project-library/work-designs.js?v=106-20260821k"></script>
+  <script defer src="assets/project-library/work-content.js?v=106-20260821k"></script>
+  <script defer src="assets/project-library/project-icons.js?v=106-20260821k"></script>
+  <script defer src="assets/interior/ripple.js?v=106-20260821k"></script>
+  <script defer src="assets/project-library/project-library.js?v=106-20260821k"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=106-20260821k"></script>
+  <script defer src="assets/interior/shelf-field.js?v=106-20260821k"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate

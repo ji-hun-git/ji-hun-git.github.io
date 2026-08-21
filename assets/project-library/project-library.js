@@ -173,6 +173,11 @@
     return iconSystem.create(work.icon, placement);
   };
 
+  // Kept for a future design pass, but intentionally dormant on the public
+  // site. Set data-design-clarity="on" on <html> to restore the CV-card and
+  // shelf-spine placements without rebuilding their implementation.
+  const designClarityEnabled = document.documentElement.dataset.designClarity === "on";
+
   // A cover needs four independently projected edges to read as a rigid
   // object while it is close to edge-on. Pseudo-elements only provide two
   // planes and disappear at the exact moment the board's thickness matters.
@@ -243,7 +248,7 @@
     source.id = source.id || `cv-work-${design.slug}`;
     source.dataset.libraryWork = design.slug;
 
-    if (!source.querySelector(".pl-project-icon--cv")) {
+    if (designClarityEnabled && !source.querySelector(".pl-project-icon--cv")) {
       const cvIcon = makeProjectIcon({ ...design, type: "project" }, "cv");
       if (cvIcon) source.prepend(cvIcon);
     }
@@ -534,7 +539,7 @@
 
     const spine = create("span", "pl-volume__spine");
     spine.dataset.mainKeyword = mainKeywordFor(work);
-    const spineIcon = makeProjectIcon(work, "spine");
+    const spineIcon = designClarityEnabled ? makeProjectIcon(work, "spine") : null;
     const spineMark = create("span", "pl-volume__spine-mark", spineKeywordFor(work));
     const spineMeta = create("span", "pl-volume__spine-meta", work.year);
     spine.append(spineMark, spineMeta);
