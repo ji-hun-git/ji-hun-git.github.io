@@ -243,6 +243,11 @@
     source.id = source.id || `cv-work-${design.slug}`;
     source.dataset.libraryWork = design.slug;
 
+    if (!source.querySelector(".pl-project-icon--cv")) {
+      const cvIcon = makeProjectIcon({ ...design, type: "project" }, "cv");
+      if (cvIcon) source.prepend(cvIcon);
+    }
+
     const title = pairFrom(source.querySelector(".item-title"));
     const meta = pairFrom(source.querySelector(".item-meta"));
     const descriptions = {
@@ -529,10 +534,13 @@
 
     const spine = create("span", "pl-volume__spine");
     spine.dataset.mainKeyword = mainKeywordFor(work);
+    const spineIcon = makeProjectIcon(work, "spine");
     const spineMark = create("span", "pl-volume__spine-mark", spineKeywordFor(work));
     const spineMeta = create("span", "pl-volume__spine-meta", work.year);
     spine.append(spineMark, spineMeta);
-    object.append(back, pages, cover, spine);
+    object.append(back, pages, cover);
+    if (spineIcon) object.append(spineIcon);
+    object.append(spine);
     trigger.append(object);
 
     const mount = create("div", "pl-volume__mount");

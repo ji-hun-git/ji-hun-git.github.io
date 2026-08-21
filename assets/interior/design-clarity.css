@@ -1,0 +1,227 @@
+/* Design clarity layer
+   A restrained hierarchy pass for the CV and library. This file never owns
+   the transforms used by book-motion.css or page-turn.css. */
+
+/* ── Library orientation ─────────────────────────────────────────────── */
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-brand-lockup {
+  display: grid !important;
+  justify-items: center !important;
+}
+
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide {
+  margin-top: 16px;
+  color: rgba(22, 22, 23, .62);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Pretendard Variable", Pretendard, sans-serif;
+  font-size: .72rem;
+  font-weight: 560;
+  line-height: 1.2;
+  letter-spacing: .01em;
+}
+
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+html[lang="en"][data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide__line[lang="ko"],
+html[lang="ko"][data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide__line[lang="en"] {
+  display: none !important;
+}
+
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide__line > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  min-height: 27px;
+  padding: 6px 9px;
+  border: 1px solid rgba(22, 22, 23, .11);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .42);
+}
+
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide strong {
+  color: #161617;
+  font-size: .78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide__action {
+  border-color: transparent !important;
+  background: transparent !important;
+  color: rgba(22, 22, 23, .74);
+}
+
+@media screen and (min-width: 1101px) {
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-shell {
+    --archive-track: 52px !important;
+    width: min(980px, 100%) !important;
+  }
+
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-stage,
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-shelf-viewport {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-shelf {
+    width: 676px !important;
+    grid-template-columns: repeat(13, var(--archive-track)) !important;
+  }
+}
+
+/* Project marks appear while browsing, not only after a volume is open. */
+#work-library.pl-library-v26 .pl-volume--project .pl-volume__spine {
+  position: relative;
+}
+
+#work-library.pl-library-v26 .pl-volume--project .pl-volume__object > .pl-project-icon--spine {
+  --pl-project-icon-paper: #273440;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 5;
+  width: 22px;
+  color: #f7f7f4;
+  translate: -50% 0;
+}
+
+#work-library.pl-library-v26 .pl-reading-dock .pl-detail__page--left
+  .pl-detail__heading--project > .pl-project-icon--detail {
+  box-sizing: border-box;
+  padding: 7px;
+  border: 1px solid rgba(22, 22, 23, .12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .46);
+}
+
+/* ── CV: capabilities become a readable map, not a compressed preface ── */
+html[data-view="cv"].ui-v23 #cv-start .caps {
+  grid-template-columns: minmax(0, 1fr) !important;
+  row-gap: 0 !important;
+  margin-bottom: var(--rhythm-section) !important;
+  padding: 20px 22px !important;
+  border: 1px solid rgba(22, 22, 23, .12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .38);
+}
+
+html[data-view="cv"].ui-v23 #cv-start .caps-title {
+  margin: 0 0 9px !important;
+  color: rgba(22, 22, 23, .68);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Pretendard Variable", Pretendard, sans-serif;
+  font-size: .7rem !important;
+  font-weight: 740 !important;
+  line-height: 1.2 !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase;
+}
+
+html[lang="ko"][data-view="cv"].ui-v23 #cv-start .caps-title {
+  letter-spacing: .06em !important;
+}
+
+@media (min-width: 761px) {
+  html[data-view="cv"].ui-v23 #cv-start .caps-row {
+    display: grid !important;
+    grid-template-columns: 80px minmax(0, 1fr) !important;
+    column-gap: 14px !important;
+    align-items: baseline !important;
+    padding: 10px 0 !important;
+    border-top: 1px solid rgba(22, 22, 23, .09);
+  }
+}
+
+html[data-view="cv"].ui-v23 #cv-start .caps-row .k {
+  color: #161617 !important;
+  font-weight: 720 !important;
+}
+
+html[data-view="cv"].ui-v23 #cv-start .caps-row .v {
+  color: rgba(22, 22, 23, .76) !important;
+  line-height: 1.55 !important;
+}
+
+/* ── CV: project cards receive the same visual identifiers as the library ── */
+html[data-view="cv"].ui-v23 #cv-start #projects .item {
+  position: relative;
+  border-color: rgba(22, 22, 23, .14) !important;
+  box-shadow: 0 10px 30px rgba(22, 22, 23, .035);
+}
+
+html[data-view="cv"].ui-v23 #cv-start #projects .item-title {
+  padding-right: 60px;
+}
+
+html[data-view="cv"].ui-v23 #cv-start #projects .pl-project-icon--cv {
+  --pl-project-icon-paper: #fff;
+  position: absolute;
+  top: 17px;
+  right: 19px;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 46px;
+  padding: 7px;
+  border: 1px solid rgba(22, 22, 23, .11);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .62);
+  color: #161617;
+}
+
+@media (max-width: 760px) {
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide {
+    width: min(330px, calc(100vw - 32px));
+    margin-top: 12px;
+    font-size: .68rem;
+  }
+
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide__line {
+    gap: 5px;
+  }
+
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide__line > span {
+    min-height: 25px;
+    padding: 5px 8px;
+  }
+
+  html[data-view="library"].ui-v26 #work-library.pl-library-v26 .pl-library-guide__action {
+    flex-basis: 100%;
+    justify-content: center;
+    padding-bottom: 0;
+  }
+
+  html[data-view="cv"].ui-v23 #cv-start .caps {
+    padding: 17px 18px !important;
+  }
+
+  html[data-view="cv"].ui-v23 #cv-start .caps-row {
+    padding: 10px 0 !important;
+    border-top: 1px solid rgba(22, 22, 23, .09);
+  }
+
+  html[data-view="cv"].ui-v23 #cv-start #projects .item-title {
+    padding-right: 47px;
+  }
+
+  html[data-view="cv"].ui-v23 #cv-start #projects .pl-project-icon--cv {
+    top: 13px;
+    right: 13px;
+    width: 38px;
+    padding: 6px;
+    border-radius: 9px;
+  }
+}
+
+@media (forced-colors: active) {
+  .pl-library-guide__line > span,
+  .pl-project-icon--cv,
+  .pl-project-icon--detail,
+  html[data-view="cv"].ui-v23 #cv-start .caps {
+    border-color: CanvasText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+    box-shadow: none !important;
+  }
+}
