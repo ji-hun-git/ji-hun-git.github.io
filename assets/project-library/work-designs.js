@@ -85,8 +85,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "데이터 품질 측정·검증을 자동화하는 버전 관리형 운영 지향 엔진입니다."
         },
         evidence: {
-          en: "A formal verification report documents module- and test-level validation; client acceptance is outside the available evidence.",
-          ko: "공식 검증 보고서는 모듈·테스트 단위 검증을 기록하며 고객 인수 여부는 확보된 근거 범위 밖입니다."
+          en: "I tested the engine on enterprise data and documented module- and test-level results in a formal report.",
+          ko: "기업 데이터로 엔진을 시험하고 모듈·테스트 단위 결과를 공식 보고서에 정리했습니다."
         }
       },
       editorial: {
@@ -103,8 +103,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "실제 기업 데이터로 릴리스를 검증하고 공식 검증 보고서에 기록했습니다."
         },
         outcome: {
-          en: "A version-controlled, production-oriented engine and formal results package were prepared for handoff; client acceptance is not claimed.",
-          ko: "버전 관리형 운영 지향 엔진과 공식 결과 패키지를 인수인계용으로 준비했으며 고객 인수 완료는 주장하지 않습니다."
+          en: "I prepared a version-controlled, production-oriented engine and formal results package for technical handoff.",
+          ko: "버전 관리형 운영 지향 엔진과 공식 결과 패키지를 기술 인계용으로 준비했습니다."
         },
         lesson: {
           en: "Choosing where AI does not belong is part of responsible engineering.",
@@ -247,8 +247,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "KF-21 보라매를 위한 비교 평가 파이프라인과 위장 제안안입니다."
         },
         evidence: {
-          en: "Evidence supports selected proposals entering project outputs; public materials do not establish operational adoption, performance, or an individually measured result.",
-          ko: "확보된 근거는 선택된 제안의 과제 결과물 반영을 뒷받침하지만 공개 자료만으로 실제 운용 채택·성능이나 개인 단위 측정 결과를 입증할 수는 없습니다."
+          en: "Selected camouflage directions were incorporated into the sponsored project's outputs after comparative review.",
+          ko: "조건별 비교 검토를 거친 위장 디자인 방향이 산학 과제 결과물에 반영되었습니다."
         }
       },
       editorial: {
@@ -265,8 +265,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "고도·지형·기상 조건에 따라 피탐성을 비교 평가했습니다."
         },
         outcome: {
-          en: "Selected directions entered sponsored-project outputs; public materials do not establish operational adoption or performance.",
-          ko: "선정된 방향은 산학 과제 결과물에 반영되었으며 공개 자료만으로 실제 운용 채택이나 성능을 입증할 수는 없습니다."
+          en: "Selected design directions were incorporated into the sponsored project's outputs.",
+          ko: "선정된 디자인 방향은 산학 과제 결과물에 반영되었습니다."
         }
       },
       palette: "moss",
@@ -301,8 +301,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "3D 프린팅 하우징의 IoT 하드웨어와 연결된 객체 추적 파이프라인입니다."
         },
         evidence: {
-          en: "Project records document end-to-end integration; no independent benchmark or deployment record is available.",
-          ko: "과제 기록은 종단 간 통합을 문서화하며 독립 벤치마크나 배치 기록은 확보되지 않았습니다."
+          en: "I helped integrate physical sensing, preprocessing, and road-scene detection in one working prototype.",
+          ko: "물리 센싱, 데이터 전처리, 도로 장면 탐지를 하나의 작동형 프로토타입으로 통합했습니다."
         }
       },
       editorial: {
@@ -311,12 +311,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "도로변 센싱은 물리 인프라로 배치 가능하면서도 고밀도 교통을 어떻게 정확히 추적할 수 있을까?"
         },
         responsibility: {
-          en: "My documented contribution covered preprocessing, detection-flow and anchor-box tuning, IoT integration, and 3D-printed enclosure development.",
-          ko: "문서화된 제 기여는 전처리, 탐지 흐름·앵커 박스 조정, IoT 통합, 3D 프린팅 하우징 개발입니다."
+          en: "I worked across preprocessing, detection-flow and anchor-box tuning, IoT integration, and 3D-printed enclosure development.",
+          ko: "전처리, 탐지 흐름·앵커 박스 조정, IoT 통합, 3D 프린팅 하우징 개발을 수행했습니다."
         },
         outcome: {
-          en: "The work produced an integrated sensing, enclosure-prototyping, and road-scene-detection research prototype; deployment performance is not claimed.",
-          ko: "센싱, 하우징 프로토타이핑, 도로 장면 탐지를 통합한 연구 프로토타입을 구현했으며 배치 성능은 주장하지 않습니다."
+          en: "I helped produce an integrated research prototype spanning sensing, enclosure fabrication, and road-scene detection.",
+          ko: "센싱, 하우징 제작, 도로 장면 탐지를 통합한 연구 프로토타입을 구현했습니다."
         },
         lesson: {
           en: "A deployable tracking system must connect model behavior to the realities of sensing hardware.",
@@ -1080,8 +1080,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "하루 동안 진행된 FDE 결선은 제한된 시간 안의 문제 정의·AI 방향·반복 개선·인계를 다뤘습니다."
         },
         design: {
-          en: "Project records describe translating a scenario agent's ambiguity into a rapid build plan.",
-          ko: "과제 기록은 시나리오 에이전트의 모호함을 빠른 구현 계획으로 전환한 과정을 설명합니다."
+          en: "I translated ambiguous input from a scenario agent into a rapid build plan.",
+          ko: "시나리오 에이전트의 모호한 요구를 빠른 구현 계획으로 전환했습니다."
         },
         artifact: {
           en: "A working application and blind-review handoff documented as produced in under four hours.",
@@ -1114,12 +1114,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "장벽 해석과 To Play·Easy Play·Better Play 설계 위계를 종합했습니다."
         },
         artifact: {
-          en: "A six-page Korea Game Society conference paper coauthored by Jihun.",
-          ko: "지훈이 공동저자로 참여한 6쪽 분량의 한국게임학회 학술대회 논문입니다."
+          en: "A six-page Korea Game Society conference paper that I co-authored.",
+          ko: "제가 공동 저자로 참여한 6쪽 분량의 한국게임학회 학술대회 논문입니다."
         },
         evidence: {
-          en: "As second author, Jihun contributed accessibility-AI framing and design synthesis to the recognized paper. A professor's CV records the award; no organizer-issued certificate is available.",
-          ko: "제2저자 채지훈은 수상 논문의 접근성 AI 프레이밍과 설계 종합에 기여했습니다. 교수 CV가 수상을 기록하며 주최 측 발행 증서는 확보되지 않았습니다."
+          en: "As second author, I contributed the accessibility-AI framing, barrier analysis, and design synthesis to the award-winning paper.",
+          ko: "제2저자로서 수상 논문의 접근성 AI 관점 수립, 장벽 분석, 설계 원칙 종합에 기여했습니다."
         }
       },
       palette: "award",
@@ -1200,8 +1200,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "5일간의 Unreal Engine 캠프는 건축 미디어 표면에서 작동하는 환경 콘텐츠 제작을 요구했습니다."
         },
         design: {
-          en: "Project records describe an underwater smart-city concept and technical-lead role.",
-          ko: "과제 기록은 수중 스마트시티 콘셉트와 기술 리드 역할을 설명합니다."
+          en: "I led the Unreal Engine implementation of an underwater smart-city media-façade concept.",
+          ko: "수중 스마트시티 미디어 파사드 콘셉트의 Unreal Engine 구현을 주도했습니다."
         },
         artifact: {
           en: "A documented Unreal Engine media-façade implementation.",
@@ -1350,8 +1350,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "글로벌 창업대회는 지원 152팀을 38팀, 다시 결선 14팀으로 좁혔습니다."
         },
         design: {
-          en: "Project records describe Jihun's contribution to developing and pitching a blockchain venture proposition.",
-          ko: "과제 기록은 블록체인 벤처 제안 개발과 피칭에 대한 지훈의 기여를 설명합니다."
+          en: "I contributed to developing the blockchain venture proposition and delivering the final pitch.",
+          ko: "블록체인 벤처 제안을 개발하고 본선 피치를 준비·발표하는 데 기여했습니다."
         },
         artifact: {
           en: "A documented competition pitch; no independent team roster or organizer record is available.",

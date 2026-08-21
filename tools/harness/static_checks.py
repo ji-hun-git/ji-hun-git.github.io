@@ -831,6 +831,48 @@ def check_award_consistency(files, cfg):
     if not (index_p.is_file() and wc_p.is_file()):
         return findings
     wc = wc_p.read_text(encoding="utf-8", errors="replace")
+    index_text = index_p.read_text(encoding="utf-8", errors="replace")
+
+    # Public portfolio copy should state the person's role and result directly.
+    # Source provenance belongs in private claim notes, not in visitor-facing
+    # sentences such as "a professor's CV records the award".
+    public_copy = {
+        "index.html": index_text,
+        "assets/project-library/work-content.js": wc,
+    }
+    designs_p = ROOT / "assets/project-library/work-designs.js"
+    if designs_p.is_file():
+        public_copy["assets/project-library/work-designs.js"] = designs_p.read_text(
+            encoding="utf-8", errors="replace")
+    attribution_phrases = (
+        "professor's cv", "professor cv", "professor young yim doh's",
+        "교수 cv", "도영임 교수의",
+    )
+    for rel, text in public_copy.items():
+        lowered = text.lower()
+        for phrase in attribution_phrases:
+            idx = lowered.find(phrase.lower())
+            if idx != -1:
+                findings.append(Finding(
+                    ERROR, "award-consistency", rel, line_of(text, idx),
+                    "public award copy cites an external CV: %r" % phrase,
+                    "state the verified result and the owner's role directly; "
+                    "keep source provenance outside public-facing copy",
+                ))
+
+    # Certificate EC-2026-0001 supports Excellence / 우수상. This exact drift
+    # previously survived because the old checker only looked for denial phrases.
+    edu_window = "education4.0 q"
+    if edu_window in index_text.lower():
+        for phrase in ("Grand Prize – Education4.0 Q", "Grand Prize - Education4.0 Q",
+                       "대상 – Education4.0 Q", "대상 - Education4.0 Q"):
+            idx = index_text.find(phrase)
+            if idx != -1:
+                findings.append(Finding(
+                    ERROR, "award-consistency", "index.html", line_of(index_text, idx),
+                    "Education4.0 Q is labeled as a top-tier award",
+                    "use Excellence Award / 우수상 to match certificate EC-2026-0001",
+                ))
     # Any surviving language that denies a result outright is worth a look, since
     # the CV asserts one for every award it lists.
     deniers = [
@@ -850,8 +892,7 @@ def check_award_consistency(files, cfg):
                 "check index.html does not assert that same award; the two "
                 "surfaces contradicted each other before 2026-08-20",
             ))
-    if "Encouragement Prize" in wc and "President's Award" in index_p.read_text(
-            encoding="utf-8", errors="replace"):
+    if "Encouragement Prize" in wc and "President's Award" in index_text:
         idx = wc.find("Encouragement Prize")
         findings.append(Finding(
             WARN, "award-consistency", "assets/project-library/work-content.js",

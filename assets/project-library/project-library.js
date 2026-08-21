@@ -865,18 +865,18 @@
   const awardEditorial = (work) => {
     if (work.editorial?.verifiedResult) {
       return [
-        ["result", { en: "Verified result", ko: "검증된 결과" }, work.editorial.verifiedResult],
-        ["selection-context", { en: "Selection context", ko: "선발 맥락" }, work.editorial.selectionContext],
-        ["challenge", { en: "The challenge", ko: "도전 과제" }, work.editorial.challenge],
-        ["contribution", { en: "My contribution", ko: "나의 기여" }, work.editorial.contribution],
-        ["criteria", { en: "What was evaluated", ko: "평가 항목" }, work.editorial.criteria],
-        ["validates", { en: "What it validates", ko: "검증하는 역량" }, work.editorial.validates]
+        ["result", { en: "Result", ko: "성과" }, work.editorial.verifiedResult],
+        ["selection-context", { en: "Competition context", ko: "대회·선발 과정" }, work.editorial.selectionContext],
+        ["challenge", { en: "Challenge", ko: "과제" }, work.editorial.challenge],
+        ["contribution", { en: "My role", ko: "나의 역할" }, work.editorial.contribution],
+        ["criteria", { en: "Evaluation focus", ko: "평가 요소" }, work.editorial.criteria],
+        ["validates", { en: "Strength demonstrated", ko: "보여준 역량" }, work.editorial.validates]
       ];
     }
     const hasExpandedEvidence = (work.descriptions?.en?.length || 0) > 1;
     return [
       ["result", { en: "Result", ko: "결과" }, work.title],
-      ["selection-context", { en: "Selection context", ko: "선발 맥락" }, hasExpandedEvidence ? awardClaimAt(work, 0) : work.meta],
+      ["selection-context", { en: "Competition context", ko: "대회·선발 과정" }, hasExpandedEvidence ? awardClaimAt(work, 0) : work.meta],
       ["criteria", { en: "Criteria", ko: "평가 기준" }, hasExpandedEvidence ? awardClaimAt(work, 1) : null],
       ["contribution", { en: "Contribution", ko: "기여" }, hasExpandedEvidence ? awardClaimAt(work, 2) : awardClaimAt(work, 0)],
       ["significance", { en: "Significance", ko: "의미" }, hasExpandedEvidence ? awardClaimAt(work, 3) : null]
