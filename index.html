@@ -1602,30 +1602,30 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=98-20260821c" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=98-20260821c" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=99-20260821d" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=99-20260821d" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=99-20260821d" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/archive.css?v=99-20260821d" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=99-20260821d" />
   <!-- Last: the open/close was switching non-animatable layout properties, so
        there was nothing to interpolate. This drives it on transform+opacity. -->
-  <link rel="stylesheet" href="assets/interior/book-motion.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=99-20260821d" />
   <!-- After archive.css: archive.css scopes the display serif by language in
        one selector and not the next, which handed Hangul a Latin-only serif
        stack and dropped the Korean name into Batang. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/typography.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/typography.css?v=99-20260821d" />
   <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
        in project-library.css can never take effect. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/light-only.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=99-20260821d" />
   <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
        page frame both views consume. It has to outrank the base layers, which
        reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
        shorthands, so source order is load-bearing here. -->
-  <link rel="stylesheet" href="assets/interior/layout.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/layout.css?v=99-20260821d" />
   <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
        inside a max-width query, so it cannot reach desktop, and it declares
        no theme tokens, so it cannot outrank light-only.css. -->
@@ -1635,17 +1635,17 @@
        matched. Declaring that same query on the link takes it out of the
        render-blocking set on desktop without changing a single computed style -
        the sheet still loads, and on phones it applies exactly as before. -->
-  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=98-20260821c" />
+  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=99-20260821d" />
   <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
        label off its plate, an overlay parked on the contact links). No theme
        tokens, so it cannot outrank light-only.css's colour pins. -->
-  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=99-20260821d" />
   <!-- Loaded LAST, after fit-desktop.css: the Tools row under Capabilities. The
        block it joins is styled from four layers that all reach
        `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
        this file both mirrors that weight and loads after them. Glyphs are inline
        path data — no icon font, no sprite, no second third-party origin. -->
-  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=99-20260821d" />
   <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
        moved out of the book to flank it. They are styled from four layers of
        project-library.css, three of them with !important on the same
@@ -1653,13 +1653,13 @@
        them. It declares no theme tokens and no transform on the animated
        elements, so it cannot outrank light-only.css or collide with
        book-motion.css. See the file header. -->
-  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=99-20260821d" />
 
   <!-- Ghost bookcase behind the library. Declares one class on one element
        it creates itself, at z-index -1 inside a section that already owns a
        stacking context — it cannot collide with any library layer, so load
        order against them does not matter. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=99-20260821d" />
 
   <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
        works ([data-state="turning-forward"|"turning-backward"]), and nothing
@@ -1668,7 +1668,7 @@
        animates `transform` only on an element the script leaves alone in those
        two states, so it cannot collide with animateStableBookOpen or with
        book-motion.css's rotate/translate split. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/page-turn.css?v=98-20260821c" />
+  <link rel="stylesheet" href="assets/interior/page-turn.css?v=99-20260821d" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -2023,10 +2023,10 @@
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip" data-m="K">Korea Game Society</span></span><span class="p-set" lang="ko"><span class="p-chip" data-m="게">한국게임학회</span></span></div>
             </div>
             <div class="item reveal">
-              <h3 class="item-title"><span lang="en">Excellence Award – Education4.0 Q TA Report</span><span lang="ko">우수상 – Education4.0 Q 조교 활동보고서</span></h3>
+              <h3 class="item-title"><span lang="en">Top Excellence Award (1st Place) – Education4.0 Q TA Report</span><span lang="ko">최우수상(1위) – Education4.0 Q 조교 활동보고서</span></h3>
               <div class="item-meta"><span lang="en">2026.03 | Certificate EC-2026-0001</span><span lang="ko">2026.03 | 증서번호 EC-2026-0001</span></div>
-              <p class="item-desc cv-summary" lang="en">Received KAIST's Excellence Award for documenting the planning, operation, and reflection of question-centered course support in the Education4.0 Q teaching and learning model.</p>
-              <p class="item-desc cv-summary" lang="ko">KAIST Education4.0 Q 교수학습 모델에서 질문 중심 수업 지원의 기획·운영·성찰 과정을 체계적으로 정리한 조교 활동보고서로 우수상을 받았습니다.</p>
+              <p class="item-desc cv-summary" lang="en">Won first place and received KAIST's Top Excellence Award for documenting the planning, operation, and reflection of question-centered course support in the Education4.0 Q teaching and learning model.</p>
+              <p class="item-desc cv-summary" lang="ko">KAIST Education4.0 Q 교수학습 모델에서 질문 중심 수업 지원의 기획·운영·성찰 과정을 체계적으로 정리한 조교 활동보고서로 1위에 선정되어 최우수상을 받았습니다.</p>
               <div class="partners"><span class="p-label"><span lang="en">Hosts · Sponsors</span><span lang="ko">주최 · 후원</span></span><span class="p-set" lang="en"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kaist.png" alt="" onerror="this.remove()" />KAIST</span></span><span class="p-set" lang="ko"><span class="p-chip"><img class="p-logo" loading="lazy" decoding="async" src="assets/logos/kaist.png" alt="" onerror="this.remove()" />KAIST</span></span></div>
             </div>
             <div class="item reveal">
@@ -2511,12 +2511,12 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=98-20260821c"></script>
-  <script defer src="assets/project-library/work-content.js?v=98-20260821c"></script>
-  <script defer src="assets/interior/ripple.js?v=98-20260821c"></script>
-  <script defer src="assets/project-library/project-library.js?v=98-20260821c"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=98-20260821c"></script>
-  <script defer src="assets/interior/shelf-field.js?v=98-20260821c"></script>
+  <script defer src="assets/project-library/work-designs.js?v=99-20260821d"></script>
+  <script defer src="assets/project-library/work-content.js?v=99-20260821d"></script>
+  <script defer src="assets/interior/ripple.js?v=99-20260821d"></script>
+  <script defer src="assets/project-library/project-library.js?v=99-20260821d"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=99-20260821d"></script>
+  <script defer src="assets/interior/shelf-field.js?v=99-20260821d"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate

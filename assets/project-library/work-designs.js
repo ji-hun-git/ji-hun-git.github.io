@@ -1132,7 +1132,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     {
       slug: "edu40-ta-excellence",
       sourceIndex: 2,
-      shortTitle: { en: "TA Report Excellence", ko: "조교 활동보고서 우수상" },
+      shortTitle: { en: "TA Report First Place", ko: "조교 활동보고서 최우수상" },
       category: { en: "Education Recognition", ko: "교육 성과 인정" },
       story: {
         research: {
@@ -1148,8 +1148,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "지훈이 작성한 Education4.0 Q 조교 활동 보고서입니다."
         },
         evidence: {
-          en: "Certificate EC-2026-0001 verifies Excellence for the Education4.0 Q TA Report.",
-          ko: "상장 EC-2026-0001은 Education4.0 Q 조교 활동보고서 우수상을 확인합니다."
+          en: "Certificate EC-2026-0001 verifies the Top Excellence Award and first-place result for the Education4.0 Q TA Report.",
+          ko: "상장 EC-2026-0001은 Education4.0 Q 조교 활동보고서의 최우수상과 1위 성과를 확인합니다."
         }
       },
       palette: "award",

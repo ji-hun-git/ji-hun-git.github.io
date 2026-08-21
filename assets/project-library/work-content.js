@@ -507,11 +507,11 @@
         }
       },
       "edu40-ta-excellence": {
-        shortTitle: p("Education4.0 Q Excellence", "Education4.0 Q 우수상"),
-        awardName: p("Excellence Award, Education4.0 Q TA Activity Report", "Education4.0 Q 조교 활동보고서 우수상"),
+        shortTitle: p("Education4.0 Q First Place", "Education4.0 Q 최우수상"),
+        awardName: p("Top Excellence Award (1st Place), Education4.0 Q TA Activity Report", "Education4.0 Q 조교 활동보고서 최우수상(1위)"),
         editorial: {
-          verifiedResult: p("I received KAIST's Excellence Award for the Education4.0 Q TA Activity Report on 23 March 2026.", "2026년 3월 23일 KAIST Education4.0 Q 조교 활동보고서 우수상을 받았습니다."),
-          selectionContext: p("KAIST's Education4.0 Q program recognizes teaching-assistant practice within its question-centered learning model; the certificate does not publish applicant or cohort counts.", "KAIST Education4.0 Q는 질문 중심 학습 모델의 조교 실천을 포상하며 증서에는 지원자나 전체 인원 수가 공개되지 않습니다."),
+          verifiedResult: p("I won first place and received KAIST's Top Excellence Award for the Education4.0 Q TA Activity Report on 23 March 2026.", "2026년 3월 23일 KAIST Education4.0 Q 조교 활동보고서 평가에서 1위에 선정되어 최우수상을 받았습니다."),
+          selectionContext: p("KAIST awarded the first-place distinction for teaching-assistant practice within its question-centered Education4.0 Q learning model.", "KAIST는 질문 중심 Education4.0 Q 학습 모델의 조교 실천 평가에서 1위 성과에 최우수상을 수여했습니다."),
           challenge: p("The assessed work was a TA activity report documenting how question-centered course support was planned, operated, and reflected upon.", "질문 중심 수업 지원을 어떻게 기획·운영하고 성찰했는지 기록한 조교 활동보고서가 평가 대상이었습니다."),
           contribution: p("I authored the report and articulated the teaching intervention, its operation, and the lessons drawn from practice.", "활동보고서를 작성하고 교육 개입의 설계와 운영 과정, 실천에서 도출한 교훈을 정리했습니다."),
           criteria: p("Quality of the TA activity report and the clarity of its account of educational practice.", "조교 활동보고서의 완성도와 교육 실천을 설명하는 내용의 명료성"),

@@ -812,7 +812,7 @@ def check_bilingual_pairs(files, cfg):
 
 
 AWARD_TIERS = {
-    "grand prize": "대상", "excellence award": "우수상", "encouragement prize": "장려상",
+    "grand prize": "대상", "top excellence award": "최우수상", "excellence award": "우수상", "encouragement prize": "장려상",
     "president's award": "총장상", "top 3": "상위 3", "finalist": "본선",
 }
 
@@ -860,18 +860,20 @@ def check_award_consistency(files, cfg):
                     "keep source provenance outside public-facing copy",
                 ))
 
-    # Certificate EC-2026-0001 supports Excellence / 우수상. This exact drift
-    # previously survived because the old checker only looked for denial phrases.
+    # Certificate EC-2026-0001 and the award holder confirm Top Excellence / 최우수상
+    # and a first-place result. Guard the exact title against future copy drift.
     edu_window = "education4.0 q"
     if edu_window in index_text.lower():
         for phrase in ("Grand Prize – Education4.0 Q", "Grand Prize - Education4.0 Q",
-                       "대상 – Education4.0 Q", "대상 - Education4.0 Q"):
+                       "대상 – Education4.0 Q", "대상 - Education4.0 Q",
+                       "Excellence Award – Education4.0 Q", "Excellence Award - Education4.0 Q",
+                       "우수상 – Education4.0 Q", "우수상 - Education4.0 Q"):
             idx = index_text.find(phrase)
             if idx != -1:
                 findings.append(Finding(
                     ERROR, "award-consistency", "index.html", line_of(index_text, idx),
-                    "Education4.0 Q is labeled as a top-tier award",
-                    "use Excellence Award / 우수상 to match certificate EC-2026-0001",
+                    "Education4.0 Q uses an incorrect award tier",
+                    "use Top Excellence Award (1st Place) / 최우수상(1위) for certificate EC-2026-0001",
                 ))
     # Any surviving language that denies a result outright is worth a look, since
     # the CV asserts one for every award it lists.
