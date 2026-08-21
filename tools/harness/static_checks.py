@@ -774,6 +774,33 @@ def check_publication_roles(files, cfg):
                 "publication #%s carries %d author-role labels, expected exactly 1" % (m.group(1), n),
                 "the other rows all state First/Second/Fourth/Sole author",
             ))
+
+    corrected_roles = {
+        "Prompting-based LLM framework for ethical decision-making":
+            ("(Co-first author)", "(공동 제1저자)"),
+        "GAIA: A game AI assistant service framework":
+            ("(Co-first author)", "(공동 제1저자)"),
+        "A technical literature review of distributed management structure":
+            ("(Corresponding author)", "(교신저자)"),
+    }
+    for title, expected in corrected_roles.items():
+        idx = text.find(title)
+        if idx == -1:
+            findings.append(Finding(
+                ERROR, "publication-roles", "index.html", 0,
+                "corrected publication is missing: %s" % title,
+                "restore the CV row and its verified authorship role",
+            ))
+            continue
+        row_start = text.rfind('<p class="item-desc">', 0, idx)
+        row_end = text.find("</p>", idx)
+        row = text[row_start:row_end if row_end != -1 else idx + 2000]
+        if not all(role in row for role in expected):
+            findings.append(Finding(
+                ERROR, "publication-roles", "index.html", line_of(text, idx),
+                "%s has the wrong role label" % title,
+                "use %s / %s" % expected,
+            ))
     return findings
 
 

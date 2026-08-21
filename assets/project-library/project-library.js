@@ -166,6 +166,13 @@
     return node;
   };
 
+  const makeProjectIcon = (work, placement) => {
+    if (work?.type !== "project") return null;
+    const iconSystem = window.PROJECT_LIBRARY_ICONS;
+    if (!iconSystem?.create || !iconSystem.has?.(work.icon)) return null;
+    return iconSystem.create(work.icon, placement);
+  };
+
   // A cover needs four independently projected edges to read as a rigid
   // object while it is close to edge-on. Pseudo-elements only provide two
   // planes and disappear at the exact moment the board's thickness matters.
@@ -476,6 +483,8 @@
   const buildBookFace = (work, inside = false) => {
     const face = create("span", inside ? "pl-volume__cover-inside" : "pl-volume__cover-face");
     const mark = create("span", "pl-volume__cover-mark pl-cover-mark", work.mark);
+    const projectIcon = inside ? null : makeProjectIcon(work, "cover");
+    if (projectIcon) mark.replaceChildren(projectIcon);
     const title = create("span", "pl-volume__cover-title pl-cover-title");
     appendPair(title, inside ? { en: work.mark, ko: work.mark } : work.shortTitle);
     const category = create("span", "pl-volume__cover-category pl-cover-category");
@@ -798,12 +807,6 @@
         ko: "접근성 AI 챗봇의 구축과 평가를 함께 책임졌습니다."
       };
     }
-    if (work.slug === "gaia-service-framework") {
-      return {
-        en: "I was one of the first three equal contributors to the AI assistant architecture.",
-        ko: "AI 어시스턴트 아키텍처의 앞의 세 동등기여자 중 한 명으로 참여했습니다."
-      };
-    }
     const role = clean(work.role?.en).replace(/^\(|\)$/g, "").toLowerCase();
     const summaries = {
       "sole author": {
@@ -893,7 +896,7 @@
     detail.setAttribute("aria-modal", "true");
 
     const top = create("div", "pl-detail__top pl-detail__header");
-    const headingGroup = create("div", "");
+    const headingGroup = create("div", "pl-detail__heading");
     const kicker = create("p", "pl-detail__kicker");
     appendPair(kicker, {
       en: recordHeaderFor(work, "en"),
@@ -905,7 +908,13 @@
     const authoredTitle = work.type === "award" ? work.awardName : null;
     appendPair(title, authoredTitle || work.shortTitle || work.title);
     title.setAttribute("aria-label", fullLabelFor(work, currentLanguage()));
-    headingGroup.append(kicker, title);
+    const detailIcon = makeProjectIcon(work, "detail");
+    if (detailIcon) {
+      headingGroup.classList.add("pl-detail__heading--project");
+      headingGroup.append(detailIcon, kicker, title);
+    } else {
+      headingGroup.append(kicker, title);
+    }
     let projectSubtitle = null;
     if (work.type === "project") {
       projectSubtitle = create("p", "pl-detail__subtitle");
@@ -1039,6 +1048,8 @@
     turningPage.setAttribute("aria-hidden", "true");
     const turningFront = create("span", "pl-page-turn__front");
     setTurningCoverLabels(work, turningFront);
+    const turnIcon = makeProjectIcon(work, "turn");
+    if (turnIcon) turningFront.append(turnIcon);
     turningPage.append(turningFront, create("span", "pl-page-turn__back"));
     appendRigidEdges(turningPage);
 
@@ -1937,6 +1948,8 @@
     const back = create("span", "pl-flight-cover__backface");
     flight.append(front, back);
     appendRigidEdges(flight);
+    const flightIcon = makeProjectIcon(work, "flight");
+    if (flightIcon) flight.append(flightIcon);
     flight.append(meta, title);
     Object.assign(flight.style, {
       position: "fixed",

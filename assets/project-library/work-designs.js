@@ -5,6 +5,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     {
       slug: "inclusive-game-ai",
       sourceIndex: 0,
+      icon: "gaia",
       shortTitle: {
         en: "Accessible Game AI",
         ko: "접근 가능한 게임 AI"
@@ -63,6 +64,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     {
       slug: "data-quality-engine",
       sourceIndex: 1,
+      icon: "dqm",
       shortTitle: {
         en: "Data-Quality Engine",
         ko: "데이터 품질 엔진"
@@ -121,6 +123,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     {
       slug: "haenyeo-legacy",
       sourceIndex: 2,
+      icon: "tewak",
       shortTitle: {
         en: "Haenyeo Heritage",
         ko: "해녀 문화유산"
@@ -175,6 +178,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     {
       slug: "adaptive-xr",
       sourceIndex: 3,
+      icon: "xr",
       shortTitle: {
         en: "Adaptive XR",
         ko: "적응형 XR"
@@ -225,6 +229,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     {
       slug: "camouflage-effectiveness",
       sourceIndex: 4,
+      icon: "kf21",
       shortTitle: {
         en: "Computer Vision for Camouflage",
         ko: "위장 분석 컴퓨터 비전"
@@ -279,6 +284,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     {
       slug: "smart-city-tracking",
       sourceIndex: 5,
+      icon: "traffic",
       shortTitle: {
         en: "Smart-City Object Tracking",
         ko: "스마트시티 객체 추적"
@@ -637,8 +643,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "PLETH는 12개 문화 프로필과 9개 도덕 시나리오를 네 기준으로 평가합니다."
         },
         evidence: {
-          en: "As the second-listed author, I contributed to an exploratory AI-ethics framework comparing 12 cultural profiles across nine moral scenarios. Decisions and scoring were model-generated, so the results remain exploratory.",
-          ko: "두 번째 기재 저자로 12개 문화 프로필과 9개 도덕 시나리오를 비교한 탐색적 AI 윤리 프레임워크에 기여했습니다. 의사결정과 평가는 모두 모델이 수행했으므로 결과는 탐색적 근거로 해석합니다."
+          en: "As co-first author, I co-led an exploratory AI-ethics framework comparing 12 cultural profiles across nine moral scenarios. Decisions and scoring were model-generated, so the results remain exploratory.",
+          ko: "공동 제1저자로서 12개 문화 프로필과 9개 도덕 시나리오를 비교한 탐색적 AI 윤리 프레임워크 연구를 공동 주도했습니다. 의사결정과 평가는 모두 모델이 수행했으므로 결과는 탐색적 근거로 해석합니다."
         }
       },
       palette: "plum",
@@ -672,8 +678,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "두 경로의 개념적 GAIA 서비스 아키텍처와 UX 시나리오를 제안했습니다."
         },
         evidence: {
-          en: "I was one of the first three equal contributors to a two-page service-architecture proposal; implementation and user evaluation are the next research phase.",
-          ko: "2쪽 분량의 서비스 아키텍처 제안에 참여한 앞의 세 명의 동등기여 저자 중 한 명이며, 구현과 사용자 평가는 다음 연구 단계입니다."
+          en: "As co-first author, I co-designed a two-page service-architecture proposal; implementation and user evaluation are the next research phase.",
+          ko: "공동 제1저자로서 2쪽 분량의 서비스 아키텍처 제안을 공동 설계했으며, 구현과 사용자 평가는 다음 연구 단계입니다."
         }
       },
       palette: "cobalt",
@@ -742,8 +748,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "자율성·공유 인프라·조정을 다룬 한 페이지 기술 문헌검토 초록입니다."
         },
         evidence: {
-          en: "As second author, I helped analyze HYBE's multi-label structure as a decentralized management strategy; this publication is a conference abstract.",
-          ko: "제2저자로 HYBE의 멀티레이블 구조를 분권형 경영 전략으로 분석하는 데 기여했으며, 이 출판물은 학술대회 초록입니다."
+          en: "As corresponding author, I helped analyze HYBE's multi-label structure as a decentralized management strategy; this publication is a conference abstract.",
+          ko: "교신저자로 HYBE의 멀티레이블 구조를 분권형 경영 전략으로 분석하는 데 기여했으며, 이 출판물은 학술대회 초록입니다."
         }
       },
       palette: "moss",

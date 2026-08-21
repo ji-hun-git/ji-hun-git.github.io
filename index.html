@@ -1602,30 +1602,30 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=101-20260821f" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=101-20260821f" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=104-20260821i" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=104-20260821i" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=104-20260821i" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/archive.css?v=104-20260821i" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=104-20260821i" />
   <!-- Last: the open/close was switching non-animatable layout properties, so
        there was nothing to interpolate. This drives it on transform+opacity. -->
-  <link rel="stylesheet" href="assets/interior/book-motion.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=104-20260821i" />
   <!-- After archive.css: archive.css scopes the display serif by language in
        one selector and not the next, which handed Hangul a Latin-only serif
        stack and dropped the Korean name into Batang. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/typography.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/typography.css?v=104-20260821i" />
   <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
        in project-library.css can never take effect. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/light-only.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=104-20260821i" />
   <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
        page frame both views consume. It has to outrank the base layers, which
        reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
        shorthands, so source order is load-bearing here. -->
-  <link rel="stylesheet" href="assets/interior/layout.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/layout.css?v=104-20260821i" />
   <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
        inside a max-width query, so it cannot reach desktop, and it declares
        no theme tokens, so it cannot outrank light-only.css. -->
@@ -1635,17 +1635,17 @@
        matched. Declaring that same query on the link takes it out of the
        render-blocking set on desktop without changing a single computed style -
        the sheet still loads, and on phones it applies exactly as before. -->
-  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=101-20260821f" />
+  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=104-20260821i" />
   <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
        label off its plate, an overlay parked on the contact links). No theme
        tokens, so it cannot outrank light-only.css's colour pins. -->
-  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=104-20260821i" />
   <!-- Loaded LAST, after fit-desktop.css: the Tools row under Capabilities. The
        block it joins is styled from four layers that all reach
        `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
        this file both mirrors that weight and loads after them. Glyphs are inline
        path data — no icon font, no sprite, no second third-party origin. -->
-  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=104-20260821i" />
   <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
        moved out of the book to flank it. They are styled from four layers of
        project-library.css, three of them with !important on the same
@@ -1653,13 +1653,17 @@
        them. It declares no theme tokens and no transform on the animated
        elements, so it cannot outrank light-only.css or collide with
        book-motion.css. See the file header. -->
-  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=104-20260821i" />
 
   <!-- Ghost bookcase behind the library. Declares one class on one element
        it creates itself, at z-index -1 inside a section that already owns a
        stacking context — it cannot collide with any library layer, so load
        order against them does not matter. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=104-20260821i" />
+
+  <!-- Monochrome SVG project marks. Loaded before page-turn.css so the book
+       motion layer remains the final owner of cover transforms. -->
+  <link rel="stylesheet" href="assets/project-library/project-icons.css?v=104-20260821i" />
 
   <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
        works ([data-state="turning-forward"|"turning-backward"]), and nothing
@@ -1668,7 +1672,7 @@
        animates `transform` only on an element the script leaves alone in those
        two states, so it cannot collide with animateStableBookOpen or with
        book-motion.css's rotate/translate split. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/page-turn.css?v=101-20260821f" />
+  <link rel="stylesheet" href="assets/interior/page-turn.css?v=104-20260821i" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -2165,20 +2169,20 @@
             <div class="pub-group">
               <h3 class="pub-group-title">2024<span class="pub-group-n" aria-hidden="true">5</span></h3>
             <div class="item reveal" data-year="2024">
-              <p class="item-desc"><span class="pub-n">9</span>Choi, E., <span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2024). <span class="paper-title">Prompting-based LLM framework for ethical decision-making in the trolley dilemma: Embedding Hofstede's cultural dimensions theory (PLETH).</span> <span class="venue">Korean Artificial Intelligence Association Fall Conference 2024, Poster 38.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
-              <p class="pub-value cv-summary"><span lang="en">I co-authored PLETH, a cultural-prompting framework that improved cultural relevance and consistency but exposed ethical tradeoffs when cultural priorities conflicted with human-rights norms.</span><span lang="ko">문화 관련성과 일관성을 높이는 프롬프팅 프레임워크 PLETH를 공동 연구했으며, 문화적 우선순위가 인권 규범과 충돌할 때 발생하는 윤리적 상충을 확인했습니다.</span></p>
+              <p class="item-desc"><span class="pub-n">9</span>Choi, E., <span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2024). <span class="paper-title">Prompting-based LLM framework for ethical decision-making in the trolley dilemma: Embedding Hofstede's cultural dimensions theory (PLETH).</span> <span class="venue">Korean Artificial Intelligence Association Fall Conference 2024, Poster 38.</span> <span class="pub-role"><span lang="en">(Co-first author)</span><span lang="ko">(공동 제1저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">As co-first author, I co-led the development of PLETH, a cultural-prompting framework that improved cultural relevance and consistency while exposing ethical tradeoffs when cultural priorities conflicted with human-rights norms.</span><span lang="ko">공동 제1저자로서 문화 관련성과 일관성을 높이는 문화 프롬프팅 프레임워크 PLETH의 개발을 공동 주도했으며, 문화적 우선순위가 인권 규범과 충돌할 때 발생하는 윤리적 상충을 확인했습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2024">
-              <p class="item-desc"><span class="pub-n">10</span>Eum, K., Park, E., <span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2024). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034" target="_blank" rel="noopener noreferrer"><span class="paper-title">GAIA: A game AI assistant service framework integrating problem-solving and emotion regulation strategies.</span></a> <span class="venue">Korea Computer Graphics Society Conference 2024, 103–104.</span> <span class="pub-role"><span lang="en">(One of the first three equal contributors)</span><span lang="ko">(앞의 세 동등기여 저자 중 한 명)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
-              <p class="pub-value cv-summary"><span lang="en">As an equal contributor, I helped design a GAIA framework that separates problem-solving from emotion-regulation support instead of forcing every player difficulty through one retrieval pipeline.</span><span lang="ko">동등기여 저자로서 모든 플레이 어려움을 하나의 검색 파이프라인으로 처리하지 않고 문제 해결과 감정 조절 지원을 분리하는 GAIA 프레임워크를 설계했습니다.</span></p>
+              <p class="item-desc"><span class="pub-n">10</span>Eum, K., Park, E., <span class="pub-author-me">Chae, J.</span>, &amp; Doh, Y. Y. (2024). <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034" target="_blank" rel="noopener noreferrer"><span class="paper-title">GAIA: A game AI assistant service framework integrating problem-solving and emotion regulation strategies.</span></a> <span class="venue">Korea Computer Graphics Society Conference 2024, 103–104.</span> <span class="pub-role"><span lang="en">(Co-first author)</span><span lang="ko">(공동 제1저자)</span></span> <a class="pub-link" href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11866034" target="_blank" rel="noopener noreferrer">DBpia ↗</a></p>
+              <p class="pub-value cv-summary"><span lang="en">As co-first author, I co-designed a GAIA framework that separates problem-solving from emotion-regulation support instead of forcing every player difficulty through one retrieval pipeline.</span><span lang="ko">공동 제1저자로서 모든 플레이 어려움을 하나의 검색 파이프라인으로 처리하지 않고 문제 해결과 감정 조절 지원을 분리하는 GAIA 프레임워크를 공동 설계했습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2024">
               <p class="item-desc"><span class="pub-n">11</span>Park, E., <span class="pub-author-me">Chae, J.</span>, Kim, K., Yi, H. W., Lootah, M. K., &amp; Doh, Y. Y. (2024). <span class="paper-title">Challenges and opportunities of game NPC research using LLM: A scoping review.</span> <span class="venue">Korea Game Society Spring Conference 2024, 165–170.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
               <p class="pub-value cv-summary"><span lang="en">I co-authored a scoping review showing that adding an LLM is not a design rationale in itself: hallucination, latency, memory, and evaluation remained unresolved across six early NPC studies.</span><span lang="ko">초기 LLM 기반 NPC 연구 6편을 검토해 언어모델 도입 자체는 설계 근거가 될 수 없으며 환각·지연·기억·평가 문제가 여전히 남아 있음을 정리했습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2024">
-              <p class="item-desc"><span class="pub-n">12</span>Kim, Y. B., &amp; <span class="pub-author-me">Chae, J.</span> (2024). <span class="paper-title">A technical literature review of distributed management structure: Focusing on the multi-label system of HYBE Co., Ltd.</span> <span class="venue">Korea Society of Technology Innovation Spring Conference 2024, Abstract Book, 69.</span> <span class="pub-role"><span lang="en">(Second author)</span><span lang="ko">(제2저자)</span></span></p>
-              <p class="pub-value cv-summary"><span lang="en">I co-authored a technical review that frames HYBE's multi-label system as a decentralized operating model shaped by decision rights, creative autonomy, shared infrastructure, and coordination.</span><span lang="ko">HYBE 멀티레이블 체계를 의사결정권·창작 자율성·공유 인프라·조정 구조로 이루어진 분권형 운영모델로 해석한 기술 문헌 검토를 공동 집필했습니다.</span></p>
+              <p class="item-desc"><span class="pub-n">12</span>Kim, Y. B., &amp; <span class="pub-author-me">Chae, J.</span> (2024). <span class="paper-title">A technical literature review of distributed management structure: Focusing on the multi-label system of HYBE Co., Ltd.</span> <span class="venue">Korea Society of Technology Innovation Spring Conference 2024, Abstract Book, 69.</span> <span class="pub-role"><span lang="en">(Corresponding author)</span><span lang="ko">(교신저자)</span></span></p>
+              <p class="pub-value cv-summary"><span lang="en">As corresponding author, I co-authored a technical review that frames HYBE's multi-label system as a decentralized operating model shaped by decision rights, creative autonomy, shared infrastructure, and coordination.</span><span lang="ko">교신저자로서 HYBE 멀티레이블 체계를 의사결정권·창작 자율성·공유 인프라·조정 구조로 이루어진 분권형 운영모델로 해석한 기술 문헌검토를 공동 집필했습니다.</span></p>
             </div>
             <div class="item reveal" data-year="2024">
               <p class="item-desc"><span class="pub-n">13</span>Kim, Y. B., &amp; <span class="pub-author-me">Chae, J.</span> (2024). <span class="paper-title">From BigHit to HYBE: Sentiment analysis and strategic transition through news data.</span> <span class="venue">Korea Society for Innovation Management &amp; Economics Summer Conference 2024, Abstract Book, 73.</span> <span class="pub-role"><span lang="en">(Corresponding author)</span><span lang="ko">(교신저자)</span></span></p>
@@ -2511,12 +2515,13 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=101-20260821f"></script>
-  <script defer src="assets/project-library/work-content.js?v=101-20260821f"></script>
-  <script defer src="assets/interior/ripple.js?v=101-20260821f"></script>
-  <script defer src="assets/project-library/project-library.js?v=101-20260821f"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=101-20260821f"></script>
-  <script defer src="assets/interior/shelf-field.js?v=101-20260821f"></script>
+  <script defer src="assets/project-library/work-designs.js?v=104-20260821i"></script>
+  <script defer src="assets/project-library/work-content.js?v=104-20260821i"></script>
+  <script defer src="assets/project-library/project-icons.js?v=104-20260821i"></script>
+  <script defer src="assets/interior/ripple.js?v=104-20260821i"></script>
+  <script defer src="assets/project-library/project-library.js?v=104-20260821i"></script>
+  <script defer src="assets/interior/fit-spine-labels.js?v=104-20260821i"></script>
+  <script defer src="assets/interior/shelf-field.js?v=104-20260821i"></script>
   <script defer>
     // Touch feedback from the pointer origin, on the controls that are actually
     // pressed. The book spines get max:2 - a shelf tap is a single deliberate
