@@ -206,7 +206,8 @@ def run(states, viewports, headed=False):
                     page.goto(base + path, wait_until="load")
                     page.wait_for_timeout(400)
                     if body_class:
-                        page.evaluate("(c) => document.body.classList.add(c)", body_class)
+                        page.locator('#langToggle').click()
+                        page.wait_for_function("document.documentElement.lang === 'ko'")
                         page.wait_for_timeout(250)
 
                     report = audit_page(page, label, audit_src)

@@ -1602,30 +1602,30 @@
       a::after { content: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="assets/interior/ripple.css?v=106-20260821k" />
-  <link rel="stylesheet" href="assets/project-library/project-library.css?v=106-20260821k" />
-  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/ripple.css?v=107-20260908a" />
+  <link rel="stylesheet" href="assets/project-library/project-library.css?v=107-20260908a" />
+  <link rel="stylesheet" href="assets/project-library/project-library-v26.css?v=107-20260908a" />
   <!-- Loaded last: restores the paper identity the inline tokens declare but
        never got to render. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/archive.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/archive.css?v=107-20260908a" />
   <!-- Last: partner-mark sizing has to outrank project-library.css, which
        loads above it. Source order, not specificity, was the problem. -->
-  <link rel="stylesheet" href="assets/interior/logos.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/logos.css?v=107-20260908a" />
   <!-- Last: the open/close was switching non-animatable layout properties, so
        there was nothing to interpolate. This drives it on transform+opacity. -->
-  <link rel="stylesheet" href="assets/interior/book-motion.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/book-motion.css?v=107-20260908a" />
   <!-- After archive.css: archive.css scopes the display serif by language in
        one selector and not the next, which handed Hangul a Latin-only serif
        stack and dropped the Korean name into Batang. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/typography.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/typography.css?v=107-20260908a" />
   <!-- Loaded LAST: pins the light tokens so the three dark blocks still present
        in project-library.css can never take effect. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/light-only.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/light-only.css?v=107-20260908a" />
   <!-- Loaded LAST, after typography.css: declares the spacing scale and the one
        page frame both views consume. It has to outrank the base layers, which
        reach `html[data-view="cv"].ui-v23 #cv-start …` and carry !important
        shorthands, so source order is load-bearing here. -->
-  <link rel="stylesheet" href="assets/interior/layout.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/layout.css?v=107-20260908a" />
   <!-- Loaded LAST, after layout.css: phone-width fit only. Every rule sits
        inside a max-width query, so it cannot reach desktop, and it declares
        no theme tokens, so it cannot outrank light-only.css. -->
@@ -1635,17 +1635,17 @@
        matched. Declaring that same query on the link takes it out of the
        render-blocking set on desktop without changing a single computed style -
        the sheet still loads, and on phones it applies exactly as before. -->
-  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=106-20260821k" />
+  <link rel="stylesheet" media="(max-width: 700px)" href="assets/interior/fit-mobile.css?v=107-20260908a" />
   <!-- Loaded LAST: box-vs-text geometry only (a leaked hanging indent, a spine
        label off its plate, an overlay parked on the contact links). No theme
        tokens, so it cannot outrank light-only.css's colour pins. -->
-  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/fit-desktop.css?v=107-20260908a" />
   <!-- Loaded LAST, after fit-desktop.css: the Tools row under Capabilities. The
        block it joins is styled from four layers that all reach
        `html[data-view="cv"].ui-v23 #cv-start .caps`, three with !important, so
        this file both mirrors that weight and loads after them. Glyphs are inline
        path data — no icon font, no sprite, no second third-party origin. -->
-  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/tech-icons.css?v=107-20260908a" />
   <!-- Loaded LAST, after tech-icons.css: the reader's previous/next controls,
        moved out of the book to flank it. They are styled from four layers of
        project-library.css, three of them with !important on the same
@@ -1653,21 +1653,21 @@
        them. It declares no theme tokens and no transform on the animated
        elements, so it cannot outrank light-only.css or collide with
        book-motion.css. See the file header. -->
-  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/project-library/reader-nav-flank.css?v=107-20260908a" />
 
   <!-- Ghost bookcase behind the library. Declares one class on one element
        it creates itself, at z-index -1 inside a section that already owns a
        stacking context — it cannot collide with any library layer, so load
        order against them does not matter. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/shelf-field.css?v=107-20260908a" />
 
   <!-- Monochrome SVG project marks. Loaded before page-turn.css so the book
        motion layer remains the final owner of cover transforms. -->
-  <link rel="stylesheet" href="assets/project-library/project-icons.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/project-library/project-icons.css?v=107-20260908a" />
 
   <!-- Dormant design study retained for future reuse. `media="not all"` keeps
        it out of the public presentation without deleting the implementation. -->
-  <link rel="stylesheet" media="not all" data-dormant-design="clarity" href="assets/interior/design-clarity.css?v=106-20260821k" />
+  <link rel="stylesheet" media="not all" data-dormant-design="clarity" href="assets/interior/design-clarity.css?v=107-20260908a" />
 
   <!-- Loaded LAST of all: owns .pl-page-turn while the reader moves between
        works ([data-state="turning-forward"|"turning-backward"]), and nothing
@@ -1676,7 +1676,7 @@
        animates `transform` only on an element the script leaves alone in those
        two states, so it cannot collide with animateStableBookOpen or with
        book-motion.css's rotate/translate split. See the file header. -->
-  <link rel="stylesheet" href="assets/interior/page-turn.css?v=106-20260821k" />
+  <link rel="stylesheet" href="assets/interior/page-turn.css?v=107-20260908a" />
   <style media="print">
     html[data-view="cv"] .page#cv-start:focus-visible .name,
     html[data-view="cv"] [id^="cv-work-"]:focus {
@@ -1684,6 +1684,14 @@
       outline-offset: 0 !important;
     }
   </style>
+  <link rel="stylesheet" data-library-style href="assets/project-library/library.css?v=107-20260908a" />
+  <script>
+    // The archive retains its print/CV styling; the library has one screen stylesheet.
+    if (document.documentElement.dataset.view === 'library') {
+      document.querySelectorAll('link[rel="stylesheet"][href^="assets/"]:not([data-library-style])')
+        .forEach((link) => { if (link.media !== 'not all') link.media = 'print'; });
+    }
+  </script>
 </head>
 <body>
   <a class="skip-link" data-view-only="library" data-cv-jump href="?view=cv#cv-start"><span lang="en">Skip to the full CV</span><span lang="ko">전체 이력서로 건너뛰기</span></a>
@@ -1705,56 +1713,14 @@
     </button>
   </div>
 
-  <!-- Simulations hub temporarily disabled. laboratory.html + lab/ still ship;
-       restore this button and the two nav links to re-enable. -->
-
   <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
 
-  <section role="main" class="work-library pl-embedded pl-library-v3 pl-library-v5 pl-library-v6 pl-library-v7 pl-library-v8 pl-library-v9 pl-library-v10 pl-library-v11 pl-library-v12 pl-library-v13 pl-library-v14 pl-library-v15 pl-library-v16 pl-library-v17 pl-library-v18 pl-library-v19 pl-library-v20 pl-library-v21 pl-library-v22 pl-library-v23 pl-library-v24 pl-library-v25 pl-library-v26" id="work-library" aria-labelledby="library-title">
-    <header class="pl-site-header">
-      <div class="pl-brand-lockup">
-        <div class="pl-brand-copy">
-          <h1 class="pl-wordmark" id="site-title">Jihun Chae<span aria-hidden="true">.</span></h1>
-          <p class="pl-hero-role">
-            <span lang="en">Human-centered AI research, product strategy, and systems built around human agency.</span>
-            <span lang="ko">사람의 주체성을 중심에 둔 인간 중심 AI 연구, 제품 전략, 시스템.</span>
-          </p>
-        </div>
-        <div class="pl-library-guide" hidden data-dormant-design="clarity">
-          <div class="pl-library-guide__line" lang="en">
-            <span><strong>6</strong> Projects</span>
-            <span><strong>21</strong> Publications</span>
-            <span><strong>10</strong> Awards</span>
-            <span class="pl-library-guide__action">Choose a spine to open</span>
-          </div>
-          <div class="pl-library-guide__line" lang="ko">
-            <span><strong>6</strong> 프로젝트</span>
-            <span><strong>21</strong> 출판물</span>
-            <span><strong>10</strong> 수상</span>
-            <span class="pl-library-guide__action">책등을 선택해 열기</span>
-          </div>
-        </div>
+  <section role="main" class="work-library catalog" id="work-library" aria-labelledby="site-title">
+    <div class="catalog-shell">
+      <div class="catalog-intro">
+        <h1 id="site-title">Jihun Chae</h1>
+        <p><a href="?view=cv">Full CV / 전체 이력서</a></p>
       </div>
-    </header>
-
-    <h2 class="pl-sr-only" id="library-title"><span lang="en">Work Library</span><span lang="ko">작업 라이브러리</span></h2>
-    <p class="pl-sr-only" id="plShelfHint">
-      <span lang="en">All works are visible in one chronological bookcase. Use the arrow keys to browse, Enter to open a volume, and Escape to close it.</span>
-      <span lang="ko">모든 작업이 하나의 연대기 책장에 표시됩니다. 방향키로 탐색하고 Enter로 열며 Escape로 닫습니다.</span>
-    </p>
-    <div class="pl-shell">
-      <div class="pl-stage">
-        <div class="pl-shelf-viewport" id="plShelfViewport" role="region" aria-label="Chronological project, publication, and award bookcase" aria-describedby="plShelfHint" tabindex="-1">
-          <ol class="pl-shelf" id="plShelf"></ol>
-        </div>
-        <p class="pl-book-caption" id="plBookCaption" aria-hidden="true"></p>
-      </div>
-
-      <div class="pl-reading-dock" id="plReadingDock" aria-label="Open book"></div>
-      <p class="pl-status" id="plStatus" role="status" aria-live="polite"></p>
-      <noscript>
-        <p class="pl-noscript"><span lang="en">Enable JavaScript to open the work library. Every project and publication remains available in the full CV below.</span><span lang="ko">작업 라이브러리를 열려면 JavaScript를 활성화하세요. 모든 프로젝트와 출판물은 아래의 전체 이력서에서 확인할 수 있습니다.</span></p>
-      </noscript>
     </div>
   </section>
 
@@ -2459,8 +2425,11 @@
           document.body.classList.toggle('ko', ko);
           document.documentElement.lang = ko ? 'ko' : 'en';
           langLabel.textContent = ko ? 'English' : '한국어';
+          const url = new URL(location.href);
+          if (ko) url.searchParams.set('lang', 'ko'); else url.searchParams.delete('lang');
+          history.replaceState(history.state, '', url);
         };
-        if (reducedMotionQuery.matches) { apply(); return; }
+        if (reducedMotionQuery.matches || document.documentElement.dataset.view === 'library') { apply(); return; }
         // Crossfade: dim, swap language mid-fade, restore. One shared
         // transformation instead of a hard DOM flip.
         document.body.classList.add('lang-fading');
@@ -2472,6 +2441,11 @@
       langBtn.addEventListener('click', () => {
         setLang(!document.body.classList.contains('ko'));
       });
+      if (new URLSearchParams(location.search).get('lang') === 'ko') {
+        document.body.classList.add('ko');
+        document.documentElement.lang = 'ko';
+        langLabel.textContent = 'English';
+      }
 
       // ── Keyboard shortcuts ─────────────────────────────────
       const sectionIds = ['projects', 'awards', 'education', 'publications', 'patents'];
@@ -2533,24 +2507,9 @@
 
     })();
   </script>
-  <script defer src="assets/project-library/work-designs.js?v=106-20260821k"></script>
-  <script defer src="assets/project-library/work-content.js?v=106-20260821k"></script>
-  <script defer src="assets/project-library/project-icons.js?v=106-20260821k"></script>
-  <script defer src="assets/interior/ripple.js?v=106-20260821k"></script>
-  <script defer src="assets/project-library/project-library.js?v=106-20260821k"></script>
-  <script defer src="assets/interior/fit-spine-labels.js?v=106-20260821k"></script>
-  <script defer src="assets/interior/shelf-field.js?v=106-20260821k"></script>
-  <script defer>
-    // Touch feedback from the pointer origin, on the controls that are actually
-    // pressed. The book spines get max:2 - a shelf tap is a single deliberate
-    // pick, not a drum roll - while the chrome buttons keep the stock ceiling.
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!window.Ripple) return;
-      window.Ripple
-        .attach('.pl-volume__trigger', { max: 2 })
-        .attach('.pill-btn')
-        .attach('.pl-cv-jump');
-    });
-  </script>
+  <script defer src="assets/project-library/work-designs.js?v=107-20260908a"></script>
+  <script defer src="assets/project-library/work-content.js?v=107-20260908a"></script>
+  <script defer src="assets/project-library/project-icons.js?v=107-20260908a"></script>
+  <script defer src="assets/project-library/library.js?v=107-20260908a"></script>
 </body>
 </html>

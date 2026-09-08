@@ -1,13 +1,26 @@
 # ji-hun-git.github.io
 
-Personal site of Jihun Chae — an interactive work library (projects, publications,
-awards) plus a CV view and a simulations lab.
+Personal site of Jihun Chae: a bilingual work library (projects, publications,
+awards), a CV view, and a simulations lab.
 
 - `index.html` — the site. `?view=cv` switches from the library to the CV.
 - `laboratory.html` + `lab/` — the simulations hub.
-- `assets/project-library/` — the bookshelf UI (CSS/JS) and its content data.
-- `assets/interior/` — the Ripple interaction, ported to vanilla JS.
+- `assets/project-library/library.css` and `library.js` — the library screen,
+  search and category filters, and native reading dialog.
+- `assets/project-library/work-designs.js` and `work-content.js` — authored,
+  bilingual records. The library combines these with the CV source in `index.html`.
+- `assets/interior/` — styles used by the CV and print view.
 - `tools/` — image build scripts. Re-run after replacing a master image.
+
+The library uses one screen stylesheet. Legacy styles remain active for the CV
+and print, but are print-only on the library route. Its transitions have one
+owner per element: 240ms cover hover, 220ms dialog entrance, 140ms dismissal,
+and 180ms record navigation. Reduced motion and Reader mode bypass animation.
+There are no continuous background effects or simulated page turns.
+
+Direct links use `?work=<slug>`, and `?lang=ko` preserves Korean when navigating
+between the library and CV. Browser Back closes a work opened from the library;
+Forward restores it. A directly opened record closes to the library.
 
 No build step: this is static HTML, CSS and JS served directly by GitHub Pages.
 After editing anything under `assets/`, bump the `?v=` stamp in `index.html` or
@@ -23,9 +36,10 @@ address in commit metadata, or a control that highlights without doing anything.
 ```
 python tools/harness/static_checks.py     # files only; stdlib, no browser, no network
 python tools/harness/run_browser.py       # a real Chromium over all 10 view states
+python tools/harness/library_interactions.py # search, dialog, history, language; five widths
 ```
 
-Both exit non-zero on failure, so either works as a pre-commit hook. After
+All exit non-zero on failure, so they can run as pre-commit checks. After
 bumping a `?v=` stamp, run `static_checks.py --update-stamps` and commit the
 refreshed baseline. `tools/harness/README.md` says what each check exists to
 catch, and records the three measurement mistakes that make a harness report
