@@ -14,8 +14,11 @@ Profile images are supplied portfolio photography. The image build script create
 CV display and structured-data derivatives from the retained master. The bookshelf
 social image is a browser rendering of the site's own design and content.
 
-The 3D book renderer uses Three.js 0.185.1, Copyright 2010-2026 Three.js Authors,
+The 3D book and jet renderers use Three.js 0.185.1, Copyright 2010-2026 Three.js Authors,
 under the MIT license in `vendor/three/LICENSE`. The two minified distribution
 modules are unmodified copies from the official `three` npm package. Their
 license is separate from this repository's CC0 dedication. Book textures render
 the portfolio's own titles and record text at runtime.
+
+The decorative KF-21-inspired aircraft is original procedural geometry. It is
+not an engineering model, an official KAI asset, or an endorsement by KAI.

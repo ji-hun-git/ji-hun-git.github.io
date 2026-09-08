@@ -1,6 +1,9 @@
 # Only the published site files are tracked.
 *
 !.gitignore
+!.gitattributes
+!.github/
+!.github/**
 !.nojekyll
 !index.html
 !interactive.html
@@ -16,5 +19,5 @@
 !lab/**
 !tools/
 !tools/**
-tools/__pycache__/
+**/__pycache__/
 *.pyc

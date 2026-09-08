@@ -1,0 +1,50 @@
+name: Site checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/harness/requirements.txt
+      - name: Install test dependencies
+        run: python -m pip install -r tools/harness/requirements.txt
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+      - name: Test diagnostic privacy
+        run: python -m unittest discover -s tools/harness -p "test_*.py"
+      - name: Check source and release stamps
+        run: python tools/harness/static_checks.py
+      - name: Audit browser layouts and accessibility
+        run: python tools/harness/run_browser.py
+      - name: Check every book reader and navigation
+        run: python tools/harness/library_interactions.py
+      - name: Check responsive CV and print
+        run: python tools/harness/rebuild_checks.py
+      - name: Check book animation and readable handoff
+        run: python tools/harness/book_motion_checks.py
+      - name: Check bilingual integrity and jet interaction
+        run: python tools/harness/jet_copy_checks.py
+      - name: Check simulations
+        run: python tools/harness/lab_checks.py

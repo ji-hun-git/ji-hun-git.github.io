@@ -598,14 +598,14 @@ def check_pii(files, cfg):
                 continue
             findings.append(Finding(
                 ERROR, "pii-email", rel, line_of(text, m.start()),
-                "email address '%s' is not on the public-contact allowlist" % addr,
+                "email address is not on the public-contact allowlist (value redacted)",
                 "remove it, or add it to harness.config.json if it is meant to be public",
             ))
         for name, pat, why in PII_PATTERNS:
             for m in pat.finditer(text):
                 findings.append(Finding(
                     ERROR, "pii-" + name, rel, line_of(text, m.start()),
-                    "%s: %s" % (why, m.group(0)[:60]),
+                    "%s (value redacted)" % why,
                     "remove before this reaches a public repository",
                 ))
     return findings
@@ -1098,7 +1098,7 @@ def check_git_identities(cfg):
             continue
         findings.append(Finding(
             WARN, "git-identity", "(git history)", 0,
-            "%d commit records carry the address '%s'" % (n, email),
+            "%d commit identity records carry a non-allowlisted address (value redacted)" % n,
             "future commits: git config user.email "
             "'90397147+ji-hun-git@users.noreply.github.com'. Past commits can only "
             "be changed by rewriting history and force-pushing.",
