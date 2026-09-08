@@ -127,6 +127,94 @@
       anchor.href = url.href;
     }
   });
+  const flightPreference = matchMedia("(prefers-reduced-motion: reduce)");
+  const flightTarget =
+    '[data-pl-book="camouflage-effectiveness"], #cv-work-camouflage-effectiveness';
+  let jetModule,
+    jetFlight,
+    jetTimer,
+    jetEpoch = 0,
+    lastFlight = -Infinity;
+  const flightAllowed = () =>
+    !flightPreference.matches &&
+    !document.body.classList.contains("reader") &&
+    !document.hidden;
+  const stopFlyby = () => {
+    jetEpoch++;
+    clearTimeout(jetTimer);
+    jetFlight?.cancel();
+    jetFlight = null;
+  };
+  const requestFlyby = (target, replay = false) => {
+    if (!flightAllowed() || (!replay && performance.now() - lastFlight < 7000))
+      return;
+    stopFlyby();
+    const epoch = jetEpoch;
+    jetTimer = setTimeout(
+      async () => {
+        jetModule ||= import("./jet-flyby.js?v=112-20260908r2").catch(
+          () => null,
+        );
+        const module = await jetModule;
+        if (
+          !module ||
+          epoch !== jetEpoch ||
+          !flightAllowed() ||
+          !target.isConnected
+        )
+          return;
+        const reader = target.closest("dialog");
+        if (
+          (!replay && document.querySelector("dialog[open]")) ||
+          (replay && !reader?.open)
+        )
+          return;
+        try {
+          const rect = target.getBoundingClientRect();
+          jetFlight = module.playJetFlyby(
+            reader || document.body,
+            replay ? undefined : rect.top + rect.height / 2,
+          );
+          lastFlight = performance.now();
+        } catch {
+          // The project and its reader remain usable without WebGL.
+        }
+      },
+      replay ? 0 : 180,
+    );
+  };
+  document.addEventListener("pointerover", (event) => {
+    const target = event.target.closest(flightTarget);
+    if (
+      event.pointerType === "mouse" &&
+      target &&
+      !target.contains(event.relatedTarget)
+    )
+      requestFlyby(target);
+  });
+  document.addEventListener("pointerout", (event) => {
+    const target = event.target.closest(flightTarget);
+    if (target && !target.contains(event.relatedTarget) && !jetFlight)
+      stopFlyby();
+  });
+  document.addEventListener("focusin", (event) => {
+    const target = event.target.closest(flightTarget);
+    if (target && target.matches(":focus-visible")) requestFlyby(target);
+  });
+  document.addEventListener("focusout", (event) => {
+    if (event.target.closest(flightTarget) && !jetFlight) stopFlyby();
+  });
+  document.addEventListener("pointerdown", stopFlyby, { passive: true });
+  document.addEventListener("visibilitychange", stopFlyby);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") stopFlyby();
+  });
+  addEventListener("popstate", stopFlyby);
+  addEventListener("pagehide", stopFlyby);
+  flightPreference.addEventListener("change", stopFlyby);
+  new MutationObserver(() => {
+    if (!flightAllowed()) stopFlyby();
+  }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   // CV deep links use the same stable record IDs even when the library is not mounted.
   if (document.documentElement.dataset.view === "cv") {
     const target = document.getElementById(
@@ -160,7 +248,7 @@
   const loadBookMotion = () => {
     if (reduced.matches || document.body.classList.contains("reader"))
       return Promise.resolve(null);
-    motionModule ||= import("./book-motion.js?v=111-20260908r2").catch(
+    motionModule ||= import("./book-motion.js?v=112-20260908r2").catch(
       () => null,
     );
     return motionModule;
@@ -274,7 +362,13 @@
   );
   const close = button("×", "catalog-icon", () => closeReader());
   close.dataset.plAction = "close";
-  readerControls.append(readerLanguage, close);
+  const replayFlight = button("", "catalog-icon catalog-flyby-replay", () =>
+    requestFlyby(replayFlight, true),
+  );
+  replayFlight.dataset.plAction = "flyby";
+  const aircraftIcon = window.PROJECT_LIBRARY_ICONS?.create("kf21");
+  if (aircraftIcon) replayFlight.append(aircraftIcon);
+  readerControls.append(replayFlight, readerLanguage, close);
   readerHead.append(readerType, readerControls);
   const readerBody = node("div", "catalog-reader-body");
   const readerFooter = node("div", "catalog-reader-footer");
@@ -400,8 +494,8 @@
       return [
         [pair("The question", "핵심 질문"), e.question],
         [pair("The problem", "문제"), e.problem || s.research],
-        [pair("My responsibility", "나의 책임"), e.responsibility],
-        [pair("What was built", "구축한 것"), e.build || s.artifact],
+        [pair("My role", "담당 역할"), e.responsibility],
+        [pair("Implementation", "구현 내용"), e.build || s.artifact],
         [pair("Design decisions", "설계 결정"), e.decision || s.design],
         [pair("Evaluation", "평가"), e.validation || e.evaluation],
         [pair("Delivery", "구축 성과"), e.outcomeSystem],
@@ -417,7 +511,7 @@
       return [
         [pair("Authorship", "저자 역할"), work.role],
         [pair("Research question", "연구 질문"), e.question],
-        [pair("Knowledge gap", "지식 공백"), e.gap],
+        [pair("Research gap", "기존 연구의 한계"), e.gap],
         [pair("Contribution", "연구 기여"), e.contribution],
         [pair("Method", "방법"), e.method],
         [
@@ -429,7 +523,7 @@
         [pair("Finding 03", "결과 03"), e.finding3],
         [pair("Implications", "시사점"), e.implication || e.implications],
         [pair("Scope", "범위"), e.scope],
-        [pair("Full citation", "전체 인용"), work.citation],
+        [pair("Citation", "서지 정보"), work.citation],
       ];
     return [
       [
@@ -439,14 +533,21 @@
       [pair("Selection context", "선발 과정"), e.selectionContext],
       [pair("The challenge", "과제"), e.challenge],
       [pair("My contribution", "나의 기여"), e.contribution || s.artifact],
-      [pair("Selection criteria", "선발 기준"), e.criteria],
+      [pair("Recognition scope", "수상·선정 범위"), e.criteria],
       [pair("What this recognizes", "인정받은 역량"), e.validates],
       [pair("Hosts and sponsors", "주최 및 후원"), work.partners],
     ];
   };
   const renderReader = () => {
     if (!selected) return;
+    stopFlyby();
     const w = selected;
+    replayFlight.hidden = w.slug !== "camouflage-effectiveness";
+    replayFlight.setAttribute(
+      "aria-label",
+      text(pair("Replay flyby", "비행 애니메이션 재생")),
+    );
+    replayFlight.title = replayFlight.ariaLabel;
     dialog.dataset.type = w.type;
     readerBody.replaceChildren();
     const title = node("h2", "", w.awardName || w.title);
@@ -557,6 +658,7 @@
     readerBody.scrollTop = 0;
   };
   const openReader = (work, trigger = null, fromHistory = false) => {
+    stopFlyby();
     transitionId++;
     stopBookMotion();
     dialogAnimation?.cancel();
@@ -619,6 +721,7 @@
       ).focus({ preventScroll: true });
   };
   const closeReader = async (fromHistory = false) => {
+    stopFlyby();
     if (!dialog.open || closing) return;
     closing = true;
     const token = ++transitionId;

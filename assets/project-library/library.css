@@ -550,9 +550,43 @@ html.catalog-reading {
   border-bottom: 1px solid var(--line);
   flex: none;
 }
+.kf21-flyby {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  contain: strict;
+}
+.kf21-flyby[data-local="true"] {
+  position: absolute;
+}
+.catalog-flyby-replay .pl-project-icon {
+  width: 26px;
+  height: 26px;
+}
+.catalog-flyby-replay[hidden],
+body.reader .catalog-flyby-replay {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce), print {
+  .kf21-flyby,
+  .catalog-reader .catalog-flyby-replay {
+    display: none;
+  }
+}
 .catalog-reader-controls {
   display: flex;
+  flex: none;
   gap: 8px;
+}
+.catalog-reader-controls > button {
+  flex: none;
+  white-space: nowrap;
+}
+@media (max-width: 360px) {
+  .catalog-reader-toolbar > .catalog-meta > .pl-project-icon {
+    display: none;
+  }
 }
 .catalog-reader-footer {
   border-top: 1px solid var(--line);

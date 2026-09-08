@@ -18,6 +18,26 @@
       "aria-label",
       ko ? "Read in English" : "한국어로 읽기",
     );
+    document.title =
+      params.get("view") === "cv"
+        ? ko
+          ? "채지훈 | 이력서"
+          : "Jihun Chae | Curriculum Vitae"
+        : ko
+          ? "채지훈 | 인간 중심 AI"
+          : "Jihun Chae | Human-Centered AI";
+    [
+      [".site-brand", "Jihun Chae home", "채지훈 홈"],
+      [".site-navigation", "Main navigation", "주 메뉴"],
+      [".mobile-nav", "Sections", "이력서 항목"],
+      [".cv-index", "CV overview", "이력서 개요"],
+      ["#pubFilter", "Filter publications by year", "연도별 논문 필터"],
+      ["#ttsToggle", "Toggle reader mode", "읽기 모드 전환"],
+    ].forEach(([selector, en, korean]) => {
+      document
+        .querySelector(selector)
+        ?.setAttribute("aria-label", ko ? korean : en);
+    });
     const url = new URL(location.href);
     if (ko) url.searchParams.set("lang", "ko");
     else url.searchParams.delete("lang");
@@ -116,6 +136,10 @@
               item.dataset.year !== button.dataset.year,
           ),
         );
+      // Keep the heading in view when filtering interrupts a long anchor scroll.
+      document
+        .getElementById("publications")
+        ?.scrollIntoView({ behavior: "instant", block: "start" });
     });
   });
   const nav = document.querySelector(".mobile-nav");

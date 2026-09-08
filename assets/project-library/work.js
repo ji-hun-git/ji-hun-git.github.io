@@ -48,12 +48,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "도출된 개입 시점, 모달리티, 개인화, 자동화 원칙은 ACM IUI 2026에 게재되었습니다.",
         },
         lesson: {
-          en: "Better accessibility did not come from answering more questions. It came from matching what the assistant could sense, express, and do to how each player could perceive and act.",
-          ko: "더 많은 질문에 답하는 것만으로 접근성이 높아지지는 않았습니다. 어시스턴트의 감지·표현·실행 방식을 각 플레이어의 지각과 행동 방식에 맞추는 것이 핵심이었습니다.",
+          en: "Accessible assistance depends on matching what the system can perceive, communicate, and do to each player's needs.",
+          ko: "접근성을 높이려면 시스템의 인식·표현·실행 방식을 각 플레이어의 필요에 맞춰야 합니다.",
         },
         problem: {
-          en: "Players with disabilities encounter information, perception, and execution gaps during settings and live play. Existing accessibility options cover known cases, but a text-first overlay can still fail when support conflicts with screen readers, vision, motor capacity, or the pace of play.",
-          ko: "장애인 플레이어는 설정과 실제 플레이에서 정보·지각·실행의 간극을 겪습니다. 기존 접근성 옵션은 알려진 사례를 다루지만, 텍스트 중심 오버레이는 스크린 리더·시각·운동 능력·플레이 속도와 충돌할 때 다시 장벽이 됩니다.",
+          en: "Players with disabilities encounter barriers to accessing information, perceiving game state, and entering commands. A text-based assistant can introduce new barriers when it conflicts with screen readers, input needs, or the pace of play.",
+          ko: "장애인 플레이어는 정보를 얻고, 게임 상태를 파악하고, 명령을 입력하는 과정에서 장벽을 겪습니다. 텍스트 중심 어시스턴트도 스크린 리더나 입력 방식, 플레이 속도와 맞지 않으면 새로운 장벽이 될 수 있습니다.",
         },
         build: {
           en: "I developed a domain-grounded research assistant with game-specific knowledge, RAG, text and voice interaction, optional visual context, interaction logging, and an operator workflow for studies and iteration.",
@@ -68,12 +68,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "프로젝트 전반 약 30명 심층 인터뷰와 협력단체를 통한 약 200명 설문을 진행했습니다.",
         },
         outcomeSystem: {
-          en: "A working GAIA research platform and a modular Explainer-Reader-Surrogate roadmap were handed forward for continued development.",
-          ko: "작동하는 GAIA 연구 플랫폼과 Explainer-Reader-Surrogate 모듈형 발전 로드맵을 구축해 후속 개발로 인계했습니다.",
+          en: "A working GAIA research platform and a modular development roadmap for the Explainer, Reader, and Surrogate roles.",
+          ko: "작동하는 GAIA 연구 플랫폼과 Explainer·Reader·Surrogate 역할별 후속 개발 로드맵을 마련했습니다.",
         },
         outcomeEvidence: {
-          en: "The studies showed strong value for information gaps, but exposed modality mismatch for perception and input burden for execution. The work produced peer-reviewed outputs at CHI, IUI, HCI Korea, and Korean journals and conferences.",
-          ko: "정보 간극에는 높은 효용을 보였지만 지각에서는 출력 모달리티 불일치, 실행에서는 입력 부담을 확인했습니다. 결과는 CHI·IUI·HCI Korea 및 국내 학술지·학회 논문으로 이어졌습니다.",
+          en: "The studies identified the value of information support, mismatches in how guidance is presented, and the burden of entering commands. Findings led to publications at CHI, IUI, HCI Korea, and Korean journals and conferences.",
+          ko: "연구를 통해 정보 지원의 가치, 안내 방식의 불일치, 명령 입력 부담을 확인했습니다. 결과는 CHI·IUI·HCI Korea와 국내 학술지·학회 발표로 이어졌습니다.",
         },
         outcomeValue: {
           en: "The project connects KAIST research with disability communities, the National Rehabilitation Center, game-industry partners, and international accessibility organizations.",
@@ -87,8 +87,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "GAIA",
       spineVenue: "KAIST",
       subtitle: {
-        en: "A conversational AI assistant designed around each player's immediate accessibility barrier.",
-        ko: "플레이어가 마주한 순간의 접근성 장벽에 맞춰 지원 방식을 바꾸는 대화형 AI",
+        en: "Conversational AI that adapts its support to the accessibility barrier a player is facing.",
+        ko: "플레이어가 겪는 접근성 장벽에 맞춰 지원 방식을 조정하는 대화형 AI입니다.",
       },
     },
     {
@@ -110,11 +110,11 @@ window.PROJECT_LIBRARY_DESIGNS = {
         },
         design: {
           en: "Chose deterministic rules and statistics where LLM variability would weaken auditability.",
-          ko: "LLM의 변동성이 감사 가능성을 약화하는 구간에는 결정론적 규칙과 통계를 선택했습니다.",
+          ko: "LLM의 응답 변동성 때문에 결과를 검증하기 어려운 구간에는 결정론적 규칙과 통계를 적용했습니다.",
         },
         artifact: {
-          en: "A version-controlled, production-oriented engine for automated data-quality measurement and verification.",
-          ko: "데이터 품질 측정·검증을 자동화하는 버전 관리형 운영 지향 엔진입니다.",
+          en: "A version-controlled engine for automated data-quality measurement and verification.",
+          ko: "데이터 품질 측정과 검증을 자동화하고 버전별 변경 이력을 관리하는 엔진입니다.",
         },
         evidence: {
           en: "I tested the engine on enterprise data and documented module- and test-level results in a formal report.",
@@ -124,7 +124,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       editorial: {
         question: {
           en: "How can we automate enterprise data-quality verification without trading away determinism, auditability, or reproducibility?",
-          ko: "결정론·감사 가능성·재현성을 포기하지 않고 기업 데이터 품질 검증을 어떻게 자동화할 수 있을까?",
+          ko: "결과의 일관성과 검증 가능성, 재현성을 유지하면서 기업 데이터 품질 검증을 어떻게 자동화할 수 있을까?",
         },
         responsibility: {
           en: "I independently built the DQM v1.0 engine within SKAIWORLDWIDE's 2024–2026 government-funded R&D project. I owned rule translation, architecture, implementation, version control, testing, and verification for the engine; the broader funded project remained a team effort.",
@@ -135,12 +135,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "실제 기업 데이터로 릴리스를 검증하고 공식 검증 보고서에 기록했습니다.",
         },
         outcome: {
-          en: "I prepared a version-controlled, production-oriented engine and formal results package for technical handoff.",
-          ko: "버전 관리형 운영 지향 엔진과 공식 결과 패키지를 기술 인계용으로 준비했습니다.",
+          en: "I prepared the version-controlled engine and its verification report for technical handoff.",
+          ko: "버전 관리 체계를 갖춘 엔진과 검증 보고서를 작성해 기술 인계를 준비했습니다.",
         },
         lesson: {
-          en: "The strongest engineering decision was not adding more AI, but selecting the smallest reliable mechanism for each decision boundary.",
-          ko: "가장 중요한 엔지니어링 결정은 AI를 더 많이 적용하는 것이 아니라 각 판단 지점에 가장 단순하고 신뢰할 수 있는 방식을 선택하는 일이었습니다.",
+          en: "Reliable automation starts with choosing a method whose decisions can be reproduced and inspected.",
+          ko: "신뢰할 수 있는 자동화는 판단 과정을 재현하고 검토할 수 있는 방법을 선택하는 데서 시작합니다.",
         },
         problem: {
           en: "Operational teams must apply many quality rules to real data, but manual checks are slow and difficult to reproduce. A probabilistic model can generate plausible explanations while still weakening the exact audit trail the client needs.",
@@ -159,8 +159,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "기업 데이터셋으로 엔진을 시험하고 동작과 결과를 공식 보고서에 정리했습니다. 제 역할은 기술 구현과 검증까지였으며 최종 고객 인수는 담당 범위 밖이었습니다.",
         },
         outcomeSystem: {
-          en: "A production-oriented, versioned verification engine and a formal results report prepared for handoff.",
-          ko: "운영 지향 버전형 검증 엔진과 인수인계를 위해 작성한 공식 결과보고서",
+          en: "A version-controlled verification engine, with a formal report documenting its results.",
+          ko: "버전 관리형 검증 엔진과 검증 결과를 정리한 공식 보고서입니다.",
         },
         outcomeEvidence: {
           en: "Each rule-level result can be reproduced and inspected instead of being accepted as an opaque model judgment.",
@@ -168,7 +168,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
         },
         outcomeValue: {
           en: "The engine provides an auditable foundation for recurring data-quality checks and future rule expansion.",
-          ko: "반복적인 데이터 품질 검사와 향후 규칙 확장을 위한 감사 가능한 기반을 마련했습니다.",
+          ko: "반복적인 데이터 품질 검사와 향후 규칙 확장을 위해 처리 과정을 추적하고 검증할 수 있는 기반을 마련했습니다.",
         },
       },
       palette: "ink",
@@ -178,8 +178,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "DQM",
       spineVenue: "IND",
       subtitle: {
-        en: "A deterministic data-quality engine built for repeatable and auditable verification.",
-        ko: "반복 가능하고 감사 가능한 검증을 위해 개발한 결정론적 데이터 품질 엔진",
+        en: "Automated data-quality checks with reproducible results and a clear audit trail.",
+        ko: "데이터 품질 검사를 자동화하고 결과와 판단 과정을 재현할 수 있는 엔진입니다.",
       },
     },
     {
@@ -219,7 +219,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
         },
         responsibility: {
           en: "As a student researcher and game designer, I joined preparatory fieldwork, participatory workshops, design synthesis, mechanics and narrative development, and the return session for community review.",
-          ko: "학생연구원·게임 디자이너로 사전 현장 조사, 참여형 워크숍, 설계 종합, 메커닉·내러티브 개발, 공동체 검토를 위한 재방문 세션에 참여했습니다.",
+          ko: "학생연구원과 게임 디자이너로서 현장 조사, 참여형 워크숍, 연구 결과 종합, 게임 규칙과 이야기 개발에 참여했습니다. 이후 공동체를 다시 방문해 설계안을 함께 검토했습니다.",
         },
         evaluation: {
           en: "The game concept and visual journey were grounded through two co-design cycles with six Haenyeo and one Haenam.",
@@ -230,16 +230,16 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "공동체가 검토한 게임 콘셉트·서사·메커니즘·시각적 여정과 돌봄 중심 설계 방법을 만들었으며 플레이 가능한 빌드는 후속 과제입니다.",
         },
         problem: {
-          en: "Jeju Haenyeo knowledge is ecological, embodied, and intergenerational. Static documentation can preserve artifacts, but it struggles to communicate the lived logic of breath, mutual responsibility, environmental change, and community survival.",
-          ko: "제주 해녀의 지식은 생태적·체화적·세대 간 지식입니다. 정적 기록은 자료를 보존할 수 있지만 숨, 상호 책임, 환경 변화, 공동체 생존의 살아 있는 논리를 전달하기 어렵습니다.",
+          en: "Jeju Haenyeo pass on ecological knowledge through diving, daily practice, and relationships across generations. Written records alone cannot fully convey how breathing, mutual responsibility, and environmental change shape that work.",
+          ko: "제주 해녀는 물질과 일상의 실천, 세대 간 관계를 통해 생태 지식을 전합니다. 호흡과 상호 책임, 환경 변화가 작업에 미치는 영향을 문서만으로 온전히 전달하기는 어렵습니다.",
         },
         build: {
           en: "A slide-based and visual-journey concept for The Golden Tewak, with a breath-centered core loop, diving tasks, community decisions, characters, environmental dilemmas, and the Inspiration Game Design with Care method.",
           ko: "숨 중심 코어 루프, 물질 과업, 공동체 의사결정, 인물, 환경 딜레마를 담은 The Golden Tewak 시각 콘셉트와 Inspiration Game Design with Care 방법을 만들었습니다.",
         },
         decision: {
-          en: "We treated relationship building and interpretation as design work. The team returned repeatedly to community narratives and used an insider-interpreter to preserve cultural meaning beyond literal translation.",
-          ko: "관계 형성과 해석 자체를 설계 작업으로 보았습니다. 공동체 서사로 반복해서 돌아가고 내부자 통역자의 문화적 해석을 통해 문자 번역 이상의 의미를 보존했습니다.",
+          en: "We made relationship building part of the design process. Returning to community accounts and working with an interpreter from the community helped preserve meanings that literal translation could miss.",
+          ko: "관계 형성을 설계 과정의 일부로 삼았습니다. 공동체의 이야기를 반복해서 검토하고 지역 문화에 익숙한 통역자와 협력해 직역으로 놓칠 수 있는 의미를 살렸습니다.",
         },
         validation: {
           en: "Evidence came from preparatory meetings, interviews with two senior Haenyeo, two participatory workshop cycles, a four-day design sprint, six Haenyeo plus one Haenam representing three villages and Jeju City, and consultation with Haenyeo Museum experts.",
@@ -247,19 +247,19 @@ window.PROJECT_LIBRARY_DESIGNS = {
         },
         outcomeSystem: {
           en: "A community-reviewed game concept, narrative, mechanics, visual journey, and reusable care-centered design method.",
-          ko: "공동체 검토를 거친 게임 콘셉트·내러티브·메커닉·비주얼 여정과 재사용 가능한 돌봄 중심 설계 방법",
+          ko: "공동체의 검토를 거친 게임 콘셉트, 이야기, 플레이 방식, 시각적 경험을 정리하고 다른 프로젝트에도 적용할 수 있는 돌봄 중심 설계 방법을 제시했습니다.",
         },
         outcomeEvidence: {
           en: "Participants unanimously said it was a game they would play and refined the breathing mechanic, platform direction, art direction, and representation.",
-          ko: "참여자 전원이 직접 플레이하고 싶은 게임이라고 평가했으며 숨 메커닉, 플랫폼, 아트 방향, 재현 방식을 함께 수정했습니다.",
+          ko: "참여자 전원이 직접 플레이하고 싶은 게임이라고 평가했습니다. 숨을 참는 플레이 방식, 플랫폼, 아트 방향, 해녀 문화를 표현하는 방식을 함께 수정했습니다.",
         },
         outcomeValue: {
           en: "The community recognized shared ownership; the Haenyeo Museum identified value for education and international interpretation. A playable prototype remains future work.",
           ko: "공동체는 공동 소유감을 확인했고 해녀박물관은 교육·국제 관람객 해설 도구의 가치를 확인했습니다. 플레이 가능한 프로토타입은 후속 과제입니다.",
         },
         lesson: {
-          en: "The challenge was not digitizing tradition. It was creating enough trust and generative friction for a community to imagine its own future through play.",
-          ko: "핵심은 전통의 디지털화가 아니라 공동체가 놀이를 통해 자신의 미래를 상상할 수 있도록 신뢰와 생산적 긴장을 만드는 일이었습니다.",
+          en: "Co-design required time to build trust, discuss differing interpretations, and let the community shape how its knowledge would be represented.",
+          ko: "공동 설계에는 신뢰를 쌓고 서로 다른 해석을 논의하며, 공동체가 지식의 표현 방식을 직접 결정할 시간이 필요했습니다.",
         },
       },
       palette: "oxide",
@@ -269,8 +269,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "HNY",
       spineVenue: "KAIST",
       subtitle: {
-        en: "The Golden Tewak, a community-authored game concept for carrying living heritage forward.",
-        ko: "살아 있는 유산을 다음 세대로 잇는 공동체 기반 게임 콘셉트, The Golden Tewak",
+        en: "The Golden Tewak: a game concept developed with Haenyeo communities to share their living heritage.",
+        ko: "해녀 공동체와 함께 살아 있는 문화유산을 전하는 게임 콘셉트, The Golden Tewak입니다.",
       },
     },
     {
@@ -333,20 +333,20 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "국제 컨소시엄과 함께 인터페이스를 개발하고 검토했습니다. 저는 적응형 공간 동작과 시각·햅틱 피드백에 집중했으며, 평가는 제 모듈만 분리하지 않고 통합 시스템을 대상으로 진행했습니다.",
         },
         outcomeSystem: {
-          en: "Adaptive spatial and multimodal interaction components for the consortium's real-time XR research stack.",
-          ko: "컨소시엄 실시간 XR 연구 스택을 위한 적응형 공간·멀티모달 상호작용 구성요소",
+          en: "Adaptive spatial behavior and visual-haptic interaction components for the consortium's real-time XR system.",
+          ko: "컨소시엄의 실시간 XR 시스템을 위한 적응형 공간 동작과 시각·햅틱 상호작용 구성요소입니다.",
         },
         outcomeEvidence: {
-          en: "The project established an implemented direction for environment-responsive XR, with my contribution focused on component design and implementation.",
-          ko: "환경 변화에 반응하는 XR의 구현 방향을 구체화했으며, 저는 구성요소의 설계와 구현에 기여했습니다.",
+          en: "The integrated system demonstrated an approach to environment-responsive XR. My contribution focused on component design and implementation.",
+          ko: "통합 시스템을 통해 환경 변화에 대응하는 XR 구현 방식을 구체화했습니다. 저는 구성요소의 설계와 구현을 담당했습니다.",
         },
         outcomeValue: {
           en: "Connected human-centered interface work across KAIST, Fraunhofer, NYU, UniSA, Anipen, and bHaptics.",
           ko: "KAIST·Fraunhofer·NYU·UniSA·Anipen·bHaptics의 인간 중심 인터페이스 연구를 연결했습니다.",
         },
         lesson: {
-          en: "The challenge was not placing content in a room. It was preserving an intelligible relationship between body, space, and feedback as the room changes.",
-          ko: "핵심은 방 안에 콘텐츠를 놓는 일이 아니라 공간이 변해도 몸·공간·피드백의 이해 가능한 관계를 유지하는 일이었습니다.",
+          en: "As a room changes, users still need to understand where virtual content is, how to reach it, and what its feedback means.",
+          ko: "공간이 변해도 사용자는 가상 콘텐츠의 위치, 접근 방법, 피드백의 의미를 이해할 수 있어야 합니다.",
         },
       },
       palette: "plum",
@@ -356,8 +356,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "XR",
       spineVenue: "KAIST",
       subtitle: {
-        en: "Real-time spatial adaptation that keeps virtual content coherent with a changing room.",
-        ko: "변화하는 현실 공간과 가상 콘텐츠의 정합성을 유지하는 실시간 공간 적응",
+        en: "XR interfaces that adjust virtual content as the surrounding physical space changes.",
+        ko: "주변의 물리적 공간 변화에 맞춰 가상 콘텐츠를 조정하는 XR 인터페이스입니다.",
       },
     },
     {
@@ -365,8 +365,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       sourceIndex: 4,
       icon: "kf21",
       shortTitle: {
-        en: "Computer Vision for Camouflage",
-        ko: "위장 분석 컴퓨터 비전",
+        en: "KF-21 Camouflage Study",
+        ko: "KF-21 위장 디자인 연구",
       },
       category: {
         en: "Computer Vision",
@@ -378,8 +378,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "컴퓨터 비전과 시뮬레이션으로 고도·지형·기상별 항공기 피탐성을 분석했습니다.",
         },
         design: {
-          en: "Developed camouflage colorways and pattern configurations for changing conditions.",
-          ko: "변화하는 조건에 대응하는 위장 컬러웨이와 패턴 구성을 설계했습니다.",
+          en: "Developed camouflage color schemes and patterns for different environmental conditions.",
+          ko: "다양한 환경 조건에 맞춰 위장 색상과 패턴을 설계했습니다.",
         },
         artifact: {
           en: "A comparative evaluation pipeline and camouflage proposals for the KF-21 Boramae.",
@@ -396,8 +396,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "주관적 시각 판단에만 의존하지 않고 고도·지형·기상별 위장 색상과 패턴 제안을 어떻게 비교할 수 있을까?",
         },
         responsibility: {
-          en: "As a student researcher, I supported image-based effectiveness analysis and developed colorway and pattern configurations for the HGU-KAI sponsored project.",
-          ko: "학생연구원으로 한동대-KAI 과제에서 영상 기반 효과 분석과 컬러웨이·패턴 구성을 개발했습니다.",
+          en: "As a student researcher on the Handong Global University-KAI project, I developed camouflage color schemes and patterns and supported image-based effectiveness analysis.",
+          ko: "한동대학교와 KAI의 산학 과제에서 학생연구원으로 위장 색상과 패턴을 개발하고 영상 기반 효과 분석을 수행했습니다.",
         },
         evaluation: {
           en: "We compared detectability across altitude, terrain, and weather conditions.",
@@ -409,7 +409,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
         },
         problem: {
           en: "A camouflage scheme that works in one scene can fail under another background or viewing condition. Static reviews do not expose that condition-dependent detectability.",
-          ko: "한 장면에서 유효한 위장안도 다른 배경·관측 조건에서는 실패할 수 있습니다. 정적 검토만으로는 조건 의존적 피탐성을 드러내기 어렵습니다.",
+          ko: "한 장면에서 잘 드러나지 않는 위장 디자인도 배경이나 관측 조건이 바뀌면 쉽게 눈에 띌 수 있습니다. 하나의 이미지만으로 판단하지 않고 여러 환경에서 탐지 가능성을 비교할 필요가 있었습니다.",
         },
         build: {
           en: "A simulation and computer-vision comparison workflow for KF-21 camouflage proposals under varied environmental conditions.",
@@ -424,8 +424,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "제안한 디자인은 산학 과제 안에서 검토되었고 선정된 방향은 과제 결과물에 반영되었습니다. 실제 운용 채택과 현장 성능 평가는 이 연구의 범위에 포함되지 않았습니다.",
         },
         outcomeSystem: {
-          en: "Condition-aware colorway and camouflage pattern proposals supported by a comparative analysis workflow.",
-          ko: "조건별 비교 분석 워크플로에 근거한 컬러웨이·위장 패턴 제안",
+          en: "Camouflage color and pattern proposals supported by comparisons across environmental conditions.",
+          ko: "환경 조건별 비교 분석을 바탕으로 위장 색상과 패턴을 제안했습니다.",
         },
         outcomeEvidence: {
           en: "The work replaced a single-scene aesthetic judgment with repeatable cross-condition comparison.",
@@ -436,8 +436,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "선정된 디자인 방향은 산학 과제 결과물에 반영되었습니다.",
         },
         lesson: {
-          en: "The challenge was not making a pattern look plausible. It was making its effectiveness comparable across the conditions that could invalidate it.",
-          ko: "핵심은 패턴을 그럴듯하게 보이게 하는 것이 아니라 효과를 무효화할 수 있는 조건 전반에서 비교 가능하게 만드는 일이었습니다.",
+          en: "A convincing image is not enough: camouflage proposals need to be compared across the backgrounds and viewing conditions that affect visibility.",
+          ko: "한 장의 이미지보다 중요한 것은 배경과 관측 조건이 달라질 때 위장 효과가 어떻게 변하는지 비교하는 일입니다.",
         },
       },
       palette: "moss",
@@ -447,8 +447,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "KF-21",
       spineVenue: "KAI",
       subtitle: {
-        en: "Computer-vision and simulation studies of detectability across operational conditions.",
-        ko: "운용 조건별 피탐성을 분석한 컴퓨터 비전·시뮬레이션 연구",
+        en: "Comparing KF-21 camouflage designs through image analysis and environmental simulation.",
+        ko: "영상 분석과 환경 시뮬레이션으로 KF-21 위장 디자인을 비교한 연구입니다.",
       },
     },
     {
@@ -483,8 +483,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       },
       editorial: {
         question: {
-          en: "How can roadside sensing track dense traffic while remaining buildable, protectable, and deployable as physical infrastructure?",
-          ko: "도로변 센싱은 제작·보호·배치 가능한 물리 인프라로 유지되면서 고밀도 교통을 어떻게 추적할 수 있을까?",
+          en: "How can roadside sensors track dense traffic while meeting the practical constraints of hardware, enclosure design, and installation?",
+          ko: "도로변 센서가 하드웨어·하우징·설치 조건을 충족하면서 혼잡한 교통 상황을 추적하려면 어떻게 설계해야 할까요?",
         },
         responsibility: {
           en: "I worked across preprocessing, detection-flow and anchor-box tuning, IoT integration, and 3D-printed enclosure development.",
@@ -495,8 +495,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "센싱, 하우징 제작, 도로 장면 탐지를 통합한 연구 프로토타입을 구현했습니다.",
         },
         lesson: {
-          en: "The challenge was not tuning a detector in isolation. It was making model behavior answerable to the realities of the sensor that produces its data.",
-          ko: "핵심은 탐지기를 따로 조정하는 일이 아니라 모델 동작을 데이터를 만드는 센서의 현실 조건에 연결하는 일이었습니다.",
+          en: "Detection performance depends on the whole sensing system, from camera placement and protection to the data the model receives.",
+          ko: "탐지 성능은 모델뿐 아니라 카메라의 배치와 보호, 입력 데이터의 품질을 포함한 전체 센싱 시스템에 달려 있습니다.",
         },
         problem: {
           en: "Road-scene models depend on the quality and position of the sensing hardware that feeds them. Optimizing detection without the enclosure and data path leaves the system undeployable.",
@@ -534,8 +534,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "IoT",
       spineVenue: "HGU",
       subtitle: {
-        en: "A roadside sensing prototype linking enclosure design to an AI detection pipeline.",
-        ko: "하우징 설계와 AI 탐지 파이프라인을 연결한 도로변 센싱 프로토타입",
+        en: "A roadside prototype connecting custom sensing hardware with an AI traffic-tracking pipeline.",
+        ko: "맞춤형 센싱 하드웨어와 AI 교통 객체 추적 파이프라인을 연결한 도로변 프로토타입입니다.",
       },
     },
   ],
@@ -580,8 +580,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "도메인 특화 AI 어시스턴트는 주류 게임 플레이에서 언제·어떻게·누구에게 접근성 장벽을 줄이거나 재생산하는가?",
         },
         gap: {
-          en: "Game AI assistants are usually judged by answer quality or model capability; evidence is limited on how an overlay coexists with assistive tools of players with disabilities, perception, motor capacity, and live play practices.",
-          ko: "게임 AI 어시스턴트는 주로 답변 품질이나 모델 능력으로 평가됐으며, 오버레이가 장애인 플레이어의 보조 기술·지각·운동 능력·실제 플레이 관행과 어떻게 공존하는지에 대한 근거는 부족했습니다.",
+          en: "Game AI assistants are often evaluated for answer quality or model capability. Less is known about how they work alongside assistive technology and the sensory, motor, and practical demands of live play.",
+          ko: "게임 AI 어시스턴트는 주로 답변 품질이나 모델 성능으로 평가됩니다. 보조 기술과 함께 사용할 때, 또는 실제 플레이의 지각·운동·조작 요구에 대응할 때의 경험은 충분히 연구되지 않았습니다.",
         },
         contribution: {
           en: "In my master's thesis, I connect a mixed-methods evaluation of AI-assisted Minecraft play to the Information-Perception-Execution framework and three corresponding assistant roles: Explainer, Reader, and Surrogate.",
@@ -608,8 +608,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "실행 간극에는 더 많은 설명이 아니라 행동 지원이 필요했습니다. 타이핑이나 지시된 동작 자체가 장벽이면 정확한 조언도 도움이 되지 않았습니다.",
         },
         implication: {
-          en: "Evaluate and orchestrate assistant roles by the active gap: explain information, translate perception, or execute only scoped player-authorized actions.",
-          ko: "현재 간극에 따라 역할을 평가·조율해야 합니다. 정보를 설명하고, 지각을 변환하며, 제한된 사용자 승인 행동만 실행해야 합니다.",
+          en: "Match assistance to the barrier: explain information, present it in an accessible form, or carry out specific actions with the player's authorization.",
+          ko: "장벽의 성격에 맞춰 정보를 설명하고, 접근 가능한 방식으로 전달하며, 플레이어가 승인한 범위에서 행동을 지원해야 합니다.",
         },
         scope: {
           en: "One controlled Minecraft study with a disability-community sample; the prototype lacked native screen-reader integration, voice input, and a working Surrogate. Findings do not yet generalize to mobile, novice, or high-twitch multiplayer play.",
@@ -638,8 +638,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "놀이 이론을 AI의 실제 행동에 근거한 관찰 가능한 차원으로 번역했습니다.",
         },
         artifact: {
-          en: "A three-dimension framework for evaluating the ludic competence of game-playing AI.",
-          ko: "게임 AI의 루딕 역량을 평가하는 세 차원 프레임워크를 제안했습니다.",
+          en: "A three-dimensional framework for evaluating how game-playing AI participates in play.",
+          ko: "게임 AI가 놀이에 참여하는 역량을 평가하는 세 차원 프레임워크입니다.",
         },
         evidence: {
           en: "A peer-reviewed conceptual journal article; empirical validation remains open.",
@@ -665,8 +665,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "제1저자로서 놀이 이론을 의도적 비효율성·인식론적 경계 자각·관계적 조율의 세 관찰 가능 차원으로 구체화하고, 이를 행동 지표와 AI 정렬 문제에 연결했습니다.",
         },
         method: {
-          en: "Theoretical synthesis and critical analysis: Suits, Sicart, Galloway, and Bateson are translated into observable behavior; benchmark cases are reread through the framework; the history and politics of win-rate measurement are examined.",
-          ko: "이론 종합과 비판 분석을 사용합니다. Suits·Sicart·Galloway·Bateson을 관찰 가능한 행동으로 번역하고 벤치마크 사례와 승률 측정의 역사·정치를 재검토합니다.",
+          en: "Theoretical synthesis and critical analysis of Suits, Sicart, Galloway, and Bateson, supported by benchmark examples and an examination of how win rate became a dominant measure of AI performance.",
+          ko: "Suits·Sicart·Galloway·Bateson의 이론을 종합하고 비판적으로 검토했습니다. 벤치마크 사례와 함께 승률이 AI 성능의 지배적인 평가 지표가 된 배경을 살펴봤습니다.",
         },
         takeaway: {
           en: "My central argument is that an AI can optimize victory while remaining unable to recognize or sustain the conditions that make interaction playful.",
@@ -715,8 +715,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "지원을 장벽·시점·맥락으로 구성하고 초기 설정 부담을 첫 우선순위로 두었습니다.",
         },
         artifact: {
-          en: "A four-unit AI-support preference map with exploratory, multiple-comparison-aware statistics.",
-          ko: "네 가지 AI 지원 선호 지도와 다중비교를 고려한 탐색적 통계를 만들었습니다.",
+          en: "A map of preferences across four types of AI support, with exploratory statistics adjusted for multiple comparisons.",
+          ko: "네 가지 AI 지원 유형의 선호를 분석하고 다중비교를 보정한 탐색적 연구입니다.",
         },
         evidence: {
           en: "Setup and automation averaged 6.31 of 7; individual regressions did not survive FDR correction.",
@@ -762,8 +762,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "시각 장벽은 설정 지원, 운동 장벽은 보조 추천과 정적 관련을 보였고 청각 장벽은 두 유형과 부적 관련을 보였습니다. 개별 회귀계수는 FDR 보정 후 유의성을 유지하지 못했습니다.",
         },
         implication: {
-          en: "Design support as a configurable portfolio organized by barrier, timing, and context, with setup labor treated as a first-class accessibility problem.",
-          ko: "장벽·시점·맥락별로 조절 가능한 지원 포트폴리오를 설계하고 초기 설정 노동을 핵심 접근성 문제로 다뤄야 합니다.",
+          en: "Offer configurable support based on the player's barriers, the timing of assistance, and the play context. Reducing setup effort should be a core accessibility goal.",
+          ko: "플레이어가 겪는 장벽, 지원 시점, 플레이 맥락에 따라 조정 가능한 지원을 제공해야 합니다. 초기 설정 부담을 줄이는 일도 핵심 접근성 목표로 다뤄야 합니다.",
         },
         scope: {
           en: "Exploratory, self-report, cross-sectional data from a Korean sample; several outcomes were single items and barriers were binary. Results identify design hypotheses, not universal preference laws.",
@@ -788,8 +788,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "전문 접근성 플레이테스터 7명은 고집중 플레이 중 개입을 거부했습니다.",
         },
         design: {
-          en: "Adapted timing and modality while preserving agency and ownership of accomplishment.",
-          ko: "시점과 모달리티를 조정하면서 주체성과 성취의 소유권을 보존하도록 설계했습니다.",
+          en: "Adapted the timing and form of assistance while preserving player control and a sense of earned accomplishment.",
+          ko: "지원 시점과 표현 방식을 조정하면서 플레이어의 통제감과 스스로 이뤄낸 성취감을 지키도록 설계했습니다.",
         },
         artifact: {
           en: "Dual Context Adaptation and an Ethical Framework for Agency and Accomplishment.",
@@ -831,8 +831,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "개입 시점이 수용을 갈랐습니다. 온보딩·설정·탐색 단계 지원은 환영했지만 고집중 플레이 중 방해는 거부했습니다.",
         },
         finding2: {
-          en: "A centralized guide had value, but verbose responses, limited customization, and weak visual cues made the prototype itself a source of effort.",
-          ko: "중앙화된 안내는 가치가 있었지만 장황한 답변, 제한된 개인화, 약한 시각 단서가 프로토타입 자체를 새로운 노력으로 만들었습니다.",
+          en: "Participants valued a single source of guidance, but lengthy answers, limited customization, and weak visual cues made the prototype harder to use.",
+          ko: "참여자들은 안내를 한곳에서 얻는 점을 긍정적으로 평가했습니다. 다만 긴 답변, 제한된 개인화, 부족한 시각적 단서가 사용 부담을 높였습니다.",
         },
         finding3: {
           en: "Players accepted assistance that restores access while retaining decisions and challenge; automation became ethically suspect when it displaced authorship of the achievement.",
@@ -873,8 +873,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "기본 접근·부담 완화·개인화를 구분하는 3단계 요구사항 지도를 제안했습니다.",
         },
         evidence: {
-          en: "This conference-stage analysis shares the N=112 survey lineage with Publication 03; it is not independent evidence.",
-          ko: "이 학술대회 단계 분석은 Publication 03과 동일한 N=112 설문 계보를 공유하며 독립된 근거가 아닙니다.",
+          en: "This conference analysis draws on the same survey of 112 players as the later accessibility-preferences journal article.",
+          ko: "이 학술대회 분석은 후속 접근성 선호 학술지 논문과 동일한 플레이어 112명의 설문을 바탕으로 합니다.",
         },
       },
       palette: "moss",
@@ -888,8 +888,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "서로 다른 장애를 가진 플레이어가 경험하는 기능적 장벽은 무엇이며 게임 AI 어시스턴트에 무엇을 요구하는가?",
         },
         gap: {
-          en: "Diagnosis-based settings and single-modality AI aids cannot capture the mismatch between a game's demands and a player's remaining abilities across a live play journey.",
-          ko: "진단명 기반 설정과 단일 모달리티 AI 보조는 실제 플레이 여정에서 게임 요구와 플레이어 잔존 능력 사이의 불일치를 충분히 포착하지 못합니다.",
+          en: "Diagnosis-based settings and single-modality assistants can miss the mismatch between a game's demands and the ways a player perceives information and acts on it.",
+          ko: "진단명에 따른 설정과 단일 방식의 AI 지원만으로는 게임의 요구와 플레이어의 지각·행동 방식 사이의 불일치를 충분히 다루기 어렵습니다.",
         },
         contribution: {
           en: "I co-developed a barrier-centered requirements map with three levels: To Play for basic access, Easy Play for reducing effort, and Better Play for personalized strategy and experience.",
@@ -900,8 +900,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "장애인 플레이어 112명 대상 윤리 승인 온라인 설문, 5개 기능적 장벽 영역, 개방형 AI 지원 선호, 장애 유형별 귀납적 주제 코딩과 3개 접근성 수준 구조화를 사용했습니다.",
         },
         takeaway: {
-          en: "Accessible game AI must filter and translate the right information, adapt its intrusiveness to context, and let the player choose how much help is allowed.",
-          ko: "접근 가능한 게임 AI는 필요한 정보만 선별·변환하고 맥락에 따라 침습도를 조절하며 조력 강도를 플레이어가 선택하게 해야 합니다.",
+          en: "Accessible game AI should select relevant information, adjust how and when it intervenes, and let players decide how much assistance they receive.",
+          ko: "접근 가능한 게임 AI는 필요한 정보를 선별하고 개입 방식과 시점을 조절하며, 지원 수준을 플레이어가 직접 선택할 수 있게 해야 합니다.",
         },
         finding1: {
           en: "Disability category did not determine one fixed barrier. Visual, auditory, motor, cognitive, and communication difficulties crossed diagnostic boundaries and combined differently by context.",
@@ -950,8 +950,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "게임 적응이 지속되거나 무너지는 과정을 설명하는 주제 기반 모델을 만들었습니다.",
         },
         evidence: {
-          en: "CHI Extended Abstract with explicit co-first authorship; the N=5 sample was hearing-skewed.",
-          ko: "공동 제1저자가 명시된 CHI 확장 초록이며, N=5 표본은 청각장애 참여자 비중이 높았습니다.",
+          en: "A CHI Extended Abstract co-authored with equal first authorship. The five-person interview sample included a high proportion of players with hearing disabilities.",
+          ko: "공동 제1저자로 참여한 CHI 확장 초록입니다. 인터뷰 참여자 5명 중 청각장애 플레이어의 비중이 높았습니다.",
         },
       },
       palette: "cobalt",
@@ -1054,8 +1054,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "선별한 게임 사례와 인용 문헌 8편을 활용한 개념적 학술대회 발표입니다. 체계적 검색, 코퍼스 선정 절차, 사용자 연구 없이 역사적 종합과 설계 성찰을 수행했습니다.",
         },
         takeaway: {
-          en: "A more intelligent NPC is not automatically a better NPC; its autonomy must strengthen the player's play rather than compete with authorship of it.",
-          ko: "더 지능적인 NPC가 자동으로 더 좋은 NPC는 아닙니다. NPC의 자율성은 플레이어의 플레이를 강화해야지 그 주체성과 경쟁해서는 안 됩니다.",
+          en: "NPC autonomy should support the player's experience while remaining consistent with the character, the game world, and the rules of play.",
+          ko: "NPC의 자율성은 캐릭터와 게임 세계, 놀이 규칙의 일관성을 지키면서 플레이어의 경험을 뒷받침해야 합니다.",
         },
         finding1: {
           en: "Past NPC identity was anchored in stable scripted functions such as opposition, guidance, exposition, and world population.",
@@ -1131,8 +1131,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "웹 크롤링·수기 정제 Street Fighter 6 지식, 연구진이 만든 초보 질문·기대답변 19개, ROUGE-1 단어 중복과 RDASS 의미 유사도, 상·하위 답변의 실제 게임 맥락 질적 검토를 사용했습니다.",
         },
         takeaway: {
-          en: "RAG made explicit steps and button inputs useful, but retrieval similarity was not the same as gameplay correctness.",
-          ko: "RAG는 명시적 절차와 버튼 입력에 유용했지만 검색·문장 유사도는 실제 게임 정답성과 같지 않았습니다.",
+          en: "RAG helped with step-by-step instructions and button inputs, but text similarity did not reliably indicate whether an answer would work in the game.",
+          ko: "RAG는 단계별 안내와 버튼 입력 지원에 유용했습니다. 다만 텍스트 유사도가 높다고 실제 게임에서 실행 가능한 답변인 것은 아니었습니다.",
         },
         finding1: {
           en: "Across 19 answers, mean ROUGE-1 was 0.210 and mean RDASS was 0.214; direct action sequences and exact inputs formed the strongest responses.",
@@ -1140,19 +1140,19 @@ window.PROJECT_LIBRARY_DESIGNS = {
         },
         finding2: {
           en: "High text similarity could still hide a wrong in-game path, showing a gap between automatic metrics and situated correctness.",
-          ko: "텍스트 유사도가 높아도 게임 안에서는 잘못된 경로일 수 있어 자동 지표와 상황적 정답성의 간극을 드러냈습니다.",
+          ko: "텍스트 유사도가 높아도 실제 게임에서는 잘못된 안내가 나올 수 있었습니다. 자동 평가 점수와 실제 상황에서의 정확성 사이의 차이를 확인했습니다.",
         },
         finding3: {
           en: "Failures included missing near-match records, irrelevant elaboration, and hallucinated move information despite a domain database.",
           ko: "도메인 DB가 있어도 유사 기록 누락, 불필요한 부연, 기술 정보 환각이 발생했습니다.",
         },
         implication: {
-          en: "Game-AI teams should use executable task tests, domain-expert review, and novice sessions as primary quality gates, treating lexical and semantic scores as diagnostic signals rather than release criteria.",
-          ko: "게임 AI 팀은 실행 가능한 과업 검사, 도메인 전문가 검토, 초보 사용자 세션을 핵심 품질 게이트로 사용하고, 어휘·의미 점수는 출시 기준이 아닌 진단 신호로 다뤄야 합니다.",
+          en: "Evaluate whether players can complete the intended action. Combine task tests, expert review, and novice sessions; use text-similarity scores as supporting diagnostics.",
+          ko: "플레이어가 의도한 행동을 실제로 수행할 수 있는지 평가해야 합니다. 과업 검사, 전문가 검토, 초보 사용자 평가를 함께 사용하고 텍스트 유사도는 보조 지표로 활용해야 합니다.",
         },
         scope: {
           en: "One game and 19 researcher-created question-answer pairs; no novice participant study, and the automatic metrics were demonstrably incomplete proxies for correctness.",
-          ko: "한 게임과 연구진 생성 질의응답 19개를 사용했으며 초보 참여자 연구가 없고 자동 지표는 정답성의 불완전한 대리변수였습니다.",
+          ko: "한 게임과 연구진이 작성한 질의응답 19개를 평가했습니다. 초보 플레이어 대상 사용자 연구는 수행하지 않았으며, 자동 지표만으로 답변의 정확성을 판단하는 데에는 한계가 있습니다.",
         },
       },
     },
@@ -1196,8 +1196,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "문화 차원을 LLM 프롬프트에 삽입해 정합성과 윤리적 수용성을 잃지 않으면서 문화별 윤리 판단을 반영할 수 있는가?",
         },
         gap: {
-          en: "LLMs can describe cultural values, but static evaluations weakly connect cultural profiles to behavior in complex moral decisions.",
-          ko: "LLM은 문화 가치를 설명할 수 있지만 정적 평가는 문화 프로필을 복잡한 도덕 판단 행동과 약하게 연결합니다.",
+          en: "LLMs can describe cultural values, but evaluations often stop short of examining how those values affect decisions in specific moral scenarios.",
+          ko: "LLM은 문화적 가치를 설명할 수 있지만, 그 가치가 구체적인 도덕적 상황의 판단에 어떻게 반영되는지에 대한 평가는 부족합니다.",
         },
         contribution: {
           en: "As co-first author, I co-led the development of PLETH, a few-shot prompting and LLM-as-a-judge framework combining twelve Hofstede-derived profiles, nine Moral Machine trolley scenarios, and four evaluation criteria.",
@@ -1224,8 +1224,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "강한 문화 프로필 일부는 문화 우선순위가 일반적 인권 규범과 충돌할 때 윤리 수용성이 낮았고 이 지점에서는 대조군이 더 높았습니다.",
         },
         implication: {
-          en: "Culturally aware ethical systems need independent human review and an explicit method for negotiating cultural specificity against non-negotiable safeguards.",
-          ko: "문화 인식 윤리 시스템에는 독립적 인간 검토와 문화 특수성을 비협상 안전 원칙과 조율하는 명시적 방법이 필요합니다.",
+          en: "Culturally responsive AI needs independent human review and clear safeguards for situations in which cultural preferences conflict with fundamental rights.",
+          ko: "문화적 맥락에 대응하는 AI에는 독립적인 인간 검토가 필요합니다. 문화적 선호가 기본권과 충돌하는 상황에 적용할 명확한 보호 원칙도 마련해야 합니다.",
         },
         scope: {
           en: "LLMs both decided and judged, creating shared-model bias; few-shot prompting was basic; trolley dilemmas simplify real ethics; no human evaluator or real-world outcome was included.",
@@ -1237,8 +1237,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       slug: "gaia-service-framework",
       sourceIndex: 9,
       shortTitle: {
-        en: "AI Support for Player Struggles",
-        ko: "플레이 어려움을 돕는 AI",
+        en: "AI for Gameplay and Emotion",
+        ko: "플레이와 감정을 돕는 AI",
       },
       category: {
         en: "Conference Short Paper",
@@ -1285,8 +1285,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "개념 아키텍처·시나리오 설계로 오버레이 채팅, 실시간 게임 맥락, LLM 분류, 분리된 전략 DB, 고강도 감정 에피소드 장기 기억을 구성했습니다.",
         },
         takeaway: {
-          en: "Useful game assistance must address both the obstacle and the player's state, then route each to a different kind of support.",
-          ko: "유용한 게임 지원은 장애물과 플레이어 상태를 함께 다루고 각각 다른 지원 경로로 보내야 합니다.",
+          en: "The proposed framework separates practical gameplay help from emotional support, using the player's situation to choose the appropriate response.",
+          ko: "제안한 프레임워크는 게임 진행을 돕는 지원과 정서적 지원을 구분하고, 플레이어의 상황에 따라 적절한 대응을 선택합니다.",
         },
         finding1: {
           en: "Information and skill difficulties require settings, rules, or strategy retrieval grounded in the current game context.",
@@ -1350,8 +1350,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "게임 NPC에 LLM을 활용하는 초기 연구를 규정하는 기술·설계·평가 과제는 무엇인가?",
         },
         gap: {
-          en: "Early LLM-NPC demonstrations were fragmented and realism-led, without consolidated guidance on system constraints, the LLM's game function, or what should be evaluated.",
-          ko: "초기 LLM-NPC 시연은 분절되고 현실성에 치우쳐 시스템 제약, LLM의 게임 기능, 평가 대상에 대한 종합 지침이 부족했습니다.",
+          en: "Early LLM-NPC prototypes emphasized realistic behavior, but offered limited guidance on system constraints, the model's role in the game, or how to evaluate the experience.",
+          ko: "초기 LLM 기반 NPC 프로토타입은 사실적인 행동을 강조했지만, 시스템 제약과 게임 내 모델의 역할, 경험 평가 방법에 대한 지침은 부족했습니다.",
         },
         contribution: {
           en: "A scoping review that organizes six 2023 studies into technical, design, and evaluation challenges and translates them into a research agenda.",
@@ -1423,12 +1423,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "KTIS",
       editorial: {
         question: {
-          en: "How can HYBE's multi-label structure be understood as a decentralized post-M&A management model, and where might that model transfer?",
-          ko: "HYBE의 멀티레이블 구조를 분산형 인수합병 후 경영 모델로 어떻게 이해하며 어디까지 전이할 수 있는가?",
+          en: "How does HYBE's multi-label structure distribute creative autonomy and coordination after acquisitions, and what questions does it raise for other organizations?",
+          ko: "HYBE의 멀티레이블 구조는 인수 이후 창작 자율성과 조직 간 조정을 어떻게 배분하며, 다른 조직에 어떤 질문을 제시할까요?",
         },
         gap: {
-          en: "The multi-label model is visible as an industry strategy, but its organizational logic, flexibility, and transferability had not been systematically framed in the accessible conference record.",
-          ko: "멀티레이블 모델은 산업 전략으로 알려졌지만 조직 논리·유연성·전이 가능성을 체계적으로 구조화한 접근은 제한적이었습니다.",
+          en: "The multi-label model is widely discussed as a business strategy. This review focuses on the organizational relationships behind it: ownership, creative autonomy, shared resources, and coordination.",
+          ko: "멀티레이블 모델은 사업 전략으로 널리 논의됩니다. 이 검토는 그 이면의 소유구조, 창작 자율성, 공유 자원, 조직 간 조정에 초점을 맞춥니다.",
         },
         contribution: {
           en: "As corresponding author, I co-authored a technical review framing HYBE's independent-label system as a case of decentralized management and differentiated creative strategy.",
@@ -1516,8 +1516,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "2005~2024년 한국 뉴스 45,393건, 사전 기반 분석과 NLTK/TextBlob 감성·키워드 분석, BigHit·HYBE 시기 비교를 사용했습니다.",
         },
         takeaway: {
-          en: "HYBE's expansion broadened the strategic story, but average news sentiment was lower and more exposed to conflict than in the BigHit era.",
-          ko: "HYBE의 확장은 전략 서사를 넓혔지만 평균 뉴스 감성은 BigHit 시기보다 낮고 갈등에 더 노출됐습니다.",
+          en: "News coverage associated HYBE with a broader set of strategic themes, while average sentiment was lower than in the BigHit period and reflected internal conflict.",
+          ko: "HYBE 시기의 뉴스는 더 다양한 전략적 주제를 다뤘습니다. 평균 감성 점수는 BigHit 시기보다 낮았으며 내부 갈등도 보도에 반영됐습니다.",
         },
         finding1: {
           en: "Mean sentiment was 0.0243 in the BigHit era and 0.0076 in the HYBE era.",
@@ -1566,8 +1566,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "개인·팀 플레이를 비교하는 4조건 OptiTrack VR 재활용 연구를 수행했습니다.",
         },
         evidence: {
-          en: "A journal study with N=65; small unequal cells and short-term self-report limit causal and general claims.",
-          ko: "N=65 학술지 연구이며 작고 불균등한 셀과 단기 자기보고로 인과·일반화 주장에 한계가 있습니다.",
+          en: "A journal study with 65 participants. Small, unequal groups and short-term self-report measures limit statistical power and generalization.",
+          ko: "65명이 참여한 학술지 연구입니다. 작고 불균형한 집단과 단기 자기보고 측정으로 검정력과 일반화에 한계가 있습니다.",
         },
       },
       palette: "moss",
@@ -1593,8 +1593,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "19~27세 대학생 65명, OptiTrack Prime17W 12대 기반 프로젝션 VR 재활용 게임, 개인 또는 3인 협력 플레이와 긍정·부정 콘텐츠 순서, 사전·중간·사후 설문, 대응·독립표본 t검정을 사용했습니다.",
         },
         takeaway: {
-          en: "Environmental impact in VR came from the sequence and social form of play, not from positive or negative content alone.",
-          ko: "VR의 환경 인식 효과는 긍정·부정 콘텐츠 하나가 아니라 제시 순서와 사회적 플레이 형식에서 나왔습니다.",
+          en: "The study suggests that content order and the social format of play matter alongside positive or negative framing in VR environmental learning.",
+          ko: "이 연구는 VR 환경 학습에서 긍정·부정 프레이밍뿐 아니라 콘텐츠 순서와 함께 플레이하는 방식도 중요함을 시사합니다.",
         },
         finding1: {
           en: "Positive content in individual play increased perceived importance of recycling.",
@@ -1643,8 +1643,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "소매 상품 2,548개에 적용한 3단계 예측 파이프라인입니다.",
         },
         evidence: {
-          en: "The full hybrid led three metrics; this is an unreviewed preprint from one retailer, and inconsistent cluster counts are omitted.",
-          ko: "전체 결합 모델이 세 지표에서 가장 좋았지만 단일 소매사의 동료심사 전 프리프린트이며, 불일치하는 군집 수는 생략했습니다.",
+          en: "The combined pipeline performed best on all three reported metrics. The study uses one retailer's data and remains an unreviewed preprint.",
+          ko: "결합 파이프라인은 보고된 세 지표에서 가장 좋은 성능을 보였습니다. 단일 소매사 데이터를 사용한 연구이며 아직 동료심사를 거치지 않은 프리프린트입니다.",
         },
       },
       palette: "ink",
@@ -1690,8 +1690,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "이질적 소매 포트폴리오에서는 모델 세분화와 변수 관리를 별도 단계가 아니라 함께 설계해야 합니다.",
         },
         scope: {
-          en: "Unreviewed preprint using one retailer and limited external covariates; the paper contains an inconsistent product/cluster count, so cluster counts are omitted and cross-company validation is required.",
-          ko: "동료심사 전 프리프린트로 한 소매사와 제한된 외생 변수를 사용했습니다. 제품 수와 군집 합계가 불일치해 군집별 수는 제시하지 않으며 타 기업 검증이 필요합니다.",
+          en: "An unreviewed preprint based on one retailer, with limited external variables. Inconsistent product and cluster totals require clarification, and the method needs validation on other retailers' data.",
+          ko: "단일 소매사와 제한된 외생 변수를 사용한 동료심사 전 프리프린트입니다. 상품 수와 군집별 합계의 불일치는 확인이 필요하며, 다른 소매사 데이터로도 검증해야 합니다.",
         },
       },
     },
@@ -1747,8 +1747,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "12명씩 4개 집단, 30개 물품·60초 제한 OptiTrack 재활용 과업, 모든 참여자가 개인 후 다인 플레이, 수정된 재활용 인식 사전·사후 설문을 사용했습니다.",
         },
         takeaway: {
-          en: "Cooperation changed what participants were willing to do more clearly than it changed their general environmental worldview.",
-          ko: "협력은 전반적 환경관보다 참여자가 실제로 하려는 행동을 더 분명하게 바꿨습니다.",
+          en: "Cooperative play was associated with higher task completion and greater willingness to make an effort to recycle; broad environmental attitudes changed less clearly.",
+          ko: "협동 플레이에서는 과업 완수율과 재활용을 위해 노력하려는 의향이 높았습니다. 전반적인 환경 태도의 변화는 뚜렷하지 않았습니다.",
         },
         finding1: {
           en: "No participant completed the solo task, while every group completed the multiplayer task.",
@@ -1797,8 +1797,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "두 차례 세션에서 시험한 초기 게임화 안구 운동 파일럿입니다.",
         },
         evidence: {
-          en: "N=7 descriptive evidence; diagnoses were not established, and no clinical efficacy was tested.",
-          ko: "N=7의 기술적 근거이며 진단 여부가 확인되지 않았고 임상 효과를 시험하지 않았습니다.",
+          en: "A descriptive pilot with seven participants. Participant diagnoses were not reported, and the study did not test clinical effectiveness.",
+          ko: "7명이 참여한 예비 연구로 기술통계를 제시했습니다. 참여자의 진단 여부는 보고되지 않았으며 임상 효과는 평가하지 않았습니다.",
         },
       },
       palette: "plum",
@@ -1816,8 +1816,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "복시 운동은 반복적이고 단조로워 운동 프로토콜이 있어도 지속 참여 문제가 생깁니다.",
         },
         contribution: {
-          en: "An early gamified exercise design spanning saccade, smooth pursuit, and optokinetic nystagmus, with a preliminary engagement comparison.",
-          ko: "단속성 안구운동·원활 추종·시운동성 안진을 아우르는 초기 게임형 운동 설계와 예비 참여 비교를 제시합니다.",
+          en: "An early game-based design for saccades, smooth pursuit, and optokinetic nystagmus, with a preliminary comparison of participant engagement.",
+          ko: "단속성 안구 운동, 부드러운 추적 안구 운동, 시운동성 안진을 활용한 초기 게임형 운동 설계와 참여도 예비 비교를 제시했습니다.",
         },
         method: {
           en: "Seven participants: four in a gamified condition and three controls; two exercise sessions 24 hours apart; 1–5 self-report ratings of anticipation, desire to continue, and interest.",
@@ -1885,8 +1885,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "KMMS",
       editorial: {
         question: {
-          en: "How can saccade and smooth-pursuit exercises become a sustainable gaze-controlled VR game?",
-          ko: "단속성 안구운동과 원활 추종 운동을 지속 가능한 시선 제어 VR 게임으로 어떻게 만들 수 있는가?",
+          en: "How can saccade and smooth-pursuit exercises be translated into a gaze-controlled VR game that people want to keep using?",
+          ko: "단속성 안구 운동과 부드러운 추적 안구 운동을 지속적으로 참여하고 싶은 시선 제어 VR 게임으로 어떻게 구현할 수 있을까요?",
         },
         gap: {
           en: "Eye exercises can support rehabilitation goals, but repetition reduces adherence and the usability of eye-tracked exercise games remains underexplored.",
@@ -1894,11 +1894,11 @@ window.PROJECT_LIBRARY_DESIGNS = {
         },
         contribution: {
           en: "A Meta Quest Pro prototype translating saccade and pursuit exercises into gaze-controlled mechanics, staged difficulty, markers, and feedback.",
-          ko: "단속성·추종 운동을 시선 제어 메커닉, 단계 난이도, 마커, 피드백으로 옮긴 Meta Quest Pro 프로토타입입니다.",
+          ko: "단속성 안구 운동과 부드러운 추적 안구 운동을 시선으로 조작하는 Meta Quest Pro 게임으로 구현했습니다. 단계별 난이도, 시각적 표식, 피드백을 함께 설계했습니다.",
         },
         method: {
-          en: "Unity with Oculus and Meta Movement SDKs on Meta Quest Pro; gaze-based saccade and smooth-pursuit mechanics; a preliminary prototype check with 24 elementary-school students.",
-          ko: "Meta Quest Pro에서 Unity·Oculus·Meta Movement SDK, 시선 기반 단속성·원활 추종 메커닉, 초등학생 24명 대상 예비 프로토타입 확인을 사용했습니다.",
+          en: "A Meta Quest Pro prototype built with Unity, Oculus, and Meta Movement SDKs, with initial feedback from 24 elementary-school students.",
+          ko: "Unity·Oculus·Meta Movement SDK를 활용해 Meta Quest Pro 프로토타입을 구현하고, 초등학생 24명을 대상으로 초기 사용 경험을 확인했습니다.",
         },
         takeaway: {
           en: "The study established prototype feasibility and engagement direction, not therapeutic effectiveness.",
@@ -1970,16 +1970,16 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "현실 노출은 자원이 많이 들고 통제가 어려우며 기존 VR 설계는 공간·거리를 개인별 노출 변수로 충분히 구조화하지 못했습니다.",
         },
         contribution: {
-          en: "A preliminary comparison treating spatial distance as an explicit dose variable in a VR cynophobia exposure sequence.",
-          ko: "공간 거리를 VR 개 공포 노출 순서의 명시적 용량 변수로 다룬 예비 비교입니다.",
+          en: "A preliminary VR comparison that uses spatial distance to control the intensity and progression of exposure to dogs.",
+          ko: "가상환경에서 개와의 거리를 조절해 노출 강도와 진행 단계를 비교한 예비 VR 연구입니다.",
         },
         method: {
           en: "Preliminary randomized two-group VR study; a realistic dog advanced through stages from far away to hand reach versus immediate closest-stage exposure; pre/post fear questionnaire. The one-page source does not report N, instrument, or statistics.",
           ko: "예비 무작위 2집단 VR 연구로 현실적 개가 먼 거리에서 손 닿는 거리까지 단계적으로 접근하는 조건과 즉시 근접 조건을 비교하고 사전·사후 공포 설문을 사용했습니다. 1쪽 자료에는 N·도구·통계가 없습니다.",
         },
         takeaway: {
-          en: "Exposure distance should be designed as a controllable progression, not treated as scene decoration.",
-          ko: "노출 거리는 장면 장식이 아니라 조절 가능한 단계로 설계해야 합니다.",
+          en: "The preliminary findings support further study of distance as an adjustable part of VR exposure design; they do not establish treatment effectiveness.",
+          ko: "예비 결과는 VR 노출 설계에서 거리 조절을 추가로 연구할 근거를 제시합니다. 치료 효과를 입증한 결과는 아닙니다.",
         },
         finding1: {
           en: "The authors report reduced fear in the graded-exposure condition.",
@@ -2024,8 +2024,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "상품을 먼저 군집화한 뒤 다섯 예측 모델 계열을 비교했습니다.",
         },
         artifact: {
-          en: "A hybrid specialization layer evaluated across 1,624 products.",
-          ko: "상품 1,624개에 적용한 결합형 전문화 계층입니다.",
+          en: "A clustering-based forecasting approach evaluated across 1,624 retail products.",
+          ko: "소매 상품 1,624개를 대상으로 평가한 군집화 기반 예측 방식입니다.",
         },
         evidence: {
           en: "Available metadata and abstract report improvement direction but no extractable magnitude, uncertainty, or external validity.",
@@ -2067,8 +2067,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "여러 신경망·트리 기반 예측기를 군집화 조건과 비군집 조건에서 비교했습니다.",
         },
         finding3: {
-          en: "The official abstract reports performance enhancement from clustering but does not provide extractable effect values.",
-          ko: "공식 초록은 군집화에 따른 성능 향상을 보고하지만 추출 가능한 효과 값은 제시하지 않습니다.",
+          en: "The abstract reports improved forecasting after clustering, but does not give numerical estimates of the improvement.",
+          ko: "초록은 군집화 이후 예측 성능이 향상됐다고 보고하지만 구체적인 개선 수치는 제시하지 않습니다.",
         },
         implication: {
           en: "Use clustering as a model-selection and specialization layer, then publish cluster stability and per-model effect sizes for operational decisions.",
@@ -2101,8 +2101,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "K-means, 군집별 LASSO, LSTM 예측을 결합했습니다.",
         },
         artifact: {
-          en: "An early auditable hybrid pipeline evaluated across 2,693 products.",
-          ko: "상품 2,693개에 적용한 초기 감사 가능 결합 파이프라인입니다.",
+          en: "An early pipeline combining clustering, feature selection, and forecasting across 2,693 retail products.",
+          ko: "소매 상품 2,693개에 군집화·변수 선택·예측을 결합한 초기 파이프라인입니다.",
         },
         evidence: {
           en: "This one-page abstract does not report numerical results or uncertainty; the later preprint provides stronger evidence. I am fourth author.",
@@ -2132,8 +2132,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "소매 제품 2,693개, 2년 주간 수요, 수요 파생 24개·외생 6개 변수, K-means·군집별 LASSO·LSTM, 4개 기준 모델과 mMAPE·RMSE·MAE를 비교했습니다.",
         },
         takeaway: {
-          en: "Pattern-specific feature selection is a plausible bridge between segmentation and sequence forecasting, but this abstract does not quantify the advantage.",
-          ko: "패턴별 변수 선택은 세분화와 시계열 예측을 잇는 타당한 방법이지만 이 초록은 장점을 정량화하지 않습니다.",
+          en: "The abstract proposes selecting features separately for each demand cluster before LSTM forecasting; the reported advantage is not quantified.",
+          ko: "수요 군집별로 변수를 선택한 뒤 LSTM으로 예측하는 방식을 제안한 초록입니다. 성능 우위는 보고했지만 수치는 제시하지 않았습니다.",
         },
         finding1: {
           en: "The source reports that the full hybrid performed best overall, without numerical values.",
@@ -2149,7 +2149,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
         },
         implication: {
           en: "Forecasting systems should make segmentation and variable selection auditable before sequence-model complexity is added.",
-          ko: "예측 시스템은 시계열 모델 복잡성을 더하기 전에 세분화와 변수 선택을 감사 가능하게 만들어야 합니다.",
+          ko: "시계열 모델을 더 복잡하게 만들기 전에, 상품을 나누고 변수를 선택하는 근거부터 확인할 수 있어야 합니다.",
         },
         scope: {
           en: "One-page abstract without data provenance, split protocol, benchmark identities, numerical results, or uncertainty; the later preprint is the stronger evidence source.",
@@ -2163,8 +2163,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
       slug: "krafton-fde-challenge",
       sourceIndex: 0,
       shortTitle: {
-        en: "Top 3 AI Product Build",
-        ko: "AI 제품 개발 최종 3팀",
+        en: "Top 3 Solo Finalist",
+        ko: "개인 참가 최종 3인",
       },
       category: {
         en: "AI Product Challenge",
@@ -2172,20 +2172,20 @@ window.PROJECT_LIBRARY_DESIGNS = {
       },
       story: {
         research: {
-          en: "A one-day FDE final tested problem definition, AI direction, iteration, and handoff under time pressure.",
-          ko: "하루 동안 진행된 FDE 결선은 제한된 시간 안의 문제 정의·AI 방향·반복 개선·인계를 다뤘습니다.",
+          en: "A one-day challenge to define a business problem, direct AI-assisted development, and deliver a working application.",
+          ko: "하루 안에 비즈니스 문제를 정의하고 AI를 활용해 작동하는 애플리케이션을 개발하는 대회였습니다.",
         },
         design: {
           en: "I translated ambiguous input from a scenario agent into a rapid build plan.",
           ko: "시나리오 에이전트의 모호한 요구를 빠른 구현 계획으로 전환했습니다.",
         },
         artifact: {
-          en: "A working application and blind-review handoff documented as produced in under four hours.",
-          ko: "4시간 이내에 구현했다고 기록된 작동형 애플리케이션과 블라인드 심사 인계물입니다.",
+          en: "A working AI application that I built and prepared for blind review in under four hours.",
+          ko: "4시간 이내에 단독 개발하고 블라인드 심사를 위해 제출한 AI 애플리케이션입니다.",
         },
         evidence: {
-          en: "My team placed in the final top three during the one-day event, which included a documented prize and recruiting fast-track.",
-          ko: "공식 상금과 채용 우대가 제공된 1일 행사에서 우리 팀이 최종 3팀에 선정되었습니다.",
+          en: "Competing solo, I was selected as one of three finalists from approximately 25 entries.",
+          ko: "개인으로 참가해 약 25개 출품작 가운데 최종 3인에 선정되었습니다.",
         },
       },
       palette: "award",
@@ -2195,33 +2195,33 @@ window.PROJECT_LIBRARY_DESIGNS = {
       mark: "FDE",
       spineVenue: "FDE",
       awardName: {
-        en: "KRAFTON Cofathon: AI Native Battlegrounds – Top 3 Finalist",
-        ko: "KRAFTON 코파톤: AI Native Battlegrounds – 최종 3팀",
+        en: "KRAFTON Cofathon: AI Native Battlegrounds | Top 3 Solo Finalist",
+        ko: "KRAFTON 코파톤: AI Native Battlegrounds | 개인 참가 최종 3인",
       },
       editorial: {
         verifiedResult: {
-          en: "My team advanced from approximately 25 entries to the final 3, completing a working AI application and blind-review handoff in under four hours.",
-          ko: "약 25개 팀 가운데 최종 3팀에 선정되었으며, 4시간 이내에 작동하는 AI 애플리케이션과 블라인드 심사용 인계를 완성했습니다.",
+          en: "I competed solo and was selected as one of three finalists from approximately 25 entries. I built a working AI application and prepared the blind-review submission in under four hours.",
+          ko: "개인으로 참가해 약 25개 출품작 가운데 최종 3인에 선정되었습니다. 4시간 이내에 AI 애플리케이션을 단독 개발하고 블라인드 심사용 제출물을 완성했습니다.",
         },
         selectionContext: {
-          en: "The event compressed discovery, implementation, verification, and handoff into a one-day final with a documented prize pool and recruiting fast-track.",
-          ko: "행사는 요구 발굴, 구현, 검증, 인계를 공식 상금과 채용 우대가 있는 1일 결선에 압축했습니다.",
+          en: "The one-day final covered requirements discovery, implementation, verification, and submission. The event offered prizes and a recruiting fast-track.",
+          ko: "하루 동안 진행된 결선에서 요구사항 파악, 구현, 검증, 제출을 모두 수행했습니다. 대회에는 시상과 채용 우대 혜택이 마련되어 있었습니다.",
         },
         challenge: {
           en: "Participants had to communicate with virtual stakeholders, define an unseen business problem, plan a solution, and implement a working application under a compressed event schedule.",
           ko: "가상 이해관계자와 소통해 처음 보는 비즈니스 문제를 정의하고 압축된 일정 안에 해결안을 기획·구현해 작동형 애플리케이션을 제출해야 했습니다.",
         },
         contribution: {
-          en: "I led agent-assisted requirements discovery, translated the findings into a build plan, implemented the application in under four hours, and prepared the blind-review handoff.",
-          ko: "에이전트를 활용한 요구사항 발굴을 주도하고 결과를 구현 계획으로 전환했으며, 4시간 이내에 애플리케이션을 개발하고 블라인드 심사용 인계를 준비했습니다.",
+          en: "I handled the full workflow independently: interviewing virtual stakeholders, defining requirements, directing AI-assisted development, testing the application, and preparing the blind-review submission.",
+          ko: "가상 이해관계자 인터뷰, 요구사항 정의, AI를 활용한 개발, 애플리케이션 테스트, 블라인드 심사용 제출물 준비까지 전 과정을 혼자 수행했습니다.",
         },
         criteria: {
-          en: "Problem definition; direction and use of AI; iteration under constraint; verification and handoff quality.",
-          ko: "문제 정의; AI 지휘·활용; 제약 속 반복 개선; 검증·핸드오프 품질",
+          en: "An individual finalist placement for a working AI application, developed and submitted solo.",
+          ko: "작동하는 AI 애플리케이션을 단독 개발·제출해 얻은 개인 결선 진출 성과입니다.",
         },
         validates: {
-          en: "Rapidly turning ambiguous requirements into a working, review-ready AI product.",
-          ko: "불명확한 요구사항을 빠르게 작동형 AI 제품과 검토 가능한 결과물로 전환하는 역량",
+          en: "Independent delivery of a working AI product from an unfamiliar and initially ambiguous brief.",
+          ko: "처음 접한 불명확한 요구사항을 해석해 작동하는 AI 제품으로 완성한 경험입니다.",
         },
       },
     },
@@ -2238,7 +2238,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       },
       story: {
         research: {
-          en: "The team converted open responses from 112 players with disabilities into defensible accessibility requirements.",
+          en: "The team translated open-ended responses from 112 players with disabilities into evidence-based accessibility requirements.",
           ko: "팀은 장애인 플레이어 112명의 서술 응답을 근거 있는 접근성 요구사항으로 전환했습니다.",
         },
         design: {
@@ -2270,24 +2270,24 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "제2저자로 참여한 논문이 우수발표논문상을 받았습니다.",
         },
         selectionContext: {
-          en: "I am second author of the six-page conference paper (pp. 83–88), presented in the 30 May 2026 session at Tech University of Korea. The presenter was listed separately from my coauthor role.",
-          ko: "2026년 5월 30일 한국공학대학교 세션에서 발표된 6쪽 분량의 학술대회 논문(83~88쪽)에 제2저자로 참여했습니다. 발표자는 제 공저자 역할과 별도로 지정되었습니다.",
+          en: "The six-page paper (pp. 83–88) was presented at Tech University of Korea on 30 May 2026. I contributed as second author, rather than as the presenter.",
+          ko: "6쪽 분량의 논문(83~88쪽)이 2026년 5월 30일 한국공학대학교에서 발표되었습니다. 저는 발표자가 아닌 제2저자로 연구에 기여했습니다.",
         },
         challenge: {
-          en: "The team had to convert open-ended responses from 112 players with disabilities into defensible barrier categories, accessibility requirements, design principles, and a concise conference presentation.",
-          ko: "장애인 플레이어 112명의 개방형 응답을 방어 가능한 장벽 범주·접근성 요구사항·설계 원칙으로 전환해 간결한 학술 발표로 제시해야 했습니다.",
+          en: "The team synthesized open-ended responses from 112 players with disabilities into evidence-based barrier categories, accessibility requirements, and design principles.",
+          ko: "장애인 플레이어 112명의 서술 응답을 분석해 근거에 기반한 장벽 범주, 접근성 요구사항, 설계 원칙으로 정리했습니다.",
         },
         contribution: {
           en: "As second author, I contributed accessibility-AI framing, barrier interpretation, design-principle synthesis, and preparation of the research output.",
           ko: "제2저자로 접근성 AI 프레이밍, 장벽 해석, 설계 원칙 종합, 연구 결과물 준비에 기여했습니다.",
         },
         criteria: {
-          en: "Research clarity; strength of evidence; contribution; quality of the paper and presentation.",
-          ko: "연구의 명료성, 근거의 충실성, 연구 기여, 논문과 발표의 완성도",
+          en: "A paper-level presentation award shared by the research team; my contribution was as second author.",
+          ko: "연구팀의 논문에 수여된 발표상이며, 저는 제2저자로 참여했습니다.",
         },
         validates: {
-          en: "My ability to translate disability research into actionable principles for accessible game-AI design.",
-          ko: "장애 관련 연구 결과를 접근 가능한 게임 AI의 실행 가능한 설계 원칙으로 전환하는 역량",
+          en: "Recognition for research that translates players' accessibility needs into practical game-AI design principles.",
+          ko: "플레이어의 접근성 요구를 실질적인 게임 AI 설계 원칙으로 구체화한 연구 성과입니다.",
         },
       },
     },
@@ -2316,8 +2316,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "제가 작성한 Education4.0 Q 조교 활동보고서입니다.",
         },
         evidence: {
-          en: "Certificate EC-2026-0001 verifies the Top Excellence Award and first-place result for the Education4.0 Q TA Report.",
-          ko: "상장 EC-2026-0001은 Education4.0 Q 조교 활동보고서의 최우수상과 1위 성과를 확인합니다.",
+          en: "The Education4.0 Q TA Activity Report received KAIST's Top Excellence Award and first place (certificate EC-2026-0001).",
+          ko: "Education4.0 Q 조교 활동보고서로 KAIST 최우수상과 1위를 받았습니다(증서번호 EC-2026-0001).",
         },
       },
       palette: "award",
@@ -2344,12 +2344,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "질문 중심 수업 지원을 어떻게 기획·운영하고 성찰했는지 기록한 조교 활동보고서가 평가 대상이었습니다.",
         },
         contribution: {
-          en: "I authored the report and articulated the teaching intervention, its operation, and the lessons drawn from practice.",
-          ko: "활동보고서를 작성하고 교육 개입의 설계와 운영 과정, 실천에서 도출한 교훈을 정리했습니다.",
+          en: "I wrote the report, documenting the design and operation of question-centered teaching support and the lessons learned from practice.",
+          ko: "질문 중심 수업 지원의 설계와 운영 과정, 현장에서 배운 점을 정리해 활동보고서를 작성했습니다.",
         },
         criteria: {
-          en: "Quality of the TA activity report and the clarity of its account of educational practice.",
-          ko: "조교 활동보고서의 완성도와 교육 실천을 설명하는 내용의 명료성",
+          en: "First place in KAIST's evaluation of Education4.0 Q teaching-assistant activity reports.",
+          ko: "KAIST Education4.0 Q 조교 활동보고서 평가에서 받은 1위 성과입니다.",
         },
         validates: {
           en: "Turning hands-on teaching practice into a clear, reflective, and reusable account.",
@@ -2382,8 +2382,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "팀 대표로서 제가 주도한 벤처 지원서입니다.",
         },
         evidence: {
-          en: "Asan UniverCT selected the team; this was a program selection, and no paid-support amount is claimed.",
-          ko: "Asan UniverCT가 팀을 선정했으며 이는 프로그램 선정이고 지원금 지급액은 주장하지 않습니다.",
+          en: "Glean was selected for Asan UniverCT's climate-tech venture program, which provided mentorship and venture-development support.",
+          ko: "Glean이 아산 UniverCT 기후테크 창업 프로그램에 선정되어 멘토링과 사업화 지원을 받았습니다.",
         },
       },
       palette: "award",
@@ -2414,12 +2414,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "팀 대표로 Glean의 AR 쓰레기 스캔·재활용 리워드 서비스에 대한 사업 총괄, AI 모델링, 특허 개발을 이끌었습니다.",
         },
         criteria: {
-          en: "Climate relevance; venture feasibility; team execution; and potential for development within the university program. The program did not publish its exact scoring rubric.",
-          ko: "기후 문제 적합성, 사업 실행 가능성, 팀 실행력, 대학 프로그램 내 발전 가능성이 평가의 중심이었습니다. 프로그램은 정확한 배점표를 공개하지 않았습니다.",
+          en: "Selection for a climate-tech entrepreneurship program, with mentorship and venture-development support.",
+          ko: "멘토링과 사업화 지원을 제공하는 기후테크 창업 프로그램에 선정된 성과입니다.",
         },
         validates: {
-          en: "Verified selection into a structured climate-tech entrepreneurship program.",
-          ko: "구조화된 기후테크 창업 프로그램 선정 성과입니다.",
+          en: "An opportunity to develop Glean's climate-tech service concept through a university-linked entrepreneurship program.",
+          ko: "대학 연계 창업 프로그램에서 Glean의 기후테크 서비스 콘셉트를 발전시킨 경험입니다.",
         },
       },
     },
@@ -2444,8 +2444,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "수중 스마트시티 미디어 파사드 콘셉트의 Unreal Engine 구현을 주도했습니다.",
         },
         artifact: {
-          en: "A documented Unreal Engine media-façade implementation.",
-          ko: "구현 기록이 있는 Unreal Engine 기반 미디어파사드입니다.",
+          en: "A working Unreal Engine experience designed for an architectural media facade.",
+          ko: "건축물의 미디어 파사드에 맞춰 구현한 Unreal Engine 콘텐츠입니다.",
         },
         evidence: {
           en: "The co-hosts awarded our media-façade prototype the Grand Prize, and I led its technical implementation.",
@@ -2468,8 +2468,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "해커톤 대상인 한동대학교 총장상을 받은 Unreal Engine 미디어 파사드 프로토타입의 기술 개발을 주도했습니다.",
         },
         selectionContext: {
-          en: "The five-day Unreal Engine program was limited to 20 participants and carried a KRW 5 million-equivalent reward pool topped by the HGU President's Award, which is the prize this prototype received.",
-          ko: "5일간 Unreal Engine 프로그램은 20명 정원이며 한동대 총장상을 최고상으로 하는 500만원 상당의 시상을 두었고, 이 프로토타입이 그 총장상을 받았습니다.",
+          en: "The five-day Unreal Engine program brought together 20 participants and offered KRW 5 million in prizes and benefits. Our prototype received the top distinction, the HGU President's Award.",
+          ko: "20명이 참여한 5일간의 Unreal Engine 프로그램으로, 500만원 상당의 시상이 마련되었습니다. 우리 프로토타입은 최고상인 한동대학교 총장상을 받았습니다.",
         },
         challenge: {
           en: "The team had to turn an environmental and smart-city theme into large-scale content that could run reliably on a real architectural media surface.",
@@ -2480,8 +2480,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "실제로 구동되는 수중 미디어 파사드 경험의 Unreal Engine 구현과 기술 개발을 총괄했습니다.",
         },
         criteria: {
-          en: "Concept and public relevance; technical execution; fit to the media-façade format; completeness for exhibition. The exact scored rubric was not located.",
-          ko: "콘셉트·공공성; 기술 구현; 미디어 파사드 형식 적합성; 전시 완성도. 정확한 배점표는 확인되지 않았습니다.",
+          en: "The hackathon's Grand Prize, awarded to the team's media-facade prototype. I led its technical implementation.",
+          ko: "팀의 미디어 파사드 프로토타입으로 해커톤 대상을 받았으며, 저는 기술 구현을 주도했습니다.",
         },
         validates: {
           en: "Leading the technical realization of a large-scale interactive-media concept under a fixed production schedule.",
@@ -2514,8 +2514,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "저자 7명의 시선추적 기반 VR 안구 운동 게임 논문입니다.",
         },
         evidence: {
-          en: "Our paper received the society's Excellence Award. I am fourth author; the award does not certify an individual task or clinical efficacy.",
-          ko: "우리 논문이 학회 우수상을 받았습니다. 저는 제4저자이며, 이 상은 개인 업무나 임상 효과를 인증하는 결과는 아닙니다.",
+          en: "The paper received the society's Excellence Award. I contributed as fourth author; clinical effectiveness was not evaluated.",
+          ko: "제4저자로 참여한 논문이 학회 우수상을 받았습니다. 임상 효과는 평가하지 않은 연구입니다.",
         },
       },
       palette: "award",
@@ -2534,12 +2534,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "2023년 11월 17일 「안구 운동을 위한 시선 추적 기반 VR 인터랙티브 게임」의 제4저자로 우수상을 받았습니다.",
         },
         selectionContext: {
-          en: "The award was issued in the society's fall undergraduate paper competition to a seven-author research team. It is a paper-level team result, not an individual first-author award.",
-          ko: "학회 추계학부생논문경진대회에서 7인 연구팀 논문에 수여된 팀 단위 결과이며 개인 제1저자상이 아닙니다.",
+          en: "The society's fall undergraduate paper competition recognized the seven-author research team's gaze-controlled VR prototype.",
+          ko: "학회 추계학부생논문경진대회에서 저자 7명이 수행한 시선 제어 VR 프로토타입 연구로 수상했습니다.",
         },
         challenge: {
           en: "The paper had to present a viable gaze-controlled VR game that translated eye exercises into interactive mechanics and a preliminary user-facing prototype.",
-          ko: "안구 운동을 상호작용 메커닉으로 전환한 시선 제어 VR 게임과 예비 사용자 프로토타입을 제시해야 했습니다.",
+          ko: "안구 운동을 게임으로 구현하고 사용자의 초기 반응을 살펴볼 수 있는 시선 제어 VR 프로토타입을 개발하는 과제였습니다.",
         },
         contribution: {
           en: "As fourth author, I contributed to the research and development of the VR game prototype.",
@@ -2550,8 +2550,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "논문 단위 수상이며 개인 점수를 부여하거나 임상 효능을 입증한 결과는 아닙니다.",
         },
         validates: {
-          en: "Society recognition for an implemented gaze-interaction research prototype, with authorship and clinical scope represented accurately.",
-          ko: "저자 역할과 임상 범위를 정확히 제한한 시선 상호작용 연구 프로토타입에 대한 학회 인정입니다.",
+          en: "Recognition for an implemented gaze-interaction research prototype, with further usability and clinical evaluation still needed.",
+          ko: "구현한 시선 상호작용 연구 프로토타입을 인정받은 성과입니다. 후속 사용성 평가와 임상 검증은 별도로 필요합니다.",
         },
       },
     },
@@ -2580,8 +2580,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "Team EyeCU가 구현한 통합형 XR 경험 Watchers입니다.",
         },
         evidence: {
-          en: "Verified Excellence and Skonec CEO Awards included KRW 5 million and a recruitment benefit; Youngsung Lee was team leader.",
-          ko: "우수상과 스코넥 대표이사상, 상금 500만원과 채용 혜택이 확인됐으며 팀 리더는 이영성이었습니다.",
+          en: "Team EyeCU received the Excellence Award, named for Skonec Entertainment's CEO, with KRW 5 million and a recruitment benefit. Youngsung Lee led the team.",
+          ko: "Team EyeCU는 스코넥엔터테인먼트 대표이사상인 우수상과 상금 500만원, 채용 우대 혜택을 받았습니다. 팀장은 이영성이었습니다.",
         },
       },
       palette: "award",
@@ -2600,8 +2600,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "Watchers를 개발한 Team EyeCU로 2023년 10월 18일 우수상·스코넥엔터테인먼트 대표이사상을 수상했습니다.",
         },
         selectionContext: {
-          en: "The official contest awarded 37 teams from a KRW 219 million pool. Independent reporting names EyeCU's Watchers as the Skonec task winner with KRW 5 million, recruitment benefit, and potential joint development.",
-          ko: "공식 대회는 총상금 2억 1,900만원 규모로 37개 팀을 시상했습니다. 독립 보도는 EyeCU의 Watchers가 스코넥 지정과제 수상팀이며 500만원·채용 우대·공동개발 가능성을 받았다고 확인합니다.",
+          en: "The contest awarded 37 teams from a KRW 219 million prize pool. Watchers won the Skonec task award, with KRW 5 million, recruitment benefits, and an opportunity to discuss joint development.",
+          ko: "총상금 2억 1,900만원 규모의 대회에서 37개 팀을 시상했습니다. Watchers는 스코넥 지정과제 수상작으로 선정되어 500만원과 채용 우대 혜택, 공동개발 협의 기회를 받았습니다.",
         },
         challenge: {
           en: "The team had to create a Meta Quest Pro application that turned eye-muscle rehabilitation exercises into a coherent, demonstrable VR experience.",
@@ -2612,12 +2612,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "Team EyeCU의 구성원으로 Watchers의 VR 콘텐츠 조사와 경험 설계에 기여했으며, 이영성이 팀 리드를 맡았습니다.",
         },
         criteria: {
-          en: "Task fit; technical implementation; experience and content design; completion and demonstration. The organizer's exact scorecard was not in the reviewed artifact.",
-          ko: "지정과제 적합성; 기술 구현; 경험·콘텐츠 설계; 완성·시연. 검토 자료에는 주최 측 정확한 배점표가 없었습니다.",
+          en: "A team award for the Skonec-designated task in the 2023 Metaverse Developer Contest.",
+          ko: "2023 메타버스 개발자 경진대회의 스코넥 지정과제에서 받은 팀 단위 수상입니다.",
         },
         validates: {
-          en: "National external recognition for translating rehabilitation exercises into a working eye-tracked VR content concept as part of a multidisciplinary team.",
-          ko: "다학제 팀에서 재활 운동을 작동형 시선 추적 VR 콘텐츠로 전환한 작업에 대한 전국 규모 외부 인정입니다.",
+          en: "Recognition for a multidisciplinary team's working, eye-tracked VR experience built around rehabilitation exercises.",
+          ko: "재활 운동을 중심으로 시선 추적 VR 경험을 구현한 다학제 팀의 성과입니다.",
         },
       },
     },
@@ -2678,12 +2678,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "팀 대표로 창업 신청을 이끌고 ESG 문제, XR 서비스 콘셉트, 경진대회 결과물 구성을 주도했습니다.",
         },
         criteria: {
-          en: "Problem and social value; business-model feasibility; technical concept; team execution. The exact competition scorecard was not preserved.",
-          ko: "문제·사회적 가치; 비즈니스 모델 실행 가능성; 기술 콘셉트; 팀 실행력. 정확한 대회 배점표는 확보되지 않았습니다.",
+          en: "The HGU President's Award for Team CGreen's Glean venture proposal.",
+          ko: "Team CGreen의 Glean 창업 제안으로 받은 한동대학교 총장상입니다.",
         },
         validates: {
-          en: "Early external evidence of venture leadership and the ability to connect immersive technology with an environmental behavior model, recognized with the university President's Award.",
-          ko: "몰입형 기술을 환경 행동 모델과 연결한 초기 벤처 리더십의 외부 근거이며 총장상으로 인정받았습니다.",
+          en: "Recognition for connecting immersive technology, recycling behavior, and user incentives in a venture proposal.",
+          ko: "몰입형 기술과 재활용 행동, 사용자 보상을 연결한 창업 제안의 성과입니다.",
         },
       },
     },
@@ -2748,8 +2748,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "예비 설계 연구를 인정한 발표상이며 임상 치료 효능을 입증한 결과는 아닙니다.",
         },
         validates: {
-          en: "Society recognition for converting a therapeutic-design question into a controllable VR exposure concept while retaining appropriate clinical caution.",
-          ko: "치료 설계 질문을 조절 가능한 VR 노출 콘셉트로 전환하면서 임상적 신중함을 유지한 연구에 대한 학회 인정입니다.",
+          en: "Recognition for a preliminary study of controllable distance and progression in VR exposure design.",
+          ko: "VR 노출 설계에서 거리와 진행 단계를 조절하는 방식을 탐구한 예비 연구 성과입니다.",
         },
       },
     },
@@ -2774,12 +2774,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "블록체인 벤처 제안을 개발하고 본선 피치를 준비·발표하는 데 기여했습니다.",
         },
         artifact: {
-          en: "A documented competition pitch; no independent team roster or organizer record is available.",
-          ko: "기록된 대회 피치이며 독립적인 팀 명단이나 주최 측 기록은 확보되지 않았습니다.",
+          en: "A blockchain venture proposal and final-round presentation prepared with the team.",
+          ko: "팀과 함께 준비한 블록체인 창업 제안서와 본선 발표입니다.",
         },
         evidence: {
-          en: "The competition funnel is verified, and the team is among the 14 finalists it selected.",
-          ko: "대회 선발 구조가 확인되며, 팀은 그 선발을 통과한 본선 14팀에 포함됩니다.",
+          en: "The team advanced to the final 14 from 152 applications.",
+          ko: "총 152개 지원팀 가운데 본선 14팀에 선정되었습니다.",
         },
       },
       palette: "award",
@@ -2810,12 +2810,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "팀의 블록체인 솔루션 개발과 본선 피치 준비·발표에 기여했습니다.",
         },
         criteria: {
-          en: "Global venture proposition; business feasibility; solution differentiation; live pitch and responses. The exact scored rubric was not located.",
-          ko: "글로벌 사업 제안; 사업 실행 가능성; 솔루션 차별성; 라이브 피칭·응답. 정확한 배점표는 확인되지 않았습니다.",
+          en: "Finalist selection followed by a live venture presentation to business-school, venture-capital, and industry judges.",
+          ko: "본선 진출 후 경영대학·벤처투자·산업 전문가 심사위원 앞에서 창업 제안을 발표했습니다.",
         },
         validates: {
-          en: "The organizer-verified funnel establishes the competition's selectivity, and places the team among its 14 finalists.",
-          ko: "주최 측이 확인한 선발 흐름은 대회의 경쟁도를 보여주며, 팀은 본선 14팀에 포함됩니다.",
+          en: "Experience developing and presenting a venture proposal in an international startup competition.",
+          ko: "국제 창업 경진대회에서 사업 제안을 발전시키고 발표한 경험입니다.",
         },
       },
     },
