@@ -148,6 +148,28 @@
   let dialogAnimation = null;
   let transitionId = 0;
   let shelfObservers = [];
+  let motionModule;
+  let activeBookMotion;
+  let motionEpoch = 0;
+  let flyingBook;
+  let flightPlaceholder;
+  const loadBookMotion = () => {
+    if (reduced.matches || document.body.classList.contains("reader"))
+      return Promise.resolve(null);
+    motionModule ||= import("./book-motion.js?v=110-20260908r1").catch(
+      () => null,
+    );
+    return motionModule;
+  };
+  ["pointerover", "pointerdown", "focusin"].forEach((type) => {
+    root.addEventListener(
+      type,
+      (event) => {
+        if (event.target.closest("[data-pl-book]")) void loadBookMotion();
+      },
+      { passive: true },
+    );
+  });
   const arrivalAnimations = new Set();
   const arrivalObserver = new IntersectionObserver(
     (entries) => {
@@ -259,7 +281,102 @@
   const position = node("span", "catalog-meta");
   readerFooter.append(prev, position, next);
   dialog.append(readerHead, readerBody, readerFooter);
+  const bookStage = node("div", "book-flight");
+  const skipMotion = button(
+    pair("Skip animation", "애니메이션 건너뛰기"),
+    "book-flight-skip",
+    () => stopBookMotion(true),
+  );
+  bookStage.append(skipMotion);
+  dialog.append(bookStage);
   root.append(dialog);
+
+  const stopBookMotion = (reveal = false) => {
+    motionEpoch++;
+    activeBookMotion?.cancel();
+    activeBookMotion = null;
+    flyingBook?.classList.remove("book-in-flight");
+    flyingBook = null;
+    flightPlaceholder?.remove();
+    flightPlaceholder = null;
+    const wasOpening = dialog.classList.contains("book-opening");
+    dialog.classList.remove("book-opening");
+    delete bookStage.dataset.rendered;
+    if (reveal && wasOpening && dialog.open) {
+      close.focus({ preventScroll: true });
+      dialogAnimation = animate(
+        dialog,
+        [
+          { opacity: 0, transform: "translateY(6px)" },
+          { opacity: 1, transform: "translateY(0)" },
+        ],
+        190,
+      );
+    }
+  };
+  const startBookMotion = async (work, trigger) => {
+    const epoch = ++motionEpoch;
+    const rect = trigger.getBoundingClientRect();
+    const style = getComputedStyle(trigger);
+    const color = style.backgroundColor,
+      ink = style.color;
+    flightPlaceholder = trigger.cloneNode(true);
+    flightPlaceholder.className =
+      trigger.className + " book-flight-placeholder";
+    flightPlaceholder.removeAttribute("data-pl-book");
+    flightPlaceholder.removeAttribute("title");
+    flightPlaceholder.setAttribute("aria-hidden", "true");
+    flightPlaceholder.tabIndex = -1;
+    Object.assign(flightPlaceholder.style, {
+      left: `${rect.left}px`,
+      top: `${rect.top}px`,
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+    });
+    bookStage.append(flightPlaceholder);
+    flyingBook = trigger;
+    flyingBook.classList.add("book-in-flight");
+    let timeout;
+    try {
+      const module = await Promise.race([
+        loadBookMotion(),
+        new Promise((resolve) => {
+          timeout = setTimeout(() => resolve(null), 1600);
+        }),
+      ]);
+      if (epoch !== motionEpoch || !dialog.open) return;
+      if (
+        module &&
+        !reduced.matches &&
+        !document.body.classList.contains("reader")
+      ) {
+        activeBookMotion = module.playBookOpening({
+          container: bookStage,
+          rect,
+          color,
+          ink,
+          title: text(work.shortTitle || work.awardName || work.title),
+          category: text(labels[work.type]),
+          year: work.year,
+          faceOut: trigger.classList.contains("catalog-face-out"),
+          pages: fields(work)
+            .slice(0, 4)
+            .map(([title, body]) => ({ title: text(title), body: text(body) })),
+        });
+        flightPlaceholder?.remove();
+        flightPlaceholder = null;
+        await activeBookMotion.finished;
+      }
+    } catch {
+      // Reading remains available when modules, shaders, or WebGL cannot start.
+    } finally {
+      clearTimeout(timeout);
+      if (epoch === motionEpoch) stopBookMotion(true);
+    }
+  };
+  reduced.addEventListener("change", () => {
+    if (reduced.matches) stopBookMotion(true);
+  });
 
   const urlFor = (slug) => {
     const url = new URL(location.href);
@@ -404,6 +521,7 @@
   };
   const openReader = (work, trigger = null, fromHistory = false) => {
     transitionId++;
+    stopBookMotion();
     dialogAnimation?.cancel();
     closing = false;
     selected = work;
@@ -413,21 +531,34 @@
       sequence = works.filter((w) => w.type === work.type);
     renderReader();
     if (!dialog.open) {
+      const cinematic =
+        trigger &&
+        !reduced.matches &&
+        !document.body.classList.contains("reader");
+      if (cinematic) dialog.classList.add("book-opening");
       dialog.showModal();
       document.documentElement.classList.add("catalog-reading");
-      if (trigger) {
-        const source = trigger.getBoundingClientRect();
-        const surface = dialog.getBoundingClientRect();
-        dialog.style.transformOrigin = `${source.left + source.width / 2 - surface.left}px ${source.top + source.height / 2 - surface.top}px`;
-      } else dialog.style.transformOrigin = "50% 75%";
-      dialogAnimation = animate(
-        dialog,
-        [
-          { opacity: 0, transform: "translateY(12px) scale(.96)" },
-          { opacity: 1, transform: "translateY(0) scale(1)" },
-        ],
-        280,
-      );
+      if (cinematic) {
+        skipMotion.textContent = text(
+          pair("Skip animation", "애니메이션 건너뛰기"),
+        );
+        skipMotion.focus({ preventScroll: true });
+        void startBookMotion(work, trigger);
+      } else {
+        if (trigger) {
+          const source = trigger.getBoundingClientRect();
+          const surface = dialog.getBoundingClientRect();
+          dialog.style.transformOrigin = `${source.left + source.width / 2 - surface.left}px ${source.top + source.height / 2 - surface.top}px`;
+        } else dialog.style.transformOrigin = "50% 75%";
+        dialogAnimation = animate(
+          dialog,
+          [
+            { opacity: 0, transform: "translateY(12px) scale(.96)" },
+            { opacity: 1, transform: "translateY(0) scale(1)" },
+          ],
+          280,
+        );
+      }
     }
     if (!fromHistory) {
       history.pushState({ catalog: true }, "", urlFor(work.slug));
@@ -435,6 +566,7 @@
     }
   };
   const finishClose = () => {
+    stopBookMotion();
     const fallback = opener?.dataset.plBook;
     const selector = opener?.matches(".catalog-record")
       ? ".catalog-record"
@@ -453,15 +585,19 @@
     if (!dialog.open || closing) return;
     closing = true;
     const token = ++transitionId;
+    const wasOpening = dialog.classList.contains("book-opening");
+    stopBookMotion();
     dialogAnimation?.cancel();
-    const a = (dialogAnimation = animate(
-      dialog,
-      [
-        { opacity: 1, transform: "translateY(0)" },
-        { opacity: 0, transform: "translateY(8px)" },
-      ],
-      140,
-    ));
+    const a = (dialogAnimation = wasOpening
+      ? null
+      : animate(
+          dialog,
+          [
+            { opacity: 1, transform: "translateY(0)" },
+            { opacity: 0, transform: "translateY(8px)" },
+          ],
+          140,
+        ));
     if (a) await a.finished.catch(() => {});
     if (token !== transitionId) return;
     finishClose();
@@ -474,6 +610,7 @@
   };
   const step = (delta) => {
     if (closing || !selected) return;
+    stopBookMotion();
     const work = sequence[sequence.indexOf(selected) + delta];
     if (!work) return;
     selected = work;
@@ -505,6 +642,11 @@
       closeReader();
   });
   dialog.addEventListener("keydown", (event) => {
+    if (dialog.classList.contains("book-opening") && event.key === "Tab") {
+      event.preventDefault();
+      skipMotion.focus();
+      return;
+    }
     if (event.key === "Tab") {
       const controls = [
         ...dialog.querySelectorAll("button:not(:disabled),a[href]"),

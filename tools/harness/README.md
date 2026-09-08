@@ -10,6 +10,7 @@ python tools/harness/run_browser.py
 python tools/harness/library_interactions.py
 python tools/harness/rebuild_checks.py
 python tools/harness/lab_checks.py
+python tools/harness/book_motion_checks.py
 ```
 
 The tests cover references, cache versions, public metadata, responsive layouts,
@@ -20,3 +21,8 @@ an A4 CV PDF. Keep those review artifacts outside the published repository.
 When releasing asset changes, update the version strings and run
 `static_checks.py --update-stamps`. Commit the resulting baseline with the assets.
 Do not suppress a failing check without understanding the underlying behavior.
+
+The book-motion suite covers the Three.js pull, turn, opening, and page bends;
+seven viewports; touch and rotation; actual WebGL pixels and framing; skip,
+Escape, history, context loss, and reduced-motion/module/WebGL fallbacks.
+Pass `--screenshots <directory>` to capture deterministic animation frames.
