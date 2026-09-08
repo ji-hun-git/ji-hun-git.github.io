@@ -1,8 +1,7 @@
 """Regenerate the profile image derivatives from the master photo.
 
-The card renders at ~286x358 CSS px (aspect-ratio 4/5, object-fit: cover), so
-572x735 covers a 2x display exactly. The master is kept only as the social-card
-source: og:image is fetched by crawlers, never by the page, so it can stay large.
+The CV renders at 164px wide and the bookshelf portrait at 38px. The display
+derivatives cover both at 2x resolution. The master also supplies the social image.
 
     python tools/build-profile-images.py
 
@@ -20,7 +19,7 @@ MASTER = ROOT / "assets" / "profile" / "jihun-chae-master.jpg"
 OUT_DIR = ROOT / "assets" / "profile"
 
 # (filename, width, height, quality) - height follows the master's aspect ratio
-DISPLAY_W = 572
+DISPLAY_W = 328
 
 
 def main() -> None:
@@ -33,8 +32,10 @@ def main() -> None:
     display_h = round(DISPLAY_W * h / w)
 
     display = src.resize((DISPLAY_W, display_h), Image.LANCZOS)
+    thumbnail = src.resize((76, round(76 * h / w)), Image.LANCZOS)
 
     targets = [
+        (OUT_DIR / "jihun-chae-thumb.webp", thumbnail, {"format": "WEBP", "quality": 82, "method": 6}),
         (OUT_DIR / "jihun-chae.webp", display, {"format": "WEBP", "quality": 82, "method": 6}),
         (OUT_DIR / "jihun-chae.jpg", display, {"format": "JPEG", "quality": 82, "optimize": True, "progressive": True}),
         # Social card: crawlers only, never loaded by the page.
@@ -46,7 +47,7 @@ def main() -> None:
         kb = path.stat().st_size / 1024
         print(f"{path.name:28} {img.width:>5} x {img.height:<5} {kb:>8.1f} KB")
 
-    print(f"\ndisplay derivatives: {DISPLAY_W} x {display_h} (covers 286 x 358 at 2x DPR)")
+    print(f"\ndisplay derivatives: {DISPLAY_W} x {display_h} (covers 164px at 2x DPR)")
 
 
 if __name__ == "__main__":

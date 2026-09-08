@@ -1,10 +1,11 @@
 (() => {
-  'use strict';
-  const root = document.getElementById('work-library');
+  "use strict";
+  const root = document.getElementById("work-library");
   const designs = window.PROJECT_LIBRARY_DESIGNS;
   if (!root || !designs) return;
-  const lang = () => document.documentElement.lang === 'ko' ? 'ko' : 'en';
-  const text = value => typeof value === 'string' ? value : value?.[lang()] || value?.en || '';
+  const lang = () => (document.documentElement.lang === "ko" ? "ko" : "en");
+  const text = (value) =>
+    typeof value === "string" ? value : value?.[lang()] || value?.en || "";
   const pair = (en, ko) => ({ en, ko });
   const node = (tag, cls, content) => {
     const el = document.createElement(tag);
@@ -14,66 +15,129 @@
   };
   const read = (source, selector) => {
     const el = selector ? source.querySelector(selector) : source;
-    if (!el) return pair('', '');
-    return Object.fromEntries(['en','ko'].map(language => {
-      const clone = el.cloneNode(true);
-      clone.querySelectorAll(`[lang]:not([lang="${language}"])`).forEach(n => n.remove());
-      return [language, clone.textContent.replace(/\s+/g, ' ').trim()];
-    }));
+    if (!el) return pair("", "");
+    return Object.fromEntries(
+      ["en", "ko"].map((language) => {
+        const clone = el.cloneNode(true);
+        clone
+          .querySelectorAll(`[lang]:not([lang="${language}"])`)
+          .forEach((n) => n.remove());
+        return [language, clone.textContent.replace(/\s+/g, " ").trim()];
+      }),
+    );
   };
   const sources = {
-    projects: [...document.querySelectorAll('#projects .items > .item')],
-    publications: [...document.querySelectorAll('#pubItems .item')],
-    awards: [...document.querySelectorAll('#awards .items > .item')]
+    projects: [...document.querySelectorAll("#projects .items > .item")],
+    publications: [...document.querySelectorAll("#pubItems .item")],
+    awards: [...document.querySelectorAll("#awards .items > .item")],
   };
-  const types = { projects:'project', publications:'publication', awards:'award' };
+  const types = {
+    projects: "project",
+    publications: "publication",
+    awards: "award",
+  };
   const labels = {
-    all: pair('All work', '전체 작업'), project:pair('Projects','프로젝트'),
-    publication:pair('Publications','논문'), award:pair('Awards','수상')
+    all: pair("All work", "전체 작업"),
+    project: pair("Projects", "프로젝트"),
+    publication: pair("Publications", "논문"),
+    award: pair("Awards", "수상"),
   };
-  const works = Object.entries(types).flatMap(([key,type]) => designs[key].map(design => {
-    const source = sources[key][design.sourceIndex];
-    if (!source) return null;
-    source.id ||= `cv-work-${design.slug}`;
-    const title = read(source, type === 'publication' ? '.paper-title' : '.item-title');
-    const meta = read(source, type === 'publication' ? '.venue' : '.item-meta');
-    const year = source.dataset.year || meta.en.match(/\b20\d{2}\b/)?.[0] || '';
-    const links = [...source.querySelectorAll('a[href]')].filter((el,i,all) => all.findIndex(a => a.href === el.href) === i)
-      .map(el => ({href:el.href, label:el.classList.contains('pub-link') ? el.textContent : 'Source'}));
-    const description = Object.fromEntries(['en','ko'].map(language => [language,
-      [...source.querySelectorAll(`.item-desc[lang="${language}"]`)].map(el => el.textContent.trim()).join('\n\n')
-    ]));
-    const citationNode = source.querySelector('.item-desc')?.cloneNode(true);
-    citationNode?.querySelectorAll('.pub-n, .pub-link, .pub-role, .pub-tag').forEach(el => el.remove());
-    const citation = type === 'publication' && citationNode ? read(citationNode) : null;
-    const partners = Object.fromEntries(['en','ko'].map(language => [language,
-      [...source.querySelectorAll(`.p-set[lang="${language}"] .p-chip`)].map(el => el.textContent.trim()).join(' · ')
-    ]));
-    return {...design, type, title, meta, year, links, description, citation, sourceId:source.id,
-      role:read(source,'.pub-role'), takeaway:read(source,'.pub-value'), partners};
-  }).filter(Boolean));
-  document.addEventListener('click', event => {
-    const anchor=event.target.closest('a[href]');
+  const works = Object.entries(types).flatMap(([key, type]) =>
+    designs[key]
+      .map((design) => {
+        const source = sources[key][design.sourceIndex];
+        if (!source) return null;
+        source.id ||= `cv-work-${design.slug}`;
+        const title = read(
+          source,
+          type === "publication" ? ".paper-title" : ".item-title",
+        );
+        const meta = read(
+          source,
+          type === "publication" ? ".venue" : ".item-meta",
+        );
+        const year =
+          source.dataset.year || meta.en.match(/\b20\d{2}\b/)?.[0] || "";
+        const links = [...source.querySelectorAll("a[href]")]
+          .filter(
+            (el, i, all) => all.findIndex((a) => a.href === el.href) === i,
+          )
+          .map((el) => ({
+            href: el.href,
+            label: el.classList.contains("pub-link")
+              ? el.textContent
+              : "Source",
+          }));
+        const description = Object.fromEntries(
+          ["en", "ko"].map((language) => [
+            language,
+            [...source.querySelectorAll(`.item-desc[lang="${language}"]`)]
+              .map((el) => el.textContent.trim())
+              .join("\n\n"),
+          ]),
+        );
+        const citationNode = source
+          .querySelector(".item-desc")
+          ?.cloneNode(true);
+        citationNode
+          ?.querySelectorAll(".pub-n, .pub-link, .pub-role, .pub-tag")
+          .forEach((el) => el.remove());
+        const citation =
+          type === "publication" && citationNode ? read(citationNode) : null;
+        const partners = Object.fromEntries(
+          ["en", "ko"].map((language) => [
+            language,
+            [...source.querySelectorAll(`.p-set[lang="${language}"] .p-chip`)]
+              .map((el) => el.textContent.trim())
+              .join(" · "),
+          ]),
+        );
+        return {
+          ...design,
+          type,
+          title,
+          meta,
+          year,
+          links,
+          description,
+          citation,
+          sourceId: source.id,
+          role: read(source, ".pub-role"),
+          takeaway: read(source, ".pub-value"),
+          partners,
+        };
+      })
+      .filter(Boolean),
+  );
+  document.addEventListener("click", (event) => {
+    const anchor = event.target.closest("a[href]");
     if (!anchor) return;
-    const url=new URL(anchor.href);
-    if (url.origin===location.origin && (url.searchParams.get('view')==='cv' || anchor.matches('.library-return'))) {
-      if (lang()==='ko') url.searchParams.set('lang','ko'); else url.searchParams.delete('lang');
-      anchor.href=url.href;
+    const url = new URL(anchor.href);
+    if (
+      url.origin === location.origin &&
+      (url.searchParams.get("view") === "cv" ||
+        anchor.matches(".library-return"))
+    ) {
+      if (lang() === "ko") url.searchParams.set("lang", "ko");
+      else url.searchParams.delete("lang");
+      anchor.href = url.href;
     }
   });
   // CV deep links use the same stable record IDs even when the library is not mounted.
-  if (document.documentElement.dataset.view === 'cv') {
-    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (document.documentElement.dataset.view === "cv") {
+    const target = document.getElementById(
+      decodeURIComponent(location.hash.slice(1)),
+    );
     if (target) requestAnimationFrame(() => target.scrollIntoView());
     return;
   }
 
-  root.className = 'work-library catalog';
+  root.className = "work-library catalog";
   root.replaceChildren();
-  root.setAttribute('aria-labelledby','site-title');
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let category = 'all';
-  let query = '';
+  root.setAttribute("aria-labelledby", "site-title");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  let category = "all";
+  let query = "";
   let selected = null;
   let opener = null;
   let sequence = [];
@@ -83,309 +147,718 @@
   let listAnimation = null;
   let dialogAnimation = null;
   let transitionId = 0;
-  const animate = (el, frames, duration=220) => {
-    if (reduced.matches || document.body.classList.contains('reader')) return null;
-    return el.animate(frames, {duration, easing:'cubic-bezier(.2,.7,.2,1)'});
+  let shelfObservers = [];
+  const animate = (el, frames, duration = 220) => {
+    if (reduced.matches || document.body.classList.contains("reader"))
+      return null;
+    return el.animate(frames, { duration, easing: "cubic-bezier(.2,.7,.2,1)" });
   };
-  const link = (label, href, cls='') => {
-    const el = node('a',cls,label); el.href = href; return el;
+  const link = (label, href, cls = "") => {
+    const el = node("a", cls, label);
+    el.href = href;
+    return el;
   };
   const button = (label, cls, action) => {
-    const el = node('button',cls,label); el.type='button'; el.addEventListener('click',action); return el;
+    const el = node("button", cls, label);
+    el.type = "button";
+    el.addEventListener("click", action);
+    return el;
   };
-  const shell = node('div','catalog-shell');
+  const shell = node("div", "catalog-shell");
   root.append(shell);
-  const header = node('header','catalog-header');
-  const brand = link('JC.', './', 'catalog-brand');
-  brand.setAttribute('aria-label','Jihun Chae home');
-  const nav = node('nav','catalog-nav'); nav.setAttribute('aria-label','Main navigation');
-  header.append(brand,nav);
-  const intro = node('section','catalog-intro');
-  const heading = node('h1','','Jihun Chae'); heading.id='site-title';
-  const eyebrow = node('p','catalog-eyebrow');
-  const statement = node('p','catalog-statement');
-  const introMeta = node('div','catalog-intro-meta');
-  const portrait = node('img','catalog-portrait');
-  portrait.src='assets/profile/jihun-chae.webp'; portrait.alt='Jihun Chae'; portrait.width=52; portrait.height=52;
-  const affiliation = node('p');
-  introMeta.append(portrait,affiliation);
-  intro.append(eyebrow,heading,statement,introMeta);
-  const featured = node('section','catalog-featured');
-  const featuredHeading = node('div','catalog-section-heading');
-  const featuredTitle = node('h2');
-  const featuredCount = node('span','catalog-meta','01 / 03');
-  featuredHeading.append(featuredTitle,featuredCount);
-  const featuredGrid = node('div','catalog-volumes');
-  featured.append(featuredHeading,featuredGrid);
-  const archive = node('section','catalog-archive'); archive.id='archive';
-  const archiveHeading = node('div','catalog-section-heading');
-  const archiveTitle = node('h2');
-  const count = node('span','catalog-meta'); count.setAttribute('role','status');
-  archiveHeading.append(archiveTitle,count);
-  const toolbar = node('div','catalog-toolbar');
-  const filters = node('div','catalog-filters'); filters.setAttribute('role','group');
-  const searchLabel = node('label','catalog-search');
-  const search = node('input'); search.type='search'; search.autocomplete='off';
+  const intro = node("section", "catalog-intro");
+  const heading = node("h1", "", "Jihun Chae");
+  heading.id = "site-title";
+  const eyebrow = node("p", "catalog-eyebrow");
+  const statement = node("p", "catalog-statement");
+  const introMeta = node("div", "catalog-intro-meta");
+  const portrait = node("img", "catalog-portrait");
+  portrait.src = "assets/profile/jihun-chae-thumb.webp";
+  portrait.addEventListener("error", () => {
+    portrait.hidden = true;
+  });
+  portrait.alt = "Jihun Chae";
+  portrait.width = 38;
+  portrait.height = 49;
+  const affiliation = node("p");
+  introMeta.append(portrait, affiliation);
+  intro.append(eyebrow, heading, statement, introMeta);
+  const archive = node("section", "catalog-archive");
+  archive.id = "archive";
+  const archiveHeading = node("div", "catalog-section-heading");
+  const archiveTitle = node("h2");
+  const count = node("span", "catalog-meta");
+  count.setAttribute("role", "status");
+  archiveHeading.append(archiveTitle, count);
+  const toolbar = node("div", "catalog-toolbar");
+  const filters = node("div", "catalog-filters");
+  filters.setAttribute("role", "group");
+  const searchLabel = node("label", "catalog-search");
+  const search = node("input");
+  search.type = "search";
+  search.autocomplete = "off";
   searchLabel.append(search);
-  toolbar.append(filters,searchLabel);
-  const list = node('ol','catalog-list');
-  const empty = node('div','catalog-empty'); empty.hidden=true;
-  archive.append(archiveHeading,toolbar,list,empty);
-  const footer = node('footer','catalog-footer');
-  shell.append(header,intro,featured,archive,footer);
-  const dialog = node('dialog','catalog-reader'); dialog.id='work-detail';
-  dialog.setAttribute('aria-label',text(pair('Work details','작업 상세')));
-  const readerHead = node('div','catalog-reader-toolbar');
-  const readerType = node('span','catalog-meta');
-  const readerControls=node('div','catalog-reader-controls');
-  const readerLanguage=button('한국어','catalog-copy',()=>document.getElementById('langToggle').click());
-  const close = button('×','catalog-icon',() => closeReader());
-  close.dataset.plAction='close';
-  readerControls.append(readerLanguage,close);
-  readerHead.append(readerType,readerControls);
-  const readerBody = node('div','catalog-reader-body');
-  const readerFooter = node('div','catalog-reader-footer');
-  const prev = button('←','catalog-icon',() => step(-1)); prev.dataset.plAction='previous';
-  const next = button('→','catalog-icon',() => step(1)); next.dataset.plAction='next';
-  const position = node('span','catalog-meta');
-  readerFooter.append(prev,position,next);
-  dialog.append(readerHead,readerBody,readerFooter);
+  toolbar.append(filters, searchLabel);
+  const list = node("div", "catalog-list");
+  const empty = node("div", "catalog-empty");
+  empty.hidden = true;
+  archive.append(archiveHeading, toolbar, list, empty);
+  const footer = node("footer", "catalog-footer");
+  const cvEntry = node("section", "catalog-cv-entry");
+  shell.append(intro, archive, cvEntry, footer);
+  const dialog = node("dialog", "catalog-reader");
+  dialog.id = "work-detail";
+  dialog.setAttribute("aria-label", text(pair("Work details", "작업 상세")));
+  const readerHead = node("div", "catalog-reader-toolbar");
+  const readerType = node("span", "catalog-meta");
+  const readerControls = node("div", "catalog-reader-controls");
+  const readerLanguage = button("한국어", "catalog-copy", () =>
+    document.getElementById("langToggle").click(),
+  );
+  const close = button("×", "catalog-icon", () => closeReader());
+  close.dataset.plAction = "close";
+  readerControls.append(readerLanguage, close);
+  readerHead.append(readerType, readerControls);
+  const readerBody = node("div", "catalog-reader-body");
+  const readerFooter = node("div", "catalog-reader-footer");
+  const prev = button("←", "catalog-icon", () => step(-1));
+  prev.dataset.plAction = "previous";
+  const next = button("→", "catalog-icon", () => step(1));
+  next.dataset.plAction = "next";
+  const position = node("span", "catalog-meta");
+  readerFooter.append(prev, position, next);
+  dialog.append(readerHead, readerBody, readerFooter);
   root.append(dialog);
 
-  const urlFor = slug => {
+  const urlFor = (slug) => {
     const url = new URL(location.href);
-    url.searchParams.delete('view');
-    if (slug) url.searchParams.set('work',slug); else url.searchParams.delete('work');
+    url.searchParams.delete("view");
+    if (slug) url.searchParams.set("work", slug);
+    else url.searchParams.delete("work");
     return url;
   };
-  const fields = work => {
-    const e=work.editorial || {}, s=work.story || {};
-    if (work.type==='project') return [
-      [pair('The question','핵심 질문'),e.question],
-      [pair('The problem','문제'),e.problem || s.research],
-      [pair('My responsibility','나의 책임'),e.responsibility],
-      [pair('What was built','구축한 것'),e.build || s.artifact],
-      [pair('Design decisions','설계 결정'),e.decision || s.design],
-      [pair('Evaluation','평가'),e.validation || e.evaluation],
-      [pair('Delivery','구축 성과'),e.outcomeSystem],
-      [pair('Research outcomes','연구 성과'),e.outcomeEvidence || s.evidence],
-      [pair('Collaboration','협업'),e.outcomeValue || e.outcome],
-      [pair('What I learned','배운 점'),e.lesson],
-      [pair('Project partners','협력 기관'),work.partners]
-    ];
-    if (work.type==='publication') return [
-      [pair('Authorship','저자 역할'),work.role],
-      [pair('Research question','연구 질문'),e.question],
-      [pair('Knowledge gap','지식 공백'),e.gap],
-      [pair('Contribution','연구 기여'),e.contribution],
-      [pair('Method','방법'),e.method],
-      [pair('Key finding','핵심 결과'),e.takeaway || e.findings || s.evidence],
-      [pair('Finding 01','결과 01'),e.finding1],
-      [pair('Finding 02','결과 02'),e.finding2],
-      [pair('Finding 03','결과 03'),e.finding3],
-      [pair('Implications','시사점'),e.implication || e.implications],
-      [pair('Scope','범위'),e.scope],
-      [pair('Full citation','전체 인용'),work.citation]
-    ];
+  const fields = (work) => {
+    const e = work.editorial || {},
+      s = work.story || {};
+    if (work.type === "project")
+      return [
+        [pair("The question", "핵심 질문"), e.question],
+        [pair("The problem", "문제"), e.problem || s.research],
+        [pair("My responsibility", "나의 책임"), e.responsibility],
+        [pair("What was built", "구축한 것"), e.build || s.artifact],
+        [pair("Design decisions", "설계 결정"), e.decision || s.design],
+        [pair("Evaluation", "평가"), e.validation || e.evaluation],
+        [pair("Delivery", "구축 성과"), e.outcomeSystem],
+        [
+          pair("Research outcomes", "연구 성과"),
+          e.outcomeEvidence || s.evidence,
+        ],
+        [pair("Collaboration", "협업"), e.outcomeValue || e.outcome],
+        [pair("What I learned", "배운 점"), e.lesson],
+        [pair("Project partners", "협력 기관"), work.partners],
+      ];
+    if (work.type === "publication")
+      return [
+        [pair("Authorship", "저자 역할"), work.role],
+        [pair("Research question", "연구 질문"), e.question],
+        [pair("Knowledge gap", "지식 공백"), e.gap],
+        [pair("Contribution", "연구 기여"), e.contribution],
+        [pair("Method", "방법"), e.method],
+        [
+          pair("Key finding", "핵심 결과"),
+          e.takeaway || e.findings || s.evidence,
+        ],
+        [pair("Finding 01", "결과 01"), e.finding1],
+        [pair("Finding 02", "결과 02"), e.finding2],
+        [pair("Finding 03", "결과 03"), e.finding3],
+        [pair("Implications", "시사점"), e.implication || e.implications],
+        [pair("Scope", "범위"), e.scope],
+        [pair("Full citation", "전체 인용"), work.citation],
+      ];
     return [
-      [pair('Recognition','수상 및 선정'),e.verifiedResult || work.description],
-      [pair('Selection context','선발 과정'),e.selectionContext],
-      [pair('The challenge','과제'),e.challenge],
-      [pair('My contribution','나의 기여'),e.contribution || s.artifact],
-      [pair('Selection criteria','선발 기준'),e.criteria],
-      [pair('What this recognizes','인정받은 역량'),e.validates],
-      [pair('Hosts and sponsors','주최 및 후원'),work.partners]
+      [
+        pair("Recognition", "수상 및 선정"),
+        e.verifiedResult || work.description,
+      ],
+      [pair("Selection context", "선발 과정"), e.selectionContext],
+      [pair("The challenge", "과제"), e.challenge],
+      [pair("My contribution", "나의 기여"), e.contribution || s.artifact],
+      [pair("Selection criteria", "선발 기준"), e.criteria],
+      [pair("What this recognizes", "인정받은 역량"), e.validates],
+      [pair("Hosts and sponsors", "주최 및 후원"), work.partners],
     ];
   };
   const renderReader = () => {
     if (!selected) return;
-    const w=selected;
-    dialog.dataset.type=w.type;
+    const w = selected;
+    dialog.dataset.type = w.type;
     readerBody.replaceChildren();
-    const title = node('h2','',w.awardName || w.title); title.id='catalog-reader-title';
-    dialog.setAttribute('aria-labelledby','catalog-reader-title');
-    const meta = node('p','catalog-reader-meta',w.meta);
-    const summary = node('p','catalog-reader-summary',w.subtitle || w.takeaway);
-    readerBody.append(title,meta,summary);
-    const sectionNav=node('nav','catalog-contents'); sectionNav.setAttribute('aria-label',text(pair('Contents','목차')));
-    const sections=fields(w).filter(([,value])=>text(value));
-    sections.forEach(([label],i)=>sectionNav.append(link(label,`#reader-section-${i}`)));
+    const title = node("h2", "", w.awardName || w.title);
+    title.id = "catalog-reader-title";
+    dialog.setAttribute("aria-labelledby", "catalog-reader-title");
+    const meta = node("p", "catalog-reader-meta", w.meta);
+    const summary = node(
+      "p",
+      "catalog-reader-summary",
+      w.subtitle || w.takeaway,
+    );
+    readerBody.append(title, meta, summary);
+    const sectionNav = node("nav", "catalog-contents");
+    sectionNav.setAttribute("aria-label", text(pair("Contents", "목차")));
+    const sections = fields(w).filter(([, value]) => text(value));
+    sections.forEach(([label], i) =>
+      sectionNav.append(link(label, `#reader-section-${i}`)),
+    );
     readerBody.append(sectionNav);
-    sections.forEach(([label,value],i)=>{
-      const section=node('section','catalog-reader-section'); section.id=`reader-section-${i}`;
-      section.append(node('h3','',label),node('p','',value)); readerBody.append(section);
+    sections.forEach(([label, value], i) => {
+      const section = node("section", "catalog-reader-section");
+      section.id = `reader-section-${i}`;
+      section.append(node("h3", "", label), node("p", "", value));
+      readerBody.append(section);
     });
-    const actions=node('div','catalog-reader-actions');
-    w.links.forEach(source=>{
-      const a=link(source.label==='Source'?pair('Original source ↗','원문 보기 ↗'):source.label,source.href); a.target='_blank'; a.rel='noopener noreferrer'; actions.append(a);
+    const actions = node("div", "catalog-reader-actions");
+    w.links.forEach((source) => {
+      const a = link(
+        source.label === "Source"
+          ? pair("Original source ↗", "원문 보기 ↗")
+          : source.label,
+        source.href,
+      );
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      actions.append(a);
     });
-    actions.append(link(pair('View in full CV','전체 이력서에서 보기'),`?view=cv#${w.sourceId}`));
-    const copy=button(pair('Copy link','링크 복사'),'catalog-copy',async()=>{
-      try { await navigator.clipboard.writeText(urlFor(w.slug).href); copy.textContent=text(pair('Link copied','링크 복사됨')); }
-      catch { copy.textContent=text(pair('Link is in the address bar','주소창에서 링크를 확인하세요')); }
-    });
-    copy.setAttribute('aria-live','polite'); actions.append(copy); readerBody.append(actions);
-    readerType.textContent=`${text(labels[w.type])} / ${w.year}`;
-    readerLanguage.textContent=lang()==='ko'?'English':'한국어';
-    readerLanguage.setAttribute('aria-label',text(pair('Read in Korean','영어로 읽기')));
-    close.setAttribute('aria-label',text(pair('Close work','작업 닫기'))); close.title=close.ariaLabel;
-    prev.setAttribute('aria-label',text(pair('Previous work','이전 작업'))); prev.title=prev.ariaLabel;
-    next.setAttribute('aria-label',text(pair('Next work','다음 작업'))); next.title=next.ariaLabel;
-    const i=sequence.indexOf(w); prev.disabled=i<=0; next.disabled=i>=sequence.length-1;
-    position.textContent=`${String(i+1).padStart(2,'0')} / ${String(sequence.length).padStart(2,'0')}`;
-    readerBody.scrollTop=0;
+    actions.append(
+      link(
+        pair("View in full CV", "전체 이력서에서 보기"),
+        `?view=cv#${w.sourceId}`,
+      ),
+    );
+    const copy = button(
+      pair("Copy link", "링크 복사"),
+      "catalog-copy",
+      async () => {
+        try {
+          await navigator.clipboard.writeText(urlFor(w.slug).href);
+          copy.textContent = text(pair("Link copied", "링크 복사됨"));
+        } catch {
+          copy.textContent = text(
+            pair("Link is in the address bar", "주소창에서 링크를 확인하세요"),
+          );
+        }
+      },
+    );
+    copy.setAttribute("aria-live", "polite");
+    actions.append(copy);
+    readerBody.append(actions);
+    readerType.textContent = `${text(labels[w.type])} / ${w.year}`;
+    const mark = window.PROJECT_LIBRARY_ICONS?.create(w.icon);
+    if (mark) readerType.prepend(mark);
+    readerLanguage.textContent = lang() === "ko" ? "English" : "한국어";
+    readerLanguage.setAttribute(
+      "aria-label",
+      text(pair("Read in Korean", "영어로 읽기")),
+    );
+    close.setAttribute("aria-label", text(pair("Close work", "작업 닫기")));
+    close.title = close.ariaLabel;
+    prev.setAttribute("aria-label", text(pair("Previous work", "이전 작업")));
+    prev.title = prev.ariaLabel;
+    next.setAttribute("aria-label", text(pair("Next work", "다음 작업")));
+    next.title = next.ariaLabel;
+    const i = sequence.indexOf(w);
+    prev.disabled = i <= 0;
+    next.disabled = i >= sequence.length - 1;
+    position.textContent = `${String(i + 1).padStart(2, "0")} / ${String(sequence.length).padStart(2, "0")}`;
+    readerBody.scrollTop = 0;
   };
-  const openReader = (work, trigger=null, fromHistory=false) => {
+  const openReader = (work, trigger = null, fromHistory = false) => {
     transitionId++;
     dialogAnimation?.cancel();
-    closing=false;
-    selected=work;
-    if (trigger) opener=trigger;
-    sequence=visibleWorks();
-    if (!sequence.includes(work)) sequence=works.filter(w=>w.type===work.type);
+    closing = false;
+    selected = work;
+    if (trigger) opener = trigger;
+    sequence = visibleWorks();
+    if (!sequence.includes(work))
+      sequence = works.filter((w) => w.type === work.type);
     renderReader();
     if (!dialog.open) {
-      dialog.showModal(); document.documentElement.classList.add('catalog-reading');
-      dialogAnimation=animate(dialog,[{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'translateY(0)'}]);
+      dialog.showModal();
+      document.documentElement.classList.add("catalog-reading");
+      dialogAnimation = animate(dialog, [
+        { opacity: 0, transform: "translateY(16px)" },
+        { opacity: 1, transform: "translateY(0)" },
+      ]);
     }
-    if (!fromHistory) { history.pushState({catalog:true},'',urlFor(work.slug)); ownedHistory=true; }
+    if (!fromHistory) {
+      history.pushState({ catalog: true }, "", urlFor(work.slug));
+      ownedHistory = true;
+    }
   };
   const finishClose = () => {
-    const fallback=opener?.dataset.plBook;
-    const selector=opener?.matches('.catalog-record') ? '.catalog-record' : '.catalog-volume';
-    dialog.close(); selected=null; closing=false;
-    document.documentElement.classList.remove('catalog-reading');
-    if (opener?.isConnected) opener.focus({preventScroll:true});
-    else (root.querySelector(`${selector}[data-pl-book="${fallback}"]`) || search).focus({preventScroll:true});
+    const fallback = opener?.dataset.plBook;
+    const selector = opener?.matches(".catalog-record")
+      ? ".catalog-record"
+      : ".catalog-volume";
+    dialog.close();
+    selected = null;
+    closing = false;
+    document.documentElement.classList.remove("catalog-reading");
+    if (opener?.isConnected) opener.focus({ preventScroll: true });
+    else
+      (
+        root.querySelector(`${selector}[data-pl-book="${fallback}"]`) || search
+      ).focus({ preventScroll: true });
   };
-  const closeReader = async (fromHistory=false) => {
+  const closeReader = async (fromHistory = false) => {
     if (!dialog.open || closing) return;
-    closing=true;
-    const token=++transitionId;
+    closing = true;
+    const token = ++transitionId;
     dialogAnimation?.cancel();
-    const a=dialogAnimation=animate(dialog,[{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(8px)'}],140);
-    if (a) await a.finished.catch(()=>{});
-    if(token!==transitionId) return;
+    const a = (dialogAnimation = animate(
+      dialog,
+      [
+        { opacity: 1, transform: "translateY(0)" },
+        { opacity: 0, transform: "translateY(8px)" },
+      ],
+      140,
+    ));
+    if (a) await a.finished.catch(() => {});
+    if (token !== transitionId) return;
     finishClose();
     if (!fromHistory) {
-      if (ownedHistory) {ownedHistory=false; history.back();}
-      else history.replaceState(null,'',urlFor(null));
+      if (ownedHistory) {
+        ownedHistory = false;
+        history.back();
+      } else history.replaceState(null, "", urlFor(null));
     }
   };
-  const step = delta => {
+  const step = (delta) => {
     if (closing || !selected) return;
-    const work=sequence[sequence.indexOf(selected)+delta]; if (!work) return;
-    selected=work; renderReader(); history.replaceState({catalog:true},'',urlFor(work.slug));
+    const work = sequence[sequence.indexOf(selected) + delta];
+    if (!work) return;
+    selected = work;
+    renderReader();
+    history.replaceState({ catalog: true }, "", urlFor(work.slug));
     pageAnimation?.cancel();
-    pageAnimation=animate(readerBody,[{opacity:.25,transform:`translateX(${delta*8}px)`},{opacity:1,transform:'translateX(0)'}],180);
+    pageAnimation = animate(
+      readerBody,
+      [
+        { opacity: 0.25, transform: `translateX(${delta * 8}px)` },
+        { opacity: 1, transform: "translateX(0)" },
+      ],
+      180,
+    );
   };
-  dialog.addEventListener('cancel',event=>{event.preventDefault();closeReader();});
-  dialog.addEventListener('click',event=>{
-    const r=dialog.getBoundingClientRect();
-    if (event.target===dialog && (event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)) closeReader();
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeReader();
   });
-  dialog.addEventListener('keydown',event=>{
-    if (event.key==='Tab') {
-      const controls=[...dialog.querySelectorAll('button:not(:disabled),a[href]')].filter(el=>el.getClientRects().length);
-      const first=controls[0], last=controls.at(-1);
-      if (event.shiftKey && event.target===first) {event.preventDefault();last.focus();}
-      else if (!event.shiftKey && event.target===last) {event.preventDefault();first.focus();}
+  dialog.addEventListener("click", (event) => {
+    const r = dialog.getBoundingClientRect();
+    if (
+      event.target === dialog &&
+      (event.clientX < r.left ||
+        event.clientX > r.right ||
+        event.clientY < r.top ||
+        event.clientY > r.bottom)
+    )
+      closeReader();
+  });
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key === "Tab") {
+      const controls = [
+        ...dialog.querySelectorAll("button:not(:disabled),a[href]"),
+      ].filter((el) => el.getClientRects().length);
+      const first = controls[0],
+        last = controls.at(-1);
+      if (event.shiftKey && event.target === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && event.target === last) {
+        event.preventDefault();
+        first.focus();
+      }
       return;
     }
-    if (event.target.matches('input,textarea') || event.altKey || event.ctrlKey || event.metaKey) return;
-    if (event.key==='ArrowLeft') {event.preventDefault();step(-1);}
-    if (event.key==='ArrowRight') {event.preventDefault();step(1);}
+    if (
+      event.target.matches("input,textarea") ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey
+    )
+      return;
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      step(-1);
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      step(1);
+    }
   });
-  dialog.addEventListener('click',event=>{
-    const anchor=event.target.closest('.catalog-contents a'); if (!anchor) return;
+  dialog.addEventListener("click", (event) => {
+    const anchor = event.target.closest(".catalog-contents a");
+    if (!anchor) return;
     event.preventDefault();
-    const target=dialog.querySelector(anchor.getAttribute('href'));
-    target?.scrollIntoView({behavior:reduced.matches||document.body.classList.contains('reader')?'instant':'smooth',block:'start'});
+    const target = dialog.querySelector(anchor.getAttribute("href"));
+    target?.scrollIntoView({
+      behavior:
+        reduced.matches || document.body.classList.contains("reader")
+          ? "instant"
+          : "smooth",
+      block: "start",
+    });
   });
-  window.addEventListener('popstate',event=>{
-    const params=new URLSearchParams(location.search);
-    if ((params.get('lang')==='ko') !== (lang()==='ko')) document.getElementById('langToggle').click();
-    const work=works.find(w=>w.slug===params.get('work'));
-    ownedHistory=Boolean(event.state?.catalog);
-    if (work) openReader(work,null,true); else {ownedHistory=false;closeReader(true);}
+  window.addEventListener("popstate", (event) => {
+    const params = new URLSearchParams(location.search);
+    if ((params.get("lang") === "ko") !== (lang() === "ko"))
+      document.getElementById("langToggle").click();
+    const work = works.find((w) => w.slug === params.get("work"));
+    ownedHistory = Boolean(event.state?.catalog);
+    if (work) openReader(work, null, true);
+    else {
+      ownedHistory = false;
+      closeReader(true);
+    }
   });
 
-  const visibleWorks = () => works.filter(w => (category==='all'||w.type===category) &&
-    [w.title.en,w.title.ko,w.shortTitle?.en,w.shortTitle?.ko,w.meta.en,w.meta.ko,w.category?.en,w.category?.ko,w.year]
-      .join(' ').toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()))
-    .sort((a,b)=>Number(b.year)-Number(a.year));
-  const renderList = (motion=false) => {
+  const visibleWorks = () =>
+    works
+      .filter(
+        (w) =>
+          (category === "all" || w.type === category) &&
+          [
+            w.title.en,
+            w.title.ko,
+            w.shortTitle?.en,
+            w.shortTitle?.ko,
+            w.meta.en,
+            w.meta.ko,
+            w.category?.en,
+            w.category?.ko,
+            w.year,
+          ]
+            .join(" ")
+            .toLocaleLowerCase()
+            .includes(query.toLocaleLowerCase().trim()),
+      )
+      .sort((a, b) => Number(b.year) - Number(a.year));
+  const renderList = (motion = false) => {
     listAnimation?.cancel();
-    const shown=visibleWorks(); list.replaceChildren();
-    shown.forEach(w=>{
-      const item=node('li','catalog-row'); item.dataset.type=w.type;
-      const btn=button('','catalog-record',()=>openReader(w,btn)); btn.dataset.plBook=w.slug;
-      const year=node('span','catalog-year',w.year);
-      const body=node('span','catalog-record-body');
-      body.append(node('span','catalog-record-title',w.awardName || w.title),node('span','catalog-record-meta',w.type==='publication'?w.meta:w.category));
-      const type=node('span','catalog-record-type',labels[w.type]);
-      const arrow=node('span','catalog-record-arrow','↗'); arrow.setAttribute('aria-hidden','true');
-      btn.append(year,body,type,arrow); item.append(btn); list.append(item);
-    });
-    count.textContent=text(pair(`${shown.length} of ${works.length} records`,`${works.length}개 중 ${shown.length}개`));
-    empty.hidden=shown.length>0;
-    empty.replaceChildren(node('p','',pair('No matching work.','일치하는 작업이 없습니다.')),button(pair('Clear filters','필터 초기화'),'catalog-copy',()=>{
-      category='all';query='';search.value='';renderFilters();renderList(true);
-    }));
-    if(motion) listAnimation=animate(list,[{opacity:.35,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],160);
+    shelfObservers.forEach((observer) => observer.disconnect());
+    shelfObservers = [];
+    const shown = visibleWorks();
+    list.replaceChildren();
+    for (let start = 0; start < shown.length; start += 13) {
+      const group = shown.slice(start, start + 13);
+      const shelf = node("section", "bookshelf");
+      const shelfHead = node("div", "shelf-heading");
+      const title = node(
+        "h3",
+        "",
+        `${String(start / 13 + 1).padStart(2, "0")} / ${group[0].year}${group.at(-1).year !== group[0].year ? " - " + group.at(-1).year : ""}`,
+      );
+      const controls = node("div", "shelf-controls");
+      const viewport = node("div", "shelf-viewport");
+      viewport.setAttribute("role", "region");
+      viewport.setAttribute(
+        "aria-label",
+        text(pair(`Bookshelf ${start / 13 + 1}`, `책장 ${start / 13 + 1}`)),
+      );
+      const track = node("ol", "shelf-track");
+      const caption = node("p", "shelf-caption");
+      const describe = (w) => {
+        caption.replaceChildren(
+          node("span", "shelf-caption-type", labels[w.type]),
+          node("span", "", w.awardName || w.title),
+        );
+      };
+      describe(group[0]);
+      const back = button("←", "shelf-arrow", () =>
+        viewport.scrollBy({
+          left: -viewport.clientWidth * 0.8,
+          behavior:
+            reduced.matches || document.body.classList.contains("reader")
+              ? "instant"
+              : "smooth",
+        }),
+      );
+      const forward = button("→", "shelf-arrow", () =>
+        viewport.scrollBy({
+          left: viewport.clientWidth * 0.8,
+          behavior:
+            reduced.matches || document.body.classList.contains("reader")
+              ? "instant"
+              : "smooth",
+        }),
+      );
+      back.setAttribute(
+        "aria-label",
+        text(pair("Browse shelf left", "책장 왼쪽으로")),
+      );
+      forward.setAttribute(
+        "aria-label",
+        text(pair("Browse shelf right", "책장 오른쪽으로")),
+      );
+      back.title = back.ariaLabel;
+      forward.title = forward.ariaLabel;
+      const updateScroll = () => {
+        back.disabled = viewport.scrollLeft <= 1;
+        forward.disabled =
+          viewport.scrollLeft + viewport.clientWidth >=
+          viewport.scrollWidth - 2;
+      };
+      viewport.addEventListener("scroll", updateScroll, { passive: true });
+      controls.append(back, forward);
+      shelfHead.append(title, controls);
+      group.forEach((w, i) => {
+        const item = node("li", "catalog-row");
+        item.dataset.type = w.type;
+        const btn = button("", "catalog-record catalog-volume", () =>
+          openReader(w, btn),
+        );
+        btn.dataset.plBook = w.slug;
+        btn.dataset.palette = w.palette;
+        btn.dataset.type = w.type;
+        btn.style.setProperty(
+          "--book-height",
+          `${w.type === "project" ? 246 : w.type === "award" ? 210 : 222 + (i % 3) * 8}px`,
+        );
+        btn.setAttribute(
+          "aria-label",
+          `${text(w.awardName || w.title)}. ${text(labels[w.type])}, ${w.year}`,
+        );
+        btn.title = text(w.awardName || w.title);
+        const cover = node("span", "book-spine");
+        cover.setAttribute("aria-hidden", "true");
+        cover.append(
+          node(
+            "span",
+            "book-number",
+            String(works.indexOf(w) + 1).padStart(2, "0"),
+          ),
+          node("span", "book-title", w.shortTitle || w.awardName || w.title),
+          node("span", "book-year", w.year),
+        );
+        btn.append(cover);
+        item.append(btn);
+        track.append(item);
+        btn.addEventListener("pointerenter", () => describe(w));
+        btn.addEventListener("focus", () => describe(w));
+      });
+      track.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+          return;
+        const buttons = [...track.querySelectorAll("button")];
+        const index = buttons.indexOf(document.activeElement);
+        if (index < 0) return;
+        event.preventDefault();
+        const target =
+          event.key === "Home"
+            ? 0
+            : event.key === "End"
+              ? buttons.length - 1
+              : Math.max(
+                  0,
+                  Math.min(
+                    buttons.length - 1,
+                    index + (event.key === "ArrowRight" ? 1 : -1),
+                  ),
+                );
+        buttons[target].focus({ preventScroll: true });
+        buttons[target].scrollIntoView({
+          block: "nearest",
+          inline: "nearest",
+          behavior:
+            reduced.matches || document.body.classList.contains("reader")
+              ? "instant"
+              : "smooth",
+        });
+      });
+      viewport.append(track);
+      shelf.append(shelfHead, viewport, caption);
+      list.append(shelf);
+      requestAnimationFrame(updateScroll);
+      const observer = new ResizeObserver(updateScroll);
+      observer.observe(viewport);
+      shelfObservers.push(observer);
+    }
+    count.textContent = text(
+      pair(
+        `${shown.length} of ${works.length} records`,
+        `${works.length}개 중 ${shown.length}개`,
+      ),
+    );
+    empty.hidden = shown.length > 0;
+    empty.replaceChildren(
+      node("p", "", pair("No matching work.", "일치하는 작업이 없습니다.")),
+      button(pair("Clear filters", "필터 초기화"), "catalog-copy", () => {
+        category = "all";
+        query = "";
+        search.value = "";
+        renderFilters();
+        renderList(true);
+      }),
+    );
+    if (motion)
+      listAnimation = animate(
+        list,
+        [
+          { opacity: 0.35, transform: "translateY(4px)" },
+          { opacity: 1, transform: "translateY(0)" },
+        ],
+        160,
+      );
   };
   const renderFilters = () => {
-    filters.replaceChildren(); filters.setAttribute('aria-label',text(pair('Filter work by type','작업 유형별 필터')));
-    Object.entries(labels).forEach(([key,label])=>{
-      const n=key==='all'?works.length:works.filter(w=>w.type===key).length;
-      const btn=button(label,'catalog-filter',()=>{category=key;renderFilters();renderList(true);filters.querySelector(`[data-filter="${key}"]`).focus();});
-      btn.dataset.filter=key; btn.setAttribute('aria-pressed',String(category===key));
-      btn.append(node('span','',String(n))); filters.append(btn);
+    filters.replaceChildren();
+    filters.setAttribute(
+      "aria-label",
+      text(pair("Filter work by type", "작업 유형별 필터")),
+    );
+    Object.entries(labels).forEach(([key, label]) => {
+      const n =
+        key === "all"
+          ? works.length
+          : works.filter((w) => w.type === key).length;
+      const btn = button(label, "catalog-filter", () => {
+        category = key;
+        renderFilters();
+        renderList(true);
+        filters.querySelector(`[data-filter="${key}"]`).focus();
+      });
+      btn.dataset.filter = key;
+      btn.setAttribute("aria-pressed", String(category === key));
+      btn.append(node("span", "", String(n)));
+      filters.append(btn);
     });
   };
-  search.addEventListener('input',()=>{query=search.value;renderList();});
-  const renderFeatured = () => {
-    featuredGrid.replaceChildren();
-    ['inclusive-game-ai','data-quality-engine','haenyeo-legacy'].forEach((slug,index)=>{
-      const w=works.find(w=>w.slug===slug); if(!w)return;
-      const btn=button('','catalog-volume',()=>openReader(w,btn)); btn.dataset.plBook=slug; btn.dataset.tone=String(index);
-      btn.setAttribute('aria-label',text(w.title));
-      const cover=node('span','catalog-cover');
-      const number=node('span','catalog-volume-number',`0${index+1} / ${w.year}`);
-      number.prepend(node('span','catalog-volume-prefix','VOL. '));
-      cover.append(number);
-      const title=node('span','catalog-cover-title',w.shortTitle); cover.append(title);
-      const icon=window.PROJECT_LIBRARY_ICONS?.create(w.icon); if(icon)cover.append(icon);
-      const imprints = ['GAIA / KAIST', 'DQM / SKAIWORLDWIDE', 'THE GOLDEN TEWAK / KAIST'];
-      cover.append(node('span','catalog-cover-foot',imprints[index]));
-      const caption=node('span','catalog-volume-caption'); caption.append(node('span','',w.category),node('span','','↗'));
-      const desc=node('span','catalog-volume-description',w.subtitle);
-      btn.append(cover,caption,desc); featuredGrid.append(btn);
-    });
-  };
+  search.addEventListener("input", () => {
+    query = search.value;
+    renderList();
+  });
   const localize = () => {
-    const focused=document.activeElement;
-    const focusSlug=focused?.dataset.plBook;
-    const focusSelector=focused?.matches('.catalog-record') ? '.catalog-record' : '.catalog-volume';
-    document.getElementById('ttsToggle').title=text(pair('Toggle reader mode','읽기 모드 전환'));
-    document.getElementById('ttsToggle').setAttribute('aria-label',text(pair('Toggle reader mode','읽기 모드 전환')));
-    nav.replaceChildren(link(pair('Work','작업'),'#archive'),link(pair('Full CV','전체 이력서'),'?view=cv'),link(pair('Simulations','시뮬레이션'),'laboratory.html'));
-    eyebrow.textContent=text(pair('RESEARCH / DESIGN / ENGINEERING','연구 / 디자인 / 엔지니어링'));
-    statement.textContent=text(pair('Human-centered AI, from field research to working systems.','현장 연구에서 작동하는 시스템까지, 사람을 중심에 둔 AI.'));
-    affiliation.textContent=text(pair('Ph.D. student at KAIST\nCulture Technology · Daejeon, Korea','KAIST 문화기술대학원 박사과정\n대한민국 대전'));
-    featuredTitle.textContent=text(pair('Selected volumes','선별 작업')); featuredCount.textContent=text(pair('03 / 06 PROJECTS','프로젝트 03 / 06'));
-    archiveTitle.textContent=text(pair('The work library','작업 라이브러리'));
-    search.placeholder=text(pair('Search work, topic, or year','작업, 주제, 연도 검색'));
-    search.setAttribute('aria-label',text(pair('Search the work library','작업 라이브러리 검색')));
-    footer.replaceChildren(node('p','',pair('Jihun Chae / Research & practice','채지훈 / 연구와 실천')),link(pair('Get in touch ↗','연락하기 ↗'),'mailto:chaejihun@kaist.ac.kr'));
-    renderFeatured();renderFilters();renderList();
-    if(selected) renderReader();
-    else if(focusSlug) root.querySelector(`${focusSelector}[data-pl-book="${focusSlug}"]`)?.focus({preventScroll:true});
+    const focused = document.activeElement;
+    const focusSlug = focused?.dataset.plBook;
+    const focusSelector = focused?.matches(".catalog-record")
+      ? ".catalog-record"
+      : ".catalog-volume";
+    document.getElementById("ttsToggle").title = text(
+      pair("Toggle reader mode", "읽기 모드 전환"),
+    );
+    document
+      .getElementById("ttsToggle")
+      .setAttribute(
+        "aria-label",
+        text(pair("Toggle reader mode", "읽기 모드 전환")),
+      );
+    eyebrow.textContent = text(
+      pair("RESEARCH / DESIGN / ENGINEERING", "연구 / 디자인 / 엔지니어링"),
+    );
+    statement.textContent = text(
+      pair(
+        "I research and build interactive systems around accessibility, games, and AI.",
+        "접근성, 게임, AI를 중심으로 인터랙티브 시스템을 연구하고 만듭니다.",
+      ),
+    );
+    affiliation.textContent = text(
+      pair(
+        "Ph.D. student at KAIST\nCulture Technology · Daejeon, Korea",
+        "KAIST 문화기술대학원 박사과정\n대한민국 대전",
+      ),
+    );
+    archiveTitle.textContent = text(
+      pair("A bookshelf of work", "작업을 모은 책장"),
+    );
+    search.placeholder = text(
+      pair("Search work, topic, or year", "작업, 주제, 연도 검색"),
+    );
+    search.setAttribute(
+      "aria-label",
+      text(pair("Search the work library", "작업 라이브러리 검색")),
+    );
+    footer.replaceChildren(
+      node(
+        "p",
+        "",
+        pair("Jihun Chae / Research & practice", "채지훈 / 연구와 실천"),
+      ),
+      link(
+        pair("Get in touch ↗", "연락하기 ↗"),
+        "mailto:chaejihun@kaist.ac.kr",
+      ),
+    );
+    cvEntry.replaceChildren(
+      node(
+        "p",
+        "catalog-eyebrow",
+        pair("THE PROFESSIONAL RECORD", "연구와 경력의 기록"),
+      ),
+      link(
+        pair("Explore the full CV ↗", "전체 이력서 보기 ↗"),
+        "?view=cv",
+        "catalog-cv-link",
+      ),
+      node(
+        "p",
+        "",
+        pair(
+          "Research, industry, education, and the work behind these books.",
+          "연구, 산업 프로젝트, 학력, 그리고 이 책들에 담긴 작업의 전체 기록.",
+        ),
+      ),
+    );
+    renderFilters();
+    renderList();
+    if (selected) renderReader();
+    else if (focusSlug)
+      root
+        .querySelector(`${focusSelector}[data-pl-book="${focusSlug}"]`)
+        ?.focus({ preventScroll: true });
   };
-  let lastLanguage=lang();
-  new MutationObserver(()=>{if(lang()!==lastLanguage){lastLanguage=lang();localize();}}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+  let lastLanguage = lang();
+  new MutationObserver(() => {
+    if (lang() !== lastLanguage) {
+      lastLanguage = lang();
+      localize();
+    }
+  }).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["lang"],
+  });
   localize();
-  animate(intro,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],360);
-  const initial=works.find(w=>w.slug===new URLSearchParams(location.search).get('work'));
-  if(initial)openReader(initial,null,true);
+  animate(
+    intro,
+    [
+      { opacity: 0, transform: "translateY(8px)" },
+      { opacity: 1, transform: "translateY(0)" },
+    ],
+    360,
+  );
+  const initial = works.find(
+    (w) => w.slug === new URLSearchParams(location.search).get("work"),
+  );
+  if (initial) openReader(initial, null, true);
+  else if (new URLSearchParams(location.search).has("work")) {
+    const notice = node(
+      "p",
+      "catalog-notice",
+      pair(
+        "This work is no longer in the library.",
+        "이 작업은 현재 책장에 없습니다.",
+      ),
+    );
+    notice.setAttribute("role", "status");
+    notice.append(
+      button(
+        pair("Return to the bookshelf", "책장으로 돌아가기"),
+        "catalog-copy",
+        () => {
+          history.replaceState(null, "", urlFor(null));
+          notice.remove();
+        },
+      ),
+    );
+    archive.prepend(notice);
+  }
 })();

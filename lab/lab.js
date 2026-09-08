@@ -1,62 +1,118 @@
-import { labArchitecture, labProjects } from "./experiments.js?v=20260820c";
-import { mountAgentArena } from "./simulations/agent-arena.js?v=20260820c";
-import { mountLudicGeometry } from "./simulations/ludic-geometry.js?v=20260820c";
-import { mountParticleField } from "./simulations/particle-field.js?v=20260820c";
-import { mountGridworldPrompt } from "./simulations/gridworld-prompt.js?v=20260820c";
-import { mountMazeChase } from "./simulations/maze-chase.js?v=20260820c";
-import { mountSnakeSwarm } from "./simulations/snake-swarm.js?v=20260820c";
-import { mountLightCycle } from "./simulations/light-cycle.js?v=20260820c";
-import { mountFrozenLake } from "./simulations/frozen-lake.js?v=20260820c";
-import { mountCartpole } from "./simulations/cartpole.js?v=20260820c";
-import { mountBoids3d } from "./simulations/boids-3d.js?v=20260820c";
-import { mountTerrainDescent3d } from "./simulations/terrain-descent-3d.js?v=20260820c";
-import { mountReactionDiffusion } from "./simulations/reaction-diffusion.js?v=20260820c";
-import { mountQLearning } from "./simulations/q-learning.js?v=20260820c";
-import { mountPathfinding } from "./simulations/pathfinding.js?v=20260820c";
-import { mountWumpus } from "./simulations/wumpus.js?v=20260820c";
-import { mountNBody3d } from "./simulations/nbody-3d.js?v=20260820c";
-import { mountNeuroFlappy } from "./simulations/neuroevolution-flappy.js?v=20260820c";
-import { mountConnectFour } from "./simulations/connect-four.js?v=20260820c";
-import { mountGame2048 } from "./simulations/game-2048.js?v=20260820c";
-import { mountMinesweeper } from "./simulations/minesweeper.js?v=20260820c";
-import { mountArcRobot } from "./simulations/arc-adaptive-robot.js?v=20260820c";
-import { mountDoublePendulum } from "./simulations/double-pendulum.js?v=20260820c";
-import { mountVerletCloth } from "./simulations/verlet-cloth.js?v=20260820c";
-import { mountFallingSand } from "./simulations/falling-sand.js?v=20260820c";
-import { mountPlinko } from "./simulations/plinko.js?v=20260820c";
-import { mountLunarLander } from "./simulations/lunar-lander.js?v=20260820c";
-import { mountBreakoutAI } from "./simulations/breakout-ai.js?v=20260820c";
-import { mountTetrisAI } from "./simulations/tetris-ai.js?v=20260820c";
+import { labProjects } from "./experiments.js?v=108-20260908r3";
 
 const rendererRegistry = {
-  "behavior-prompt-gridworld": mountGridworldPrompt,
-  "arc-adaptive-unit": mountArcRobot,
-  "double-pendulum": mountDoublePendulum,
-  "verlet-cloth": mountVerletCloth,
-  "falling-sand": mountFallingSand,
-  "plinko": mountPlinko,
-  "lunar-lander": mountLunarLander,
-  "breakout-ai": mountBreakoutAI,
-  "tetris-ai": mountTetrisAI,
-  "agent-arena": mountAgentArena,
-  "neuroevolution-flappy": mountNeuroFlappy,
-  "connect-four": mountConnectFour,
-  "game-2048": mountGame2048,
-  "minesweeper": mountMinesweeper,
-  "maze-chase": mountMazeChase,
-  "snake-growth": mountSnakeSwarm,
-  "light-cycle-arena": mountLightCycle,
-  "frozen-lake": mountFrozenLake,
-  "q-learning-gridworld": mountQLearning,
-  "cartpole-control": mountCartpole,
-  "pathfinding-search": mountPathfinding,
-  "wumpus-world": mountWumpus,
-  "reaction-diffusion": mountReactionDiffusion,
-  "boids-3d": mountBoids3d,
-  "optimizer-landscape-3d": mountTerrainDescent3d,
-  "nbody-gravity-3d": mountNBody3d,
-  "ludic-geometry": mountLudicGeometry,
-  "particle-policy-field": mountParticleField
+  "behavior-prompt-gridworld": () =>
+    import("./simulations/gridworld-prompt.js?v=108-20260908r3").then(
+      (module) => module.mountGridworldPrompt,
+    ),
+  "arc-adaptive-unit": () =>
+    import("./simulations/arc-adaptive-robot.js?v=108-20260908r3").then(
+      (module) => module.mountArcRobot,
+    ),
+  "double-pendulum": () =>
+    import("./simulations/double-pendulum.js?v=108-20260908r3").then(
+      (module) => module.mountDoublePendulum,
+    ),
+  "verlet-cloth": () =>
+    import("./simulations/verlet-cloth.js?v=108-20260908r3").then(
+      (module) => module.mountVerletCloth,
+    ),
+  "falling-sand": () =>
+    import("./simulations/falling-sand.js?v=108-20260908r3").then(
+      (module) => module.mountFallingSand,
+    ),
+  plinko: () =>
+    import("./simulations/plinko.js?v=108-20260908r3").then(
+      (module) => module.mountPlinko,
+    ),
+  "lunar-lander": () =>
+    import("./simulations/lunar-lander.js?v=108-20260908r3").then(
+      (module) => module.mountLunarLander,
+    ),
+  "breakout-ai": () =>
+    import("./simulations/breakout-ai.js?v=108-20260908r3").then(
+      (module) => module.mountBreakoutAI,
+    ),
+  "tetris-ai": () =>
+    import("./simulations/tetris-ai.js?v=108-20260908r3").then(
+      (module) => module.mountTetrisAI,
+    ),
+  "agent-arena": () =>
+    import("./simulations/agent-arena.js?v=108-20260908r3").then(
+      (module) => module.mountAgentArena,
+    ),
+  "neuroevolution-flappy": () =>
+    import("./simulations/neuroevolution-flappy.js?v=108-20260908r3").then(
+      (module) => module.mountNeuroFlappy,
+    ),
+  "connect-four": () =>
+    import("./simulations/connect-four.js?v=108-20260908r3").then(
+      (module) => module.mountConnectFour,
+    ),
+  "game-2048": () =>
+    import("./simulations/game-2048.js?v=108-20260908r3").then(
+      (module) => module.mountGame2048,
+    ),
+  minesweeper: () =>
+    import("./simulations/minesweeper.js?v=108-20260908r3").then(
+      (module) => module.mountMinesweeper,
+    ),
+  "maze-chase": () =>
+    import("./simulations/maze-chase.js?v=108-20260908r3").then(
+      (module) => module.mountMazeChase,
+    ),
+  "snake-growth": () =>
+    import("./simulations/snake-swarm.js?v=108-20260908r3").then(
+      (module) => module.mountSnakeSwarm,
+    ),
+  "light-cycle-arena": () =>
+    import("./simulations/light-cycle.js?v=108-20260908r3").then(
+      (module) => module.mountLightCycle,
+    ),
+  "frozen-lake": () =>
+    import("./simulations/frozen-lake.js?v=108-20260908r3").then(
+      (module) => module.mountFrozenLake,
+    ),
+  "q-learning-gridworld": () =>
+    import("./simulations/q-learning.js?v=108-20260908r3").then(
+      (module) => module.mountQLearning,
+    ),
+  "cartpole-control": () =>
+    import("./simulations/cartpole.js?v=108-20260908r3").then(
+      (module) => module.mountCartpole,
+    ),
+  "pathfinding-search": () =>
+    import("./simulations/pathfinding.js?v=108-20260908r3").then(
+      (module) => module.mountPathfinding,
+    ),
+  "wumpus-world": () =>
+    import("./simulations/wumpus.js?v=108-20260908r3").then(
+      (module) => module.mountWumpus,
+    ),
+  "reaction-diffusion": () =>
+    import("./simulations/reaction-diffusion.js?v=108-20260908r3").then(
+      (module) => module.mountReactionDiffusion,
+    ),
+  "boids-3d": () =>
+    import("./simulations/boids-3d.js?v=108-20260908r3").then(
+      (module) => module.mountBoids3d,
+    ),
+  "optimizer-landscape-3d": () =>
+    import("./simulations/terrain-descent-3d.js?v=108-20260908r3").then(
+      (module) => module.mountTerrainDescent3d,
+    ),
+  "nbody-gravity-3d": () =>
+    import("./simulations/nbody-3d.js?v=108-20260908r3").then(
+      (module) => module.mountNBody3d,
+    ),
+  "ludic-geometry": () =>
+    import("./simulations/ludic-geometry.js?v=108-20260908r3").then(
+      (module) => module.mountLudicGeometry,
+    ),
+  "particle-policy-field": () =>
+    import("./simulations/particle-field.js?v=108-20260908r3").then(
+      (module) => module.mountParticleField,
+    ),
 };
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -71,7 +127,7 @@ const ACCENTS = {
   Simulation: "124, 110, 150",
   "Math Visualization": "176, 138, 79",
   "Research Tool": "110, 138, 106",
-  "Experimental Tool": "124, 110, 150"
+  "Experimental Tool": "124, 110, 150",
 };
 const accentFor = (category) => ACCENTS[category] || "141, 137, 126";
 
@@ -92,13 +148,10 @@ const railFilter = $("#railFilter");
 const viewportMount = $("#viewportMount");
 const detailMount = $("#detailMount");
 const controlMount = $("#controlMount");
-const architectureTree = $("#architectureTree");
-const addSteps = $("#addSteps");
-const heroCanvas = $("#heroCanvas");
 const heroMetrics = {
   projects: $("#metricProjects"),
   renderers: $("#metricRenderers"),
-  live: $("#metricLive")
+  live: $("#metricLive"),
 };
 
 let mountedSimulation = null;
@@ -108,14 +161,17 @@ function statusLabel(status) {
 }
 
 function sortedProjects() {
-  return [...labProjects].sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group));
+  return [...labProjects].sort(
+    (a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group),
+  );
 }
 
 // Stable catalogue number per sim (01..N), in the grouped reading order. Used
 // both as the index entry number and the figure number, so every experiment is
 // referable by a fixed "Fig. N" the way a paper numbers its figures.
 const FIG_NUM = new Map(sortedProjects().map((p, i) => [p.id, i + 1]));
-const figNo = (project) => String(FIG_NUM.get(project.id) || 0).padStart(2, "0");
+const figNo = (project) =>
+  String(FIG_NUM.get(project.id) || 0).padStart(2, "0");
 
 function cardHTML(project, selectedId) {
   return `
@@ -135,10 +191,15 @@ function cardHTML(project, selectedId) {
 function renderFilter() {
   if (!railFilter) return;
   const counts = {};
-  labProjects.forEach((p) => { counts[p.group] = (counts[p.group] || 0) + 1; });
+  labProjects.forEach((p) => {
+    counts[p.group] = (counts[p.group] || 0) + 1;
+  });
   const chips = ["All", ...GROUP_ORDER];
   railFilter.innerHTML = chips
-    .map((g) => `<button class="chip ${g === currentFilter ? "active" : ""}" type="button" data-filter="${g}">${g}<span class="chip-n">${g === "All" ? labProjects.length : counts[g] || 0}</span></button>`)
+    .map(
+      (g) =>
+        `<button class="chip ${g === currentFilter ? "active" : ""}" type="button" data-filter="${g}">${g}<span class="chip-n">${g === "All" ? labProjects.length : counts[g] || 0}</span></button>`,
+    )
     .join("");
   railFilter.querySelectorAll("[data-filter]").forEach((b) => {
     b.addEventListener("click", () => {
@@ -150,7 +211,9 @@ function renderFilter() {
 }
 
 function renderProjectCards(selectedId) {
-  const list = sortedProjects().filter((p) => currentFilter === "All" || p.group === currentFilter);
+  const list = sortedProjects().filter(
+    (p) => currentFilter === "All" || p.group === currentFilter,
+  );
   let html = "";
   let lastGroup = null;
   for (const p of list) {
@@ -162,7 +225,9 @@ function renderProjectCards(selectedId) {
   }
   projectCards.innerHTML = html;
   projectCards.querySelectorAll("[data-project-id]").forEach((card) => {
-    card.addEventListener("click", () => selectProject(card.dataset.projectId, true));
+    card.addEventListener("click", () =>
+      selectProject(card.dataset.projectId, true),
+    );
   });
 }
 
@@ -183,10 +248,12 @@ function viewportHTML(project) {
           <button class="text-button" type="button" data-control="copyLink">Copy link</button>
         </div>
       </figcaption>
-      ${canRender
-        ? `<div class="viewport-stage"><canvas id="simulationCanvas" aria-label="${project.title} simulation"></canvas></div>
+      ${
+        canRender
+          ? `<div class="viewport-stage"><canvas id="simulationCanvas" aria-label="${project.title} simulation"></canvas></div>
            <p class="viewport-caption"><b>Fig. ${n}.</b> ${project.subtitle}. ${project.simulationType}; adjust parameters in the Controls panel and switch regimes with the mode buttons.</p>`
-        : `<div class="empty-stage"><div><strong>${project.title} is registered.</strong><br />A renderer module will activate this figure.</div></div>`}
+          : `<div class="empty-stage"><div><strong>${project.title} is registered.</strong><br />A renderer module will activate this figure.</div></div>`
+      }
     </figure>
   `;
 }
@@ -271,11 +338,15 @@ function controlsTemplate(project) {
   const labels = project.controlLabels;
   return `
     <div class="preset-row">
-      ${project.variations.map((variation, index) => `
+      ${project.variations
+        .map(
+          (variation, index) => `
         <button class="ghost-button ${index === 0 ? "active" : ""}" type="button" data-variation="${variation.id}" title="${variation.description}">
           ${variation.label}
         </button>
-      `).join("")}
+      `,
+        )
+        .join("")}
     </div>
 
     <!-- for= is required here, not decorative. A <label> binds to its first
@@ -318,27 +389,57 @@ function placeholderControlsTemplate(project) {
   `;
 }
 
-function mountSelectedSimulation(project) {
+let mountRevision = 0;
+async function mountSelectedSimulation(project) {
+  const revision = ++mountRevision;
   mountedSimulation?.dispose?.();
   mountedSimulation = null;
 
   const copyLink = $('[data-control="copyLink"]');
   if (copyLink) {
-    copyLink.addEventListener("click", async () => {
-      const url = `${location.origin}${location.pathname}${project.route}`;
-      try {
-        await navigator.clipboard.writeText(url);
-        copyLink.textContent = "Copied";
-        setTimeout(() => { copyLink.textContent = "Copy link"; }, 1300);
-      } catch {
-        copyLink.textContent = "Link ready";
-        setTimeout(() => { copyLink.textContent = "Copy link"; }, 1300);
-      }
-    }, { once: false });
+    copyLink.addEventListener(
+      "click",
+      async () => {
+        const url = `${location.origin}${location.pathname}${project.route}`;
+        try {
+          await navigator.clipboard.writeText(url);
+          copyLink.textContent = "Copied";
+          setTimeout(() => {
+            copyLink.textContent = "Copy link";
+          }, 1300);
+        } catch {
+          copyLink.textContent = "Link ready";
+          setTimeout(() => {
+            copyLink.textContent = "Copy link";
+          }, 1300);
+        }
+      },
+      { once: false },
+    );
   }
 
-  const renderer = rendererRegistry[project.id];
-  if (!renderer) return;
+  const load = rendererRegistry[project.id];
+  if (!load) return;
+  const canvas = $("#simulationCanvas");
+  canvas.setAttribute("aria-busy", "true");
+  let renderer;
+  try {
+    renderer = await load();
+  } catch {
+    if (revision !== mountRevision) return;
+    const error = document.createElement("div");
+    error.className = "load-error";
+    error.setAttribute("role", "alert");
+    error.textContent = "This simulation could not be loaded. ";
+    const retry = document.createElement("button");
+    retry.textContent = "Try again";
+    retry.addEventListener("click", () => location.reload());
+    error.append(retry);
+    canvas.after(error);
+    canvas.setAttribute("aria-busy", "false");
+    return;
+  }
+  if (revision !== mountRevision) return;
 
   mountedSimulation = renderer({
     canvas: $("#simulationCanvas"),
@@ -359,16 +460,18 @@ function mountSelectedSimulation(project) {
       attractionValue: $("#attractionValue"),
       trails: $("#trailsControl"),
       seed: $("#seedControl"),
-      seedValue: $("#seedValue")
+      seedValue: $("#seedValue"),
     },
     metrics: {
       energy: $("#metricEnergy"),
       order: $("#metricOrder"),
       spread: $("#metricSpread"),
-      fps: $("#metricFps")
+      fps: $("#metricFps"),
     },
-    log: $("#simulationLog")
+    log: $("#simulationLog"),
   });
+  canvas.setAttribute("aria-busy", "false");
+  canvas.dataset.ready = "true";
 }
 
 function renderMath() {
@@ -376,9 +479,9 @@ function renderMath() {
     window.renderMathInElement(document.body, {
       delimiters: [
         { left: "\\[", right: "\\]", display: true },
-        { left: "\\(", right: "\\)", display: false }
+        { left: "\\(", right: "\\)", display: false },
       ],
-      throwOnError: false
+      throwOnError: false,
     });
   }
 }
@@ -389,11 +492,19 @@ function markEquationParts() {
   currentEqEls.forEach((eq) => {
     const html = eq.querySelector(".katex-html");
     if (!html) return;
-    [...html.querySelectorAll(".eqk")].forEach((s) => s.classList.remove("eqk"));
-    const bases = [...html.children].filter((c) => c.classList && c.classList.contains("base"));
+    [...html.querySelectorAll(".eqk")].forEach((s) =>
+      s.classList.remove("eqk"),
+    );
+    const bases = [...html.children].filter(
+      (c) => c.classList && c.classList.contains("base"),
+    );
     bases.forEach((base) => {
-      const kids = [...base.children].filter((c) => !c.classList || !c.classList.contains("strut"));
-      const relIdx = kids.findIndex((k) => k.classList && k.classList.contains("mrel"));
+      const kids = [...base.children].filter(
+        (c) => !c.classList || !c.classList.contains("strut"),
+      );
+      const relIdx = kids.findIndex(
+        (k) => k.classList && k.classList.contains("mrel"),
+      );
       if (relIdx < 0) return;
       for (let i = relIdx + 1; i < kids.length; i++) {
         if (kids[i].classList) kids[i].classList.add("eqk");
@@ -426,7 +537,10 @@ function selectProject(id, updateHash = false) {
 
 function navigateProject(delta) {
   const projects = sortedProjects();
-  const idx = Math.max(0, projects.findIndex((p) => p.id === currentProjectId));
+  const idx = Math.max(
+    0,
+    projects.findIndex((p) => p.id === currentProjectId),
+  );
   const next = projects[(idx + delta + projects.length) % projects.length];
   currentFilter = "All";
   renderFilter();
@@ -436,7 +550,10 @@ function navigateProject(delta) {
 function navigateVariation(delta) {
   const buttons = [...document.querySelectorAll("[data-variation]")];
   if (!buttons.length) return;
-  const idx = Math.max(0, buttons.findIndex((button) => button.classList.contains("active")));
+  const idx = Math.max(
+    0,
+    buttons.findIndex((button) => button.classList.contains("active")),
+  );
   buttons[(idx + delta + buttons.length) % buttons.length].click();
 }
 
@@ -480,89 +597,19 @@ function highlightLoop(ts) {
   requestAnimationFrame(highlightLoop);
 }
 
-function renderArchitecture() {
-  // #architectureTree / #addSteps are not in laboratory.html, so both
-  // consts are null and this would throw the moment anything called it.
-  // Fail soft rather than delete: experiments.js still exports the data.
-  if (!architectureTree || !addSteps) return;
-  architectureTree.textContent = labArchitecture.folders.join("\n");
-  addSteps.innerHTML = labArchitecture.addSteps.map((step) => `<li>${step}</li>`).join("");
-}
-
-function runHeroCanvas() {
-  const ctx = heroCanvas.getContext("2d", { alpha: true });
-  let width = 0;
-  let height = 0;
-  let dpr = 1;
-  let frame = 0;
-  const points = Array.from({ length: 84 }, (_, i) => ({
-    x: 0,
-    y: 0,
-    phase: i * 0.37,
-    radius: 1.5 + (i % 5) * 0.35
-  }));
-
-  function resize() {
-    const rect = heroCanvas.parentElement.getBoundingClientRect();
-    width = rect.width;
-    height = rect.height;
-    dpr = Math.min(2, window.devicePixelRatio || 1);
-    heroCanvas.width = Math.floor(width * dpr);
-    heroCanvas.height = Math.floor(height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  function draw() {
-    frame += 1;
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "rgba(5, 7, 11, 0.5)";
-    ctx.fillRect(0, 0, width, height);
-    ctx.globalCompositeOperation = "lighter";
-
-    const t = frame * 0.008;
-    points.forEach((point, index) => {
-      const ring = 0.18 + (index % 9) * 0.038;
-      const angle = t + point.phase + Math.sin(t * 0.7 + index) * 0.25;
-      point.x = width * (0.5 + Math.cos(angle) * ring * 1.2);
-      point.y = height * (0.54 + Math.sin(angle * 1.37) * ring);
-      const hue = 180 + (index % 12) * 13;
-      ctx.fillStyle = `hsla(${hue}, 90%, 65%, 0.45)`;
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
-    ctx.lineWidth = 1;
-    for (let i = 0; i < points.length; i += 3) {
-      const a = points[i];
-      const b = points[(i + 17) % points.length];
-      const distance = Math.hypot(a.x - b.x, a.y - b.y);
-      if (distance < width * 0.34) {
-        ctx.globalAlpha = Math.max(0, 0.22 - distance / (width * 1.4));
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
-      }
-    }
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(draw);
-  }
-
-  new ResizeObserver(resize).observe(heroCanvas.parentElement);
-  resize();
-  draw();
-}
-
 function boot() {
-  if (heroMetrics.projects) heroMetrics.projects.textContent = String(labProjects.length);
-  if (heroMetrics.renderers) heroMetrics.renderers.textContent = String(Object.keys(rendererRegistry).length);
-  if (heroMetrics.live) heroMetrics.live.textContent = String(labProjects.filter((project) => project.status === "live").length);
+  if (heroMetrics.projects)
+    heroMetrics.projects.textContent = String(labProjects.length);
+  if (heroMetrics.renderers)
+    heroMetrics.renderers.textContent = String(
+      Object.keys(rendererRegistry).length,
+    );
+  if (heroMetrics.live)
+    heroMetrics.live.textContent = String(
+      labProjects.filter((project) => project.status === "live").length,
+    );
 
   renderFilter();
-  if (heroCanvas) runHeroCanvas();
 
   selectProject(location.hash.replace("#", "") || labProjects[0].id);
   requestAnimationFrame(highlightLoop);
@@ -573,7 +620,14 @@ function boot() {
 
   window.addEventListener("keydown", (event) => {
     const tag = (event.target.tagName || "").toLowerCase();
-    if (tag === "input" || tag === "textarea" || event.metaKey || event.ctrlKey || event.altKey) return;
+    if (
+      tag === "input" ||
+      tag === "textarea" ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.altKey
+    )
+      return;
     if (event.key === "j") navigateProject(1);
     if (event.key === "k") navigateProject(-1);
     if (event.key === "]") navigateVariation(1);

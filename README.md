@@ -1,80 +1,27 @@
-# ji-hun-git.github.io
+# Jihun Chae
 
-Personal site of Jihun Chae: a bilingual work library (projects, publications,
-awards), a CV view, and a simulations lab.
+A bilingual bookshelf of projects, publications, and awards, with a full
+professional CV and an interactive simulations lab.
 
-- `index.html` — the site. `?view=cv` switches from the library to the CV.
-- `laboratory.html` + `lab/` — the simulations hub.
-- `assets/project-library/library.css` and `library.js` — the library screen,
-  search and category filters, and native reading dialog.
-- `assets/project-library/work-designs.js` and `work-content.js` — authored,
-  bilingual records. The library combines these with the CV source in `index.html`.
-- `assets/interior/` — styles used by the CV and print view.
-- `tools/` — image build scripts. Re-run after replacing a master image.
+## Run
 
-The library uses one screen stylesheet. Legacy styles remain active for the CV
-and print, but are print-only on the library route. Its transitions have one
-owner per element: 240ms cover hover, 220ms dialog entrance, 140ms dismissal,
-and 180ms record navigation. Reduced motion and Reader mode bypass animation.
-There are no continuous background effects or simulated page turns.
+Static HTML, CSS, and JavaScript. No application dependencies or build step.
+Serve locally with `python -m http.server 8000`, then open `http://localhost:8000`.
+The bookshelf and CV also work by opening `index.html` directly; simulations
+require HTTP because they use JavaScript modules.
 
-Direct links use `?work=<slug>`, and `?lang=ko` preserves Korean when navigating
-between the library and CV. Browser Back closes a work opened from the library;
-Forward restores it. A directly opened record closes to the library.
+## Structure
 
-No build step: this is static HTML, CSS and JS served directly by GitHub Pages.
-After editing anything under `assets/`, bump the `?v=` stamp in `index.html` or
-browsers will keep serving the cached copy.
+- `index.html`: bookshelf shell and authored bilingual CV.
+- `assets/site.*`, `assets/cv.css`: shared controls and CV presentation.
+- `assets/project-library/`: bookshelf, record content, and project pictograms.
+- `laboratory.html`, `lab/`: simulations and their on-demand renderers.
+- `tools/`: image generation and regression checks.
 
-## Checking your work
+Run `python tools/harness/static_checks.py` for source checks. Browser tests are
+documented in `tools/harness/README.md`. Update asset URL versions when releasing
+changed assets. `main` is the production branch; feature branches are temporary.
 
-`tools/harness/` is a regression net for exactly the failures this site makes
-silently - a reference that resolves to nothing, a stale cache stamp, a rule
-that loses a specificity contest inside the 463 KB stylesheet, a personal
-address in commit metadata, or a control that highlights without doing anything.
+## License
 
-```
-python tools/harness/static_checks.py     # files only; stdlib, no browser, no network
-python tools/harness/run_browser.py       # a real Chromium over all 10 view states
-python tools/harness/library_interactions.py # search, dialog, history, language; five widths
-```
-
-All exit non-zero on failure, so they can run as pre-commit checks. After
-bumping a `?v=` stamp, run `static_checks.py --update-stamps` and commit the
-refreshed baseline. `tools/harness/README.md` says what each check exists to
-catch, and records the three measurement mistakes that make a harness report
-clean while the page is broken.
-
-## Licence
-
-Released under **CC0 1.0 Universal** (see `LICENSE`) — copyright waived, no
-permission needed, attribution welcome but not required.
-
-Note that the organisation logos in `assets/logos/` are the trademarks of their
-respective owners. They appear here to identify partners, funders and hosts of
-the work described, and are not covered by the CC0 dedication above. Marks with
-a documented source:
-
-| File | Source | Terms |
-| --- | --- | --- |
-| `krafton.svg` | Wikimedia Commons, "KRAFTON Logo New" | CC BY-SA 4.0, credited to KRAFTON, Inc. |
-| `skaiworldwide.png` | Official site `skaiworldwide.com` — the header mark, inlined in its `/static/js/main.36e1f395.js` bundle as a base64 PNG. Retrieved 14 Aug 2026, cropped to the mark; colours untouched. | No published brand terms. Trademark of SKAI WORLDWIDE Co., Ltd. (formerly Bitnine), used nominatively to identify the client. |
-| `pohang-city.svg` | Pohang City symbol mark | Trademark of Pohang City. The city's CI page reserves commercial use and use that would damage the mark; identification of a co-host is neither. |
-| `pohang-cultural-foundation.svg` | Pohang Cultural Foundation, `www.phcf.or.kr` footer lockup | **Unused — do not wire it up as-is.** It is the reversed (white) version, invisible on this light-only page. The foundation publishes no positive version; the chip shows a monogram until one is obtained. |
-
-The technology marks in the CV's Code and Tools rows are a separate case: **no
-file was downloaded for any of them.** Every glyph is original path data drawn
-for this repo in `assets/interior/tech-icons.css`'s markup, and C++, C# and R
-are set as type in the page's own mono face. None reproduces a vendor logo —
-deliberately, because the row's constraint is 20px monochrome inheriting
-`currentColor`, and recolouring a two-tone mark like Python's to a single ink
-is exactly what those guidelines prohibit. The names identify skills
-nominatively; the drawings are category marks, not brand marks. Same reasoning
-as the `.p-brand-wordmark` device KRAFTON, NYU and bHaptics use — see the
-header of `assets/interior/tech-icons.css`.
-
-Getting a logo wrong is usually not a missing file. Two marks shipped in this
-repo for months while rendering nothing at all — see the comment above the
-partner chips in `index.html`. A mark belongs in the markup as
-`<img class="p-logo">`, never as a `::before` background painted through a
-positional selector.
+CC0 1.0 Universal. See `LICENSE` and `assets/NOTICE.md` for asset and trademark notes.

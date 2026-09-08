@@ -59,15 +59,18 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *args):
         pass
 
+    def copyfile(self, source, outputfile):
+        try:
+            super().copyfile(source, outputfile)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            pass  # Browsers cancel lazy-image requests when navigating away.
+
 
 def serve(directory):
     """Serve `directory` on a free port; returns (port, shutdown_callable)."""
     handler = functools.partial(QuietHandler, directory=str(directory))
-    with socket.socket() as probe:
-        probe.bind(("127.0.0.1", 0))
-        port = probe.getsockname()[1]
-    httpd = socketserver.TCPServer(("127.0.0.1", port), handler)
-    httpd.allow_reuse_address = True
+    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    port = httpd.server_address[1]
     t = threading.Thread(target=httpd.serve_forever, daemon=True)
     t.start()
     return port, httpd.shutdown

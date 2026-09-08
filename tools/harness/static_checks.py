@@ -730,7 +730,7 @@ def check_lab_registry(files, cfg):
         return findings
     text = lab_js.read_text(encoding="utf-8", errors="replace")
     imported = set()
-    for m in re.finditer(r"""from\s+['"]\./simulations/([\w.\-]+\.js)""", text):
+    for m in re.finditer(r"""(?:from\s+|import\(\s*)['"]\./simulations/([\w.\-]+\.js)""", text):
         imported.add(m.group(1))
     on_disk = {p.name for p in sims_dir.glob("*.js")}
     for name in sorted(imported - on_disk):
@@ -763,7 +763,9 @@ def check_publication_roles(files, cfg):
     if not index.is_file():
         return findings
     text = index.read_text(encoding="utf-8", errors="replace")
-    rows = [m for m in re.finditer(r'<p class="item-desc"><span class="pub-n">(\d+)</span>', text)]
+    # Formatting may insert whitespace between or within text nodes.
+    text = re.sub(r'\s+', ' ', text)
+    rows = [m for m in re.finditer(r'<p class="item-desc">\s*<span class="pub-n">(\d+)</span>', text)]
     for m in rows:
         end = text.find("</p>", m.end())
         row = text[m.start():end if end != -1 else m.end() + 2000]

@@ -57,7 +57,7 @@ try:
             expect(page).not_to_have_url(re.compile('work='))
             page.locator('#langToggle').click()
             expect(page.locator('html')).to_have_attribute('lang','ko')
-            expect(page.locator('.catalog-statement')).to_contain_text('사람')
+            expect(page.locator('.catalog-statement')).to_contain_text('접근성')
             page.locator('[data-filter="project"]').click()
             expect(page.locator('.catalog-row')).to_have_count(6)
             if args.screenshots:
@@ -71,7 +71,7 @@ try:
             expect(page.locator('dialog')).not_to_be_visible()
             expect(page.locator('.catalog-volume[data-pl-book="data-quality-engine"]')).to_be_focused()
             page.locator('#ttsToggle').click()
-            expect(page.locator('.catalog-cover').first).not_to_be_visible()
+            expect(page.locator('.book-title').first).to_have_css('writing-mode','horizontal-tb')
             page.locator('.catalog-volume').first.click()
             assert page.locator('dialog').evaluate('(el)=>el.getAnimations().length===0'), 'Reader mode animated'
             page.keyboard.press('Escape')
@@ -114,7 +114,7 @@ try:
         results.append({'recordDetails':len(slugs),'keyboardFocus':'pass','readerMode':'pass'})
         page=browser.new_page(viewport={'width':1280,'height':800})
         page.goto(base,wait_until='networkidle')
-        page.locator('.catalog-volume').first.click()
+        page.locator('[data-pl-book="inclusive-game-ai"]').click()
         page.go_back()
         page.go_forward()
         expect(page.locator('dialog')).to_be_visible()
