@@ -148,6 +148,45 @@
   let dialogAnimation = null;
   let transitionId = 0;
   let shelfObservers = [];
+  const arrivalAnimations = new Set();
+  const arrivalObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        if (!isIntersecting) return;
+        arrivalObserver.unobserve(target);
+        target.querySelectorAll(".catalog-row").forEach((book, index) => {
+          const motion = animate(
+            book,
+            [
+              { opacity: 0, transform: "translateY(22px)" },
+              { opacity: 1, transform: "translateY(0)" },
+            ],
+            420,
+          );
+          if (!motion) return;
+          motion.effect.updateTiming({
+            delay: Math.min(index * 24, 240),
+            fill: "backwards",
+          });
+          arrivalAnimations.add(motion);
+          motion.finished
+            .catch(() => {})
+            .finally(() => arrivalAnimations.delete(motion));
+        });
+      });
+    },
+    { threshold: 0.15 },
+  );
+  const stopArrival = () => {
+    if (reduced.matches || document.body.classList.contains("reader")) {
+      arrivalAnimations.forEach((motion) => motion.cancel());
+    }
+  };
+  reduced.addEventListener("change", stopArrival);
+  new MutationObserver(stopArrival).observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
   const animate = (el, frames, duration = 220) => {
     if (reduced.matches || document.body.classList.contains("reader"))
       return null;
@@ -172,16 +211,8 @@
   const eyebrow = node("p", "catalog-eyebrow");
   const statement = node("p", "catalog-statement");
   const introMeta = node("div", "catalog-intro-meta");
-  const portrait = node("img", "catalog-portrait");
-  portrait.src = "assets/profile/jihun-chae-thumb.webp";
-  portrait.addEventListener("error", () => {
-    portrait.hidden = true;
-  });
-  portrait.alt = "Jihun Chae";
-  portrait.width = 38;
-  portrait.height = 49;
   const affiliation = node("p");
-  introMeta.append(portrait, affiliation);
+  introMeta.append(affiliation);
   intro.append(eyebrow, heading, statement, introMeta);
   const archive = node("section", "catalog-archive");
   archive.id = "archive";
@@ -384,10 +415,19 @@
     if (!dialog.open) {
       dialog.showModal();
       document.documentElement.classList.add("catalog-reading");
-      dialogAnimation = animate(dialog, [
-        { opacity: 0, transform: "translateY(16px)" },
-        { opacity: 1, transform: "translateY(0)" },
-      ]);
+      if (trigger) {
+        const source = trigger.getBoundingClientRect();
+        const surface = dialog.getBoundingClientRect();
+        dialog.style.transformOrigin = `${source.left + source.width / 2 - surface.left}px ${source.top + source.height / 2 - surface.top}px`;
+      } else dialog.style.transformOrigin = "50% 75%";
+      dialogAnimation = animate(
+        dialog,
+        [
+          { opacity: 0, transform: "translateY(12px) scale(.96)" },
+          { opacity: 1, transform: "translateY(0) scale(1)" },
+        ],
+        280,
+      );
     }
     if (!fromHistory) {
       history.pushState({ catalog: true }, "", urlFor(work.slug));
@@ -542,21 +582,31 @@
             .toLocaleLowerCase()
             .includes(query.toLocaleLowerCase().trim()),
       )
-      .sort((a, b) => Number(b.year) - Number(a.year));
+      .sort((a, b) => {
+        if (a.slug === "inclusive-game-ai") return -1;
+        if (b.slug === "inclusive-game-ai") return 1;
+        return Number(b.year) - Number(a.year);
+      });
   const renderList = (motion = false) => {
     listAnimation?.cancel();
+    arrivalObserver.disconnect();
+    arrivalAnimations.forEach((animation) => animation.cancel());
     shelfObservers.forEach((observer) => observer.disconnect());
     shelfObservers = [];
     const shown = visibleWorks();
     list.replaceChildren();
     for (let start = 0; start < shown.length; start += 13) {
       const group = shown.slice(start, start + 13);
+      const displayBook = group.find((w) => w.type === "project");
       const shelf = node("section", "bookshelf");
       const shelfHead = node("div", "shelf-heading");
+      const years = group.map((w) => Number(w.year));
+      const newest = Math.max(...years),
+        oldest = Math.min(...years);
       const title = node(
         "h3",
         "",
-        `${String(start / 13 + 1).padStart(2, "0")} / ${group[0].year}${group.at(-1).year !== group[0].year ? " - " + group.at(-1).year : ""}`,
+        `${String(start / 13 + 1).padStart(2, "0")} / ${newest}${oldest !== newest ? " - " + oldest : ""}`,
       );
       const controls = node("div", "shelf-controls");
       const viewport = node("div", "shelf-viewport");
@@ -573,7 +623,7 @@
           node("span", "", w.awardName || w.title),
         );
       };
-      describe(group[0]);
+      describe(displayBook || group[0]);
       const back = button("←", "shelf-arrow", () =>
         viewport.scrollBy({
           left: -viewport.clientWidth * 0.8,
@@ -620,6 +670,7 @@
         btn.dataset.plBook = w.slug;
         btn.dataset.palette = w.palette;
         btn.dataset.type = w.type;
+        if (w === displayBook) btn.classList.add("catalog-face-out");
         btn.style.setProperty(
           "--book-height",
           `${w.type === "project" ? 246 : w.type === "award" ? 210 : 222 + (i % 3) * 8}px`,
@@ -640,6 +691,11 @@
           node("span", "book-title", w.shortTitle || w.awardName || w.title),
           node("span", "book-year", w.year),
         );
+        if (w === displayBook) {
+          const emblem = window.PROJECT_LIBRARY_ICONS?.create(w.icon, "cover");
+          if (emblem)
+            cover.insertBefore(emblem, cover.querySelector(".book-title"));
+        }
         btn.append(cover);
         item.append(btn);
         track.append(item);
@@ -678,6 +734,7 @@
       viewport.append(track);
       shelf.append(shelfHead, viewport, caption);
       list.append(shelf);
+      if (!motion) arrivalObserver.observe(track);
       requestAnimationFrame(updateScroll);
       const observer = new ResizeObserver(updateScroll);
       observer.observe(viewport);
@@ -685,7 +742,9 @@
     }
     count.textContent = text(
       pair(
-        `${shown.length} of ${works.length} records`,
+        shown.length === works.length
+          ? `${works.length} collected works`
+          : `${shown.length} of ${works.length} works`,
         `${works.length}개 중 ${shown.length}개`,
       ),
     );
@@ -753,25 +812,32 @@
         text(pair("Toggle reader mode", "읽기 모드 전환")),
       );
     eyebrow.textContent = text(
-      pair("RESEARCH / DESIGN / ENGINEERING", "연구 / 디자인 / 엔지니어링"),
+      pair("A personal collection", "생각과 작업을 모은 곳"),
     );
-    statement.textContent = text(
-      pair(
-        "I research and build interactive systems around accessibility, games, and AI.",
-        "접근성, 게임, AI를 중심으로 인터랙티브 시스템을 연구하고 만듭니다.",
+    statement.replaceChildren(
+      document.createTextNode(
+        text(
+          pair(
+            "I build and research interactive systems around ",
+            "사람과 AI를 중심으로 ",
+          ),
+        ),
+      ),
+      node(
+        "span",
+        "catalog-statement-focus",
+        pair("humans and AI.", "인터랙티브 시스템을 만들고 연구합니다."),
       ),
     );
     affiliation.textContent = text(
       pair(
-        "Ph.D. student at KAIST\nCulture Technology · Daejeon, Korea",
-        "KAIST 문화기술대학원 박사과정\n대한민국 대전",
+        "Ph.D. researcher at KAIST · Daejeon, Korea",
+        "KAIST 문화기술대학원 박사과정 · 대전",
       ),
     );
-    archiveTitle.textContent = text(
-      pair("A bookshelf of work", "작업을 모은 책장"),
-    );
+    archiveTitle.textContent = text(pair("The bookshelf", "나의 책장"));
     search.placeholder = text(
-      pair("Search work, topic, or year", "작업, 주제, 연도 검색"),
+      pair("Find something on the shelf", "책장에서 찾기"),
     );
     search.setAttribute(
       "aria-label",
@@ -781,10 +847,10 @@
       node(
         "p",
         "",
-        pair("Jihun Chae / Research & practice", "채지훈 / 연구와 실천"),
+        pair("Jihun Chae · Always curious.", "채지훈 · 호기심을 따라."),
       ),
       link(
-        pair("Get in touch ↗", "연락하기 ↗"),
+        pair("Say hello ↗", "안부 전하기 ↗"),
         "mailto:chaejihun@kaist.ac.kr",
       ),
     );
@@ -792,10 +858,10 @@
       node(
         "p",
         "catalog-eyebrow",
-        pair("THE PROFESSIONAL RECORD", "연구와 경력의 기록"),
+        pair("Beyond the bookshelf", "책장 너머의 이야기"),
       ),
       link(
-        pair("Explore the full CV ↗", "전체 이력서 보기 ↗"),
+        pair("The full picture ↗", "전체 이력 보기 ↗"),
         "?view=cv",
         "catalog-cv-link",
       ),
@@ -803,8 +869,8 @@
         "p",
         "",
         pair(
-          "Research, industry, education, and the work behind these books.",
-          "연구, 산업 프로젝트, 학력, 그리고 이 책들에 담긴 작업의 전체 기록.",
+          "My CV: research, collaborations, and the path so far.",
+          "연구, 협업, 그리고 지금까지 걸어온 길을 이력서에 담았습니다.",
         ),
       ),
     );

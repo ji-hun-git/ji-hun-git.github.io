@@ -1,7 +1,7 @@
 """Regenerate the profile image derivatives from the master photo.
 
-The CV renders at 164px wide and the bookshelf portrait at 38px. The display
-derivatives cover both at 2x resolution. The master also supplies the social image.
+The CV renders at 164px wide. Display derivatives cover it at 2x resolution.
+The full-size derivative remains available for the Person structured data.
 
     python tools/build-profile-images.py
 
@@ -32,13 +32,11 @@ def main() -> None:
     display_h = round(DISPLAY_W * h / w)
 
     display = src.resize((DISPLAY_W, display_h), Image.LANCZOS)
-    thumbnail = src.resize((76, round(76 * h / w)), Image.LANCZOS)
 
     targets = [
-        (OUT_DIR / "jihun-chae-thumb.webp", thumbnail, {"format": "WEBP", "quality": 82, "method": 6}),
         (OUT_DIR / "jihun-chae.webp", display, {"format": "WEBP", "quality": 82, "method": 6}),
         (OUT_DIR / "jihun-chae.jpg", display, {"format": "JPEG", "quality": 82, "optimize": True, "progressive": True}),
-        # Social card: crawlers only, never loaded by the page.
+        # Preserve the existing portrait URL referenced by Person structured data.
         (OUT_DIR / "jihun-chae-og.jpg", src, {"format": "JPEG", "quality": 78, "optimize": True, "progressive": True}),
     ]
 

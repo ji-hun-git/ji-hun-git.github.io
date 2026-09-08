@@ -1,116 +1,116 @@
-import { labProjects } from "./experiments.js?v=108-20260908r3";
+import { labProjects } from "./experiments.js?v=109-20260908r3";
 
 const rendererRegistry = {
   "behavior-prompt-gridworld": () =>
-    import("./simulations/gridworld-prompt.js?v=108-20260908r3").then(
+    import("./simulations/gridworld-prompt.js?v=109-20260908r3").then(
       (module) => module.mountGridworldPrompt,
     ),
   "arc-adaptive-unit": () =>
-    import("./simulations/arc-adaptive-robot.js?v=108-20260908r3").then(
+    import("./simulations/arc-adaptive-robot.js?v=109-20260908r3").then(
       (module) => module.mountArcRobot,
     ),
   "double-pendulum": () =>
-    import("./simulations/double-pendulum.js?v=108-20260908r3").then(
+    import("./simulations/double-pendulum.js?v=109-20260908r3").then(
       (module) => module.mountDoublePendulum,
     ),
   "verlet-cloth": () =>
-    import("./simulations/verlet-cloth.js?v=108-20260908r3").then(
+    import("./simulations/verlet-cloth.js?v=109-20260908r3").then(
       (module) => module.mountVerletCloth,
     ),
   "falling-sand": () =>
-    import("./simulations/falling-sand.js?v=108-20260908r3").then(
+    import("./simulations/falling-sand.js?v=109-20260908r3").then(
       (module) => module.mountFallingSand,
     ),
   plinko: () =>
-    import("./simulations/plinko.js?v=108-20260908r3").then(
+    import("./simulations/plinko.js?v=109-20260908r3").then(
       (module) => module.mountPlinko,
     ),
   "lunar-lander": () =>
-    import("./simulations/lunar-lander.js?v=108-20260908r3").then(
+    import("./simulations/lunar-lander.js?v=109-20260908r3").then(
       (module) => module.mountLunarLander,
     ),
   "breakout-ai": () =>
-    import("./simulations/breakout-ai.js?v=108-20260908r3").then(
+    import("./simulations/breakout-ai.js?v=109-20260908r3").then(
       (module) => module.mountBreakoutAI,
     ),
   "tetris-ai": () =>
-    import("./simulations/tetris-ai.js?v=108-20260908r3").then(
+    import("./simulations/tetris-ai.js?v=109-20260908r3").then(
       (module) => module.mountTetrisAI,
     ),
   "agent-arena": () =>
-    import("./simulations/agent-arena.js?v=108-20260908r3").then(
+    import("./simulations/agent-arena.js?v=109-20260908r3").then(
       (module) => module.mountAgentArena,
     ),
   "neuroevolution-flappy": () =>
-    import("./simulations/neuroevolution-flappy.js?v=108-20260908r3").then(
+    import("./simulations/neuroevolution-flappy.js?v=109-20260908r3").then(
       (module) => module.mountNeuroFlappy,
     ),
   "connect-four": () =>
-    import("./simulations/connect-four.js?v=108-20260908r3").then(
+    import("./simulations/connect-four.js?v=109-20260908r3").then(
       (module) => module.mountConnectFour,
     ),
   "game-2048": () =>
-    import("./simulations/game-2048.js?v=108-20260908r3").then(
+    import("./simulations/game-2048.js?v=109-20260908r3").then(
       (module) => module.mountGame2048,
     ),
   minesweeper: () =>
-    import("./simulations/minesweeper.js?v=108-20260908r3").then(
+    import("./simulations/minesweeper.js?v=109-20260908r3").then(
       (module) => module.mountMinesweeper,
     ),
   "maze-chase": () =>
-    import("./simulations/maze-chase.js?v=108-20260908r3").then(
+    import("./simulations/maze-chase.js?v=109-20260908r3").then(
       (module) => module.mountMazeChase,
     ),
   "snake-growth": () =>
-    import("./simulations/snake-swarm.js?v=108-20260908r3").then(
+    import("./simulations/snake-swarm.js?v=109-20260908r3").then(
       (module) => module.mountSnakeSwarm,
     ),
   "light-cycle-arena": () =>
-    import("./simulations/light-cycle.js?v=108-20260908r3").then(
+    import("./simulations/light-cycle.js?v=109-20260908r3").then(
       (module) => module.mountLightCycle,
     ),
   "frozen-lake": () =>
-    import("./simulations/frozen-lake.js?v=108-20260908r3").then(
+    import("./simulations/frozen-lake.js?v=109-20260908r3").then(
       (module) => module.mountFrozenLake,
     ),
   "q-learning-gridworld": () =>
-    import("./simulations/q-learning.js?v=108-20260908r3").then(
+    import("./simulations/q-learning.js?v=109-20260908r3").then(
       (module) => module.mountQLearning,
     ),
   "cartpole-control": () =>
-    import("./simulations/cartpole.js?v=108-20260908r3").then(
+    import("./simulations/cartpole.js?v=109-20260908r3").then(
       (module) => module.mountCartpole,
     ),
   "pathfinding-search": () =>
-    import("./simulations/pathfinding.js?v=108-20260908r3").then(
+    import("./simulations/pathfinding.js?v=109-20260908r3").then(
       (module) => module.mountPathfinding,
     ),
   "wumpus-world": () =>
-    import("./simulations/wumpus.js?v=108-20260908r3").then(
+    import("./simulations/wumpus.js?v=109-20260908r3").then(
       (module) => module.mountWumpus,
     ),
   "reaction-diffusion": () =>
-    import("./simulations/reaction-diffusion.js?v=108-20260908r3").then(
+    import("./simulations/reaction-diffusion.js?v=109-20260908r3").then(
       (module) => module.mountReactionDiffusion,
     ),
   "boids-3d": () =>
-    import("./simulations/boids-3d.js?v=108-20260908r3").then(
+    import("./simulations/boids-3d.js?v=109-20260908r3").then(
       (module) => module.mountBoids3d,
     ),
   "optimizer-landscape-3d": () =>
-    import("./simulations/terrain-descent-3d.js?v=108-20260908r3").then(
+    import("./simulations/terrain-descent-3d.js?v=109-20260908r3").then(
       (module) => module.mountTerrainDescent3d,
     ),
   "nbody-gravity-3d": () =>
-    import("./simulations/nbody-3d.js?v=108-20260908r3").then(
+    import("./simulations/nbody-3d.js?v=109-20260908r3").then(
       (module) => module.mountNBody3d,
     ),
   "ludic-geometry": () =>
-    import("./simulations/ludic-geometry.js?v=108-20260908r3").then(
+    import("./simulations/ludic-geometry.js?v=109-20260908r3").then(
       (module) => module.mountLudicGeometry,
     ),
   "particle-policy-field": () =>
-    import("./simulations/particle-field.js?v=108-20260908r3").then(
+    import("./simulations/particle-field.js?v=109-20260908r3").then(
       (module) => module.mountParticleField,
     ),
 };

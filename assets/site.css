@@ -7,11 +7,11 @@
 }
 :root {
   color-scheme: light;
-  --paper: #f7f8f5;
-  --ink: #242925;
-  --muted: #5e665e;
-  --line: #d6dcd4;
-  --accent: #305843;
+  --paper: #f6f5f3;
+  --ink: #272a29;
+  --muted: #666b68;
+  --line: #dedfdb;
+  --accent: #365f51;
   --sans: Geist, "Pretendard Variable", Arial, sans-serif;
   --display: Georgia, "Pretendard Variable", serif;
   --frame: 1120px;
@@ -68,14 +68,14 @@ button {
 button,
 input {
   border: 1px solid var(--line);
-  border-radius: 3px;
+  border-radius: 6px;
 }
 button {
   min-height: 44px;
   padding: 8px 14px;
 }
 button:hover {
-  background: #eaf0e7;
+  background: #e9ece8;
 }
 input {
   padding: 10px 12px;
@@ -107,15 +107,18 @@ body.ko {
 .site-header {
   width: min(var(--frame), calc(100% - 64px));
   margin: auto;
-  height: 86px;
+  height: 76px;
   display: flex;
   align-items: center;
   gap: 36px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
 }
 .site-brand {
-  font-size: 27px;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 23px;
+  font-weight: 650;
   line-height: 1;
   min-width: 48px;
 }
@@ -143,6 +146,7 @@ body.ko {
 .site-controls button {
   font-size: 13px;
   white-space: nowrap;
+  border-color: transparent;
 }
 #ttsToggle {
   width: 44px;

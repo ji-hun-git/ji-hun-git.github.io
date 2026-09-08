@@ -23,6 +23,17 @@ try:
                 page.goto(base+('/?lang=ko' if lang=='ko' else '/'),wait_until='networkidle')
                 expect(page.locator('.catalog-row')).to_have_count(37)
                 expect(page.locator('.bookshelf')).to_have_count(3)
+                expect(page.locator('#work-library img')).to_have_count(0)
+                if lang == 'en':
+                    expect(page.locator('.catalog-statement')).to_have_text('I build and research interactive systems around humans and AI.')
+                else:
+                    expect(page.locator('.book-title').first).to_have_css('text-orientation', 'upright')
+                assert page.locator('.catalog-face-out').count() > 0
+                assert page.locator('.catalog-face-out').evaluate_all('''(books) => books.every(book => {
+                    const title = book.querySelector('.book-title');
+                    const year = book.querySelector('.book-year');
+                    return title.scrollWidth <= title.clientWidth + 1 && title.getBoundingClientRect().bottom <= year.getBoundingClientRect().top + 1;
+                })'''), (width, lang, 'cover text fit')
                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), (width,lang,'shelf overflow')
                 if args.screenshots: page.screenshot(path=str(args.screenshots/f'shelf-{width}-{lang}.png'),animations='disabled')
                 book=page.locator('[data-pl-book="inclusive-game-ai"]')

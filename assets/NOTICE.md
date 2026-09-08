@@ -11,4 +11,5 @@ repository's CC0 dedication.
 
 Project pictograms and technology category symbols are original vector drawings.
 Profile images are supplied portfolio photography. The image build script creates
-display and social derivatives from the retained master.
+CV display and structured-data derivatives from the retained master. The bookshelf
+social image is a browser rendering of the site's own design and content.
