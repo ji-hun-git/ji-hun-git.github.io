@@ -1,6 +1,9 @@
 """Verify the Three.js book sequence, touch framing, pixels, and interruption paths."""
 import argparse
 import json
+import re
+from io import BytesIO
+from PIL import Image, ImageChops, ImageStat, ImageFilter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
@@ -37,7 +40,7 @@ results = []
 
 def ready(page):
     expect(page.locator('#work-detail')).to_be_visible()
-    expect(page.locator('#work-detail')).not_to_have_class('catalog-reader book-opening', timeout=10000)
+    expect(page.locator('#work-detail')).not_to_have_class(re.compile(r'\bbook-opening\b'), timeout=10000)
     expect(page.locator('#catalog-reader-title')).to_be_visible()
     expect(page.locator('.book-flight-canvas')).to_have_count(0)
     expect(page.locator('.book-in-flight')).to_have_count(0)
@@ -75,14 +78,35 @@ try:
             assert pixels['left'] > 2 and pixels['right'] < pixels['width'] - 2, ('horizontal clipping',width,pixels)
             assert pixels['top'] > 2 and pixels['bottom'] < pixels['height'] - 2, ('vertical clipping',width,pixels)
             if args.screenshots: page.screenshot(path=str(args.screenshots/f'book-flip-{width}.png'))
-            page.clock.run_for(1000)
+            page.clock.run_for(850)
+            # The last opaque WebGL frame must match both real reading pages,
+            # not merely contain similarly themed placeholder text.
+            expect(page.locator('.book-flight')).to_have_attribute('data-phase','settle')
+            before = Image.open(BytesIO(page.screenshot())).convert('RGB')
+            regions = page.locator('.catalog-opening-index, .catalog-opening-page').evaluate_all('''els => els.map(el => {
+                const r=el.getBoundingClientRect(); return {x:r.x,y:r.y,w:r.width,h:r.height};
+            }).filter(r=>r.w>0)''')
+            if args.screenshots: before.save(args.screenshots/f'book-final-frame-{width}.png')
+            page.clock.run_for(450)
             ready(page)
+            after = Image.open(BytesIO(page.screenshot())).convert('RGB')
+            differences = []
+            for r in regions:
+                crop = (round((r['x']+28)*2), round((r['y']+26)*2), round((r['x']+r['w']-28)*2), round(min(r['y']+r['h']-26, page.viewport_size['height']-80)*2))
+                difference = sum(ImageStat.Stat(ImageChops.difference(before.crop(crop),after.crop(crop))).mean)/3
+                assert difference < 14, ('book-to-reader pixel mismatch',width,difference)
+                expected_ink = after.crop(crop).convert('L').point(lambda value: 255 if value < 150 else 0)
+                actual_ink = before.crop(crop).convert('L').point(lambda value: 255 if value < 150 else 0).filter(ImageFilter.MaxFilter(7))
+                missing_ink = ImageStat.Stat(ImageChops.subtract(expected_ink, actual_ink)).sum[0] / max(1, ImageStat.Stat(expected_ink).sum[0])
+                assert missing_ink < .12, ('missing or misplaced final-page text',width,missing_ink)
+                differences.append(round(difference,2))
+            if args.screenshots: after.save(args.screenshots/f'book-readable-{width}.png')
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),width
             page.keyboard.press('Escape')
             expect(page.locator('#work-detail')).not_to_be_visible()
             expect(book).to_be_focused()
             assert not errors,errors
-            results.append({'width':width,'touch':width<760,'pixels':pixels,'result':'pass'})
+            results.append({'width':width,'touch':width<760,'pixels':pixels,'handoffMeanPixelDifference':differences,'result':'pass'})
             context.close()
 
         context = browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)

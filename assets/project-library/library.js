@@ -22,6 +22,9 @@
         clone
           .querySelectorAll(`[lang]:not([lang="${language}"])`)
           .forEach((n) => n.remove());
+        clone
+          .querySelectorAll('[aria-hidden="true"]')
+          .forEach((n) => n.remove());
         return [language, clone.textContent.replace(/\s+/g, " ").trim()];
       }),
     );
@@ -72,7 +75,7 @@
           ["en", "ko"].map((language) => [
             language,
             [...source.querySelectorAll(`.item-desc[lang="${language}"]`)]
-              .map((el) => el.textContent.trim())
+              .map((el) => read(el)[language])
               .join("\n\n"),
           ]),
         );
@@ -112,6 +115,7 @@
   document.addEventListener("click", (event) => {
     const anchor = event.target.closest("a[href]");
     if (!anchor) return;
+    if (anchor.getAttribute("href").startsWith("#")) return;
     const url = new URL(anchor.href);
     if (
       url.origin === location.origin &&
@@ -156,7 +160,7 @@
   const loadBookMotion = () => {
     if (reduced.matches || document.body.classList.contains("reader"))
       return Promise.resolve(null);
-    motionModule ||= import("./book-motion.js?v=110-20260908r1").catch(
+    motionModule ||= import("./book-motion.js?v=111-20260908r2").catch(
       () => null,
     );
     return motionModule;
@@ -300,18 +304,11 @@
     flightPlaceholder?.remove();
     flightPlaceholder = null;
     const wasOpening = dialog.classList.contains("book-opening");
-    dialog.classList.remove("book-opening");
+    dialog.classList.remove("book-opening", "book-handoff");
+    dialog.style.removeProperty("--reader-reveal");
     delete bookStage.dataset.rendered;
     if (reveal && wasOpening && dialog.open) {
       close.focus({ preventScroll: true });
-      dialogAnimation = animate(
-        dialog,
-        [
-          { opacity: 0, transform: "translateY(6px)" },
-          { opacity: 1, transform: "translateY(0)" },
-        ],
-        190,
-      );
     }
   };
   const startBookMotion = async (work, trigger) => {
@@ -350,15 +347,26 @@
         !reduced.matches &&
         !document.body.classList.contains("reader")
       ) {
+        const art = await module.prepareCoverArt(
+          window.PROJECT_LIBRARY_ICONS?.create(work.icon)?.querySelector("svg"),
+          ink,
+        );
+        if (epoch !== motionEpoch || !dialog.open) return;
         activeBookMotion = module.playBookOpening({
           container: bookStage,
           rect,
           color,
           ink,
+          art,
           title: text(work.shortTitle || work.awardName || work.title),
           category: text(labels[work.type]),
           year: work.year,
           faceOut: trigger.classList.contains("catalog-face-out"),
+          opening: readerBody.querySelector(".catalog-opening"),
+          onHandoff: (progress) => {
+            dialog.classList.add("book-handoff");
+            dialog.style.setProperty("--reader-reveal", progress);
+          },
           pages: fields(work)
             .slice(0, 4)
             .map(([title, body]) => ({ title: text(title), body: text(body) })),
@@ -450,19 +458,47 @@
       "catalog-reader-summary",
       w.subtitle || w.takeaway,
     );
-    readerBody.append(title, meta, summary);
+    const opening = node("div", "catalog-opening");
+    const leftPage = node("div", "catalog-opening-index");
+    const rightPage = node("div", "catalog-opening-page");
+    leftPage.append(
+      node(
+        "p",
+        "catalog-page-label",
+        pair("Jihun Chae / Collected work", "채지훈 / 작업 모음"),
+      ),
+      node("p", "catalog-opening-name", w.shortTitle || w.awardName || w.title),
+    );
+    rightPage.append(
+      node("p", "catalog-page-label", `${text(labels[w.type])} / ${w.year}`),
+      title,
+      meta,
+      summary,
+    );
     const sectionNav = node("nav", "catalog-contents");
     sectionNav.setAttribute("aria-label", text(pair("Contents", "목차")));
     const sections = fields(w).filter(([, value]) => text(value));
     sections.forEach(([label], i) =>
       sectionNav.append(link(label, `#reader-section-${i}`)),
     );
-    readerBody.append(sectionNav);
+    leftPage.append(sectionNav);
+    leftPage.append(node("p", "catalog-folio", "01"));
+    rightPage.append(node("p", "catalog-folio", "02"));
+    opening.append(leftPage, rightPage);
+    readerBody.append(opening);
+    const mobileContents = node("details", "catalog-mobile-contents");
+    mobileContents.append(
+      node("summary", "", pair("Contents", "목차")),
+      sectionNav.cloneNode(true),
+    );
+    readerBody.append(mobileContents);
+    const chapters = node("div", "catalog-chapters");
     sections.forEach(([label, value], i) => {
       const section = node("section", "catalog-reader-section");
       section.id = `reader-section-${i}`;
       section.append(node("h3", "", label), node("p", "", value));
-      readerBody.append(section);
+      if (i === 0) rightPage.append(section);
+      else chapters.append(section);
     });
     const actions = node("div", "catalog-reader-actions");
     w.links.forEach((source) => {
@@ -498,7 +534,8 @@
     );
     copy.setAttribute("aria-live", "polite");
     actions.append(copy);
-    readerBody.append(actions);
+    chapters.append(actions);
+    readerBody.append(chapters);
     readerType.textContent = `${text(labels[w.type])} / ${w.year}`;
     const mark = window.PROJECT_LIBRARY_ICONS?.create(w.icon);
     if (mark) readerType.prepend(mark);
@@ -649,8 +686,8 @@
     }
     if (event.key === "Tab") {
       const controls = [
-        ...dialog.querySelectorAll("button:not(:disabled),a[href]"),
-      ].filter((el) => el.getClientRects().length);
+        ...dialog.querySelectorAll("button:not(:disabled),a[href],summary"),
+      ].filter((el) => el.checkVisibility());
       const first = controls[0],
         last = controls.at(-1);
       if (event.shiftKey && event.target === first) {
@@ -986,34 +1023,16 @@
       text(pair("Search the work library", "작업 라이브러리 검색")),
     );
     footer.replaceChildren(
-      node(
-        "p",
-        "",
-        pair("Jihun Chae · Always curious.", "채지훈 · 호기심을 따라."),
-      ),
       link(
         pair("Say hello ↗", "안부 전하기 ↗"),
         "mailto:chaejihun@kaist.ac.kr",
       ),
     );
     cvEntry.replaceChildren(
-      node(
-        "p",
-        "catalog-eyebrow",
-        pair("Beyond the bookshelf", "책장 너머의 이야기"),
-      ),
       link(
-        pair("The full picture ↗", "전체 이력 보기 ↗"),
+        pair("See the full CV ↗", "전체 이력서 보기 ↗"),
         "?view=cv",
         "catalog-cv-link",
-      ),
-      node(
-        "p",
-        "",
-        pair(
-          "My CV: research, collaborations, and the path so far.",
-          "연구, 협업, 그리고 지금까지 걸어온 길을 이력서에 담았습니다.",
-        ),
       ),
     );
     renderFilters();

@@ -2,7 +2,7 @@ import * as THREE from "../vendor/three/three.module.min.js";
 
 const WIDTH = 1.55;
 const HEIGHT = 2.3;
-const DURATION = 2400;
+const DURATION = 2800;
 const clamp = (value) => Math.max(0, Math.min(1, value));
 const ease = (value) => {
   const t = clamp(value);
@@ -57,7 +57,25 @@ function texture(draw) {
   return map;
 }
 
-function coverTexture({ color, ink, title, category, year }) {
+export async function prepareCoverArt(svg, ink) {
+  if (!svg) return null;
+  const art = new Image();
+  const source = svg.cloneNode(true);
+  source.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  source.setAttribute("fill", "none");
+  source.setAttribute("stroke", ink);
+  source.setAttribute("color", ink);
+  source.setAttribute("stroke-width", "1.2");
+  art.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(source))}`;
+  try {
+    await art.decode();
+    return art;
+  } catch {
+    return null;
+  }
+}
+
+function coverTexture({ color, ink, title, category, year, art }) {
   return texture((ctx) => {
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, 512, 768);
@@ -70,8 +88,14 @@ function coverTexture({ color, ink, title, category, year }) {
     ctx.fillStyle = ink;
     ctx.font = "22px Arial, sans-serif";
     ctx.fillText(category, 54, 64);
-    ctx.font = "56px Georgia, serif";
-    ctx.fillText("JC.", 54, 220);
+    ctx.globalAlpha = 0.45;
+    ctx.fillRect(54, 90, 398, 1);
+    ctx.globalAlpha = 1;
+    if (art) ctx.drawImage(art, 54, 145, 175, 175);
+    else {
+      ctx.font = "64px Georgia, serif";
+      ctx.fillText(year, 54, 230);
+    }
     ctx.font = "500 43px Arial, sans-serif";
     wrap(ctx, title, 54, 425, 398, 52, 4);
     ctx.globalAlpha = 0.45;
@@ -82,6 +106,55 @@ function coverTexture({ color, ink, title, category, year }) {
     ctx.textAlign = "right";
     ctx.fillText(year, 458, 694);
   });
+}
+
+// Read the real opening-page layout, including browser line breaks. The final
+// WebGL leaves and the accessible HTML therefore share content AND geometry.
+function readerTexture(element, reverse = false) {
+  const bounds = element.getBoundingClientRect();
+  const canvas = document.createElement("canvas");
+  const ratio = Math.min(devicePixelRatio || 1, 2);
+  canvas.width = Math.ceil(bounds.width * ratio);
+  canvas.height = Math.ceil(bounds.height * ratio);
+  const ctx = canvas.getContext("2d");
+  ctx.scale(ratio, ratio);
+  if (reverse) {
+    ctx.translate(bounds.width, 0);
+    ctx.scale(-1, 1);
+  }
+  ctx.fillStyle = "#fbfbf8";
+  ctx.fillRect(0, 0, bounds.width, bounds.height);
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+  const range = document.createRange();
+  while (walker.nextNode()) {
+    const text = walker.currentNode;
+    if (!text.textContent.trim()) continue;
+    const style = getComputedStyle(text.parentElement);
+    ctx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    ctx.fillStyle = style.color;
+    const metrics = ctx.measureText("Hg");
+    const ascent =
+      metrics.fontBoundingBoxAscent ?? parseFloat(style.fontSize) * 0.8;
+    const descent =
+      metrics.fontBoundingBoxDescent ?? parseFloat(style.fontSize) * 0.2;
+    for (const { segment, index } of segmenter.segment(text.textContent)) {
+      if (!segment.trim()) continue;
+      range.setStart(text, index);
+      range.setEnd(text, index + segment.length);
+      const rect = range.getBoundingClientRect();
+      if (!rect.width || !rect.height) continue;
+      ctx.fillText(
+        segment,
+        rect.left - bounds.left,
+        rect.top - bounds.top + (rect.height - ascent - descent) / 2 + ascent,
+      );
+    }
+  }
+  const map = new THREE.CanvasTexture(canvas);
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.anisotropy = 4;
+  return map;
 }
 
 function pageTexture(title, body, number, reverse = false) {
@@ -124,6 +197,9 @@ export function playBookOpening({
   category,
   year,
   pages,
+  opening,
+  onHandoff,
+  art,
   faceOut = false,
 }) {
   const canvas = document.createElement("canvas");
@@ -187,7 +263,7 @@ export function playBookOpening({
         ...options,
       }),
     );
-  const cover = track(coverTexture({ color, ink, title, category, year }));
+  const cover = track(coverTexture({ color, ink, title, category, year, art }));
   const board = material({ color });
   const printed = material({ map: cover });
   const inside = material({ color: "#e8e7d9" });
@@ -261,6 +337,8 @@ export function playBookOpening({
     leaf.position.z = 0.079 + index * 0.008;
     book.add(leaf);
     leaves.push({
+      face,
+      reverse,
       geometry,
       backGeometry,
       base: geometry.attributes.position.array.slice(),
@@ -287,14 +365,34 @@ export function playBookOpening({
     camera.position.z =
       innerHeight / (2 * Math.tan(THREE.MathUtils.degToRad(16)));
     camera.updateProjectionMatrix();
+    if (opening) {
+      const right = opening.querySelector(".catalog-opening-page");
+      const left = opening.querySelector(".catalog-opening-index");
+      const rightMap = track(readerTexture(right));
+      const leftMap = left.getBoundingClientRect().width
+        ? track(readerTexture(left, true))
+        : null;
+      for (const [mesh, map] of [
+        [leaves[0].face, rightMap],
+        [leaves[1].reverse, leftMap],
+      ]) {
+        if (!map) continue;
+        resources.delete(mesh.material.map);
+        mesh.material.map.dispose();
+        mesh.material.map = map;
+        mesh.material.needsUpdate = true;
+      }
+    }
   };
   resize();
   window.addEventListener("resize", resize, { passive: true });
+  document.fonts.addEventListener("loadingdone", resize);
   const dispose = () => {
     if (stopped) return;
     stopped = true;
     cancelAnimationFrame(frame);
     window.removeEventListener("resize", resize);
+    document.fonts.removeEventListener("loadingdone", resize);
     canvas.removeEventListener("webglcontextlost", lost);
     resources.forEach((resource) => resource.dispose());
     light.shadow.dispose();
@@ -347,7 +445,8 @@ export function playBookOpening({
     const pull = between(time, 0, 400);
     const present = between(time, 360, 920);
     const open = between(time, 900, 1460);
-    const finish = between(time, 2200, DURATION);
+    const settle = between(time, 2120, 2480);
+    const finish = between(time, 2520, DURATION);
     const scale = Math.min(
       (innerWidth - 48) / (WIDTH * 2 + 0.3),
       (innerHeight - 170) / (HEIGHT + 0.4),
@@ -372,16 +471,48 @@ export function playBookOpening({
       mix(startAngle - pull * 0.3, -0.12, present),
       mix(0, -0.025, present),
     );
+    if (opening && settle) {
+      const target = opening
+        .querySelector(".catalog-opening-page")
+        .getBoundingClientRect();
+      const sx = target.width / (WIDTH - 0.055);
+      const sy = target.height / (HEIGHT - 0.085);
+      root.scale.set(mix(scale, sx, settle), mix(scale, sy, settle), scale);
+      root.position.set(
+        mix(0, target.left - innerWidth / 2, settle),
+        mix(12, innerHeight / 2 - target.top - target.height / 2, settle),
+        -0.079 * scale * settle,
+      );
+      root.rotation.x *= 1 - settle;
+      root.rotation.y *= 1 - settle;
+      root.rotation.z *= 1 - settle;
+    }
     book.position.x = (-WIDTH / 2) * (1 - open);
     hinge.rotation.y = -Math.PI * open;
+    hinge.position.z = mix(0.12, 0, settle);
     leaves.forEach((leaf, index) => {
       const turn =
         index === 0
           ? 0
           : between(time, 1320 + (3 - index) * 180, 1740 + (3 - index) * 180);
       bend(leaf, turn);
-      leaf.leaf.position.z =
-        0.079 + index * 0.008 + turn * (0.085 + (4 - index) * 0.01);
+      leaf.leaf.position.z = mix(
+        0.079 + index * 0.008 + turn * (0.085 + (4 - index) * 0.01),
+        0.079 + (index ? 4 - index : 0) * 0.0001,
+        settle,
+      );
+      // Coplanar leaves lose depth precision at document scale. Once the last
+      // turn is complete, draw its printed back above the settled paper stack.
+      leaf.reverse.renderOrder = index === 1 && settle ? 10 : 0;
+      leaf.reverse.material.depthTest = !(index === 1 && settle);
+      // Unlit print at the handoff matches CSS colors without losing the lit
+      // cloth, page curvature, and cast shadows earlier in the sequence.
+      for (const mesh of [leaf.face, leaf.reverse]) {
+        mesh.material.emissive.set(0xffffff);
+        mesh.material.emissiveMap = mesh.material.map;
+        mesh.material.emissiveIntensity = settle;
+        mesh.material.color.setScalar(1 - settle);
+      }
     });
     container.dataset.phase =
       time < 400
@@ -394,6 +525,7 @@ export function playBookOpening({
               ? "flip"
               : "settle";
     canvas.style.opacity = String(1 - finish);
+    if (finish > 0) onHandoff?.(finish);
     renderer.render(scene, camera);
     start ??= performance.now();
     container.dataset.rendered = "true";
