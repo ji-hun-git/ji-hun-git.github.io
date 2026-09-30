@@ -8,7 +8,7 @@
  * endless AI-vs-AI match on the main site's hero.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const COLORS = [
   { trail: "rgba(96,165,250,0.85)", head: "rgba(147,197,253,1)", glow: "rgba(96,165,250,0.35)" },
@@ -231,10 +231,13 @@ export function mountLightCycle(refs) {
 
       const hx = ox + (c.x + 0.5) * cell;
       const hy = oy + (c.y + 0.5) * cell;
-      ctx.fillStyle = c.color.glow;
-      ctx.beginPath();
-      ctx.arc(hx, hy, cell * 0.9, 0, Math.PI * 2);
-      ctx.fill();
+      if (api.state.trails) {
+        // "Head glow" toggle: a soft halo that makes each cycle's head easy to follow
+        ctx.fillStyle = c.color.glow;
+        ctx.beginPath();
+        ctx.arc(hx, hy, cell * 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.fillStyle = c.alive ? c.color.head : "rgba(120,120,130,0.8)";
       ctx.beginPath();
       ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2);
@@ -258,6 +261,18 @@ export function mountLightCycle(refs) {
       order: (v) => `${Math.round(v * 100)}%`,
       spread: (v) => `${Math.round(v * 100)}%`
     },
+    controlFormat: {
+      count: (v) => {
+        const g = clamp(Math.round(v / 6), 24, 64);
+        return `${g}×${g}`;
+      },
+      speed: (v) => {
+        const n = clamp(Math.round(10 / Math.max(0.2, v)), 1, 22);
+        return n === 1 ? "every frame" : `every ${n} frames`;
+      },
+      turbulence: (v) => `±${(v * 4).toFixed(1)}`,
+      attraction: (v) => `weight ${(v * 0.8).toFixed(2)}`
+    },
     presets: {
       duel: { count: 200, speed: 1.9, turbulence: 0.12, attraction: 0.2, trails: true },
       triple: { count: 240, speed: 1.9, turbulence: 0.14, attraction: 0.2, trails: true },
@@ -276,7 +291,7 @@ export function mountLightCycle(refs) {
       w.pendingReset = 0;
       w.lastRoundLen = 0;
       newRound(api);
-      api.log(`${api.state.variation} · ${w.cycleCount} cycles on a ${w.G}×${w.G} arena${w.torus ? " (wrap)" : ""}.`);
+      api.log(`${api.variationLabel()} · ${w.cycleCount} cycles on a ${w.G}×${w.G} arena${w.torus ? " (wrap)" : ""}.`);
     },
     step,
     draw

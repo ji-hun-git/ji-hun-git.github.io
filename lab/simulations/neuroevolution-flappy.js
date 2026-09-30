@@ -7,7 +7,7 @@
  * generation. Watch the swarm get better - the chart is the learning curve.
  */
 
-import { createSimHarness, clamp, mulberry32 } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, mulberry32 } from "./_shared.js?v=115-20260930a";
 
 const IN = 4;
 const H = 6;
@@ -49,7 +49,7 @@ export function mountNeuroFlappy(refs) {
     switch (api.state.variation) {
       case "easy": return { gap: 0.34, spacing: 0.62, speed: 2.1 };
       case "hard": return { gap: 0.22, spacing: 0.46, speed: 2.9 };
-      case "insane": return { gap: 0.18, spacing: 0.4, speed: 3.4 };
+      case "extreme": return { gap: 0.18, spacing: 0.4, speed: 3.4 };
       default: return { gap: 0.28, spacing: 0.54, speed: 2.5 };
     }
   }
@@ -196,6 +196,7 @@ export function mountNeuroFlappy(refs) {
     for (const b of w.birds) {
       if (!b.alive) continue;
       const isBest = b === bestBird;
+      if (!isBest && !api.state.trails) continue; // "Show all birds" off: only the leader
       ctx.fillStyle = isBest ? "rgba(251,191,36,0.95)" : "rgba(147,197,253,0.35)";
       ctx.beginPath();
       ctx.arc(birdX, b.y, isBest ? r * 1.2 : r, 0, Math.PI * 2);
@@ -218,11 +219,17 @@ export function mountNeuroFlappy(refs) {
       order: (_v, api) => String(api.custom.bestEver || 0),
       spread: (v) => `${Math.round(v * 100)}%`
     },
+    controlFormat: {
+      count: (v) => `${clamp(Math.round(v), 60, 320)} birds`,
+      speed: (v) => `${clamp(Math.round(1 + v * 2), 1, 7)} steps/frame`,
+      turbulence: (v) => `${Math.round(clamp(v * 0.6, 0.02, 0.7) * 100)}% of weights`,
+      attraction: (v) => `top ${Math.round(clamp(v, 0.05, 0.5) * 100)}% kept`
+    },
     presets: {
       easy: { count: 160, speed: 1.8, turbulence: 0.2, attraction: 0.15, trails: true },
       normal: { count: 180, speed: 2.0, turbulence: 0.25, attraction: 0.15, trails: true },
       hard: { count: 220, speed: 2.2, turbulence: 0.3, attraction: 0.12, trails: true },
-      insane: { count: 260, speed: 2.4, turbulence: 0.35, attraction: 0.1, trails: true }
+      extreme: { count: 260, speed: 2.4, turbulence: 0.35, attraction: 0.1, trails: true }
     },
     reset(api) {
       const w = api.custom;
@@ -237,7 +244,7 @@ export function mountNeuroFlappy(refs) {
         y: 0, vy: 0, alive: true, score: 0, frames: 0, fitness: 0
       }));
       resetGame(api);
-      api.log(`${api.state.variation} · ${n} birds, random brains · evolving.`);
+      api.log(`${api.variationLabel()} · ${n} birds with random weights · evolving.`);
     },
     step,
     draw

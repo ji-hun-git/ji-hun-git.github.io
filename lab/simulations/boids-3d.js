@@ -7,7 +7,7 @@
  * volume. A "predator" variation adds a chaser the flock evades.
  */
 
-import { createSimHarness, clamp, project3d } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, project3d } from "./_shared.js?v=115-20260930a";
 
 function clampMag(v, max) {
   const m = Math.hypot(v.x, v.y, v.z);
@@ -241,7 +241,7 @@ export function mountBoids3d(refs) {
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText(`${w.boids.length} boids · 3D · ${api.state.variation}`, 14, 12);
+    ctx.fillText(`${w.boids.length} boids · 3D · ${api.variationLabel()}`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -252,6 +252,12 @@ export function mountBoids3d(refs) {
       energy: (v) => v.toFixed(2),
       order: (v) => v.toFixed(2),
       spread: (v) => v.toFixed(2)
+    },
+    controlFormat: {
+      count: (v) => `${clamp(Math.round(v / 1.6), 50, 260)} boids`,
+      speed: (v) => `${(0.006 + v * 0.006).toFixed(3)} max`,
+      turbulence: (v) => `±${(v * 0.0008).toFixed(4)}`,
+      attraction: (v) => `weight ${(0.6 + v * 2).toFixed(2)}`
     },
     presets: {
       flock: { count: 180, speed: 1.7, turbulence: 0.18, attraction: 0.5, trails: true },
@@ -265,7 +271,7 @@ export function mountBoids3d(refs) {
       w.boids = Array.from({ length: n }, () => spawn(api));
       w.vortex = api.state.variation === "vortex";
       w.predator = api.state.variation === "predator" ? { ...spawn(api), x: 0, y: 0, z: 0 } : null;
-      api.log(`${api.state.variation} · ${n} boids in a 3D cube.`);
+      api.log(`${api.variationLabel()} · ${n} boids in a 3D cube.`);
     },
     step,
     draw

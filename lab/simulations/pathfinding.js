@@ -7,7 +7,7 @@
  * goal and can detour. Ties to the catalog's Search topic.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 export function mountPathfinding(refs) {
   function id(w, x, y) {
@@ -85,14 +85,14 @@ export function mountPathfinding(refs) {
     }
     w.path = path;
     w.found = true;
-    api.log(`${api.state.variation.toUpperCase()} reached goal · expanded ${w.expanded} · path ${path.length}`);
+    api.log(`${api.variationLabel()} reached goal · expanded ${w.expanded} · path ${path.length}`);
   }
 
   function searchStep(api) {
     const w = api.custom;
     if (w.open.length === 0) {
       w.done = true;
-      if (!w.found) api.log(`${api.state.variation.toUpperCase()} found no path · expanded ${w.expanded}`);
+      if (!w.found) api.log(`${api.variationLabel()} found no path · expanded ${w.expanded}`);
       w.holdT = 40;
       return;
     }
@@ -199,7 +199,7 @@ export function mountPathfinding(refs) {
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     const status = w.found ? `path ${w.path.length}` : w.done ? "no path" : "searching…";
-    ctx.fillText(`${api.state.variation.toUpperCase()} · expanded ${w.expanded} · ${status}`, 14, 12);
+    ctx.fillText(`${api.variationLabel()} · expanded ${w.expanded} · ${status}`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -211,6 +211,18 @@ export function mountPathfinding(refs) {
       order: (v) => v.toFixed(2),
       spread: (v) => `${Math.round(v * 100)}%`
     },
+    // Obstacle density is used when a field is drawn, so moving it draws a new one.
+    resetOn: ["turbulence"],
+    controlFormat: {
+      count: (v, api) => {
+        const W = clamp(Math.round(v / 12), 16, 46);
+        return `${W}×${clamp(Math.round((W * api.h) / Math.max(1, api.w)), 12, 34)}`;
+      },
+      speed: (v) => `${clamp(Math.round(v * 4), 1, 30)}`,
+      turbulence: (v) => `${Math.round(clamp(0.12 + v * 0.22, 0.08, 0.42) * 100)}% walls`,
+      // Only A* weights its heuristic; the other three ignore this slider.
+      attraction: (v, api) => (api.state.variation === "astar" ? `w = ${(1 + v * 3).toFixed(1)}` : "not used")
+    },
     presets: {
       astar: { count: 280, speed: 1.6, turbulence: 0.45, attraction: 0.0, trails: true },
       dijkstra: { count: 280, speed: 1.6, turbulence: 0.45, attraction: 0.0, trails: true },
@@ -219,7 +231,7 @@ export function mountPathfinding(refs) {
     },
     reset(api) {
       genGrid(api);
-      api.log(`${api.state.variation.toUpperCase()} on a ${api.custom.W}×${api.custom.H} field.`);
+      api.log(`${api.variationLabel()} on a ${api.custom.W}×${api.custom.H} field.`);
     },
     step,
     draw

@@ -1,12 +1,12 @@
 /**
- * Breakout AI - a paddle agent that reads the bounce
+ * Breakout AI: a paddle agent that reads the bounce
  *
  * The paddle predicts where the ball will cross its line (reflecting off walls)
- * and slides to intercept, with a reaction lag and a little noise. It clears the
- * brick field, the ball speeds up, and the board resets when cleared or missed.
+ * and slides to intercept, with a reaction lag and a little noise. A missed ball
+ * is served again; a cleared wall is rebuilt.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 export function mountBreakoutAI(refs) {
   function build(api) {
@@ -23,8 +23,13 @@ export function mountBreakoutAI(refs) {
     w.paddleX = api.w / 2;
     w.padY = api.h - 24;
     w.r = Math.max(4, api.h * 0.012);
+    w.cleared = 0; w.misses = 0; w.balls = 0; w.returns = 0;
     serve(api);
-    w.cleared = 0; w.misses = 0; w.balls = 0;
+  }
+
+  function catchRate(w) {
+    const attempts = w.returns + w.misses;
+    return attempts ? w.returns / attempts : 1;
   }
 
   function serve(api) {
@@ -53,7 +58,7 @@ export function mountBreakoutAI(refs) {
     for (let s = 0; s < sub; s++) {
       const b = w.ball;
       // AI paddle
-      const aim = predict(api) + (api.rand() - 0.5) * (1 - api.state.attraction) * api.state.brickW * 0.0;
+      const aim = predict(api);
       const target = clamp(aim + (api.rand() - 0.5) * api.state.turbulence * 60, w.paddleW / 2, api.w - w.paddleW / 2);
       const react = 0.08 + api.state.attraction * 0.22;
       w.paddleX += (target - w.paddleX) * react;
@@ -71,18 +76,21 @@ export function mountBreakoutAI(refs) {
       if (b.y > w.padY - w.r && b.y < w.padY + 6 && Math.abs(b.x - w.paddleX) < w.paddleW / 2 && b.vy > 0) {
         b.vy = -Math.abs(b.vy);
         b.vx += (b.x - w.paddleX) / (w.paddleW / 2) * 1.6;
+        w.returns++;
       }
       if (b.y > api.h + 10) { w.misses++; serve(api); }
       if (!w.bricks.some((k) => k.alive)) { api.log(`Board cleared (${w.cleared} bricks).`); build(api); return; }
     }
     const total = w.cols * w.rows;
     const aliveB = w.bricks.filter((k) => k.alive).length;
-    api.push(clamp(w.cleared / 80, 0, 1), clamp(w.balls / (w.misses + 1) / 6, 0, 1), clamp(1 - aliveB / total, 0, 1));
+    // Catch rate: the share of balls reaching the paddle line that the paddle returned.
+    api.push(clamp(w.cleared / 80, 0, 1), catchRate(w), clamp(1 - aliveB / total, 0, 1));
   }
 
   function draw(api) {
     const { ctx, custom: w } = api;
-    ctx.fillStyle = "rgba(7,7,13,0.96)";
+    // With the ball trail on, the background is only partly cleared each frame.
+    ctx.fillStyle = api.state.trails ? "rgba(7,7,13,0.35)" : "rgba(7,7,13,0.96)";
     ctx.fillRect(0, 0, api.w, api.h);
     for (const k of w.bricks) {
       if (!k.alive) continue;
@@ -96,21 +104,34 @@ export function mountBreakoutAI(refs) {
     ctx.fillStyle = "rgba(245,245,247,0.92)";
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left"; ctx.textBaseline = "top";
-    ctx.fillText(`bricks ${w.cleared} - balls ${w.balls} - misses ${w.misses}`, 14, 12);
+    ctx.fillText(`bricks ${w.cleared} · balls ${w.balls} · misses ${w.misses}`, 14, 12);
   }
 
   return createSimHarness(refs, {
     seedDefault: 81,
     firstVariation: "classic",
     chartColors: ["rgba(96,165,250,0.95)", "rgba(52,211,153,0.95)", "rgba(251,191,36,0.95)"],
-    metricFormat: { energy: (_v, api) => String(api.custom.cleared || 0), order: (v) => v.toFixed(2), spread: (v) => `${Math.round(v * 100)}%` },
+    metricFormat: {
+      energy: (_v, api) => String(api.custom.cleared || 0),
+      order: (v) => `${Math.round(v * 100)}%`,
+      spread: (v) => `${Math.round(v * 100)}%`
+    },
+    controlFormat: {
+      count: (v) => {
+        const cols = clamp(Math.round(v / 18), 7, 16);
+        return `${cols}×${clamp(Math.round(cols * 0.55), 4, 9)} bricks`;
+      },
+      speed: (v) => `${((2 + v) * clamp(Math.round(v * 1.5), 1, 4)).toFixed(1)} px/frame`,
+      turbulence: (v) => `±${Math.round(v * 30)} px`,
+      attraction: (v) => `${Math.round((0.08 + v * 0.22) * 100)}% per step`
+    },
     presets: {
       classic: { count: 200, speed: 1.6, turbulence: 0.15, attraction: 0.7, trails: false },
       wide: { count: 280, speed: 1.6, turbulence: 0.15, attraction: 0.7, trails: false },
       fast: { count: 200, speed: 2.6, turbulence: 0.2, attraction: 0.8, trails: false },
       shaky: { count: 200, speed: 1.8, turbulence: 0.6, attraction: 0.4, trails: false }
     },
-    reset(api) { build(api); api.log(`${api.custom.cols}x${api.custom.rows} bricks - predictive paddle agent.`); },
+    reset(api) { build(api); api.log(`${api.custom.cols}×${api.custom.rows} bricks · predictive paddle agent.`); },
     step,
     draw
   });

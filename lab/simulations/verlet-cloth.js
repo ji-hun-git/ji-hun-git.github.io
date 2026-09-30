@@ -7,7 +7,7 @@
  * links tear.
  */
 
-import { createSimHarness, clamp, TAU } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, TAU } from "./_shared.js?v=115-20260930a";
 
 export function mountVerletCloth(refs) {
   function build(api) {
@@ -37,10 +37,22 @@ export function mountVerletCloth(refs) {
     w.linkCount = w.links.length;
   }
 
+  // Simulation speed: physics steps per frame, accumulated so that 1.5 on the
+  // slider is one step per frame, 0.4 about one step in four, 3.4 about two.
   function step(api) {
     const w = api.custom;
+    w.acc = (w.acc || 0) + api.state.speed / 1.5;
+    let n = 0;
+    while (w.acc >= 1 && n < 3) { w.acc -= 1; n++; physicsStep(api); }
+    if (n === 0) return;
+    measure(api);
+  }
+
+  function physicsStep(api) {
+    const w = api.custom;
+    w.t = (w.t || 0) + 1;
     const grav = 0.5;
-    const wind = Math.sin(api.frame * 0.02) * api.state.turbulence * 1.4 + api.state.turbulence * 0.6;
+    const wind = Math.sin(w.t * 0.02) * api.state.turbulence * 1.4 + api.state.turbulence * 0.6;
     const iters = clamp(Math.round(2 + api.state.attraction * 6), 2, 8);
     // verlet integrate
     for (const p of w.points) {
@@ -75,6 +87,10 @@ export function mountVerletCloth(refs) {
     }
     // bounds
     for (const p of w.points) { p.y = Math.min(p.y, api.h - 4); }
+  }
+
+  function measure(api) {
+    const w = api.custom;
     let intact = 0, spd = 0, maxy = 0;
     for (const l of w.links) if (l.on) intact++;
     for (const p of w.points) { spd += Math.abs(p.x - (p.px ?? p.x)) + Math.abs(p.y - (p.py ?? p.y)); maxy = Math.max(maxy, p.y); }
@@ -94,6 +110,11 @@ export function mountVerletCloth(refs) {
       ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
     }
     ctx.stroke();
+    if (api.state.trails) {
+      // "Show nodes": every point mass as a small dot
+      ctx.fillStyle = "rgba(125,211,252,0.8)";
+      for (const p of w.points) if (!p.pin) ctx.fillRect(p.x - 1.2, p.y - 1.2, 2.4, 2.4);
+    }
     ctx.fillStyle = "rgba(167,139,250,0.9)";
     for (const p of w.points) if (p.pin) { ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, TAU); ctx.fill(); }
     if (api.pointer) {
@@ -104,7 +125,7 @@ export function mountVerletCloth(refs) {
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left"; ctx.textBaseline = "top";
     const torn = w.linkCount - w.links.filter((l) => l.on).length;
-    ctx.fillText(`${w.cols}x${w.rows} cloth - drag to push, stress to tear (${torn} torn)`, 14, 12);
+    ctx.fillText(`${w.cols}×${w.rows} cloth · move the cursor through it to push and tear (${torn} torn)`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -113,13 +134,22 @@ export function mountVerletCloth(refs) {
     usePointer: true,
     chartColors: ["rgba(96,165,250,0.95)", "rgba(52,211,153,0.95)", "rgba(167,139,250,0.95)"],
     metricFormat: { energy: (v) => v.toFixed(2), order: (v) => `${Math.round(v * 100)}%`, spread: (v) => `${Math.round(v * 100)}%` },
+    controlFormat: {
+      count: (v) => {
+        const cols = clamp(Math.round(v / 9), 12, 40);
+        return `${cols}×${Math.round(cols * 0.7)}`;
+      },
+      speed: (v) => `${Math.min(3, v / 1.5).toFixed(2)} steps/frame`,
+      turbulence: (v) => `${(v * 0.6).toFixed(2)} ± ${(v * 1.4).toFixed(2)}`,
+      attraction: (v) => `${clamp(Math.round(2 + v * 6), 2, 8)} passes`
+    },
     presets: {
       drape: { count: 220, speed: 1.5, turbulence: 0.12, attraction: 0.5, trails: false },
       breeze: { count: 220, speed: 1.6, turbulence: 0.4, attraction: 0.5, trails: false },
       flag: { count: 280, speed: 1.6, turbulence: 0.7, attraction: 0.45, trails: false },
       loose: { count: 180, speed: 1.5, turbulence: 0.2, attraction: 0.2, trails: false }
     },
-    reset(api) { build(api); api.log(`${api.custom.cols}x${api.custom.rows} Verlet cloth, ${api.custom.linkCount} links.`); },
+    reset(api) { build(api); api.log(`${api.custom.cols}×${api.custom.rows} Verlet cloth, ${api.custom.linkCount.toLocaleString("en-US")} links.`); },
     step,
     draw
   });

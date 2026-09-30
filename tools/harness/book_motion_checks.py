@@ -7,7 +7,7 @@ from PIL import Image, ImageChops, ImageStat, ImageFilter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
-from run_browser import ROOT, serve
+from run_browser import ROOT, serve, BOOKSHELF
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--screenshots', type=Path)
@@ -57,7 +57,7 @@ try:
             page = context.new_page()
             errors = []
             page.on('pageerror', lambda error: errors.append(str(error)))
-            page.goto(base, wait_until='networkidle')
+            page.goto(base + BOOKSHELF, wait_until='networkidle')
             page.clock.install()
             page.clock.pause_at(datetime.now(timezone.utc) + timedelta(seconds=1))
             assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("three.module"))'), '3D loaded before book intent'
@@ -112,7 +112,7 @@ try:
         context = browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
         context.add_init_script(PRESERVE_PIXELS)
         page = context.new_page()
-        page.goto(base+'/?lang=ko', wait_until='networkidle')
+        page.goto(base+BOOKSHELF+'&lang=ko', wait_until='networkidle')
         page.locator('[data-pl-book="inclusive-game-ai"]').tap()
         phase(page, 'turn')
         page.set_viewport_size({'width':844,'height':390})
@@ -151,7 +151,7 @@ try:
                 context.add_init_script("const get=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext=function(type,...args){return type==='webgl2'?null:get.call(this,type,...args)}")
             if mode == 'module-failure': context.route('**/book-motion.js*', lambda route: route.abort())
             page = context.new_page()
-            page.goto(base,wait_until='networkidle')
+            page.goto(base+BOOKSHELF,wait_until='networkidle')
             page.locator('[data-pl-book="inclusive-game-ai"]').click()
             ready(page)
             if mode == 'reduced': assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("three.module"))')

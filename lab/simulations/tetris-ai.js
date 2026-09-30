@@ -6,7 +6,7 @@
  * It plays the best placement, clears lines, and keeps going until it tops out.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const W = 10, H = 20;
 const SHAPES = [
@@ -157,7 +157,7 @@ export function mountTetrisAI(refs) {
     ctx.fillStyle = "rgba(245,245,247,0.92)";
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left"; ctx.textBaseline = "top";
-    ctx.fillText(`lines ${w.lines} - pieces ${w.pieces}${w.topout ? " - top out" : ""}`, 14, 12);
+    ctx.fillText(`lines ${w.lines} · pieces ${w.pieces}${w.topout ? " · top out" : ""}`, 14, 12);
   }
 
   function rr(ctx, x, y, ww, hh, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + ww, y, x + ww, y + hh, r); ctx.arcTo(x + ww, y + hh, x, y + hh, r); ctx.arcTo(x, y + hh, x, y, r); ctx.arcTo(x, y, x + ww, y, r); ctx.closePath(); }
@@ -168,13 +168,22 @@ export function mountTetrisAI(refs) {
     liveCount: true,
     chartColors: ["rgba(52,211,153,0.95)", "rgba(96,165,250,0.95)", "rgba(167,139,250,0.95)"],
     metricFormat: { energy: (_v, api) => String(api.custom.lines || 0), order: (v) => `${Math.round(v * 100)}%`, spread: (v) => `${Math.round(v * 100)}%` },
+    controlFormat: {
+      count: (v) => `${clamp(Math.round(v / 6), 8, 50)} frames`,
+      speed: (v) => {
+        const n = clamp(Math.round(8 / Math.max(0.2, v)), 1, 20);
+        return n === 1 ? "every frame" : `every ${n} frames`;
+      },
+      turbulence: (v) => `±${(v * 2).toFixed(2)}`,
+      attraction: (v) => `${((0.6 + v * 1.2) * 6).toFixed(1)} per line`
+    },
     presets: {
       classic: { count: 160, speed: 1.8, turbulence: 0.0, attraction: 0.5, trails: true },
       fast: { count: 160, speed: 3.0, turbulence: 0.0, attraction: 0.5, trails: true },
       greedy: { count: 160, speed: 2.0, turbulence: 0.0, attraction: 0.9, trails: true },
       noisy: { count: 160, speed: 2.0, turbulence: 0.5, attraction: 0.5, trails: true }
     },
-    reset(api) { reset2(api); api.log("Heuristic Tetris agent: height / holes / lines / bumpiness."); },
+    reset(api) { reset2(api); api.log("Heuristic Tetris agent: height, holes, lines, bumpiness."); },
     step,
     draw
   });

@@ -1,3 +1,8 @@
+:root {
+  --meta: #5a666d;
+  --meta-soft: #62717a;
+  --ink-green: #233b32;
+}
 html[data-view="cv"] body {
   background: #f0f2f3;
 }
@@ -18,6 +23,16 @@ html[data-view="cv"] body {
   position: sticky;
   top: 94px;
   padding-top: 8px;
+}
+/* Short windows cannot hold the whole card below its 94px offset (it is
+   about 800px tall in the 224px column, 864px in the 190px one): there it
+   scrolls with the page instead of sticking, so Focus, the contacts and
+   "Get in touch" all stay reachable and nothing is hidden. */
+@media (min-width: 761px) and (max-height: 899px),
+  (min-width: 761px) and (max-width: 1000px) and (max-height: 969px) {
+  .profile-card {
+    position: static;
+  }
 }
 .profile-image {
   width: 96px;
@@ -43,6 +58,7 @@ html[data-view="cv"] body {
 .role {
   font-size: 15px;
   line-height: 1.65;
+  text-wrap: balance;
 }
 .org {
   font-size: 13px;
@@ -93,22 +109,27 @@ html[data-view="cv"] body {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 28px;
-  background: #f0f2f3f0;
-  backdrop-filter: blur(16px);
+  background: #f0f2f3;
   border-bottom: 1px solid var(--line);
   padding: 12px 0;
   font-size: 13px;
 }
+/* A short label sits in the middle of its 28px box, so the visible gaps
+   between labels stay even (Korean labels can be narrower than the box). */
 .mobile-nav a {
   min-width: 28px;
   min-height: 36px;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
   color: #535c63;
 }
+.mobile-nav a:hover {
+  color: var(--ink-green);
+}
 .mobile-nav a[aria-current] {
-  color: #233b32;
+  color: var(--ink-green);
   font-weight: 600;
 }
 .mobile-nav a[aria-current]::after {
@@ -129,16 +150,18 @@ html[data-view="cv"] body {
     0 1px 2px #26323a05;
 }
 .cv-overview {
-  padding-bottom: 26px;
+  padding-bottom: 24px;
 }
 .cv-eyebrow {
   font-size: 12px;
-  font-weight: 550;
+  font-weight: 500;
   color: #5d696e;
   margin-bottom: 16px;
 }
+/* The page's h1 is the name in the sidebar (28px): the overview heading does
+   not outrank it. */
 .cv-overview h2 {
-  font: 600 32px/1.25 var(--sans);
+  font: 600 28px/1.3 var(--sans);
   text-wrap: balance;
 }
 .cv-introduction {
@@ -152,7 +175,7 @@ html[data-view="cv"] body {
   display: flex;
   flex-wrap: wrap;
   gap: 20px 28px;
-  margin-top: 26px;
+  margin-top: 24px;
 }
 .cv-index a {
   display: flex;
@@ -163,18 +186,17 @@ html[data-view="cv"] body {
   min-height: 44px;
 }
 .cv-index strong {
-  font-size: 25px;
-  font-weight: 550;
+  font-size: 24px;
+  font-weight: 600;
   line-height: 1.2;
-  color: #233b32;
+  color: var(--ink-green);
   font-variant-numeric: tabular-nums;
 }
 .cv-index a:hover span {
   text-decoration: underline;
 }
 .content > section {
-  scroll-margin-top: 90px;
-  margin-bottom: 54px;
+  margin-bottom: 56px;
 }
 .caps {
   border-block: 1px solid var(--line);
@@ -182,62 +204,74 @@ html[data-view="cv"] body {
   margin-bottom: 40px;
 }
 .caps summary {
-  padding: 17px 0;
+  padding: 16px 0;
   font-size: 14px;
-  font-weight: 550;
+  font-weight: 500;
   cursor: pointer;
 }
+.caps summary:hover {
+  color: var(--accent);
+}
 .caps[open] {
-  padding-bottom: 18px;
+  padding-bottom: 16px;
 }
 .caps-row {
   display: grid;
   grid-template-columns: 70px minmax(0, 1fr);
+  align-items: baseline;
   gap: 14px;
   padding: 8px 0;
 }
 .caps .k {
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 600;
   color: var(--accent);
 }
-.caps .v,
-.tech-set {
-  font-size: 13px;
-  color: #525e64;
-}
-.sep {
-  padding: 0 8px;
-  color: #99a196;
-}
-.tech-set {
+/* Each row is a list, so screen readers hear the items apart; the dots
+   between them are drawn here and have no text alternative. An item that is
+   too long for the line wraps inside itself. Each item carries its dot in
+   front, and the list is shifted left by one dot's width and clipped there
+   (the technique .cv-meta-row uses): a wrapped line never starts or ends
+   with a stray dot. */
+.caps .v {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
-}
-.tech-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.tech-i {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
-}
-.tech-w {
-  font-weight: 600;
+  margin: 0 0 0 -20px;
+  padding: 0;
+  list-style: none;
   font-size: 13px;
+  color: #525e64;
+  clip-path: inset(-4px 0 -4px 20px);
 }
+/* The dot sits in the item's own 20px left padding, so an item that wraps
+   inside itself keeps its second line clear of the clipped strip. */
+.caps .v li {
+  position: relative;
+  padding-left: 20px;
+}
+.caps .v li::before {
+  content: "·";
+  content: "·" / "";
+  position: absolute;
+  left: 0;
+  width: 20px;
+  text-align: center;
+  color: #99a196;
+}
+/* A heading with a link beside it (Publications and Google Scholar): the
+   pair shares the section's hairline, and the link stays out of the heading. */
 .section-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 16px;
+  gap: 8px 16px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #cbd3d6;
+}
+.section-head .section-title {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 .section-title {
   font: 600 24px/1.3 var(--sans);
@@ -249,21 +283,22 @@ html[data-view="cv"] body {
   border-bottom: 1px solid #cbd3d6;
   margin-bottom: 0;
 }
+/* Tabular digits: every title starts at the same x after its number. */
 .section-title .num {
   font: 12px var(--sans);
-  color: #62717a;
+  font-variant-numeric: tabular-nums;
+  color: var(--meta-soft);
   margin-right: 0;
 }
-.section-title .title-aside {
+.title-aside {
   display: inline-block;
   min-height: 28px;
   margin-left: auto;
   font: 13px/28px var(--sans);
-  vertical-align: middle;
 }
-.section-subtitle {
-  font-size: 13px;
-  color: var(--muted);
+.title-aside:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 .items {
   display: block;
@@ -271,11 +306,15 @@ html[data-view="cv"] body {
 .item {
   padding: 30px 0;
   border-bottom: 1px solid var(--line);
-  scroll-margin-top: 86px;
   min-width: 0;
 }
 .item:first-child {
   padding-top: 20px;
+}
+/* An entry is focused only as a link's landing place (it is no Tab stop):
+   no ring around the whole entry then. */
+.item[tabindex="-1"]:focus {
+  outline: none;
 }
 .item-title {
   font-size: 20px;
@@ -291,25 +330,39 @@ html[data-view="cv"] body {
   display: inline-block;
   min-height: 28px;
 }
+/* One entry anatomy everywhere: title, meta row, text, partner row. The
+   title and its meta row sit close (8px); every later step is 16px, and the
+   partner row adds its own 16px above the dashed hairline. */
 .item-meta {
   font-size: 13px;
-  color: #5a666d;
-  margin: 12px 0 16px;
+  color: var(--meta);
+  margin: 8px 0 16px;
   line-height: 1.7;
 }
+/* The measure holds English prose to about 60-75 characters per line
+   (measured at 1440 and 1024: median 70, 90th percentile 75). */
 .item-desc,
 .pub-value {
   font-size: 16px;
   line-height: 1.75;
-  max-width: 68ch;
-  margin-top: 10px;
+  margin-top: 16px;
+  max-width: 35em;
 }
+/* A publication's summary follows its citation as plain muted text, set off
+   by the same dashed hairline as an entry's partner row (no box, no bar). */
 .pub-value {
+  max-width: 34em;
   color: #46535b;
-  padding: 14px 18px;
-  border-left: 2px solid #a9c2b4;
-  background: #f5f8f6;
-  font-size: 14px;
+  padding-top: 16px;
+  border-top: 1px dashed #e0e5e6;
+  font-size: 15px;
+}
+/* Hangul needs more leading than Latin at the same size. */
+body.ko .item-desc:not(.cv-citation),
+body.ko .pub-value,
+body.ko .cv-introduction,
+body.ko .pub-summary {
+  line-height: 1.85;
 }
 .item-desc a,
 .pub-link {
@@ -322,11 +375,14 @@ html[data-view="cv"] body {
   padding: 4px 0;
   min-height: 28px;
 }
+.pub-link:hover {
+  text-decoration-thickness: 2px;
+}
 .item strong {
   font-weight: 600;
 }
 .partners {
-  margin-top: 20px;
+  margin-top: 16px;
   padding-top: 16px;
   border-top: 1px dashed #e0e5e6;
 }
@@ -335,53 +391,68 @@ html[data-view="cv"] body {
   font-weight: 600;
   color: var(--muted);
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .p-set {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 16px;
+  gap: 8px 20px;
 }
 .p-chip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   max-width: 100%;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.45;
   min-height: 32px;
+  overflow-wrap: anywhere;
+}
+/* Every mark is one 24px square (the files are square with their padding
+   built in), so marks of any shape read at the same size. */
+.p-logo,
+.p-chip::before {
+  flex: none;
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
 }
 .p-logo {
   object-fit: contain;
-  width: 24px;
-  height: 24px;
-  flex: none;
 }
-.p-name {
-  overflow-wrap: anywhere;
+/* A partner without a mark gets a hairline monogram from its data-m letter;
+   the empty alt text keeps screen readers from announcing the letter. On a
+   chip that has both, the monogram stands in only when the mark fails to
+   load (site.js hides it); without data-m the chip is then its name alone. */
+.p-chip[data-m]::before {
+  content: attr(data-m) / "";
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid #d3d8d9;
+  border-radius: 50%;
+  font: 600 11px/1 var(--sans);
+  color: var(--muted);
 }
-.p-initial,
-.p-mono,
-.p-brand-wordmark {
-  font-size: 12px;
-  font-weight: 700;
-  display: inline-block;
-}
-.p-brand-wordmark[aria-hidden="true"] {
-  display: none;
+.p-chip[data-m]:has(.p-logo:not([hidden]))::before {
+  content: none;
 }
 .cv-meta-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px 14px;
+  gap: 4px 14px;
+  /* Every part carries a left hairline; the row reaches 15px into the
+     margin and clips it, so a part that starts a wrapped line shows none. */
+  margin-left: -15px;
+  clip-path: inset(-4px 0 -4px 15px);
 }
 .cv-date {
   flex-basis: 100%;
-  font-size: 12px;
+  margin-left: 15px;
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
   color: #416957;
 }
-.cv-meta-part + .cv-meta-part {
+.cv-meta-part {
   border-left: 1px solid #d8dfe1;
   padding-left: 14px;
 }
@@ -421,7 +492,7 @@ html[data-view="cv"] body {
   gap: 14px;
   padding: 16px 0 10px;
   font-size: 18px;
-  font-weight: 550;
+  font-weight: 500;
 }
 .pub-group-n {
   font-size: 12px;
@@ -440,23 +511,36 @@ body.ko .pub-group-n::after {
 .cv-citation {
   position: relative;
   max-width: none;
+  margin-top: 0;
 }
 .cv-citation > .pub-n {
   display: block;
   margin-bottom: 8px;
   font-variant-numeric: tabular-nums;
 }
+/* Wide screens hang the entry number in the card's 44px gutter, level with
+   the first line of the paper title. */
+@media (min-width: 1001px) {
+  .cv-citation > .pub-n {
+    position: absolute;
+    right: calc(100% + 14px);
+    top: 5px;
+    margin: 0;
+  }
+}
+/* Selected by class: the heading element is h3 or h4 (papers nest under
+   their year), so the margins are set here rather than left to the UA. */
 .cv-paper-heading {
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 600;
   line-height: 1.5;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
 }
 .cv-paper-heading .paper-title {
   font: inherit;
 }
 .cv-paper-heading a {
-  color: #233b32;
+  color: var(--ink-green);
   text-decoration: none;
   display: inline-block;
   min-height: 28px;
@@ -468,7 +552,7 @@ body.ko .pub-group-n::after {
 .cv-citation-detail {
   font-size: 13px;
   line-height: 1.7;
-  color: #5a666d;
+  color: var(--meta);
   margin-top: 6px;
 }
 .pub-author-me {
@@ -481,22 +565,27 @@ body.ko .pub-group-n::after {
   flex-wrap: wrap;
   align-items: center;
   margin-top: 12px;
+  font-size: 13px;
 }
-.cv-publication-links .pub-role {
-  background: #edf4ef;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
+/* Education entries are a title and one meta line, so they sit closer
+   together than the long entries; the dots stay centred on the titles. */
 #education .item {
   position: relative;
+  padding-block: 16px;
   padding-left: 22px;
   border-left: 1px solid #d6e0dc;
   border-bottom: 0;
 }
+#education .item:first-child {
+  padding-top: 20px;
+}
+#education .item .item-meta {
+  margin: 6px 0 0;
+}
 #education .item::before {
   content: "";
   position: absolute;
-  top: 38px;
+  top: 26px;
   left: -4px;
   width: 7px;
   height: 7px;
@@ -504,7 +593,7 @@ body.ko .pub-group-n::after {
   border-radius: 50%;
 }
 #education .item:first-child::before {
-  top: 28px;
+  top: 30px;
 }
 #education .item-title {
   font-size: 18px;
@@ -517,24 +606,47 @@ body.ko .pub-group-n::after {
 .venue {
   color: var(--muted);
 }
+/* The author role and tag are plain text: link green is for links only. */
 .pub-role {
-  font-size: 12px;
-  color: var(--accent);
+  font-size: 13px;
+  color: var(--meta);
 }
 .pub-tag {
   display: inline;
-  font-size: 12px;
-  color: var(--accent);
+  font-size: 13px;
+  color: var(--meta);
   margin-right: 6px;
 }
-.footer {
+/* The footer's hairline closes the page; the last entry above it drops its
+   own, so the two never stack. */
+.content > section:last-of-type .item:last-child {
+  border-bottom: 0;
+}
+.site-footer {
   border-top: 1px solid var(--line);
   padding-top: 24px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 20px;
+  gap: 8px 20px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
+}
+/* The contact line runs above the other two on a line of its own. */
+.ft-contact {
+  flex-basis: 100%;
+}
+/* A full-size touch target, like every other control on the page. */
+.ft-contact a {
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.ft-contact a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .profile-image {
   overflow: hidden;
@@ -560,9 +672,6 @@ body.reader .pub-value {
   }
   .content {
     padding: 30px 28px;
-  }
-  .section-title {
-    font-size: 25px;
   }
 }
 @media (max-width: 760px) {
@@ -600,9 +709,18 @@ body.reader .pub-value {
   .org {
     max-width: 330px;
   }
+  /* Fixed columns: the row count no longer depends on which font has
+     loaded, so the page below does not jump when Pretendard arrives. The
+     four profile links share one row from 360px up (they need 270px). */
   .contact-list {
     clear: both;
     padding-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, max-content);
+  }
+  /* The address is wider than a column: it has the first row to itself. */
+  .contact-list .contact-email {
+    grid-column: 1 / -1;
   }
   .sidebar .button {
     max-width: 300px;
@@ -618,8 +736,9 @@ body.reader .pub-value {
     flex: none;
     min-height: 40px;
   }
+  /* The current-section bar sits on the hairline, as on desktop. */
   .mobile-nav a[aria-current]::after {
-    bottom: -8px;
+    bottom: -12px;
   }
   .content {
     padding: 28px 24px;
@@ -641,7 +760,8 @@ body.reader .pub-value {
     font-size: 24px;
   }
   .caps-row {
-    grid-template-columns: 62px minmax(0, 1fr);
+    /* Wide enough for the longest key ("Languages", 65px). */
+    grid-template-columns: 66px minmax(0, 1fr);
     gap: 12px;
   }
   .section-title {
@@ -658,18 +778,58 @@ body.reader .pub-value {
     font-size: 13px;
   }
   .cv-paper-heading {
-    font-size: 18px;
+    font-size: 16px;
   }
   .item {
     padding-block: 24px;
   }
-  .footer {
+  .site-footer {
     flex-direction: column;
     gap: 8px;
-    padding: 24px;
+    padding: 24px 0 0;
   }
   .p-set {
     gap: 10px 14px;
+  }
+}
+/* The section bar fits all five sections on the narrowest phones, and it
+   stops sticking where a short (landscape or zoomed) window needs the room. */
+@media (max-width: 380px) {
+  .mobile-nav {
+    gap: 4px 12px;
+    padding-inline: 16px;
+    scroll-padding-inline: 16px;
+  }
+  /* The Korean labels are shorter: they keep wider, even gaps. */
+  body.ko .mobile-nav {
+    gap: 4px 22px;
+  }
+}
+/* At 340px and below the five English labels fit only with tighter gaps. */
+@media (max-width: 340px) {
+  body:not(.ko) .mobile-nav {
+    gap: 4px 9px;
+    padding-inline: 12px;
+  }
+}
+@media (max-height: 420px) {
+  .mobile-nav {
+    position: static;
+  }
+}
+/* Small phones: a smaller photo leaves room for the name on one line. */
+@media (max-width: 360px) {
+  .profile-image {
+    width: 76px;
+    margin: 0 0 16px 16px;
+  }
+  .name {
+    font-size: 28px;
+  }
+}
+@media (max-width: 359px) {
+  .contact-list {
+    grid-template-columns: repeat(3, max-content);
   }
 }
 @media print {
@@ -679,6 +839,7 @@ body.reader .pub-value {
     margin-bottom: 5px;
   }
   .cv-paper-heading a {
+    display: inline;
     min-height: 0;
   }
   .cv-authors,
@@ -690,8 +851,11 @@ body.reader .pub-value {
     margin-top: 5px;
     gap: 4px 10px;
   }
+  /* On paper the number runs in at the start of the title line. */
   .cv-citation > .pub-n {
-    margin-bottom: 3px;
+    float: left;
+    margin: 0 6px 0 0;
+    line-height: inherit;
   }
   .item-desc,
   .pub-value {
@@ -734,18 +898,17 @@ body.reader .pub-value {
   }
   .caps summary {
     padding: 10px 0;
+    list-style: none;
+  }
+  .caps summary::-webkit-details-marker {
+    display: none;
   }
   .pub-value {
     padding: 0;
     border: 0;
-    background: none;
   }
   .pub-group {
     display: block !important;
-  }
-  .cv-publication-links .pub-role {
-    padding: 0;
-    background: none;
   }
   #cv-start {
     width: 100%;
@@ -781,11 +944,16 @@ body.reader .pub-value {
     display: none !important;
   }
   .contact-list {
-    gap: 8px;
+    display: flex;
+    gap: 4px 16px;
     margin: 12px 0;
   }
   .contact-list a {
     min-height: 0;
+  }
+  /* Paper cannot follow a link: print where each one leads. */
+  .contact-list a[data-print]::after {
+    content: " (" attr(data-print) ")";
   }
   .content > section {
     margin: 20px 0;
@@ -793,9 +961,13 @@ body.reader .pub-value {
   .caps {
     break-inside: avoid;
   }
-  .section-title {
+  .section-title,
+  .section-head {
     font-size: 18pt;
     break-after: avoid;
+  }
+  .title-aside {
+    font-size: 8pt;
   }
   .item {
     break-inside: avoid;
@@ -809,22 +981,72 @@ body.reader .pub-value {
   }
   .item-meta,
   .p-chip,
-  .caps .v,
-  .tech-set {
+  .caps .v {
     font-size: 8pt;
+  }
+  .pub-role,
+  .pub-tag {
+    font-size: 9pt;
+  }
+  /* Muted greys wash out on paper: print them darker (9.8:1 on white).
+     Dates keep their green, which already prints at 6.2:1. */
+  .item-meta,
+  .cv-authors,
+  .cv-citation-detail,
+  .pub-summary,
+  .caps .v,
+  .pub-value,
+  .venue,
+  .pub-n,
+  .p-label,
+  .pub-group-n,
+  .section-title .num,
+  .org,
+  .site-footer {
+    color: #3b4549;
   }
   .item.hidden {
     display: block !important;
   }
-  .p-logo {
+  .p-chip {
+    min-height: 0;
+  }
+  .p-logo,
+  .p-chip::before {
     width: 16px;
     height: 16px;
   }
-  .footer {
+  .p-chip[data-m]::before {
+    font-size: 8px;
+  }
+  .site-footer {
     font-size: 8pt;
   }
   .profile-image img {
     filter: grayscale(1);
+  }
+  /* A soft shadow prints as a grey halo. */
+  .profile-image {
+    box-shadow: none;
+  }
+  /* The role and links set in the size of the author role beside them. */
+  .cv-publication-links {
+    font-size: 9pt;
+  }
+  /* Keep "04 Publications" with the first papers: the year filter (its
+     buttons are hidden on paper) no longer sits between the heading and the
+     count, and the footer does not go to a page of its own. */
+  .filter {
+    display: none !important;
+  }
+  .pub-summary {
+    break-after: avoid;
+  }
+  .site-footer {
+    break-before: avoid;
+  }
+  .ft-contact a {
+    min-height: 0;
   }
   @page {
     margin: 15mm;

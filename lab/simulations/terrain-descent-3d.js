@@ -8,7 +8,7 @@
  * research, and a genuine 3D scene with no external dependencies.
  */
 
-import { createSimHarness, clamp, project3d } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, project3d } from "./_shared.js?v=115-20260930a";
 
 const GRID = 24;
 const RANGE = 1.3;
@@ -183,7 +183,7 @@ export function mountTerrainDescent3d(refs) {
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText(`${w.agents.length} optimizers · ${api.state.variation} · 3D loss landscape`, 14, 12);
+    ctx.fillText(`${w.agents.length} optimizers · ${api.variationLabel()} · 3D loss landscape`, 14, 12);
   }
 
   function buildWells(api) {
@@ -223,6 +223,12 @@ export function mountTerrainDescent3d(refs) {
       order: (v) => `${Math.round(v * 100)}%`,
       spread: (v) => v.toFixed(2)
     },
+    controlFormat: {
+      count: (v) => `${clamp(Math.round(v / 8), 4, 44)} optimizers`,
+      speed: (v) => `η = ${(0.002 + v * 0.004).toFixed(4)}`,
+      turbulence: (v, api) => `${(v * 0.05).toFixed(3)}${api.state.variation === "annealing" ? ", cooling" : ""}`,
+      attraction: (v) => `μ = ${clamp(v * 0.95, 0, 0.95).toFixed(2)}`
+    },
     presets: {
       descent: { count: 150, speed: 1.5, turbulence: 0.05, attraction: 0.2, trails: true },
       momentum: { count: 150, speed: 1.4, turbulence: 0.05, attraction: 0.85, trails: true },
@@ -235,7 +241,7 @@ export function mountTerrainDescent3d(refs) {
       buildWells(api);
       const n = clamp(Math.round(api.state.count / 8), 4, 44);
       w.agents = Array.from({ length: n }, () => spawnAgent(api));
-      api.log(`${api.state.variation} · ${n} optimizers on a ${w.wells.length}-well landscape.`);
+      api.log(`${api.variationLabel()} · ${n} optimizers on a ${w.wells.length}-well landscape.`);
     },
     step,
     draw

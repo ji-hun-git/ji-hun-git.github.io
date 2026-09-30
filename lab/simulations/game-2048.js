@@ -1,13 +1,13 @@
 /**
- * 2048 - Expectimax agent
+ * 2048: Expectimax agent
  *
  * An agent plays 2048 by expectimax search: it maximizes over the four slides and
  * averages over the random tile spawns, scoring boards by empty cells,
- * monotonicity, smoothness, and keeping the max tile in a corner. Watch it build
- * toward 2048 and beyond.
+ * monotonicity, and keeping the max tile in a corner (the three terms of h(s) in
+ * the Model panel).
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const TILE_COLORS = {
   2: "#3b3f52", 4: "#465079", 8: "#5b76b8", 16: "#5fa0e0",
@@ -80,27 +80,24 @@ export function mountGame2048(refs) {
     return e;
   }
 
+  // h(s) = w_e * empty + w_m * mono(s) + w_c * corner(s), as in the Model panel.
   function heuristic(g, N) {
     const empty = emptyCells(g).length;
     let mono = 0;
-    let smooth = 0;
     let max = 0;
     for (let i = 0; i < g.length; i++) max = Math.max(max, g[i]);
-    // monotonicity along rows and cols (prefer ordered)
+    // monotonicity along rows (prefer tiles that decrease left to right)
     for (let i = 0; i < N; i++) {
       for (let j = 0; j < N - 1; j++) {
         const a = g[i * N + j];
         const b = g[i * N + j + 1];
-        if (a && b) { mono += a >= b ? 0 : -(b - a) * 0.001; smooth -= Math.abs(a - b) * 0.0005; }
-        const c = g[j * N + i];
-        const d = g[(j + 1) * N + i];
-        if (c && d) { smooth -= Math.abs(c - d) * 0.0005; }
+        if (a && b) mono += a >= b ? 0 : -(b - a) * 0.001;
       }
     }
     // corner bonus: max tile in a corner
     const corners = [g[0], g[N - 1], g[(N - 1) * N], g[N * N - 1]];
     const cornerBonus = corners.includes(max) ? Math.log2(max || 1) * 1.2 : 0;
-    return empty * 2.7 + mono + smooth + cornerBonus;
+    return empty * 2.7 + mono + cornerBonus;
   }
 
   function expectimax(api, g, N, depth, isChance) {
@@ -155,6 +152,8 @@ export function mountGame2048(refs) {
     return true;
   }
 
+  // Base depth per mode (the depths the mode buttons state), plus up to one ply
+  // from the "Extra depth" slider, which every preset leaves at 0.
   function depthFor(api) {
     const v = api.state.variation;
     const base = v === "greedy" ? 1 : v === "deep" ? 4 : 3;
@@ -257,7 +256,7 @@ export function mountGame2048(refs) {
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText(`${api.state.variation} · score ${w.score} · best tile ${w.bestTile || w.maxTile}${w.over ? " · game over" : ""}`, 14, 12);
+    ctx.fillText(`${api.variationLabel()} · score ${w.score} · best tile ${w.bestTile || w.maxTile}${w.over ? " · game over" : ""}`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -270,11 +269,17 @@ export function mountGame2048(refs) {
       order: (_v, api) => String(api.custom.bestTile || 0),
       spread: (v) => `${Math.round(v * 100)}%`
     },
+    controlFormat: {
+      count: (v) => `${clamp(Math.round(v / 6), 8, 50)} frames`,
+      speed: (v) => `every ${clamp(Math.round(14 / Math.max(0.2, v)), 2, 30)} frames`,
+      turbulence: (v) => `${Math.round(v * 8)}% random moves`,
+      attraction: (v, api) => `+${Math.round(v * 1.5)} (depth ${depthFor(api)})`
+    },
     presets: {
-      classic: { count: 160, speed: 2.0, turbulence: 0.0, attraction: 0.5, trails: true },
-      deep: { count: 160, speed: 1.6, turbulence: 0.0, attraction: 0.6, trails: true },
-      greedy: { count: 160, speed: 2.4, turbulence: 0.0, attraction: 0.3, trails: true },
-      big: { count: 220, speed: 1.8, turbulence: 0.0, attraction: 0.5, trails: true }
+      classic: { count: 160, speed: 2.0, turbulence: 0.0, attraction: 0, trails: true },
+      deep: { count: 160, speed: 1.6, turbulence: 0.0, attraction: 0, trails: true },
+      greedy: { count: 160, speed: 2.4, turbulence: 0.0, attraction: 0, trails: true },
+      big: { count: 220, speed: 1.8, turbulence: 0.0, attraction: 0, trails: true }
     },
     reset(api) {
       const w = api.custom;
@@ -283,7 +288,7 @@ export function mountGame2048(refs) {
       w.bestTile = 0;
       w.acc = 0;
       startGame(api);
-      api.log(`${api.state.variation} · ${w.N}×${w.N} · expectimax depth ${depthFor(api)}.`);
+      api.log(`${api.variationLabel()} · ${w.N}×${w.N} · expectimax depth ${depthFor(api)}.`);
     },
     step,
     draw

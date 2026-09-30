@@ -7,7 +7,7 @@
  * Layouts include Cliff Walking and Four Rooms (from the benchmark catalog).
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const DX = [0, 0, -1, 1]; // up, down, left, right (col deltas)
 const DY = [-1, 1, 0, 0];
@@ -239,7 +239,7 @@ export function mountQLearning(refs) {
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     const sr = w.results.length ? Math.round((w.results.filter((r) => r.success).length / w.results.length) * 100) : 0;
-    ctx.fillText(`${api.state.variation} · episodes ${w.episodes} · success ${sr}% · ε ${(w.eps || 0).toFixed(2)}`, 14, 12);
+    ctx.fillText(`${api.variationLabel()} · episodes ${w.episodes} · success ${sr}% · ε ${(w.eps || 0).toFixed(2)}`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -250,6 +250,16 @@ export function mountQLearning(refs) {
       energy: (v) => `${Math.round(v * 100)}%`,
       order: (v) => v.toFixed(2),
       spread: (v) => `${Math.round(v * 100)}%`
+    },
+    controlFormat: {
+      count: (v, api) => {
+        let n = clamp(Math.round(v / 28), 6, 13);
+        if (api.state.variation === "maze" && n % 2 === 0) n += 1;
+        return `${n}×${n}`;
+      },
+      speed: (v) => `${clamp(Math.round(v * 4), 1, 24)}`,
+      turbulence: (v) => clamp(v * 0.25, 0.02, 0.35).toFixed(2),
+      attraction: (v) => clamp(0.1 + v * 0.5, 0.05, 0.6).toFixed(2)
     },
     presets: {
       cliff: { count: 200, speed: 2.0, turbulence: 0.4, attraction: 0.6, trails: true },
@@ -270,7 +280,7 @@ export function mountQLearning(refs) {
       w.results = [];
       buildLayout(api);
       w.agent = { ...w.start };
-      api.log(`${api.state.variation} · ${w.N}×${w.N} · learning from scratch (γ ${GAMMA}).`);
+      api.log(`${api.variationLabel()} · ${w.N}×${w.N} · learning from scratch (γ ${GAMMA}).`);
     },
     step,
     draw

@@ -20,9 +20,13 @@
   box-sizing: border-box;
   letter-spacing: 0;
 }
+/* A jump to a section or entry lands it just below the sticky section bar
+   (61-65px tall), with 20px to spare; the targets add no margin of their own. */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 110px;
+  scroll-padding-top: 84px;
+  /* Room below a focused element for its whole focus ring. */
+  scroll-padding-bottom: 24px;
   scrollbar-gutter: stable;
 }
 body {
@@ -102,7 +106,7 @@ body.ko [lang="en"] {
 }
 body.ko {
   word-break: keep-all;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 .site-header {
   width: min(var(--frame), calc(100% - 64px));
@@ -112,6 +116,10 @@ body.ko {
   align-items: center;
   gap: 36px;
   border-bottom: 0;
+}
+/* On the CV the header spans the same 1200px frame as #cv-start (cv.css). */
+html[data-view="cv"] .site-header {
+  width: min(1200px, calc(100% - 64px));
 }
 .site-brand {
   display: inline-flex;
@@ -138,6 +146,21 @@ body.ko {
   align-items: center;
   min-height: 44px;
 }
+.site-navigation a:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+/* With the bookshelf off, Simulations is the one text link in the header:
+   it takes the size of the controls beside it. */
+html:not([data-bookshelf="on"]) .site-navigation {
+  font-size: 13px;
+}
+/* The "한국어" label is drawn with the system's Korean font, so an English
+   visit downloads no Korean web-font files for two characters. */
+#langLabel {
+  font-family: Geist, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR",
+    sans-serif;
+}
 .site-controls {
   display: flex;
   gap: 8px;
@@ -147,6 +170,28 @@ body.ko {
   font-size: 13px;
   white-space: nowrap;
   border-color: transparent;
+}
+/* The language control is a link to the other language's page; it looks and
+   responds exactly like the buttons beside it. */
+.site-controls a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+.site-controls a:hover {
+  color: inherit;
+  background: #e9ece8;
+}
+.site-controls a:active {
+  transform: translateY(1px);
 }
 #ttsToggle {
   width: 44px;
@@ -183,8 +228,16 @@ body.ko {
 }
 html[data-view="library"] #cv-start,
 html[data-view="library"] [data-view-only="cv"],
-html[data-view="cv"] #work-library,
-html[data-view="cv"] [data-view-only="library"] {
+html:not([data-view="library"]) #work-library,
+html:not([data-view="library"]) [data-view-only="library"],
+html:not([data-bookshelf="on"]) [data-bookshelf-only] {
+  display: none;
+}
+/* Controls that need a script (reader mode, print, the year filter) are
+   hidden when scripts do not run; the head script sets html.js first. */
+html:not(.js) #ttsToggle,
+html:not(.js) #printCV,
+html:not(.js) #pubFilter {
   display: none;
 }
 html[data-view="cv"] .cv-link,
@@ -217,7 +270,8 @@ html[data-view="library"] .library-return {
   .site-controls {
     gap: 6px;
   }
-  .site-controls button {
+  .site-controls button,
+  .site-controls a {
     font-size: 12px;
     padding: 8px 10px;
   }
@@ -234,6 +288,41 @@ html[data-view="library"] .library-return {
   html[data-view="cv"] .site-header {
     min-height: 124px;
   }
+  html:not([data-bookshelf="on"]) .site-controls {
+    width: auto;
+  }
+  html:not([data-bookshelf="on"]) .site-header {
+    min-height: 80px;
+  }
+  /* The CV header: the content's 24px gutter, and one 64px row while the
+     bookshelf is off (brand and controls only; buttons stay 44px). */
+  html[data-view="cv"] .site-header {
+    width: calc(100% - 48px);
+  }
+  html[data-view="cv"]:not([data-bookshelf="on"]) .site-header {
+    min-height: 64px;
+    padding: 10px 0;
+    flex-wrap: nowrap;
+  }
+  html:not([data-bookshelf="on"]) .site-navigation {
+    font-size: 12px;
+  }
+}
+/* The narrowest phones have no room for the Simulations link beside the
+   controls: it takes a row of its own under them. */
+@media (max-width: 359px) {
+  html[data-view="cv"]:not([data-bookshelf="on"]) .site-header {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+  html[data-view="cv"]:not([data-bookshelf="on"]) .site-navigation {
+    order: 1;
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+  html[data-view="cv"]:not([data-bookshelf="on"]) .site-controls {
+    margin-left: auto;
+  }
 }
 @media (max-width: 390px) {
   .site-header {
@@ -242,7 +331,8 @@ html[data-view="library"] .library-return {
   .site-navigation {
     gap: 10px;
   }
-  .site-controls button {
+  .site-controls button,
+  .site-controls a {
     padding: 8px;
   }
   .site-brand {
@@ -256,6 +346,16 @@ html[data-view="library"] .library-return {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+}
+/* Forced colours (Windows High Contrast) drop background fills, which is how
+   a pressed toggle or the chosen filter shows its state: use system colours. */
+@media (forced-colors: active) {
+  .filter button[aria-pressed="true"],
+  .site-controls button[aria-pressed="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
   }
 }
 .error-page {

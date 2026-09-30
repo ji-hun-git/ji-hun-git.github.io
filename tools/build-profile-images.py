@@ -2,6 +2,8 @@
 
 The CV renders at 164px wide. Display derivatives cover it at 2x resolution.
 The full-size derivative remains available for the Person structured data.
+The 1200 x 630 link-preview card (jihun-chae-card.jpg) is not made here:
+tools/build_og_card.py renders it around the same master.
 
     python tools/build-profile-images.py
 

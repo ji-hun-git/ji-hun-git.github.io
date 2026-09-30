@@ -7,7 +7,7 @@
  * shallow one. A canonical adversarial game-AI demo.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const COLS = 7;
 const ROWS = 6;
@@ -137,6 +137,8 @@ export function mountConnectFour(refs) {
     return pool[Math.floor(api.rand() * pool.length)].c;
   }
 
+  // Base depth per mode (the depths the mode buttons state), plus up to two
+  // plies from the "Extra lookahead" slider, which every preset leaves at 0.
   function depthFor(api, player) {
     const v = api.state.variation;
     const base = v === "easy" ? 2 : v === "hard" ? 6 : v === "mixed" ? (player === 1 ? 5 : 2) : 4;
@@ -244,7 +246,7 @@ export function mountConnectFour(refs) {
       ctx.fill();
     }
 
-    if (w.lastMove && !w.anim) {
+    if (w.lastMove && !w.anim && api.state.trails) {
       const x = ox + (w.lastMove.c + 0.5) * cell;
       const y = oy + (w.lastMove.r + 0.5) * cell;
       ctx.strokeStyle = "rgba(245,245,247,0.7)";
@@ -259,7 +261,7 @@ export function mountConnectFour(refs) {
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     const turnTxt = w.winner ? `winner ${w.winner === 1 ? "red" : "yellow"}` : `${w.turn === 1 ? "red" : "yellow"} to move`;
-    ctx.fillText(`${api.state.variation} · red ${w.wins[1] || 0} · yellow ${w.wins[2] || 0} · ${turnTxt}`, 14, 12);
+    ctx.fillText(`${api.variationLabel()} · red ${w.wins[1] || 0} · yellow ${w.wins[2] || 0} · ${turnTxt}`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -272,18 +274,27 @@ export function mountConnectFour(refs) {
       order: (v) => `${Math.round(v * 100)}%`,
       spread: (v) => `${Math.round(v * 100)}%`
     },
+    controlFormat: {
+      count: (v) => `${clamp(Math.round(v / 6), 8, 64)} frames`,
+      speed: (v) => `${clamp(Math.round(18 / Math.max(0.2, v)), 3, 40)} frames per move`,
+      turbulence: (v) => `within ${Math.round(v * 60)} points`,
+      attraction: (v) => {
+        const n = Math.round(v * 2);
+        return `+${n} ${n === 1 ? "ply" : "plies"}`;
+      }
+    },
     presets: {
-      easy: { count: 120, speed: 1.6, turbulence: 0.25, attraction: 0.3, trails: true },
-      medium: { count: 140, speed: 1.6, turbulence: 0.15, attraction: 0.3, trails: true },
-      hard: { count: 160, speed: 1.4, turbulence: 0.05, attraction: 0.3, trails: true },
-      mixed: { count: 140, speed: 1.6, turbulence: 0.1, attraction: 0.3, trails: true }
+      easy: { count: 120, speed: 1.6, turbulence: 0.25, attraction: 0, trails: true },
+      medium: { count: 140, speed: 1.6, turbulence: 0.15, attraction: 0, trails: true },
+      hard: { count: 160, speed: 1.4, turbulence: 0.05, attraction: 0, trails: true },
+      mixed: { count: 140, speed: 1.6, turbulence: 0.1, attraction: 0, trails: true }
     },
     reset(api) {
       api.custom.wins = {};
       api.custom.draws = 0;
       api.custom.starter = 2;
       newGame(api);
-      api.log(`${api.state.variation} · two minimax agents (alpha-beta).`);
+      api.log(`${api.variationLabel()} · two minimax agents (alpha-beta), depth ${depthFor(api, 1)} vs. ${depthFor(api, 2)}.`);
     },
     step,
     draw

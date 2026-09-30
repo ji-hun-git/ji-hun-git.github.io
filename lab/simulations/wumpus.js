@@ -8,7 +8,7 @@
  * guess. Maps the catalog's POMDP environments.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 export function mountWumpus(refs) {
   const key = (x, y) => `${x},${y}`;
@@ -150,7 +150,8 @@ export function mountWumpus(refs) {
     frontier.sort((p, q) => p.score - q.score);
     const caution = api.state.attraction; // higher = less willing to gamble
     const best = frontier[0];
-    if (best.score > 0 && best.score >= 1 + Math.round(caution * 2)) {
+    // A higher caution lowers the risk the agent will accept (3 at 0, 1 at 0.75+).
+    if (best.score > 0 && best.score >= 3 - Math.round(caution * 2)) {
       // too risky for the agent's caution → abandon this cave
       w.plan = null;
       return;
@@ -197,13 +198,13 @@ export function mountWumpus(refs) {
       w.grabbed = true;
       w.collected = (w.collected || 0) + 1;
       w.successHold = 26;
-      api.log(`Glitter! Grabbed the gold (#${w.collected}).`);
+      api.log(`Glitter: grabbed the gold (#${w.collected}).`);
       return;
     }
 
     if (!w.plan || !w.plan.length) planMove(api);
     if (w.plan === null) {
-      api.log("Too risky - leaving this cave.");
+      api.log("Too risky; leaving this cave.");
       w.alive = false;
       return;
     }
@@ -239,7 +240,7 @@ export function mountWumpus(refs) {
     perceive(api);
     if (w.steps > w.N * w.N * 3) {
       w.alive = false;
-      api.log("Explored out - resetting cave.");
+      api.log("Nothing left to explore; resetting the cave.");
     }
   }
 
@@ -356,6 +357,17 @@ export function mountWumpus(refs) {
       energy: (_v, api) => String(api.custom.collected || 0),
       order: (v) => `${Math.round(v * 100)}%`,
       spread: (v) => `${Math.round(v * 100)}%`
+    },
+    // Pit density is used when a cave is generated, so moving it generates a new one.
+    resetOn: ["turbulence"],
+    controlFormat: {
+      count: (v) => {
+        const n = clamp(Math.round(v / 34), 4, 9);
+        return `${n}×${n}`;
+      },
+      speed: (v) => `every ${clamp(Math.round(16 / Math.max(0.2, v)), 2, 36)} frames`,
+      turbulence: (v) => `${Math.round(clamp(0.1 + v * 0.22, 0.06, 0.34) * 100)}% pits`,
+      attraction: (v) => `quits at ${3 - Math.round(v * 2)} clues`
     },
     presets: {
       classic: { count: 200, speed: 1.6, turbulence: 0.35, attraction: 0.3, trails: true },

@@ -1,18 +1,19 @@
 /**
  * Behavior-Prompt Gridworld
  *
- * A live reconstruction of the BehaviorPrompt Games thesis: can an agent infer a
- * latent prerequisite rule (procedural / causal / social) from a prompt condition?
+ * Can an agent keep a latent prerequisite rule (procedural, causal, or social)
+ * that depends on its prompt condition?
  *
- * Three 7x7 environments - DoorKey, SwitchBridge, Ownership - each have a hidden
- * rule. The agent executes a deterministic plan whose shape depends on the prompt
- * condition (none / text / behavior / hybrid). The "none" plan greedily reaches
- * the goal but violates the latent rule; text/behavior/hybrid satisfy the
- * prerequisite first. The dashboard tracks goal-reach rate vs rule-compliance
- * rate - exactly the sufficiency-vs-compliance distinction the paper sharpens.
+ * Three 7x7 environments (DoorKey, SwitchBridge, Ownership) each have a hidden
+ * rule. The agent executes a fixed plan whose shape depends on the prompt
+ * condition (none / text / behavior / hybrid); the Execution slip control adds
+ * seeded random missteps. The "none" plan greedily reaches the goal but
+ * violates the latent rule; text/behavior/hybrid satisfy the prerequisite
+ * first. The dashboard tracks goal-reach rate (sufficiency) and rule-compliance
+ * rate (compliance) separately.
  */
 
-import { createSimHarness, clamp, lerp, TAU } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, lerp, TAU } from "./_shared.js?v=115-20260930a";
 
 const N = 7;
 
@@ -50,10 +51,11 @@ const ENVIRONMENTS = [
   }
 ];
 
+// The same names as the mode buttons (experiments.js).
 const CONDITION_LABEL = {
-  none: "No prompt · Direct Greedy",
-  text: "Text rule",
-  behavior: "Behavior demo",
+  none: "No prompt",
+  text: "Text",
+  behavior: "Behavior",
   hybrid: "Text + behavior"
 };
 
@@ -144,7 +146,7 @@ export function mountGridworldPrompt(refs) {
     w.pauseT = 0;
     w.heat = w.heat || {};
     w.pulse = 0;
-    api.log(`${env.name} · ${CONDITION_LABEL[api.state.variation]} - rule: ${env.rule}`);
+    api.log(`${env.name} · ${CONDITION_LABEL[api.state.variation]} · rule: ${env.rule}`);
   }
 
   function finishEpisode(api) {
@@ -194,10 +196,10 @@ export function mountGridworldPrompt(refs) {
         api.log("Picked up the key.");
       } else if (env.lever && eq(w.pos, env.lever) && !w.leverOn) {
         w.leverOn = true;
-        api.log("Activated the lever - bridge is safe.");
+        api.log("Activated the lever; the bridge is safe.");
       } else if (env.owner && eq(w.pos, env.owner) && !w.permission) {
         w.permission = true;
-        api.log("Asked the owner - permission granted.");
+        api.log("Asked the owner; permission granted.");
       } else if (env.door && eq(w.pos, env.door)) {
         if (!w.hasKey) {
           w.violations += 1;
@@ -388,6 +390,12 @@ export function mountGridworldPrompt(refs) {
       energy: (_v, api) => (api.custom.lastReward || 0).toFixed(1),
       order: (v) => `${Math.round(v * 100)}%`,
       spread: (v) => `${Math.round(v * 100)}%`
+    },
+    controlFormat: {
+      count: (v) => `last ${clamp(Math.round(v / 24), 4, 16)} episodes`,
+      speed: (v) => `every ${clamp(Math.round(14 / Math.max(0.2, v)), 3, 44)} frames`,
+      turbulence: (v) => `${Math.round(v * 36)}% per move`,
+      attraction: (v) => (v > 0.02 ? `${Math.round(clamp(v, 0, 0.7) * 80)}% opacity` : "off")
     },
     presets: {
       none: { count: 180, speed: 1.9, turbulence: 0.1, attraction: 0.0, trails: true },

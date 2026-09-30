@@ -6,7 +6,7 @@
  * cursor; the variation picks what falls from the sky.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const EMPTY = 0, SAND = 1, WATER = 2, WALL = 3, WOOD = 4, FIRE = 5;
 const COLORS = {
@@ -31,7 +31,8 @@ export function mountFallingSand(refs) {
     w.emit = { sand: SAND, water: WATER, fire: FIRE, mixed: SAND }[api.state.variation] || SAND;
   }
 
-  function swap(g, a, b) { const t = g[a]; g[a] = g[b]; g[b] = t; }
+  let moves = 0; // cells moved in the current step, for the "Moving" signal
+  function swap(g, a, b) { const t = g[a]; g[a] = g[b]; g[b] = t; moves++; }
 
   function tick(api) {
     const w = api.custom, g = w.grid, W = w.W, H = w.H;
@@ -45,10 +46,11 @@ export function mountFallingSand(refs) {
         if (g[idx(w, x, 1)] === EMPTY) g[idx(w, x, 1)] = mat;
       }
     }
-    // pointer paints
+    // pointer paints a square brush; the Brush size slider sets its radius (1 to 5 cells)
     if (api.pointer) {
       const px = Math.floor((api.pointer.x / api.w) * W), py = Math.floor((api.pointer.y / api.h) * H);
-      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+      const br = 1 + Math.round(api.state.attraction * 4);
+      for (let dy = -br; dy <= br; dy++) for (let dx = -br; dx <= br; dx++) {
         const x = px + dx, y = py + dy;
         if (x > 0 && y > 0 && x < W && y < H && g[idx(w, x, y)] === EMPTY) g[idx(w, x, y)] = w.emit;
       }
@@ -90,10 +92,18 @@ export function mountFallingSand(refs) {
   function step(api) {
     const w = api.custom;
     const sub = clamp(Math.round(api.state.speed * 1.6), 1, 5);
+    moves = 0;
     for (let s = 0; s < sub; s++) tick(api);
-    let filled = 0, fire = 0;
-    for (let i = 0; i < w.grid.length; i++) { if (w.grid[i]) filled++; if (w.grid[i] === FIRE) fire++; }
-    api.push(clamp(filled / w.grid.length * 2, 0, 1), clamp(fire / 200, 0, 1), clamp(filled / w.grid.length, 0, 1));
+    let filled = 0, loose = 0, fire = 0;
+    for (let i = 0; i < w.grid.length; i++) {
+      const c = w.grid[i];
+      if (c) filled++;
+      if (c === SAND || c === WATER || c === FIRE) loose++;
+      if (c === FIRE) fire++;
+    }
+    // Moving: share of loose cells (sand, water, fire) that moved this step
+    const moving = loose ? moves / (loose * sub) : 0;
+    api.push(clamp(moving, 0, 1), clamp(fire / 200, 0, 1), clamp(filled / w.grid.length, 0, 1));
   }
 
   function draw(api) {
@@ -105,13 +115,14 @@ export function mountFallingSand(refs) {
       d[o + 3] = 255;
     }
     w.bufCtx.putImageData(w.img, 0, 0);
-    api.ctx.imageSmoothingEnabled = false;
+    // "Smooth" scales the cell grid with filtering; off keeps hard pixel edges.
+    api.ctx.imageSmoothingEnabled = Boolean(api.state.trails);
     api.ctx.clearRect(0, 0, api.w, api.h);
     api.ctx.drawImage(w.buf, 0, 0, w.W, w.H, 0, 0, api.w, api.h);
     api.ctx.fillStyle = "rgba(245,245,247,0.92)";
     api.ctx.font = "600 12px Inter, sans-serif";
     api.ctx.textAlign = "left"; api.ctx.textBaseline = "top";
-    api.ctx.fillText(`${api.state.variation} - paint with the cursor`, 14, 12);
+    api.ctx.fillText(`${api.variationLabel()} · paint with the cursor`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -120,13 +131,22 @@ export function mountFallingSand(refs) {
     usePointer: true,
     chartColors: ["rgba(232,193,112,0.95)", "rgba(245,140,60,0.95)", "rgba(86,150,220,0.95)"],
     metricFormat: { energy: (v) => `${Math.round(v * 100)}%`, order: (v) => `${Math.round(v * 100)}%`, spread: (v) => `${Math.round(v * 100)}%` },
+    controlFormat: {
+      count: (v, api) => {
+        const scale = clamp(Math.round(7 - v / 80), 3, 8);
+        return `${Math.max(80, Math.floor(api.w / scale))}×${Math.max(60, Math.floor(api.h / scale))} cells`;
+      },
+      speed: (v) => `${clamp(Math.round(v * 1.6), 1, 5)} steps/frame`,
+      turbulence: (v) => `${Math.round(Math.min(1, 0.3 + v) * 100)}% per step`,
+      attraction: (v) => `radius ${1 + Math.round(v * 4)}`
+    },
     presets: {
       sand: { count: 200, speed: 2.0, turbulence: 0.4, attraction: 0.3, trails: false },
       water: { count: 200, speed: 2.0, turbulence: 0.5, attraction: 0.3, trails: false },
       fire: { count: 200, speed: 2.0, turbulence: 0.3, attraction: 0.3, trails: false },
       mixed: { count: 220, speed: 2.2, turbulence: 0.5, attraction: 0.3, trails: false }
     },
-    reset(api) { build(api); api.log(`${api.custom.W}x${api.custom.H} grid - emitting ${api.state.variation}.`); },
+    reset(api) { build(api); api.log(`${api.custom.W}×${api.custom.H} grid · emitting ${api.variationLabel()}.`); },
     step,
     draw
   });

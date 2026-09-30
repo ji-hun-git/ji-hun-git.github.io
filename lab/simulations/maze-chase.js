@@ -6,7 +6,7 @@
  * classic-inspired template from the BehaviorPrompt catalog.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 export function mountMazeChase(refs) {
   function key(x, y) {
@@ -258,6 +258,16 @@ export function mountMazeChase(refs) {
       order: (_v, api) => String(api.custom.survival || 0),
       spread: (v) => `${Math.round(v * 100)}%`
     },
+    controlFormat: {
+      count: (v, api) => {
+        const cols = clamp(Math.round(v / 26), 5, 12);
+        return `${cols}×${clamp(Math.round((cols * api.h) / Math.max(1, api.w)), 4, 11)} cells`;
+      },
+      speed: (v) => `every ${clamp(Math.round(12 / Math.max(0.2, v)), 2, 30)} frames`,
+      turbulence: (v) => `${Math.round(v * 40)}% random hunter moves`,
+      // A hunter follows the distance field unless noise or low focus sends it at random.
+      attraction: (v, api) => `${Math.round((1 - api.state.turbulence * 0.4) * clamp(v, 0, 1) * 100)}% on the gradient`
+    },
     presets: {
       classic: { count: 200, speed: 1.8, turbulence: 0.2, attraction: 0.75, trails: true },
       aggressive: { count: 200, speed: 2.2, turbulence: 0.12, attraction: 0.95, trails: true },
@@ -279,7 +289,7 @@ export function mountMazeChase(refs) {
       w.prey = { ...w.cells[0] };
       w.hunters = Array.from({ length: hunterCount }, () => farCell(api, [w.prey], 6));
       spawnPellets(api, 4);
-      api.log(`${api.state.variation} maze · ${hunterCount} hunters on a ${w.W}×${w.H} lattice.`);
+      api.log(`${api.variationLabel()} maze · ${hunterCount} hunters on a ${w.W}×${w.H} lattice.`);
     },
     step,
     draw

@@ -8,7 +8,7 @@
  * "FrozenLake" CS/RL template.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 // actions: 0 left, 1 down, 2 right, 3 up
 const DX = [-1, 1, 0, 0];
@@ -299,6 +299,16 @@ export function mountFrozenLake(refs) {
       energy: (v) => `${Math.round(v * 100)}%`,
       order: (_v, api) => (api.custom.V ? api.custom.V[0].toFixed(2) : "0.00"),
       spread: (v) => `${Math.round(v * 100)}%`
+    },
+    // The readouts show the model's own values (the same ones the log prints).
+    controlFormat: {
+      count: (v) => {
+        const n = clamp(Math.round(v / 34), 4, 10);
+        return `${n}×${n}`;
+      },
+      speed: (v) => `every ${clamp(Math.round(14 / Math.max(0.2, v)), 2, 32)} frames`,
+      turbulence: (v) => clamp(v * 0.5, 0, 0.66).toFixed(2),
+      attraction: (v) => clamp(0.8 + v * 0.19, 0.8, 0.995).toFixed(2)
     },
     presets: {
       fourbyfour: { count: 140, speed: 1.6, turbulence: 0.4, attraction: 0.85, trails: true },

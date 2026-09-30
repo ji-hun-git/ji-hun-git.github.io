@@ -1,135 +1,22 @@
-const TAU = Math.PI * 2;
+/**
+ * Ludic Geometry Notebook: parametric sketches (orbits, rose curves, wave
+ * interference, a decision boundary, and a chaotic map).
+ *
+ * Each step computes the sample points for the current time and three simple
+ * shape measures; draw renders the stored points. Runs on the shared harness.
+ */
 
-function mulberry32(seed) {
-  let value = seed >>> 0;
-  return function random() {
-    value += 0x6D2B79F5;
-    let t = value;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+import { createSimHarness, clamp, TAU } from "./_shared.js?v=115-20260930a";
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function metricLine(ctx, values, color, height, width) {
-  if (values.length < 2) return;
-  ctx.beginPath();
-  values.forEach((value, index) => {
-    const x = (index / (values.length - 1)) * width;
-    const y = height - clamp(value, 0, 1) * height;
-    if (index === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-}
-
-export function mountLudicGeometry({ canvas, chartCanvas, controls, metrics, log }) {
-  const ctx = canvas.getContext("2d", { alpha: true });
-  const chartCtx = chartCanvas.getContext("2d", { alpha: true });
-  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  let width = 0;
-  let height = 0;
-  let dpr = 1;
-  let raf = 0;
-  let frame = 0;
-  let running = !prefersReduced;
-  let random = mulberry32(314);
-  let resizeObserver = null;
-  let phases = [];
-
-  const state = {
-    count: Number(controls.count.value),
-    speed: Number(controls.speed.value),
-    turbulence: Number(controls.turbulence.value),
-    attraction: Number(controls.attraction.value),
-    trails: controls.trails.checked,
-    seed: Number(controls.seed.value) || 314,
-    variation: controls.variationButtons[0]?.dataset.variation || "orbit"
-  };
-
-  const presets = {
-    orbit: { count: 180, speed: 1.2, turbulence: 0.14, attraction: 0.26, trails: true },
-    rose: { count: 220, speed: 1.65, turbulence: 0.08, attraction: 0.42, trails: true },
-    interference: { count: 280, speed: 1.05, turbulence: 0.25, attraction: 0.34, trails: false },
-    boundary: { count: 156, speed: 0.9, turbulence: 0.18, attraction: 0.58, trails: false },
-    chaos: { count: 240, speed: 2.4, turbulence: 0.55, attraction: 0.22, trails: true }
-  };
-
-  const history = {
-    energy: [],
-    order: [],
-    spread: []
-  };
-
-  function writeLog(message) {
-    const line = document.createElement("li");
-    line.textContent = `${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })} - ${message}`;
-    log.prepend(line);
-    while (log.children.length > 5) log.lastElementChild.remove();
-  }
-
-  function syncLabels() {
-    controls.countValue.textContent = String(state.count);
-    controls.speedValue.textContent = state.speed.toFixed(2);
-    controls.turbulenceValue.textContent = state.turbulence.toFixed(2);
-    controls.attractionValue.textContent = state.attraction.toFixed(2);
-    controls.seedValue.textContent = String(state.seed);
-    controls.pause.textContent = running ? "Pause" : "Run";
-    controls.pause.setAttribute("aria-pressed", running ? "false" : "true");
-    controls.variationButtons.forEach((button) => {
-      button.classList.toggle("active", button.dataset.variation === state.variation);
-    });
-  }
-
-  function resize() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    // No 320px floor: the stage is ~294px wide at a 360px viewport, so a
-    // forced 320 pushed the grid column past the page and the right edge of
-    // every simulation was clipped with no scrollbar to recover it
-    // (.viewport-stage is overflow:hidden and body is overflow-x:hidden).
-    // The inline style.width/height that pinned it are gone too: lab.css
-    // sizes the canvas at width:100%, and an inline px value silently beat
-    // it. canvas.width/height (device pixels) and the dpr transform below
-    // are untouched, so rendering resolution is unchanged.
-    width = Math.max(1, rect.width);
-    height = Math.max(260, rect.height);
-    dpr = Math.min(2, window.devicePixelRatio || 1);
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const chartRect = chartCanvas.parentElement.getBoundingClientRect();
-    const chartWidth = Math.max(260, chartRect.width);
-    const chartHeight = 220;
-    chartCanvas.width = Math.floor(chartWidth * dpr);
-    chartCanvas.height = Math.floor(chartHeight * dpr);
-    chartCanvas.style.width = `${chartWidth}px`;
-    chartCanvas.style.height = `${chartHeight}px`;
-    chartCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  function resetSystem() {
-    random = mulberry32(state.seed);
-    phases = Array.from({ length: state.count }, () => random() * TAU);
-    history.energy.length = 0;
-    history.order.length = 0;
-    history.spread.length = 0;
-    frame = 0;
-    ctx.clearRect(0, 0, width, height);
-    writeLog(`${state.variation} notebook variation loaded with ${state.count} samples.`);
-  }
-
-  function samplePoint(index, t) {
+export function mountLudicGeometry(refs) {
+  function samplePoint(api, index, t) {
+    const w = api.custom;
+    const { state } = api;
+    const width = api.w;
+    const height = api.h;
     const n = Math.max(1, state.count - 1);
     const u = index / n;
-    const phase = phases[index] || 0;
+    const phase = w.phases[index] || 0;
     const cx = width / 2;
     const cy = height / 2;
     const scale = Math.min(width, height) * 0.36;
@@ -194,43 +81,74 @@ export function mountLudicGeometry({ canvas, chartCanvas, controls, metrics, log
     };
   }
 
-  function drawBoundary() {
+  // Compute the points for the current time and the three shape measures.
+  function sample(api) {
+    const w = api.custom;
+    const { state } = api;
+    const cx = api.w / 2;
+    const cy = api.h / 2;
+    let last = null;
+    let curvature = 0;
+    let symmetryX = 0;
+    let coverage = 0;
+    w.points = [];
+    for (let i = 0; i < state.count; i++) {
+      const p = samplePoint(api, i, w.time);
+      w.points.push(p);
+      if (last && state.variation !== "interference") {
+        curvature += Math.abs(Math.atan2(p.y - last.y, p.x - last.x));
+      }
+      last = p;
+      symmetryX += 1 - clamp(Math.abs(p.x - (api.w - p.x)) / api.w, 0, 1);
+      coverage += clamp(Math.hypot(p.x - cx, p.y - cy) / Math.hypot(cx, cy), 0, 1);
+    }
+    const n = Math.max(1, state.count);
+    return [clamp((curvature / n) % 1.2, 0, 1), clamp(symmetryX / n, 0, 1), clamp(coverage / n, 0, 1)];
+  }
+
+  function reset(api) {
+    const w = api.custom;
+    w.time = 0;
+    w.phases = Array.from({ length: api.state.count }, () => api.rand() * TAU);
+    sample(api);
+    api.log(`${api.variationLabel()} sketch with ${api.state.count} samples.`);
+  }
+
+  function step(api) {
+    const w = api.custom;
+    w.time += 0.01 * api.state.speed;
+    api.push(...sample(api));
+  }
+
+  function drawBoundary(api) {
+    const { ctx, state } = api;
     if (state.variation !== "boundary") return;
-    const t = frame * 0.01 * state.speed;
     ctx.save();
     ctx.strokeStyle = "rgba(246, 211, 107, 0.42)";
     ctx.lineWidth = 1.6;
     ctx.setLineDash([7, 8]);
     ctx.beginPath();
-    for (let x = width * 0.12; x <= width * 0.88; x += 12) {
-      const nx = (x / width - 0.5) * 2;
-      const y = height / 2 + Math.sin(nx * 4 + t) * 50 * state.attraction;
-      if (x === width * 0.12) ctx.moveTo(x, y);
+    for (let x = api.w * 0.12; x <= api.w * 0.88; x += 12) {
+      const nx = (x / api.w - 0.5) * 2;
+      const y = api.h / 2 + Math.sin(nx * 4 + api.custom.time) * 50 * state.attraction;
+      if (x === api.w * 0.12) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
     ctx.stroke();
     ctx.restore();
   }
 
-  function draw() {
+  function draw(api) {
+    const { ctx, custom: w, state } = api;
     const fade = state.trails ? (state.variation === "chaos" ? 0.08 : 0.14) : 0.96;
     ctx.fillStyle = `rgba(5, 8, 13, ${fade})`;
-    ctx.fillRect(0, 0, width, height);
-
-    const t = frame * 0.01 * state.speed;
-    drawBoundary();
+    ctx.fillRect(0, 0, api.w, api.h);
+    drawBoundary(api);
 
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     let last = null;
-    let curvature = 0;
-    let symmetryX = 0;
-    let coverage = 0;
-    const cx = width / 2;
-    const cy = height / 2;
-
-    for (let i = 0; i < state.count; i++) {
-      const p = samplePoint(i, t);
+    (w.points || []).forEach((p, i) => {
       const hue = state.variation === "boundary"
         ? (p.classA ? 198 : 42)
         : state.variation === "chaos"
@@ -241,7 +159,6 @@ export function mountLudicGeometry({ canvas, chartCanvas, controls, metrics, log
       ctx.beginPath();
       ctx.arc(p.x, p.y, state.variation === "interference" ? 1.6 : 2.2, 0, TAU);
       ctx.fill();
-
       if (last && state.variation !== "interference") {
         ctx.strokeStyle = `hsla(${hue}, 84%, 65%, 0.18)`;
         ctx.lineWidth = 1;
@@ -249,140 +166,59 @@ export function mountLudicGeometry({ canvas, chartCanvas, controls, metrics, log
         ctx.moveTo(last.x, last.y);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
-        curvature += Math.abs(Math.atan2(p.y - last.y, p.x - last.x));
       }
       last = p;
-      symmetryX += 1 - clamp(Math.abs(p.x - (width - p.x)) / width, 0, 1);
-      coverage += clamp(Math.hypot(p.x - cx, p.y - cy) / Math.hypot(cx, cy), 0, 1);
-    }
+    });
     ctx.restore();
+  }
 
-    const n = Math.max(1, state.count);
-    history.energy.push(clamp((curvature / n) % 1.2, 0, 1));
-    history.order.push(clamp(symmetryX / n, 0, 1));
-    history.spread.push(clamp(coverage / n, 0, 1));
-    for (const key of Object.keys(history)) {
-      if (history[key].length > 96) history[key].shift();
+  // What Distortion and Coupling do depends on the mode, so the readout names
+  // the parameter each one sets in the current mode.
+  function distortionText(v, api) {
+    switch (api.state.variation) {
+      case "rose": return `±${Math.round(v * 18)} px wobble`;
+      case "interference": return `${Math.round(10 + v * 34)} px amplitude`;
+      case "boundary": return `±${Math.round(v * 38)} px drift`;
+      // A true minus sign (U+2212), not a hyphen, for negative values.
+      case "chaos": return `b = ${(-2.3 + v).toFixed(2).replace("-", "−")}`;
+      default: return `${Math.round(v * 18)}% wobble`;
     }
   }
 
-  function drawChart() {
-    const rect = chartCanvas.getBoundingClientRect();
-    const chartW = rect.width;
-    const chartH = rect.height;
-    chartCtx.clearRect(0, 0, chartW, chartH);
-    chartCtx.fillStyle = "rgba(8, 11, 18, 0.72)";
-    chartCtx.fillRect(0, 0, chartW, chartH);
-    chartCtx.strokeStyle = "rgba(255,255,255,0.07)";
-    for (let i = 1; i < 4; i++) {
-      const y = (chartH / 4) * i;
-      chartCtx.beginPath();
-      chartCtx.moveTo(0, y);
-      chartCtx.lineTo(chartW, y);
-      chartCtx.stroke();
+  function couplingText(v, api) {
+    switch (api.state.variation) {
+      case "rose": return `k = ${3 + Math.round(v * 5)}`;
+      case "interference": return "not used";
+      case "boundary": return `±${Math.round(v * 50)} px boundary`;
+      case "chaos": return `a = ${(1.4 + v).toFixed(2)}`;
+      default: return `${(0.6 + v).toFixed(2)}× orbit rate`;
     }
-    metricLine(chartCtx, history.energy, "rgba(255, 147, 199, 0.95)", chartH, chartW);
-    metricLine(chartCtx, history.order, "rgba(126, 231, 189, 0.95)", chartH, chartW);
-    metricLine(chartCtx, history.spread, "rgba(120, 210, 255, 0.95)", chartH, chartW);
   }
 
-  function updateMetrics() {
-    const last = (key) => history[key][history[key].length - 1] || 0;
-    metrics.energy.textContent = last("energy").toFixed(2);
-    metrics.order.textContent = last("order").toFixed(2);
-    metrics.spread.textContent = last("spread").toFixed(2);
-    metrics.fps.textContent = running ? "60" : "0";
-  }
-
-  function loop() {
-    if (running && !document.hidden) {
-      frame += 1;
-      draw();
-      if (frame % 2 === 0) drawChart();
-      if (frame % 8 === 0) updateMetrics();
-    }
-    raf = requestAnimationFrame(loop);
-  }
-
-  function applyControl(event) {
-    const target = event.currentTarget;
-    if (target === controls.trails) {
-      state.trails = controls.trails.checked;
-      syncLabels();
-      return;
-    }
-    if (target === controls.seed) {
-      state.seed = Number(controls.seed.value) || 314;
-      syncLabels();
-      return;
-    }
-    state[target.name] = Number(target.value);
-    syncLabels();
-    if (target.name === "count") resetSystem();
-  }
-
-  function randomizeSeed() {
-    state.seed = Math.floor(Math.random() * 90000) + 10000;
-    controls.seed.value = String(state.seed);
-    syncLabels();
-    resetSystem();
-  }
-
-  function setVariation(name) {
-    state.variation = name;
-    Object.assign(state, presets[name] || presets.orbit);
-    controls.count.value = state.count;
-    controls.speed.value = state.speed;
-    controls.turbulence.value = state.turbulence;
-    controls.attraction.value = state.attraction;
-    controls.trails.checked = state.trails;
-    syncLabels();
-    resetSystem();
-  }
-
-  controls.count.addEventListener("input", applyControl);
-  controls.speed.addEventListener("input", applyControl);
-  controls.turbulence.addEventListener("input", applyControl);
-  controls.attraction.addEventListener("input", applyControl);
-  controls.seed.addEventListener("change", applyControl);
-  controls.trails.addEventListener("change", applyControl);
-  controls.randomize.addEventListener("click", randomizeSeed);
-  controls.reset.addEventListener("click", resetSystem);
-  controls.pause.addEventListener("click", () => {
-    running = !running;
-    syncLabels();
-    writeLog(running ? "Notebook resumed." : "Notebook paused.");
+  return createSimHarness(refs, {
+    seedDefault: 314,
+    firstVariation: "orbit",
+    chartColors: ["rgba(255, 147, 199, 0.95)", "rgba(126, 231, 189, 0.95)", "rgba(120, 210, 255, 0.95)"],
+    metricFormat: {
+      energy: (v) => v.toFixed(2),
+      order: (v) => v.toFixed(2),
+      spread: (v) => v.toFixed(2)
+    },
+    controlFormat: {
+      count: (v) => `${v} points`,
+      speed: (v) => `${v.toFixed(2)}×`,
+      turbulence: distortionText,
+      attraction: couplingText
+    },
+    presets: {
+      orbit: { count: 180, speed: 1.2, turbulence: 0.14, attraction: 0.26, trails: true },
+      rose: { count: 220, speed: 1.65, turbulence: 0.08, attraction: 0.42, trails: true },
+      interference: { count: 280, speed: 1.05, turbulence: 0.25, attraction: 0.34, trails: false },
+      boundary: { count: 156, speed: 0.9, turbulence: 0.18, attraction: 0.58, trails: false },
+      chaos: { count: 240, speed: 2.4, turbulence: 0.55, attraction: 0.22, trails: true }
+    },
+    reset,
+    step,
+    draw
   });
-  const variationClick = (event) => setVariation(event.currentTarget.dataset.variation);
-  controls.variationButtons.forEach((button) => button.addEventListener("click", variationClick));
-
-  resizeObserver = new ResizeObserver(() => {
-    resize();
-    resetSystem();
-  });
-  resizeObserver.observe(canvas.parentElement);
-  resizeObserver.observe(chartCanvas.parentElement);
-  syncLabels();
-  resize();
-  resetSystem();
-  draw();
-  drawChart();
-  updateMetrics();
-  raf = requestAnimationFrame(loop);
-
-  return {
-    dispose() {
-      cancelAnimationFrame(raf);
-      resizeObserver?.disconnect();
-      controls.count.removeEventListener("input", applyControl);
-      controls.speed.removeEventListener("input", applyControl);
-      controls.turbulence.removeEventListener("input", applyControl);
-      controls.attraction.removeEventListener("input", applyControl);
-      controls.seed.removeEventListener("change", applyControl);
-      controls.trails.removeEventListener("change", applyControl);
-      controls.randomize.removeEventListener("click", randomizeSeed);
-      controls.reset.removeEventListener("click", resetSystem);
-      controls.variationButtons.forEach((button) => button.removeEventListener("click", variationClick));
-    }
-  };
 }

@@ -2,103 +2,135 @@
 
 <html lang="en">
   <head>
-    <link href="assets/site.css?v=110-20260908r1" rel="stylesheet" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <!-- Only this site and the KaTeX/Geist CDN may supply code, styles and
+         fonts. frame-ancestors cannot be set from a meta tag. -->
     <meta
-      content="Jihun Chae Simulations - an interactive hub of AI agents, games, reinforcement learning, physics, and 3D simulations."
+      content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      http-equiv="Content-Security-Policy"
+    />
+    <title>Jihun Chae | Simulations</title>
+    <meta
+      content="Interactive simulations of AI agents, game AI, reinforcement learning, and physics in 2D and 3D, with equations for each. By Jihun Chae, KAIST."
       name="description"
     />
+    <link href="https://ji-hun-git.github.io/laboratory.html" rel="canonical" />
     <meta content="Jihun Chae | Simulations" property="og:title" />
     <meta
-      content="Interactive models in agent behavior, games, learning, physics, and generative systems."
+      content="Interactive simulations of AI agents, game AI, reinforcement learning, and physics in 2D and 3D, with equations for each. By Jihun Chae, KAIST."
       property="og:description"
     />
+    <meta content="website" property="og:type" />
+    <meta
+      content="https://ji-hun-git.github.io/laboratory.html"
+      property="og:url"
+    />
+    <meta content="Jihun Chae" property="og:site_name" />
+    <meta content="en_US" property="og:locale" />
+    <!-- The preview image is a screenshot of this page: tools/build_lab_og.py -->
     <meta
       content="https://ji-hun-git.github.io/lab/assets/simulations-og.png"
       property="og:image"
+    />
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />
+    <meta
+      content="The Simulations page by Jihun Chae: a catalog of 28 simulations beside a gridworld figure and its controls"
+      property="og:image:alt"
     />
     <meta content="summary_large_image" name="twitter:card" />
     <meta
       content="https://ji-hun-git.github.io/lab/assets/simulations-og.png"
       name="twitter:image"
     />
-    <title>Jihun Chae | Simulations</title>
-    <link href="https://ji-hun-git.github.io/laboratory.html" rel="canonical" />
+    <meta
+      content="The Simulations page by Jihun Chae: a catalog of 28 simulations beside a gridworld figure and its controls"
+      name="twitter:image:alt"
+    />
+    <link href="assets/site.css?v=115-20260930b" rel="stylesheet" />
 
+    <!-- KaTeX (pinned, with integrity) is loaded by lab/lab.js after the page,
+         so a slow CDN never blocks the simulations. -->
     <link crossorigin="" href="https://cdn.jsdelivr.net" rel="preconnect" />
 
     <link
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2317181b'/%3E%3Ctext x='32' y='43' font-family='Inter,Arial,sans-serif' font-size='28' font-weight='700' fill='%23f6f5f2' text-anchor='middle'%3EJC%3C/text%3E%3C/svg%3E"
       rel="icon"
     />
+    <link href="favicon.ico" rel="icon" sizes="48x48" />
     <link
-      href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
-      rel="stylesheet"
+      href="assets/favicon-96.png"
+      rel="icon"
+      sizes="96x96"
+      type="image/png"
     />
-    <link href="lab/lab.css?v=110-20260908r1" rel="stylesheet" />
+    <link href="apple-touch-icon.png" rel="apple-touch-icon" />
+    <link href="lab/lab.css?v=115-20260930b" rel="stylesheet" />
   </head>
   <body>
+    <a class="skip-link" href="#viewportMount">Skip to simulation</a>
     <div class="lab-shell">
-      <header aria-label="Site header" class="lab-nav">
-        <a class="brand-link" href="index.html">
-          <span class="brand-text">
-            <h1 class="brand-title">Simulations</h1>
-            <span class="brand-sub"
-              >Interactive models in agent behavior, games, learning, and
-              physics</span
-            >
-          </span>
-        </a>
+      <header class="lab-nav">
+        <div class="brand-text">
+          <h1 class="brand-title">Simulations</h1>
+          <p class="brand-sub">
+            Interactive simulations of AI agents, game AI, reinforcement
+            learning, and physics in 2D and 3D, with equations for each.
+          </p>
+        </div>
         <div class="nav-readout">
-          <span class="nav-aff">Jihun Chae · KAIST GSCT</span>
+          <span class="nav-aff"
+            >Jihun Chae · Human-centered AI researcher and developer ·
+            KAIST&nbsp;Ph.D.&nbsp;student</span
+          >
         </div>
         <div class="lab-actions">
-          <a class="text-link" href="index.html">Bookshelf</a>
-
-          <a class="text-link" href="index.html?view=cv">View CV →</a>
+          <a class="text-link" href="index.html?view=cv"
+            >View CV <span aria-hidden="true">→</span></a
+          >
         </div>
       </header>
       <main>
         <section class="console" id="console">
-          <aside aria-label="Experiment registry" class="console-rail">
+          <aside aria-label="Simulation index" class="console-rail">
             <div class="rail-head">
-              <p class="eyebrow">Index</p>
-              <h2>Catalogue of experiments</h2>
+              <h2>Catalog of experiments</h2>
               <div class="rail-stats">
-                <span><strong id="metricProjects">0</strong> sims</span>
-                <span><strong id="metricRenderers">0</strong> renderers</span>
-                <span><strong id="metricLive">0</strong> live</span>
+                <span><strong id="metricProjects">28</strong> simulations</span>
+                <span hidden id="metricLiveStat"
+                  ><strong id="metricLive">28</strong> live</span
+                >
               </div>
-
+              <noscript>
+                <p class="noscript-note">
+                  The simulations need JavaScript.
+                  <a href="index.html">Back to the CV</a>
+                </p>
+              </noscript>
               <div class="rail-filter" id="railFilter"></div>
             </div>
             <div class="project-list" id="projectCards"></div>
           </aside>
-          <section aria-label="Simulation stage" class="console-stage">
-            <div id="viewportMount"></div>
-            <div class="detail-grid" id="detailMount"></div>
-          </section>
+          <section
+            aria-label="Selected simulation"
+            class="console-figure"
+            id="viewportMount"
+            tabindex="-1"
+          ></section>
           <aside
-            aria-label="Controls and parameters"
+            aria-label="Controls"
             class="control-panel console-controls"
             id="controlMount"
           ></aside>
+          <div class="detail-grid" id="detailMount"></div>
         </section>
       </main>
       <footer class="footer">
         <span>Jihun Chae · KAIST Graduate School of Culture Technology</span>
-        <span>Human-AI Interaction · Game AI · Ludic AI</span>
+        <span>Human-AI interaction · Game AI · Ludic AI</span>
       </footer>
     </div>
-    <script
-      defer=""
-      src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
-    ></script>
-    <script
-      defer=""
-      src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-    ></script>
-    <script src="lab/lab.js?v=110-20260908r1" type="module"></script>
+    <script src="lab/lab.js?v=115-20260930b" type="module"></script>
   </body>
 </html>

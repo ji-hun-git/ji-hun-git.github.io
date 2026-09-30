@@ -2,25 +2,40 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'none'; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Page not found | Jihun Chae</title>
-    <link rel="stylesheet" href="/assets/site.css?v=110-20260908r1" />
+    <title>Jihun Chae | Page not found</title>
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/assets/favicon-96.png" sizes="96x96" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- Pretendard draws the Korean line in the site's type, as on the CV. -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <link rel="stylesheet" href="/assets/site.css?v=115-20260930b" />
   </head>
   <body>
     <header class="site-header">
       <a class="site-brand" href="/">JC.</a>
       <nav class="site-navigation" aria-label="Main navigation">
-        <a href="/">Bookshelf</a><a href="/?view=cv">Full CV</a>
+        <a href="/">CV</a><a href="/laboratory.html">Simulations</a>
       </nav>
     </header>
     <main class="error-page">
       <p>404 / Page not found</p>
       <h1>A page out of place.</h1>
-      <p>
-        The link may have changed. The bookshelf and full CV are still here.
+      <p>The link may have changed. The CV is still here.</p>
+      <a href="/">Go to the CV <span aria-hidden="true">→</span></a>
+      <!-- lang="ko-KR", not "ko": site.css hides exact lang="ko" on English pages. -->
+      <p lang="ko-KR">
+        페이지를 찾을 수 없습니다.
+        <a href="/ko.html">이력서로 가기 <span aria-hidden="true">→</span></a>
       </p>
-      <a href="/">Return to the bookshelf ↗</a>
     </main>
   </body>
 </html>

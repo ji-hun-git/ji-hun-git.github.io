@@ -217,15 +217,21 @@
   }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   // CV deep links use the same stable record IDs even when the library is not mounted.
   if (document.documentElement.dataset.view === "cv") {
-    const target = document.getElementById(
-      decodeURIComponent(location.hash.slice(1)),
-    );
+    let target = null;
+    try {
+      target = document.getElementById(
+        decodeURIComponent(location.hash.slice(1)),
+      );
+    } catch {} // a malformed #% fragment names no entry
     if (target) requestAnimationFrame(() => target.scrollIntoView());
     return;
   }
 
   root.className = "work-library catalog";
   root.replaceChildren();
+  // The page's main landmark while the bookshelf is shown (the CV has its own
+  // <main>, so the static shell does not claim the role).
+  root.setAttribute("role", "main");
   root.setAttribute("aria-labelledby", "site-title");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   let category = "all";
@@ -1085,14 +1091,11 @@
       ? ".catalog-record"
       : ".catalog-volume";
     document.getElementById("ttsToggle").title = text(
-      pair("Toggle reader mode", "읽기 모드 전환"),
+      pair("Reader mode", "읽기 모드"),
     );
     document
       .getElementById("ttsToggle")
-      .setAttribute(
-        "aria-label",
-        text(pair("Toggle reader mode", "읽기 모드 전환")),
-      );
+      .setAttribute("aria-label", text(pair("Reader mode", "읽기 모드")));
     eyebrow.textContent = text(
       pair("A personal collection", "생각과 작업을 모은 곳"),
     );
@@ -1100,20 +1103,23 @@
       document.createTextNode(
         text(
           pair(
-            "I build and research interactive systems around ",
-            "사람과 AI를 중심으로 ",
+            "I start where people get stuck, build the AI they need, ",
+            "사람들이 어디서 막히는지부터 살피고 필요한 AI를 만든 뒤, ",
           ),
         ),
       ),
       node(
         "span",
         "catalog-statement-focus",
-        pair("humans and AI.", "인터랙티브 시스템을 만들고 연구합니다."),
+        pair(
+          "and test with users and data whether it helps.",
+          "실제로 도움이 되는지 사용자와 데이터로 확인합니다.",
+        ),
       ),
     );
     affiliation.textContent = text(
       pair(
-        "Ph.D. researcher at KAIST · Daejeon, Korea",
+        "Ph.D. student at KAIST · Daejeon, Korea",
         "KAIST 문화기술대학원 박사과정 · 대전",
       ),
     );

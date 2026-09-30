@@ -1,33 +1,141 @@
 # Jihun Chae
 
 [Website](https://ji-hun-git.github.io/) ·
-[Full CV](https://ji-hun-git.github.io/?view=cv) ·
 [Site checks](https://github.com/ji-hun-git/ji-hun-git.github.io/actions/workflows/site-checks.yml)
 
-A bilingual bookshelf of projects, publications, and awards, with a full
-professional CV and an interactive simulations lab.
+A bilingual (English and Korean) CV of research and development projects,
+publications, and awards, with an interactive simulations lab.
 
 ## Run
 
-Static HTML, CSS, and JavaScript. No build step. A pinned local copy of Three.js
-loads on book interaction for the 3D opening sequence and KF-21 flyby.
+Static HTML, CSS, and JavaScript. No build step.
 Serve locally with `python -m http.server 8000`, then open `http://localhost:8000`.
-The bookshelf and CV also work by opening `index.html` directly; 3D book motion
-and simulations require HTTP because they use JavaScript modules. Reduced motion,
-Reader mode, or unavailable WebGL use the standard reader directly.
+The CV also works by opening `index.html` directly; simulations require HTTP
+because they use JavaScript modules.
+
+## Bookshelf (switched off)
+
+The bookshelf, a browsable library view of the same records, is switched off for
+now. While it is off, every URL shows the CV (`/?view=cv` keeps working), an old
+`?work=<slug>` link opens the matching CV entry, and nothing under
+`assets/project-library/` is downloaded except the KF-21 flyby: `assets/site.js`
+loads `jet-flyby.js` (and Three.js) the first time a mouse pointer moves onto
+that CV entry (not when the page scrolls the entry under a resting pointer),
+never under reduced motion or in Reader mode. (The entry has no Tab
+stop of its own, so keyboard users do not trigger it; a decoration does not get
+one.) Its code stays in the repository.
+
+- To switch it back on, set `BOOKSHELF_ENABLED = true` in the inline script in
+  the `<head>` of `index.html`, then run `python tools/build_ko_page.py` so
+  `ko.html` gets the same switch. The bookshelf returns at `/` and `/ko.html`,
+  the CV at `?view=cv`, and the Bookshelf and Full CV header links reappear. You
+  may also want to restore the `?view=cv` sitemap entries and the bookshelf
+  link-preview image (`assets/project-library/bookshelf-og.png`).
+- To work on it while it is off, serve the site locally and open
+  `http://localhost:8000/?view=library` (or `?work=<slug>`). On `localhost`,
+  `127.0.0.1` and `[::1]` only, that browser tab then behaves as if the
+  bookshelf were on until the tab is closed. The browser suites use this URL.
+
+With the bookshelf on, a pinned local copy of Three.js loads on book interaction
+for the 3D opening sequence and the KF-21 flyby. Reduced motion, Reader mode, or
+unavailable WebGL use the standard reader directly.
+
+## Search engines
+
+The CV is published as two pages, one per language, so each can be found on its
+own: `/` (English, `index.html`) and `/ko.html` (Korean). `index.html` holds the
+bilingual CV; `ko.html` is the same CV with a Korean `<head>` and a Korean-only
+`<body>` (every English element that has a Korean twin is left out), so a
+crawler that reads the raw HTML without JavaScript or CSS, as Naver mostly does,
+indexes a Korean page rather than a copy of the English one. The language
+control is a real link between the two pages (`<a id="langToggle">`, with
+`hreflang`). On `/` it switches in place, then updates the address to
+`/ko.html`, keeping the query and the `#section`; on `/ko.html` it loads the
+English page at the same query and `#section`. Old `?lang=ko` links are sent on
+to `/ko.html` by the `<head>` script.
+
+- `index.html` is the only source. `ko.html` is generated from it: after any
+  edit to `index.html`, run `python tools/build_ko_page.py`.
+  `static_checks.py` fails while `ko.html` is out of date, or if an English
+  element is left in its body (`python tools/build_ko_page.py --check` runs the
+  first check alone). Every English element needs a Korean twin: the generator
+  stops with the line number if one has none.
+- The Korean tab title, search description and link-preview text are edited in
+  one place: the `<script id="ko-head">` block in the `<head>` of `index.html`.
+  The Korean forms of the few English attribute texts (aria-labels, titles) and
+  of the structured-data topics are in `tools/build_ko_page.py`, next to the
+  same list in `assets/site.js`.
+- Icons: `favicon.ico` (16, 32, 48 px), `assets/favicon-96.png` and
+  `apple-touch-icon.png` (180 px) are drawn from the "JC" monogram by
+  `python tools/build_favicons.py` (Pillow). Search results show a favicon only
+  from a real image file, not from the SVG data URI the pages also carry.
+- Each page names itself as canonical and both list each other with `hreflang`
+  (`x-default` is `/`). `sitemap.xml` lists the three public pages (`/`,
+  `/ko.html`, `/laboratory.html`) and repeats the same language links.
+- The structured data (JSON-LD: WebSite, ProfilePage, Person) must say only what
+  the page shows. `static_checks.py` compares the name, role line, topics,
+  education and profile links with the page, and `dateModified` with
+  `<lastmod>` in `sitemap.xml` and with the footer's "Updated YYYY.MM" /
+  "YYYY.MM 갱신". When the content changes, update all three. The counters at the
+  top of the CV (6 / 21 / 10) are checked against the entries below them.
+  Publications are not repeated as structured data: they are already on the
+  page, and a second copy could drift from the pinned citations.
+
+One-time steps for the owner (they need your accounts, so nothing is automated):
+
+1. Google Search Console: add a URL-prefix property for
+   `https://ji-hun-git.github.io/` (a Domain property is not possible on
+   `github.io`). Verify it with the HTML tag method: paste the
+   `<meta name="google-site-verification" ...>` it gives you into the `<head>`
+   of `index.html`, run `python tools/build_ko_page.py`, and publish. (The
+   HTML-file method also works, but `.gitignore` lists every published file, so
+   the file must be added there, and the page checks would flag it as a page
+   without a title.)
+2. In Search Console, submit `sitemap.xml` under Sitemaps, then use URL
+   Inspection and Request indexing for `https://ji-hun-git.github.io/` and
+   `https://ji-hun-git.github.io/ko.html`.
+3. Naver Search Advisor (searchadvisor.naver.com): register
+   `https://ji-hun-git.github.io`, verify it the same way (its HTML tag,
+   `<meta name="naver-site-verification" ...>`), submit the sitemap under
+   요청 > 사이트맵 제출, and request `https://ji-hun-git.github.io/ko.html` under
+   요청 > 웹 페이지 수집.
+4. Optional: Bing Webmaster Tools can import the Search Console property and
+   the sitemap in one step.
+5. Link this site from your public profiles: Google Scholar (Homepage), ORCID
+   (Websites & social links), LinkedIn (Contact info, Website) and GitHub
+   (Website), the four the structured data names as the same person. On GitHub,
+   setting the profile name to "Jihun Chae (채지훈)" also helps name search, and
+   the site repository's description still mentions the bookshelf.
 
 ## Structure
 
-- `index.html`: bookshelf shell and authored bilingual CV.
+- `index.html`: authored bilingual CV and the bookshelf switch and shell.
+- `ko.html`: the Korean page, generated from `index.html`
+  (`tools/build_ko_page.py`); do not edit it by hand.
 - `assets/site.*`, `assets/cv.css`: shared controls and CV presentation.
-- `assets/project-library/`: bookshelf, record content, and project pictograms.
+- `assets/project-library/`: bookshelf, record content, and project pictograms
+  (loaded only while the bookshelf is on, apart from the KF-21 flyby).
 - `assets/vendor/three/`: Three.js 0.185.1 and its MIT license.
 - `laboratory.html`, `lab/`: simulations and their on-demand renderers.
-- `tools/`: image generation and regression checks.
+- `favicon.ico`, `apple-touch-icon.png`, `assets/favicon-96.png`: site icons
+  (`tools/build_favicons.py`).
+- `tools/`: image generation, the Korean page generator and regression checks.
 
 Run `python tools/harness/static_checks.py` for source checks. Browser tests are
 documented in `tools/harness/README.md`. Update asset URL versions when releasing
 changed assets. `main` is the production branch; feature branches are temporary.
+
+## Content-Security-Policy
+
+Every page that loads code or styles declares a policy in a
+`<meta http-equiv="Content-Security-Policy">` tag right after `<meta charset>`:
+code only from this site, styles and fonts also from the jsDelivr CDN (and, on
+the Simulations page, KaTeX from the same CDN). The inline `<head>` script of
+`index.html` is allowed by its SHA-256 hash, so editing that script, including a
+`?v=` stamp bump inside it, changes the hash: `static_checks.py` fails and prints
+the new value to put in the policy, then run `python tools/build_ko_page.py`.
+GitHub Pages cannot send response headers, so `frame-ancestors` (framing) and
+`report-uri` (violation reports) are not available; a meta policy cannot set them.
 
 ## Publishing
 

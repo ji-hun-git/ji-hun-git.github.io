@@ -16,7 +16,7 @@
  * term when a part breaks.
  */
 
-import { createSimHarness, clamp, TAU, project3d } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, TAU, project3d } from "./_shared.js?v=115-20260930a";
 
 function inv3(m) {
   const [a, b, c, d, e, f, g, h, i] = m;
@@ -32,6 +32,10 @@ function inv3(m) {
     C * id, (b * g - a * h) * id, (a * e - b * d) * id
   ];
 }
+
+// "Agility" slider: rotor thrust limit for flyers, stride speed for walkers.
+const flyerAgility = (count) => 0.6 + count * 0.0025;
+const walkerAgility = (count) => 0.6 + count * 0.004;
 
 function rotY(x, z, a) {
   const c = Math.cos(a), s = Math.sin(a);
@@ -136,7 +140,8 @@ export function mountArcRobot(refs) {
     const g = 0.004;
     const kp = 0.011 * (0.6 + api.state.attraction);
     const kd = 0.2;
-    const fmax = 0.0075;
+    // Agility scales each rotor's thrust limit (1× at the presets' 160).
+    const fmax = 0.0075 * flyerAgility(api.state.count);
 
     // gravity-compensated PD command, then thrust direction
     const ax = kp * (w.target.x - b.x) - kd * b.vx;
@@ -224,7 +229,7 @@ export function mountArcRobot(refs) {
     const enough = stance.length >= 3;
     const supported = enough && pointInPoly(hull2d(stance), b.x, b.z);
     const traction = stance.length / Math.max(1, w.parts.length);
-    const speed = 0.02 * spd * (0.6 + api.state.count * 0.004) * traction * (enough ? 1 : 0.5);
+    const speed = 0.02 * spd * walkerAgility(api.state.count) * traction * (enough ? 1 : 0.5);
     b.x += fwd.x * speed; b.z += fwd.z * speed;
     b.x = clamp(b.x, -1.6, 1.6); b.z = clamp(b.z, -1.6, 1.6);
     b.h = b.h * 0.9 + (0.34 + (k / w.parts.length) * 0.22) * 0.1; // crouch when legs are lost
@@ -399,7 +404,7 @@ export function mountArcRobot(refs) {
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     const mode = isFlyer(api) ? "thrust re-allocation" : "gait re-phasing";
-    ctx.fillText(`${api.state.variation} (3D) · ${alive}/${w.parts.length} ${w.partName}s · ${down ? mode : "nominal"}`, 14, 12);
+    ctx.fillText(`${api.variationLabel()} (3D) · ${alive}/${w.parts.length} ${w.partName}s · ${down ? mode : "nominal"}`, 14, 12);
     ctx.fillStyle = "rgba(139,139,149,0.85)";
     ctx.font = "500 11px ui-monospace, monospace";
     ctx.fillText("hover a rotor/leg to disable it", 14, 30);
@@ -417,6 +422,12 @@ export function mountArcRobot(refs) {
       energy: (v) => `${Math.round(v * 100)}%`,
       order: (v) => `${Math.round(v * 100)}%`,
       spread: (v) => `${Math.round(v * 100)}%`
+    },
+    controlFormat: {
+      count: (v, api) => (isFlyer(api) ? `${flyerAgility(v).toFixed(2)}× thrust` : `${walkerAgility(v).toFixed(2)}× stride`),
+      speed: (v) => `${clamp(0.4 + v * 0.5, 0.3, 1.4).toFixed(2)}×`,
+      turbulence: (v) => `a fault every ${Math.round(clamp(440 - v * 360, 100, 620))} frames`,
+      attraction: (v) => `${(0.6 + v).toFixed(2)}×`
     },
     presets: {
       quadrotor: { count: 160, speed: 1.6, turbulence: 0.3, attraction: 0.5, trails: true },
@@ -459,9 +470,17 @@ export function mountArcRobot(refs) {
       w.stability = 1;
       w.supported = true;
       w.stanceFeet = [];
+      // A standing pose, so the walker can be drawn before its first step
+      // (the figure is painted right after every reset).
+      if (!flyer) {
+        for (const p of w.parts) {
+          p.hip = { x: p.bx, y: w.body.h, z: p.bz };
+          p.foot = { x: p.bx, y: 0, z: p.bz };
+        }
+      }
       newTarget(api);
       if (!flyer) regait(api);
-      api.log(`${api.state.variation} online (3D), ${n} ${w.partName}s, patrolling.`);
+      api.log(`${api.variationLabel()} online (3D), ${n} ${w.partName}s, patrolling.`);
     },
     step,
     draw

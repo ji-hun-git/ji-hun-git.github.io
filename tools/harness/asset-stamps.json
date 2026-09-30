@@ -1,17 +1,172 @@
 {
+  "assets/project-library/library.js": {
+    "n_assets": 2,
+    "sha256": "983c36790cba3e3f",
+    "stamp": "112-20260908r2"
+  },
+  "assets/site.js": {
+    "n_assets": 1,
+    "sha256": "3aad009e6b08bfd9",
+    "stamp": "112-20260908r2"
+  },
   "index.html": {
     "n_assets": 7,
-    "sha256": "d10fa5dc43edd6ac",
-    "stamp": "112-20260908r2"
+    "sha256": "df5f9a2008e48be5",
+    "stamp": "115-20260930b"
+  },
+  "ko.html": {
+    "n_assets": 7,
+    "sha256": "df5f9a2008e48be5",
+    "stamp": "115-20260930b"
   },
   "lab/lab.js": {
     "n_assets": 29,
-    "sha256": "04d70f2a2191eefe",
-    "stamp": "110-20260908r1"
+    "sha256": "d457ca8e557bbb8c",
+    "stamp": "115-20260930b"
+  },
+  "lab/simulations/agent-arena.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/arc-adaptive-robot.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/boids-3d.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/breakout-ai.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/cartpole.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/connect-four.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/double-pendulum.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/falling-sand.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/frozen-lake.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/game-2048.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/gridworld-prompt.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/light-cycle.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/ludic-geometry.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/lunar-lander.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/maze-chase.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/minesweeper.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/nbody-3d.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/neuroevolution-flappy.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/particle-field.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/pathfinding.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/plinko.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/q-learning.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/reaction-diffusion.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/snake-swarm.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/terrain-descent-3d.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/tetris-ai.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/verlet-cloth.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
+  },
+  "lab/simulations/wumpus.js": {
+    "n_assets": 1,
+    "sha256": "2a361ea9a80f5ed0",
+    "stamp": "115-20260930a"
   },
   "laboratory.html": {
     "n_assets": 3,
-    "sha256": "b2d904392922b6d6",
-    "stamp": "110-20260908r1"
+    "sha256": "534188c624839f68",
+    "stamp": "115-20260930b"
   }
 }

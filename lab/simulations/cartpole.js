@@ -7,7 +7,7 @@
  * controllers stabilize - or fail - together. Maps the "CartPole Balance" template.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const GRAV = 9.8;
 const MC = 1.0; // cart mass
@@ -39,11 +39,15 @@ export function mountCartpole(refs) {
       // energy-pumping swing-up
       const E = 0.5 * w.mp * w.l * w.l * cart.thetadot * cart.thetadot + w.mp * GRAV * w.l * Math.cos(th);
       const Edes = w.mp * GRAV * w.l;
-      const u = clamp((E - Edes) * cart.thetadot * Math.cos(th) * -6, -w.fmax, w.fmax);
+      // Pump energy toward the upright level while a PD term keeps the cart near
+      // the middle of the track.
+      const u = clamp((E - Edes) * cart.thetadot * Math.cos(th) * 4 - (4 * cart.x + 4 * cart.xdot), -w.fmax, w.fmax);
       return u;
     }
-    // PD stabilization near upright
-    let u = -(gain * (18 * th + 4 * cart.thetadot) + gain * (1.4 * cart.x + 1.8 * cart.xdot));
+    // PD stabilization near upright. The force pushes the cart toward the side
+    // the pole leans to (theta > 0 leans toward +x), which moves the base back
+    // under it; the cart terms bring it back toward the middle of the track.
+    const u = gain * (18 * th + 4 * cart.thetadot) + gain * (1.4 * cart.x + 1.8 * cart.xdot);
     return clamp(u, -w.fmax, w.fmax);
   }
 
@@ -57,10 +61,11 @@ export function mountCartpole(refs) {
     const temp = (force + w.mp * w.l * cart.thetadot * cart.thetadot * st) / total;
     const thetaacc = (GRAV * st - ct * temp) / (w.l * (4 / 3 - (w.mp * ct * ct) / total));
     const xacc = temp - (w.mp * w.l * thetaacc * ct) / total;
-    cart.x += DT * cart.xdot;
+    // Semi-implicit Euler: update the velocities first, then move with the new ones.
     cart.xdot += DT * xacc;
-    cart.theta += DT * cart.thetadot;
+    cart.x += DT * cart.xdot;
     cart.thetadot += DT * thetaacc;
+    cart.theta += DT * cart.thetadot;
 
     if (cart.x < -2.4 || cart.x > 2.4) {
       cart.fell += 1;
@@ -171,6 +176,18 @@ export function mountCartpole(refs) {
       order: (v) => v.toFixed(2),
       spread: (v) => v.toFixed(2)
     },
+    controlFormat: {
+      count: (v) => {
+        const n = clamp(Math.round(v / 24), 1, 12);
+        return `${n} cart${n === 1 ? "" : "s"}`;
+      },
+      speed: (v) => {
+        const n = Math.max(1, Math.round(v * 1.4));
+        return `${n} step${n === 1 ? "" : "s"}/frame`;
+      },
+      turbulence: (v, api) => `±${((v * (api.state.variation === "windy" ? 22 : 10)) / 2).toFixed(1)} N`,
+      attraction: (v) => `gain ${(0.4 + v * 2.2).toFixed(2)}`
+    },
     presets: {
       balance: { count: 150, speed: 1.6, turbulence: 0.15, attraction: 0.55, trails: false },
       swingup: { count: 120, speed: 1.8, turbulence: 0.1, attraction: 0.6, trails: false },
@@ -187,7 +204,7 @@ export function mountCartpole(refs) {
       w.falls = 0;
       const n = clamp(Math.round(api.state.count / 24), 1, 12);
       w.carts = Array.from({ length: n }, (_, i) => makeCart(api, i));
-      api.log(`${api.state.variation} · ${n} cartpole controllers (pole ${w.l.toFixed(2)} m).`);
+      api.log(`${api.variationLabel()} · ${n} cartpole controllers (pole ${w.l.toFixed(2)} m).`);
     },
     step,
     draw

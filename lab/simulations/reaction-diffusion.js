@@ -3,10 +3,10 @@
  *
  * Two virtual chemicals diffuse and react on a torus; tiny parameter changes
  * grow corals, mitosis, worms, spots, or waves. A canonical "simulation" -
- * pure local rules, global emergence. Click/drag to seed reagent.
+ * pure local rules, global emergence. Move the cursor over the grid to seed reagent.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const DU = 0.16;
 const DV = 0.08;
@@ -135,7 +135,7 @@ export function mountReactionDiffusion(refs) {
     api.ctx.font = "600 12px Inter, sans-serif";
     api.ctx.textAlign = "left";
     api.ctx.textBaseline = "top";
-    api.ctx.fillText(`Gray-Scott · ${api.state.variation} · f ${w.f.toFixed(3)} · k ${w.k.toFixed(3)}`, 14, 12);
+    api.ctx.fillText(`Gray–Scott · ${api.variationLabel()} · f ${w.f.toFixed(3)} · k ${w.k.toFixed(3)}`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -147,6 +147,17 @@ export function mountReactionDiffusion(refs) {
       energy: (v) => v.toFixed(2),
       order: (v) => v.toFixed(2),
       spread: (v) => `${Math.round(v * 100)}%`
+    },
+    // The initial seeds are placed at reset, so moving that slider restarts.
+    resetOn: ["turbulence"],
+    controlFormat: {
+      count: (v, api) => {
+        const scale = clamp(Math.round(6 - v / 90), 3, 7);
+        return `${Math.max(80, Math.floor(api.w / scale))}×${Math.max(50, Math.floor(api.h / scale))}`;
+      },
+      speed: (v) => `${clamp(Math.round(v * 1.8), 1, 7)}`,
+      turbulence: (v) => `${6 + Math.floor(v * 14)} spots`,
+      attraction: (v, api) => `k = ${((api.custom.k || 0) + (v - 0.3) * 0.01).toFixed(4)}`
     },
     presets: {
       coral: { count: 200, speed: 2.2, turbulence: 0.3, attraction: 0.32, trails: false },
@@ -189,7 +200,7 @@ export function mountReactionDiffusion(refs) {
       w.buf.height = w.gh;
       w.bufCtx = w.buf.getContext("2d");
       w.img = w.bufCtx.createImageData(w.gw, w.gh);
-      api.log(`${api.state.variation} · ${w.gw}×${w.gh} grid · drag to seed reagent.`);
+      api.log(`${api.variationLabel()} · ${w.gw}×${w.gh} grid · move the cursor over it to seed reagent.`);
     },
     onTrails(api) {
       api.custom.warm = api.state.trails;

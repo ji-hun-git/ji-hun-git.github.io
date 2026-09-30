@@ -4,7 +4,7 @@ import json
 import re
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
-from run_browser import serve, ROOT
+from run_browser import serve, ROOT, BOOKSHELF
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--screenshots', type=Path)
@@ -21,7 +21,7 @@ try:
             page = browser.new_page(viewport={'width':width,'height':height})
             errors = []
             page.on('pageerror', lambda error: errors.append(str(error)))
-            page.goto(base, wait_until='networkidle')
+            page.goto(base + BOOKSHELF, wait_until='networkidle')
             expect(page.locator('.catalog-row')).to_have_count(37)
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Horizontal overflow'
             if args.screenshots:
@@ -57,7 +57,7 @@ try:
             expect(page).not_to_have_url(re.compile('work='))
             page.locator('#langToggle').click()
             expect(page.locator('html')).to_have_attribute('lang','ko')
-            expect(page.locator('.catalog-statement')).to_contain_text('사람과 AI')
+            expect(page.locator('.catalog-statement')).to_contain_text('사람들이 어디서 막히는지')
             page.locator('[data-filter="project"]').click()
             expect(page.locator('.catalog-row')).to_have_count(6)
             if args.screenshots:
@@ -113,7 +113,7 @@ try:
         results.append({'deepLinks':'pass','reducedMotion':'pass','history':'pass','cvLink':'pass'})
         results.append({'recordDetails':len(slugs),'keyboardFocus':'pass','readerMode':'pass'})
         page=browser.new_page(viewport={'width':1280,'height':800})
-        page.goto(base,wait_until='networkidle')
+        page.goto(base+BOOKSHELF,wait_until='networkidle')
         page.locator('[data-pl-book="inclusive-game-ai"]').click()
         page.go_back()
         page.go_forward()

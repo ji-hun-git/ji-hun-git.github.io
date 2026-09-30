@@ -6,7 +6,7 @@
  * physics: the central limit theorem you can watch.
  */
 
-import { createSimHarness, clamp, TAU } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, TAU } from "./_shared.js?v=115-20260930a";
 
 export function mountPlinko(refs) {
   function build(api) {
@@ -74,7 +74,8 @@ export function mountPlinko(refs) {
       });
     }
     const peak = Math.max(1, ...w.counts);
-    // "normality": center bins should dominate
+    // center weight: how much of the landed mass sits near the middle bins
+    // (1 = all in the center, 0 = all at the edges); it does not test normality
     const mid = w.bins / 2;
     let centerMass = 0;
     for (let i = 0; i < w.bins; i++) centerMass += w.counts[i] * (1 - Math.abs(i - mid) / mid);
@@ -83,7 +84,8 @@ export function mountPlinko(refs) {
 
   function draw(api) {
     const { ctx, custom: w } = api;
-    ctx.fillStyle = "rgba(7,7,13,0.96)";
+    // With ball trails on, the background is only partly cleared each frame.
+    ctx.fillStyle = api.state.trails ? "rgba(7,7,13,0.3)" : "rgba(7,7,13,0.96)";
     ctx.fillRect(0, 0, api.w, api.h);
     // histogram
     const peak = Math.max(1, ...w.counts);
@@ -105,7 +107,7 @@ export function mountPlinko(refs) {
     ctx.fillStyle = "rgba(245,245,247,0.92)";
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left"; ctx.textBaseline = "top";
-    ctx.fillText(`${w.rows} rows - ${w.total} balls landed - a normal distribution emerges`, 14, 12);
+    ctx.fillText(`${w.rows} rows · ${w.total} balls landed`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -113,6 +115,12 @@ export function mountPlinko(refs) {
     firstVariation: "classic",
     chartColors: ["rgba(96,165,250,0.95)", "rgba(52,211,153,0.95)", "rgba(251,191,36,0.95)"],
     metricFormat: { energy: (v) => `${Math.round(v * 100)}%`, order: (v) => `${Math.round(v * 100)}%`, spread: (v) => `${Math.round(v * 100)}%` },
+    controlFormat: {
+      count: (v) => `${clamp(Math.round(v / 26), 7, 14)} rows, ${Math.round((0.2 + v * 0.001) * 100)}% drop`,
+      speed: (v) => `${clamp(Math.round(v * 2), 1, 6)} steps/frame`,
+      turbulence: (v) => `±${((0.6 + v * 1.6) / 2).toFixed(2)} px/step`,
+      attraction: (v) => `g ${(0.06 + v * 0.12).toFixed(3)}`
+    },
     presets: {
       classic: { count: 220, speed: 1.8, turbulence: 0.25, attraction: 0.4, trails: false },
       tall: { count: 320, speed: 1.8, turbulence: 0.25, attraction: 0.4, trails: false },

@@ -24,11 +24,14 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
+import importlib.util
 import json
 import os
 import re
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -213,6 +216,14 @@ JS_PATH = re.compile(
 
 SKIP_REF = re.compile(r"^\s*(?:https?:|//|data:|mailto:|tel:|javascript:|#|blob:)", re.I)
 
+# Inline <script> blocks can request assets too: index.html's head script adds
+# the bookshelf's stylesheet and scripts only while the bookshelf is on. Their
+# URLs must still resolve and still count towards the page's ?v= stamp.
+INLINE_SCRIPT = re.compile(r"<script\b([^>]*)>(.*?)</script>", re.I | re.S)
+DATA_SCRIPT_TYPE = re.compile(r"""type\s*=\s*['"][^'"]*json""", re.I)
+LD_JSON_TYPE = re.compile(r"""type\s*=\s*['"]application/ld\+json['"]""", re.I)
+SITE_URL_IN_JSON = re.compile(r'"(https?://[^"\s]+)"')
+
 _SITE_HOSTS = []
 
 
@@ -242,6 +253,19 @@ def extract_refs(rel):
         out.extend((u, ln, a) for u, ln, a in c.refs)
         for m in CSS_URL.finditer(text):
             out.append((m.group(1), line_of(text, m.start()), "css-url"))
+        for block in INLINE_SCRIPT.finditer(text):
+            attrs = block.group(1)
+            if LD_JSON_TYPE.search(attrs):
+                # Structured data names the site's own files too (the Person
+                # image); they must exist like any other reference.
+                for m in SITE_URL_IN_JSON.finditer(block.group(2)):
+                    out.append((m.group(1), line_of(text, block.start(2) + m.start()), "json-ld"))
+                continue
+            if re.search(r"\bsrc\s*=", attrs, re.I) or DATA_SCRIPT_TYPE.search(attrs):
+                continue
+            for m in JS_PATH.finditer(block.group(2)):
+                out.append((m.group(1) + (m.group(2) or ""),
+                            line_of(text, block.start(2) + m.start()), "inline-script"))
     elif suffix == ".css":
         for m in CSS_URL.finditer(text):
             out.append((m.group(1), line_of(text, m.start()), "css-url"))
@@ -663,6 +687,23 @@ def hashable_bytes(path):
     return blob
 
 
+def stamped_files(cfg):
+    """The stamped files named in the config, with glob patterns expanded.
+
+    Scripts count as well as pages: a module that imports a sibling under a
+    ?v= query (every simulation imports ./_shared.js that way, site.js and
+    library.js import the flyby) serves a stale copy of that sibling until its
+    own stamp moves.
+    """
+    out = []
+    for entry in cfg["stamped_files"]["files"]:
+        if any(ch in entry for ch in "*?["):
+            out += sorted(p.relative_to(ROOT).as_posix() for p in ROOT.glob(entry) if p.is_file())
+        else:
+            out.append(entry)
+    return out
+
+
 def check_cache_stamps(files, cfg):
     """One ?v= stamp per page, and the stamp moves when the bytes move.
 
@@ -678,7 +719,7 @@ def check_cache_stamps(files, cfg):
         baseline = json.loads(STAMP_BASELINE.read_text(encoding="utf-8"))
 
     current = {}
-    for rel in cfg["stamped_files"]["files"]:
+    for rel in stamped_files(cfg):
         if not (ROOT / rel).is_file():
             continue
         text = read_text(rel)
@@ -761,11 +802,21 @@ def check_publication_roles(files, cfg):
     findings = []
     index = ROOT / "index.html"
     if not index.is_file():
-        return findings
+        return cannot_run("publication-roles", "index.html")
     text = index.read_text(encoding="utf-8", errors="replace")
     # Formatting may insert whitespace between or within text nodes.
     text = re.sub(r'\s+', ' ', text)
-    rows = [m for m in re.finditer(r'<p class="item-desc">\s*<span class="pub-n">(\d+)</span>', text)]
+    # The citation paragraphs carry lang="en-US" (they are English on both pages).
+    row_start = r'<p class="item-desc"(?: lang="[^"]*")?>'
+    # "</span >": a formatter may break the closing tag before its ">".
+    rows = [m for m in re.finditer(row_start + r'\s*<span class="pub-n">(\d+)</span\s*>', text)]
+    publications = len(re.findall(r'class="pub-n"', text))
+    if len(rows) != publications:
+        findings.append(Finding(
+            ERROR, "publication-roles", "index.html", 0,
+            "found %d citation rows for %d numbered publications" % (len(rows), publications),
+            "keep each citation as <p class=\"item-desc\" lang=\"en-US\"><span class=\"pub-n\">",
+        ))
     for m in rows:
         end = text.find("</p>", m.end())
         row = text[m.start():end if end != -1 else m.end() + 2000]
@@ -794,9 +845,10 @@ def check_publication_roles(files, cfg):
                 "restore the CV row and its verified authorship role",
             ))
             continue
-        row_start = text.rfind('<p class="item-desc">', 0, idx)
+        starts = list(re.finditer(row_start, text[:idx]))
+        begin = starts[-1].start() if starts else 0
         row_end = text.find("</p>", idx)
-        row = text[row_start:row_end if row_end != -1 else idx + 2000]
+        row = text[begin:row_end if row_end != -1 else idx + 2000]
         if not all(role in row for role in expected):
             findings.append(Finding(
                 ERROR, "publication-roles", "index.html", line_of(text, idx),
@@ -806,37 +858,54 @@ def check_publication_roles(files, cfg):
     return findings
 
 
-P_CALL = re.compile(r'\bp\(\s*("(?:[^"\\]|\\.)*")\s*,\s*("(?:[^"\\]|\\.)*")\s*\)', re.S)
+WORK_JS = "assets/project-library/work.js"
+JS_STRING = r'"(?:[^"\\]|\\.)*"'
+EN_KO_PAIR = re.compile(r'\ben:\s*(%s),\s*ko:\s*(%s)' % (JS_STRING, JS_STRING), re.S)
+
+
+def cannot_run(check, rel):
+    """A check whose input is gone must fail, not pass having tested nothing."""
+    return [Finding(ERROR, check, rel, 0, "check cannot run: %s is missing" % rel,
+                    "restore the file, or retire the check together with it")]
 
 
 def check_bilingual_pairs(files, cfg):
-    """Every p(en, ko) call carries real text on both sides.
+    """Every {en, ko} pair in the bookshelf's content has real text on both sides.
 
     Why: the whole site is two languages toggled by CSS `display`. An empty half
     is invisible in the language you author in and a blank gap in the other one,
     which is exactly the kind of defect nobody notices until a Korean reader
-    does.
+    does. The bookshelf's content lives in work.js as { en: "...", ko: "..." }
+    objects (it once lived in work-content.js and work-designs.js as p() calls).
     """
+    if not (ROOT / WORK_JS).is_file():
+        return cannot_run("bilingual-pairs", WORK_JS)
     findings = []
-    for rel in ("assets/project-library/work-content.js",
-                "assets/project-library/work-designs.js"):
-        if not (ROOT / rel).is_file():
-            continue
-        text = read_text(rel)
-        for m in P_CALL.finditer(text):
-            en, ko = m.group(1)[1:-1].strip(), m.group(2)[1:-1].strip()
-            if not en or not ko:
-                findings.append(Finding(
-                    ERROR, "bilingual-pairs", rel, line_of(text, m.start()),
-                    "p() call has an empty %s half" % ("English" if not en else "Korean"),
-                    "one language shows a gap here",
-                ))
-            elif en == ko and len(en) > 12 and not re.match(r"^[\x00-\x7f]+$", en):
-                findings.append(Finding(
-                    WARN, "bilingual-pairs", rel, line_of(text, m.start()),
-                    "both halves of p() are identical: %r" % en[:50],
-                    "probably an untranslated placeholder",
-                ))
+    text = read_text(WORK_JS)
+    pairs = list(EN_KO_PAIR.finditer(text))
+    en_keys = len(re.findall(r'\ben:\s*"', text))
+    ko_keys = len(re.findall(r'\bko:\s*"', text))
+    if not pairs or not len(pairs) == en_keys == ko_keys:
+        findings.append(Finding(
+            ERROR, "bilingual-pairs", WORK_JS, 0,
+            "%d English strings, %d Korean strings, %d en/ko pairs; every string needs its twin"
+            % (en_keys, ko_keys, len(pairs)),
+            "write each text as { en: \"...\", ko: \"...\" }",
+        ))
+    for m in pairs:
+        en, ko = m.group(1)[1:-1].strip(), m.group(2)[1:-1].strip()
+        if not en or not ko:
+            findings.append(Finding(
+                ERROR, "bilingual-pairs", WORK_JS, line_of(text, m.start()),
+                "en/ko pair has an empty %s half" % ("English" if not en else "Korean"),
+                "one language shows a gap here",
+            ))
+        elif en == ko and len(en) > 12 and not re.match(r"^[\x00-\x7f]+$", en):
+            findings.append(Finding(
+                WARN, "bilingual-pairs", WORK_JS, line_of(text, m.start()),
+                "both halves of the en/ko pair are identical: %r" % en[:50],
+                "probably an untranslated placeholder",
+            ))
     return findings
 
 
@@ -856,23 +925,20 @@ def check_award_consistency(files, cfg):
     cross-file check catches the drift.
     """
     findings = []
-    index_p, wc_p = ROOT / "index.html", ROOT / "assets/project-library/work-content.js"
-    if not (index_p.is_file() and wc_p.is_file()):
-        return findings
-    wc = wc_p.read_text(encoding="utf-8", errors="replace")
-    index_text = index_p.read_text(encoding="utf-8", errors="replace")
+    for rel in ("index.html", WORK_JS):
+        if not (ROOT / rel).is_file():
+            return cannot_run("award-consistency", rel)
+    # The library half is the bookshelf's own content, now all in work.js.
+    wc = read_text(WORK_JS)
+    index_text = read_text("index.html")
 
     # Public portfolio copy should state the person's role and result directly.
     # Source provenance belongs in private claim notes, not in visitor-facing
     # sentences such as "a professor's CV records the award".
     public_copy = {
         "index.html": index_text,
-        "assets/project-library/work-content.js": wc,
+        WORK_JS: wc,
     }
-    designs_p = ROOT / "assets/project-library/work-designs.js"
-    if designs_p.is_file():
-        public_copy["assets/project-library/work-designs.js"] = designs_p.read_text(
-            encoding="utf-8", errors="replace")
     attribution_phrases = (
         "professor's cv", "professor cv", "professor young yim doh's",
         "교수 cv", "도영임 교수의",
@@ -917,7 +983,7 @@ def check_award_consistency(files, cfg):
         idx = wc.find(phrase)
         if idx != -1:
             findings.append(Finding(
-                WARN, "award-consistency", "assets/project-library/work-content.js",
+                WARN, "award-consistency", WORK_JS,
                 line_of(wc, idx),
                 "library still disclaims a result: %r" % phrase,
                 "check index.html does not assert that same award; the two "
@@ -926,7 +992,7 @@ def check_award_consistency(files, cfg):
     if "Encouragement Prize" in wc and "President's Award" in index_text:
         idx = wc.find("Encouragement Prize")
         findings.append(Finding(
-            WARN, "award-consistency", "assets/project-library/work-content.js",
+            WARN, "award-consistency", WORK_JS,
             line_of(wc, idx),
             "library says Encouragement Prize while the CV says President's Award",
             "one of the two is stale",
@@ -934,90 +1000,52 @@ def check_award_consistency(files, cfg):
     return findings
 
 
-def check_library_source_alignment(files, cfg):
-    """Every library book must map one-to-one to a CV row and detail record.
-
-    The reader inherits titles, dates, venues, and compact summaries from
-    index.html through sourceIndex. A missing, duplicated, or stale index can
-    therefore display the wrong CV record under an otherwise plausible cover.
-    """
-    findings = []
-    index_p = ROOT / "index.html"
-    designs_p = ROOT / "assets/project-library/work-designs.js"
-    content_p = ROOT / "assets/project-library/work-content.js"
-    if not (index_p.is_file() and designs_p.is_file() and content_p.is_file()):
-        return findings
-
-    index_text = index_p.read_text(encoding="utf-8", errors="replace")
-    designs_text = designs_p.read_text(encoding="utf-8", errors="replace")
-    content_text = content_p.read_text(encoding="utf-8", errors="replace")
-
-    def section(text, start_pattern, end_pattern):
+def cv_entry_counts(text):
+    """{"projects": n, "publications": n, "awards": n} entries on a CV page."""
+    def items(start_pattern, end_pattern):
         start = re.search(start_pattern, text)
-        if not start:
-            return ""
-        end = re.search(end_pattern, text[start.end():])
-        return text[start.end():start.end() + end.start()] if end else text[start.end():]
-
-    cv_counts = {
-        "projects": len(re.findall(
-            r'<div class="item reveal">',
-            section(index_text, r'<section[^>]+id="projects"[^>]*>',
-                    r'<section[^>]+id="awards"[^>]*>'))),
-        "publications": len(re.findall(r'class="pub-n"', index_text)),
-        "awards": len(re.findall(
-            r'<div class="item reveal">',
-            section(index_text, r'<section[^>]+id="awards"[^>]*>',
-                    r'<section[^>]+id="education"[^>]*>'))),
+        end = re.search(end_pattern, text[start.end():]) if start else None
+        if not (start and end):
+            return None
+        segment = text[start.end():start.end() + end.start()]
+        return sum(1 for tag in re.finditer(r"<div\b[^>]*>", segment)
+                   if "item" in (re.search(r'class="([^"]*)"', tag.group(0)) or [None, ""])[1].split())
+    return {
+        "projects": items(r'<section[^>]+id="projects"', r'<section[^>]+id="awards"'),
+        "publications": len(re.findall(r'class="pub-n"', text)),
+        "awards": items(r'<section[^>]+id="awards"', r'<section[^>]+id="education"'),
     }
 
-    design_starts = list(re.finditer(
-        r'^  (projects|publications|awards): \[$', designs_text, re.M))
-    design_records = {}
-    for pos, match in enumerate(design_starts):
-        end = design_starts[pos + 1].start() if pos + 1 < len(design_starts) else len(designs_text)
-        block = designs_text[match.end():end]
-        indices = [int(v) for v in re.findall(r'^      sourceIndex: (\d+),$', block, re.M)]
-        slugs = re.findall(r'^      slug: "([^"]+)",$', block, re.M)
-        design_records[match.group(1)] = (indices, slugs, match.start())
 
-    content_starts = list(re.finditer(
-        r'^    (projects|publications|awards): \{$', content_text, re.M))
-    content_slugs = {}
-    for pos, match in enumerate(content_starts):
-        end = content_starts[pos + 1].start() if pos + 1 < len(content_starts) else len(content_text)
-        block = content_text[match.end():end]
-        content_slugs[match.group(1)] = set(re.findall(
-            r'^      "([^"]+)": \{$', block, re.M))
+def check_cv_counters(files, cfg):
+    """The overview counters (6 / 21 / 10) are the number of entries they link to.
 
-    for collection, cv_count in cv_counts.items():
-        indices, slugs, offset = design_records.get(collection, ([], [], 0))
-        expected = list(range(cv_count))
-        if indices != expected:
-            findings.append(Finding(
-                ERROR, "library-source-alignment", "assets/project-library/work-designs.js",
-                line_of(designs_text, offset),
-                "%s sourceIndex values are %r; CV requires %r" %
-                (collection, indices, expected),
-                "keep one ordered library design for every CV row",
-            ))
-        if len(slugs) != cv_count or len(set(slugs)) != len(slugs):
-            findings.append(Finding(
-                ERROR, "library-source-alignment", "assets/project-library/work-designs.js",
-                line_of(designs_text, offset),
-                "%s has %d CV rows but %d design slugs (%d unique)" %
-                (collection, cv_count, len(slugs), len(set(slugs))),
-                "add, remove, or deduplicate library records to match the CV",
-            ))
-        missing_detail = set(slugs) - content_slugs.get(collection, set())
-        stale_detail = content_slugs.get(collection, set()) - set(slugs)
-        if missing_detail or stale_detail:
-            findings.append(Finding(
-                ERROR, "library-source-alignment", "assets/project-library/work-content.js", 0,
-                "%s detail mismatch; missing=%r stale=%r" %
-                (collection, sorted(missing_detail), sorted(stale_detail)),
-                "use the same slugs in work-designs.js and work-content.js",
-            ))
+    Why: the three numbers at the top of the CV are the first facts a reader
+    sees, and nothing tied them to the lists below: adding or removing an entry
+    would leave a wrong count on the front page. (This replaces the old
+    library-source alignment check, whose inputs, work-designs.js and
+    work-content.js, no longer exist; check_cv_record_ids covers the bookshelf.)
+    """
+    findings = []
+    for page in CV_PAGES:
+        if not (ROOT / page).is_file():
+            findings += cannot_run("cv-counters", page)
+            continue
+        text = read_text(page)
+        counts = cv_entry_counts(text)
+        for section, count in counts.items():
+            m = re.search(r'<a href="#%s"\s*><strong>(\d+)</strong' % section, text)
+            if not m or count is None:
+                findings.append(Finding(
+                    ERROR, "cv-counters", page, 0,
+                    "cannot find the %s counter or section" % section, ""))
+            elif int(m.group(1)) != count:
+                findings.append(Finding(
+                    ERROR, "cv-counters", page, line_of(text, m.start()),
+                    "the %s counter says %s but the section has %d entries"
+                    % (section, m.group(1), count),
+                    "update the number in .cv-index",
+                ))
     return findings
 
 
@@ -1140,6 +1168,181 @@ def check_meta(files, cfg):
     return findings
 
 
+BOOKSHELF_SWITCH = re.compile(r"\bconst BOOKSHELF_ENABLED = (true|false);")
+# The CV in each language: index.html is authored, ko.html is generated from it.
+CV_PAGES = ("index.html", "ko.html")
+
+
+def bookshelf_enabled():
+    """State of the single bookshelf switch in index.html; None if it is missing."""
+    if not (ROOT / "index.html").is_file():
+        return None
+    found = BOOKSHELF_SWITCH.findall(read_text("index.html"))
+    return found[0] == "true" if len(found) == 1 else None
+
+
+def visible_text(html):
+    """Rough reader-visible text of a page: no scripts, styles or tags."""
+    html = re.sub(r"<(script|style)\b.*?</\1>", " ", html, flags=re.I | re.S)
+    return " ".join(re.sub(r"<[^>]+>", " ", html).split())
+
+
+def check_bookshelf_switch(files, cfg):
+    """The bookshelf has one switch, and while it is off nothing advertises it.
+
+    Why: the owner switched the bookshelf off "for now" (Sep 2026). It must come
+    back by flipping BOOKSHELF_ENABLED alone, so its files may only be requested
+    by the loader behind that switch: a plain <script src> or stylesheet link
+    downloads them for every visitor whatever the switch says. While it is off,
+    the site root is the CV, so the sitemap must not list ?view= duplicates of
+    it, link previews must not show the bookshelf, and no page may send visitors
+    to it.
+    """
+    findings = []
+    if not (ROOT / "index.html").is_file():
+        return findings
+    index_text = read_text("index.html")
+    switches = BOOKSHELF_SWITCH.findall(index_text)
+    if len(switches) != 1:
+        findings.append(Finding(
+            ERROR, "bookshelf-switch", "index.html", 1,
+            "expected one 'const BOOKSHELF_ENABLED = true|false;', found %d" % len(switches),
+            "keep the bookshelf behind the single switch in the <head> script",
+        ))
+        return findings
+    tag_re = re.compile(r"<(link|script)\b([^>]*)>", re.I)
+    for rel in files:
+        if Path(rel).suffix.lower() != ".html":
+            continue
+        text = read_text(rel)
+        for m in tag_re.finditer(text):
+            if "project-library/" in m.group(2):
+                findings.append(Finding(
+                    ERROR, "bookshelf-switch", rel, line_of(text, m.start()),
+                    "<%s> requests a bookshelf file whatever BOOKSHELF_ENABLED says"
+                    % m.group(1).lower(),
+                    "let the head script in index.html add it only while the bookshelf is on",
+                ))
+    if switches[0] == "true":
+        return findings
+
+    off = "while BOOKSHELF_ENABLED is false"
+    for page in CV_PAGES:
+        if not (ROOT / page).is_file():
+            continue
+        page_text = read_text(page)
+        for m in re.finditer(r"<meta\b[^>]*>", page_text, re.I):
+            tag = m.group(0)
+            if "project-library/" in tag or re.search(r"bookshelf|책장", tag, re.I):
+                findings.append(Finding(
+                    ERROR, "bookshelf-switch", page, line_of(page_text, m.start()),
+                    "a meta tag still presents the bookshelf %s" % off,
+                    "describe and preview the CV instead",
+                ))
+    canonical = re.search(
+        r"""<link\b(?=[^>]*rel=['"]canonical['"])[^>]*href=['"]([^'"]+)['"]""", index_text, re.I)
+    root_urls = ["https://%s/" % h for h in _SITE_HOSTS]
+    if canonical and root_urls and canonical.group(1) not in root_urls:
+        findings.append(Finding(
+            ERROR, "bookshelf-switch", "index.html", line_of(index_text, canonical.start()),
+            "canonical URL is %s; the CV is the site root %s" % (canonical.group(1), off),
+            "use %s so ?view=cv and / count as one page" % root_urls[0],
+        ))
+    sitemap = ROOT / "sitemap.xml"
+    if sitemap.is_file():
+        text = read_text("sitemap.xml")
+        for m in re.finditer(r"<loc>([^<]*)</loc>", text):
+            if re.search(r"[?&](?:view|work)=", m.group(1)):
+                findings.append(Finding(
+                    ERROR, "bookshelf-switch", "sitemap.xml", line_of(text, m.start()),
+                    "sitemap lists %s, a duplicate of the site root %s" % (m.group(1), off),
+                    "list the root URL only; its canonical covers ?view=cv",
+                ))
+    for rel in files:
+        if Path(rel).suffix.lower() != ".html":
+            continue
+        text = read_text(rel)
+        for m in re.finditer(r"""href=['"]([^'"]*)['"]""", text, re.I):
+            if re.search(r"[?&](?:view=library|work=)", m.group(1)):
+                findings.append(Finding(
+                    ERROR, "bookshelf-switch", rel, line_of(text, m.start()),
+                    "links to the bookshelf (%s) %s" % (m.group(1), off),
+                    "link to the CV instead",
+                ))
+        # index.html (and ko.html, generated from it) keeps the bookshelf's own
+        # markup for the switch; the browser suite checks none of it is visible.
+        if rel not in CV_PAGES and re.search(r"bookshelf|책장", visible_text(text), re.I):
+            findings.append(Finding(
+                ERROR, "bookshelf-switch", rel, 0,
+                "page text still mentions the bookshelf %s" % off,
+                "point visitors to the CV",
+            ))
+    return findings
+
+
+def check_cv_record_ids(files, cfg):
+    """Every CV record the bookshelf maps carries the id library.js would give it.
+
+    Why: shared links (?work=<slug> and ?view=cv#cv-work-<slug>) land on these
+    ids. While the bookshelf is off no script assigns them, so they are written
+    into index.html, and library.js keeps them when it is on. If they drift from
+    work.js (slug and sourceIndex), a shared link opens the wrong CV entry.
+    """
+    findings = []
+    work_p = ROOT / WORK_JS
+    for rel in ("index.html", WORK_JS):
+        if not (ROOT / rel).is_file():
+            return cannot_run("cv-record-ids", rel)
+    index_text = read_text("index.html")
+    work = read_text("assets/project-library/work.js")
+    starts = list(re.finditer(r"^  (projects|publications|awards): \[$", work, re.M))
+    designs = {}
+    for pos, m in enumerate(starts):
+        end = starts[pos + 1].start() if pos + 1 < len(starts) else len(work)
+        block = work[m.end():end]
+        pairs = re.findall(r'^      slug: "([^"]+)",\n      sourceIndex: (\d+),$', block, re.M)
+        designs[m.group(1)] = {int(i): slug for slug, i in pairs}
+    bounds = {
+        "projects": (r'id="projects"', r'id="awards"'),
+        "awards": (r'id="awards"', r'id="education"'),
+        "publications": (r'id="pubItems"', r'id="patents"'),
+    }
+    for collection, (start_pat, end_pat) in bounds.items():
+        start = re.search(start_pat, index_text)
+        end = re.search(end_pat, index_text[start.end():]) if start else None
+        if not (start and end):
+            findings.append(Finding(
+                ERROR, "cv-record-ids", "index.html", 0,
+                "cannot find the %s section" % collection, "",
+            ))
+            continue
+        offset = start.end()
+        segment = index_text[offset:offset + end.start()]
+        items = []
+        for tag in re.finditer(r"<div\b[^>]*>", segment):
+            cls = re.search(r'class="([^"]*)"', tag.group(0))
+            if cls and "item" in cls.group(1).split():
+                ident = re.search(r'\bid="([^"]*)"', tag.group(0))
+                items.append((ident.group(1) if ident else None,
+                              line_of(index_text, offset + tag.start())))
+        mapped = designs.get(collection, {})
+        if len(mapped) != len(items):
+            findings.append(Finding(
+                ERROR, "cv-record-ids", "assets/project-library/work.js", 0,
+                "%s: the CV has %d entries but work.js maps %d" % (collection, len(items), len(mapped)),
+                "keep one library design per CV entry, in CV order",
+            ))
+        for index, (ident, line) in enumerate(items):
+            expected = "cv-work-" + mapped[index] if index in mapped else None
+            if expected and ident != expected:
+                findings.append(Finding(
+                    ERROR, "cv-record-ids", "index.html", line,
+                    "%s entry %d has id %r; work.js maps it to %r" % (collection, index, ident, expected),
+                    "set id=\"%s\" so shared links open this entry" % expected,
+                ))
+    return findings
+
+
 def check_font_preload_drift(files, cfg):
     """A preloaded font URL still matches the @font-face that consumes it.
 
@@ -1176,6 +1379,638 @@ def check_font_preload_drift(files, cfg):
 
 
 # --------------------------------------------------------------------------
+# search engines: titles, descriptions, canonical/hreflang, JSON-LD, sitemap
+# --------------------------------------------------------------------------
+
+KO_BUILDER = ROOT / "tools" / "build_ko_page.py"
+DESCRIPTION_MAX = {"en": 160}   # characters; longer is cut off in results
+DESCRIPTION_MAX_KO = 100        # Hangul is about twice as wide: a warning only
+DESCRIPTION_MIN = 50
+TITLE_MAX_WIDTH = 60            # Latin characters; Hangul counts double
+
+
+def load_ko_builder():
+    """tools/build_ko_page.py as a module: the --check and the shared parsers."""
+    if not KO_BUILDER.is_file():
+        return None
+    spec = importlib.util.spec_from_file_location("build_ko_page", KO_BUILDER)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def page_head(text):
+    """The <head> of a page without its inline scripts."""
+    m = re.search(r"<head\b[^>]*>(.*?)</head>", text, re.I | re.S)
+    head = m.group(1) if m else ""
+    return re.sub(r"<script\b.*?</script>", " ", head, flags=re.I | re.S)
+
+
+def tag_attrs(tag):
+    return {k.lower(): html.unescape(v) for k, v in re.findall(r'([\w:-]+)\s*=\s*"([^"]*)"', tag)}
+
+
+def head_tags(head, name):
+    return [tag_attrs(m.group(0)) for m in re.finditer(r"<%s\b[^>]*>" % name, head, re.I)]
+
+
+def page_lang(text):
+    m = re.search(r"<html\b[^>]*>", text, re.I)
+    return (tag_attrs(m.group(0)).get("lang") or "") if m else ""
+
+
+def is_indexable(text):
+    return not (re.search(r"""http-equiv=['"]refresh['"]""", text, re.I)
+                or re.search(r"""name=['"]robots['"][^>]*noindex""", text, re.I))
+
+
+def public_url(rel):
+    """The URL a page is published at; index.html is the site root."""
+    host = _SITE_HOSTS[0] if _SITE_HOSTS else "ji-hun-git.github.io"
+    return "https://%s/%s" % (host, "" if rel == "index.html" else rel)
+
+
+def local_page(url):
+    """The file behind one of the site's own page URLs, or None."""
+    path = localise(url)
+    if path is None:
+        return None
+    path = path.split("#")[0].split("?")[0].lstrip("/")
+    return path or "index.html"
+
+
+def hreflang_links(head):
+    links = {}
+    for a in head_tags(head, "link"):
+        if "alternate" in (a.get("rel") or "").lower().split() and a.get("hreflang"):
+            links.setdefault(a["hreflang"], []).append(a.get("href", ""))
+    return links
+
+
+def text_width(value):
+    return sum(2 if "ᄀ" <= ch <= "힣" or "　" <= ch <= "鿿" else 1 for ch in value)
+
+
+def check_search_metadata(files, cfg):
+    """One title and one description per page, sensible lengths.
+
+    Why: the owner asked to be findable by name and topic. A search result shows
+    the <title> and usually the meta description; a page with two of either
+    shows whichever the engine picks, and a description over ~160 characters is
+    cut mid-sentence (Korean at about 100, since Hangul is twice as wide).
+    """
+    findings = []
+    for rel in files:
+        if Path(rel).suffix.lower() != ".html":
+            continue
+        text = read_text(rel)
+        head = page_head(text)
+        titles = re.findall(r"<title\b[^>]*>(.*?)</title>", head, re.I | re.S)
+        if len(titles) != 1:
+            findings.append(Finding(
+                ERROR, "search-metadata", rel, 1,
+                "the <head> has %d <title> elements, expected exactly 1" % len(titles),
+                "keep one <title> per page",
+            ))
+        descriptions = [a.get("content", "") for a in head_tags(head, "meta")
+                        if (a.get("name") or "").lower() == "description"]
+        indexable = is_indexable(text)
+        if len(descriptions) > 1 or (indexable and len(descriptions) != 1):
+            findings.append(Finding(
+                ERROR, "search-metadata", rel, 1,
+                "the <head> has %d meta descriptions, expected exactly 1" % len(descriptions),
+                "search engines show one; keep exactly one per indexable page",
+            ))
+        if not indexable:
+            continue
+        lang = page_lang(text).split("-")[0].lower()
+        for title in titles[:1]:
+            title = " ".join(html.unescape(title).split())
+            if text_width(title) > TITLE_MAX_WIDTH:
+                findings.append(Finding(
+                    WARN, "search-metadata", rel, 1,
+                    "title is %d characters wide (Hangul counted double); results cut "
+                    "it after about %d: %r" % (text_width(title), TITLE_MAX_WIDTH, title),
+                    "put the name and the most important words first",
+                ))
+        for description in descriptions[:1]:
+            description = " ".join(description.split())
+            if lang == "ko":
+                if len(description) > DESCRIPTION_MAX_KO:
+                    findings.append(Finding(
+                        WARN, "search-metadata", rel, 1,
+                        "Korean description is %d characters; results show about %d"
+                        % (len(description), DESCRIPTION_MAX_KO),
+                        "shorten it in the ko-head block of index.html, then run "
+                        "python tools/build_ko_page.py",
+                    ))
+            elif len(description) > DESCRIPTION_MAX.get(lang, 160):
+                findings.append(Finding(
+                    ERROR, "search-metadata", rel, 1,
+                    "description is %d characters, more than %d"
+                    % (len(description), DESCRIPTION_MAX.get(lang, 160)),
+                    "search results cut it mid-sentence; shorten it",
+                ))
+            if len(description) < DESCRIPTION_MIN:
+                findings.append(Finding(
+                    WARN, "search-metadata", rel, 1,
+                    "description is only %d characters" % len(description),
+                    "say who, what and where in one or two sentences",
+                ))
+    return findings
+
+
+def check_canonical_hreflang(files, cfg):
+    """Each page names itself as canonical; language versions name each other.
+
+    Why: / (English) and /ko.html (Korean) are one CV in two languages. Search
+    engines ignore hreflang unless every version lists itself and every other
+    version with identical links, and a canonical that points across languages
+    would drop the Korean page from Korean results altogether.
+    """
+    findings = []
+    pages = {}
+    for rel in files:
+        if Path(rel).suffix.lower() != ".html":
+            continue
+        text = read_text(rel)
+        if not is_indexable(text):
+            continue
+        head = page_head(text)
+        canonicals = [a.get("href", "") for a in head_tags(head, "link")
+                      if "canonical" in (a.get("rel") or "").lower().split()]
+        pages[rel] = {"text": text, "head": head, "canonicals": canonicals,
+                      "hreflang": hreflang_links(head), "lang": page_lang(text)}
+    for rel, page in pages.items():
+        expected = public_url(rel)
+        if len(page["canonicals"]) != 1:
+            findings.append(Finding(
+                ERROR, "canonical-hreflang", rel, 1,
+                "%d rel=canonical links, expected exactly 1" % len(page["canonicals"]),
+                "one canonical per page, pointing at the page itself",
+            ))
+        elif page["canonicals"][0] != expected:
+            findings.append(Finding(
+                ERROR, "canonical-hreflang", rel, 1,
+                "canonical is %s; this page is published at %s" % (page["canonicals"][0], expected),
+                "each language version is its own canonical page",
+            ))
+        og_url = [a.get("content", "") for a in head_tags(page["head"], "meta")
+                  if (a.get("property") or "") == "og:url"]
+        if og_url and og_url[0] != expected:
+            findings.append(Finding(
+                ERROR, "canonical-hreflang", rel, 1,
+                "og:url is %s, not the canonical %s" % (og_url[0], expected), "",
+            ))
+        links = page["hreflang"]
+        if not links:
+            continue
+        for code, hrefs in links.items():
+            if len(hrefs) > 1:
+                findings.append(Finding(
+                    ERROR, "canonical-hreflang", rel, 1,
+                    "hreflang=%s is declared %d times" % (code, len(hrefs)), "",
+                ))
+            if not hrefs[0].startswith("https://"):
+                findings.append(Finding(
+                    ERROR, "canonical-hreflang", rel, 1,
+                    "hreflang=%s href %r is not an absolute https URL" % (code, hrefs[0]),
+                    "hreflang URLs must be fully qualified",
+                ))
+        own = page["lang"].split("-")[0].lower()
+        if links.get(own, [None])[0] != expected:
+            findings.append(Finding(
+                ERROR, "canonical-hreflang", rel, 1,
+                "hreflang=%s should point at this page (%s)" % (own, expected),
+                "every language version lists itself",
+            ))
+        if "x-default" not in links:
+            findings.append(Finding(
+                ERROR, "canonical-hreflang", rel, 1, "no hreflang=x-default",
+                "point x-default at the English page, /",
+            ))
+        compared = set()
+        for code, hrefs in links.items():
+            if code == "x-default":
+                continue
+            target = local_page(hrefs[0])
+            if target in compared:
+                continue
+            compared.add(target)
+            if target is None or target not in pages:
+                findings.append(Finding(
+                    ERROR, "canonical-hreflang", rel, 1,
+                    "hreflang=%s points at %s, which is not an indexable page here"
+                    % (code, hrefs[0]), "",
+                ))
+                continue
+            other = pages[target]
+            if other["hreflang"] != links:
+                findings.append(Finding(
+                    ERROR, "canonical-hreflang", target, 1,
+                    "hreflang links differ from %s's; both must list the same set" % rel,
+                    "if %s is generated, run python tools/build_ko_page.py" % target
+                    if target in CV_PAGES else "",
+                ))
+            if other["lang"].split("-")[0].lower() != code.split("-")[0].lower():
+                findings.append(Finding(
+                    ERROR, "canonical-hreflang", target, 1,
+                    "listed as hreflang=%s but its <html lang> is %r" % (code, other["lang"]), "",
+                ))
+    if "ko.html" in pages and "index.html" in pages:
+        if local_page(pages["index.html"]["hreflang"].get("ko", [""])[0]) != "ko.html":
+            findings.append(Finding(
+                ERROR, "canonical-hreflang", "index.html", 1,
+                "index.html does not list ko.html as hreflang=ko",
+                "keep the English and Korean pages linked both ways",
+            ))
+    return findings
+
+
+def ld_nodes(text):
+    """([(node, line)], [(error, line)]) for every JSON-LD block on a page."""
+    nodes, errors = [], []
+    for m in INLINE_SCRIPT.finditer(text):
+        if not LD_JSON_TYPE.search(m.group(1)):
+            continue
+        line = line_of(text, m.start())
+        try:
+            data = json.loads(m.group(2))
+        except ValueError as exc:
+            errors.append((str(exc), line))
+            continue
+        items = data.get("@graph", [data]) if isinstance(data, dict) else data
+        for node in items if isinstance(items, list) else []:
+            if isinstance(node, dict):
+                nodes.append((node, line))
+    return nodes, errors
+
+
+def as_list(value):
+    if value is None:
+        return []
+    return value if isinstance(value, list) else [value]
+
+
+def sitemap_entries():
+    """{loc: {"lastmod": str, "alternates": {hreflang: href}}} from sitemap.xml."""
+    path = ROOT / "sitemap.xml"
+    if not path.is_file():
+        return None
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9",
+          "x": "http://www.w3.org/1999/xhtml"}
+    root = ET.parse(str(path)).getroot()
+    entries = []
+    for url in root.findall("s:url", ns):
+        alternates = {}
+        for link in url.findall("x:link", ns):
+            alternates.setdefault(link.get("hreflang"), []).append(link.get("href"))
+        entries.append({
+            "loc": (url.findtext("s:loc", default="", namespaces=ns) or "").strip(),
+            "lastmod": (url.findtext("s:lastmod", default="", namespaces=ns) or "").strip(),
+            "alternates": alternates,
+        })
+    return entries
+
+
+def check_structured_data(files, cfg):
+    """JSON-LD parses and says only what the visible page says.
+
+    Why: the old Person data gave a job title ("... & Product Strategist") and a
+    topic ("AI product strategy") that appear nowhere on the page. Search
+    engines treat structured data that contradicts the page as spam, and it is
+    the owner's name. Each fact is compared with the element that shows it.
+    """
+    findings = []
+    builder = load_ko_builder()
+    try:
+        sitemap = {e["loc"]: e for e in (sitemap_entries() or [])}
+    except ET.ParseError:
+        sitemap = {}  # reported by check_sitemap
+    for rel in files:
+        if Path(rel).suffix.lower() != ".html":
+            continue
+        text = read_text(rel)
+        nodes, errors = ld_nodes(text)
+        for error, line in errors:
+            findings.append(Finding(
+                ERROR, "structured-data", rel, line,
+                "JSON-LD does not parse: %s" % error,
+                "search engines ignore the whole block",
+            ))
+        if rel not in CV_PAGES or builder is None:
+            continue
+
+        def fail(message, fix=""):
+            findings.append(Finding(ERROR, "structured-data", rel, nodes[0][1] if nodes else 1,
+                                    message, fix))
+
+        by_type = {}
+        for node, _line in nodes:
+            by_type.setdefault(node.get("@type"), []).append(node)
+        missing = [t for t in ("WebSite", "ProfilePage", "Person") if len(by_type.get(t, [])) != 1]
+        if missing:
+            fail("JSON-LD needs exactly one each of %s" % ", ".join(missing))
+            continue
+        person, profile = by_type["Person"][0], by_type["ProfilePage"][0]
+        lang = page_lang(text).split("-")[0].lower()
+        other = "en" if lang == "ko" else "ko"
+        canonical = public_url(rel)
+        # ko.html is Korean only; its English name is the one on index.html.
+        source, source_rel = (text, rel) if rel == "index.html" else (read_text("index.html"), "index.html")
+        try:
+            name = builder.display_name(text, lang, rel)
+            other_name = builder.display_name(source, other, source_rel)
+            role = builder.role_lines(text, lang, rel)
+        except builder.BuildError as exc:
+            fail(str(exc))
+            continue
+        if person.get("name") != name:
+            fail("Person name %r is not the name on the page (%r)" % (person.get("name"), name))
+        if other_name not in as_list(person.get("alternateName")):
+            fail("Person alternateName should include %r" % other_name)
+        if [" ".join(str(t).split()) for t in as_list(person.get("jobTitle"))] != role:
+            fail("jobTitle %r is not the sidebar role line %r" % (person.get("jobTitle"), role),
+                 "copy the role line (one entry per line) into jobTitle")
+        if profile.get("url") != canonical or profile.get("@id") != canonical:
+            fail("ProfilePage url/@id should be the canonical URL %s" % canonical)
+        if profile.get("inLanguage") != lang:
+            fail("ProfilePage inLanguage is %r; the page is %r" % (profile.get("inLanguage"), lang))
+        if (profile.get("mainEntity") or {}).get("@id") != person.get("@id"):
+            fail("ProfilePage mainEntity does not point at the Person @id")
+        modified = str(profile.get("dateModified", ""))
+        if not re.match(r"^\d{4}-\d{2}-\d{2}", modified):
+            fail("ProfilePage dateModified %r is not an ISO 8601 date" % modified)
+        elif canonical in sitemap and sitemap[canonical]["lastmod"][:10] != modified[:10]:
+            fail("dateModified %s differs from <lastmod> %s in sitemap.xml"
+                 % (modified, sitemap[canonical]["lastmod"]),
+                 "update both when the content changes")
+        # The footer's "Updated 2026.09" / "2026.09 갱신" is the same date, shown.
+        footer = re.search(r"<footer\b.*?</footer>", text, re.S)
+        shown = re.findall(r"Updated (\d{4})\.(\d{2})|(\d{4})\.(\d{2}) 갱신",
+                           visible_text(footer.group(0)) if footer else "")
+        months = {"%s-%s" % ((a, b) if a else (c, d)) for a, b, c, d in shown}
+        expected_langs = 2 if rel == "index.html" else 1
+        if len(shown) != expected_langs or months != {modified[:7]}:
+            fail("the footer's updated date %s does not match dateModified %s"
+                 % (sorted(months) or "(none)", modified[:10]),
+                 "set 'Updated YYYY.MM' / 'YYYY.MM 갱신' in the footer to the same month")
+        page_text = visible_text(text).lower()
+        for topic in as_list(person.get("knowsAbout")):
+            if str(topic).lower() not in page_text:
+                fail("knowsAbout %r is not a topic the page mentions" % topic,
+                     "remove it from the JSON-LD, or keep the wording that supports it")
+        education = re.search(r'<section\b[^>]*id="education"[^>]*>(.*?)</section>', text, re.S)
+        education_text = " ".join(visible_text(education.group(1)).split()) if education else ""
+        for school in as_list(person.get("alumniOf")):
+            names = [school.get("name")] + as_list(school.get("alternateName")) \
+                if isinstance(school, dict) else [school]
+            for n in names:
+                if not n or n not in education_text:
+                    fail("alumniOf %r is not an institution listed under Education" % n)
+        affiliation = person.get("affiliation") or {}
+        if isinstance(affiliation, dict) and affiliation.get("name") \
+                and affiliation["name"] not in " ".join(visible_text(text).split()):
+            fail("affiliation %r does not appear on the page" % affiliation["name"])
+        hrefs = {html.unescape(h) for h in re.findall(r'href="([^"]+)"', text)}
+        for url in as_list(person.get("sameAs")):
+            if not any(h.startswith(url) for h in hrefs):
+                fail("sameAs %s is not a profile the page links to" % url)
+        image = localise(str(person.get("image", "")))
+        if image and not (ROOT / image.lstrip("/")).is_file():
+            fail("Person image %s does not exist" % person.get("image"))
+    return findings
+
+
+def check_sitemap(files, cfg):
+    """sitemap.xml lists exactly the canonical pages, with their language links.
+
+    Why: a sitemap that lists a duplicate (?view=cv) or misses the Korean page
+    tells search engines the wrong set of pages; its hreflang links must agree
+    with the pages' own, or engines trust neither.
+    """
+    findings = []
+    try:
+        entries = sitemap_entries()
+    except ET.ParseError as exc:
+        return [Finding(ERROR, "sitemap", "sitemap.xml", 1, "does not parse: %s" % exc, "")]
+    if entries is None:
+        return [Finding(ERROR, "sitemap", "sitemap.xml", 0, "sitemap.xml is missing", "")]
+    pages = {}
+    for rel in files:
+        if Path(rel).suffix.lower() == ".html":
+            text = read_text(rel)
+            if is_indexable(text):
+                pages[public_url(rel)] = hreflang_links(page_head(text))
+    locs = [e["loc"] for e in entries]
+    for loc in sorted({l for l in locs if locs.count(l) > 1}):
+        findings.append(Finding(ERROR, "sitemap", "sitemap.xml", 0, "lists %s twice" % loc, ""))
+    for loc in sorted(set(pages) - set(locs)):
+        findings.append(Finding(
+            ERROR, "sitemap", "sitemap.xml", 0, "missing the canonical page %s" % loc,
+            "list every indexable page by its canonical URL",
+        ))
+    for loc in sorted(set(locs) - set(pages)):
+        findings.append(Finding(
+            ERROR, "sitemap", "sitemap.xml", 0,
+            "lists %s, which is not the canonical URL of an indexable page" % loc,
+            "list canonical URLs only (no ?view=, no noindex pages)",
+        ))
+    for entry in entries:
+        if not re.match(r"^\d{4}-\d{2}-\d{2}$", entry["lastmod"]):
+            findings.append(Finding(
+                ERROR, "sitemap", "sitemap.xml", 0,
+                "%s has lastmod %r; use YYYY-MM-DD" % (entry["loc"], entry["lastmod"]), "",
+            ))
+        if entry["loc"] in pages and entry["alternates"] != pages[entry["loc"]]:
+            findings.append(Finding(
+                ERROR, "sitemap", "sitemap.xml", 0,
+                "hreflang links for %s differ from the page's own" % entry["loc"],
+                "keep sitemap.xml and the <head> links identical",
+            ))
+    robots = ROOT / "robots.txt"
+    sitemap_url = "https://%s/sitemap.xml" % (_SITE_HOSTS[0] if _SITE_HOSTS else "ji-hun-git.github.io")
+    if not robots.is_file():
+        findings.append(Finding(ERROR, "sitemap", "robots.txt", 0, "robots.txt is missing", ""))
+    else:
+        lines = [l.strip() for l in read_text("robots.txt").splitlines()]
+        if "Sitemap: %s" % sitemap_url not in lines:
+            findings.append(Finding(
+                ERROR, "sitemap", "robots.txt", 0, "does not point at %s" % sitemap_url, "",
+            ))
+        if any(re.match(r"(?i)^disallow:\s*/\s*$", l) for l in lines):
+            findings.append(Finding(
+                ERROR, "sitemap", "robots.txt", 0, "disallows the whole site", "",
+            ))
+    return findings
+
+
+def check_ko_page(files, cfg):
+    """ko.html is exactly what tools/build_ko_page.py makes from index.html.
+
+    Why: ko.html is a generated copy of the CV. Edited by hand, or left behind
+    after an index.html edit, the Korean page silently shows an older CV.
+    """
+    builder = load_ko_builder()
+    if builder is None:
+        return [Finding(ERROR, "ko-page", "tools/build_ko_page.py", 0,
+                        "the Korean page generator is missing", "")]
+    problem = builder.check()
+    if problem:
+        return [Finding(
+            ERROR, "ko-page", "ko.html", 0, problem,
+            "run: python tools/build_ko_page.py (then review and commit ko.html)",
+        )]
+    # The Korean page is Korean only: a crawler that reads the raw HTML without
+    # CSS (Naver) must not index a copy of the English page.
+    findings = []
+    text = read_text("ko.html")
+    body = re.search(r"<body\b", text)
+    for m in re.finditer(r"""<[a-z][^>]*\slang=["']en["'][^>]*>""", text[body.start():] if body else ""):
+        findings.append(Finding(
+            ERROR, "ko-page", "ko.html", line_of(text, body.start() + m.start()),
+            "English element in the Korean page's body: %s" % m.group(0)[:80],
+            "give it a lang=\"ko\" twin in index.html, then run python tools/build_ko_page.py",
+        ))
+    return findings
+
+
+def check_lab_page(files, cfg):
+    """The Simulations page's static text agrees with the CV and with the lab.
+
+    Why (audit FP-01, CC-18): the page shows its simulation count before the
+    script runs, so a hard-coded number goes stale when a simulation is added
+    or removed; and the page's author line drifted from the CV's role line
+    ('KAIST GSCT') while the CV's wording was being revised.
+    """
+    rel = "laboratory.html"
+    if not (ROOT / rel).is_file():
+        return []
+    findings = []
+    text = read_text(rel)
+    records = ROOT / "lab" / "experiments.js"
+    if records.is_file():
+        count = len(re.findall(r"^    id: ['\"]", records.read_text(encoding="utf-8"), re.M))
+        m = re.search(r'id="metricProjects"[^>]*>\s*(\d+)\s*<', text)
+        if not m:
+            findings.append(Finding(
+                ERROR, "lab-page", rel, 0,
+                "#metricProjects does not show a number before the script runs",
+                "write the number of simulations in it (the lab boot replaces it)",
+            ))
+        elif int(m.group(1)) != count:
+            findings.append(Finding(
+                ERROR, "lab-page", rel, line_of(text, m.start()),
+                "#metricProjects says %s, lab/experiments.js has %d simulations" % (m.group(1), count),
+                "change the number in laboratory.html",
+            ))
+    builder = load_ko_builder()
+    if builder is not None and (ROOT / "index.html").is_file():
+        try:
+            role = builder.role_lines(read_text("index.html"), "en")[0]
+        except builder.BuildError as exc:
+            role = None
+            findings.append(Finding(ERROR, "lab-page", "index.html", 0, str(exc), ""))
+        aff = re.search(r'class="nav-aff"[^>]*>(.*?)</span>', text, re.S)
+        aff_text = " ".join(html.unescape(re.sub(r"<[^>]+>", " ", aff.group(1))).split()) if aff else ""
+        if role and role not in aff_text:
+            findings.append(Finding(
+                ERROR, "lab-page", rel, line_of(text, aff.start()) if aff else 0,
+                "the author line (.nav-aff) does not repeat the CV's role line %r" % role,
+                "use the CV's role line in laboratory.html",
+            ))
+    for m in re.finditer(r"\bGSCT\b", text):
+        findings.append(Finding(
+            ERROR, "lab-page", rel, line_of(text, m.start()),
+            "'GSCT' is an abbreviation the CV never uses",
+            "write 'KAIST Graduate School of Culture Technology' or the CV's role line",
+        ))
+    return findings
+
+
+CSP_META = re.compile(r"""<meta\b[^>]*http-equiv=["']Content-Security-Policy["'][^>]*>""", re.I)
+
+
+def inline_script_hashes(text):
+    """[(sha256 source, line)] of the scripts the browser would run inline.
+
+    The hash covers the script text as the browser sees it: the HTML parser
+    turns CRLF into LF first, so a Windows checkout hashes like the server copy.
+    """
+    import base64
+    out = []
+    for block in INLINE_SCRIPT.finditer(text):
+        attrs = block.group(1)
+        if re.search(r"\bsrc\s*=", attrs, re.I) or DATA_SCRIPT_TYPE.search(attrs):
+            continue
+        body = block.group(2).replace("\r\n", "\n").replace("\r", "\n")
+        digest = base64.b64encode(hashlib.sha256(body.encode("utf-8")).digest()).decode("ascii")
+        out.append(("'sha256-%s'" % digest, line_of(text, block.start())))
+    return out
+
+
+def check_content_security_policy(files, cfg):
+    """Every page that loads code or styles declares a Content-Security-Policy,
+    and each inline script it runs is allowed by its hash.
+
+    Why (audit PSD-04): a policy keeps an injected script or a swapped CDN
+    file from running with the page's rights. A meta policy that forgets an
+    inline script breaks the page silently for real visitors (the script just
+    does not run), so the hashes are checked here, where editing the script
+    shows up at once. frame-ancestors and report-uri cannot be set by a meta
+    tag; GitHub Pages sends no CSP header.
+    """
+    findings = []
+    for rel in sorted(f for f in files if f.endswith(".html")):
+        text = read_text(rel)
+        loads = re.search(r"<script\b|<link\b[^>]*rel=\"stylesheet\"", text, re.I)
+        metas = list(CSP_META.finditer(text))
+        if not metas:
+            if loads:
+                findings.append(Finding(
+                    ERROR, "csp", rel, 0,
+                    "page loads scripts or styles but declares no Content-Security-Policy",
+                    "add <meta http-equiv=\"Content-Security-Policy\" ...> right after <meta charset>",
+                ))
+            continue
+        meta = metas[0]
+        first_load = re.search(r"<script\b|<link\b[^>]*rel=\"(?:stylesheet|preload|icon)\"", text, re.I)
+        if first_load and first_load.start() < meta.start():
+            findings.append(Finding(
+                ERROR, "csp", rel, line_of(text, meta.start()),
+                "the policy comes after the first script or stylesheet, which it then does not cover",
+                "move the policy up, right after <meta charset>",
+            ))
+        policy = tag_attrs(meta.group(0)).get("content", "")
+        directives = {}
+        for part in policy.split(";"):
+            bits = part.split()
+            if bits:
+                directives[bits[0].lower()] = bits[1:]
+        scripts = directives.get("script-src", directives.get("default-src", []))
+        for source, line in inline_script_hashes(text):
+            if source not in scripts:
+                findings.append(Finding(
+                    ERROR, "csp", rel, line,
+                    "inline script is not allowed by the policy (its hash is %s)" % source,
+                    "put %s in script-src (and keep index.html and ko.html in step)" % source,
+                ))
+        for name in ("object-src", "base-uri"):
+            if directives.get(name) != ["'none'"]:
+                findings.append(Finding(
+                    WARN, "csp", rel, line_of(text, meta.start()),
+                    "%s is not 'none'" % name, "add %s 'none'" % name,
+                ))
+        if any("'unsafe-inline'" in v or "'unsafe-eval'" in v for v in directives.values()):
+            findings.append(Finding(
+                ERROR, "csp", rel, line_of(text, meta.start()),
+                "the policy allows 'unsafe-inline' or 'unsafe-eval'",
+                "allow inline scripts by hash instead",
+            ))
+    return findings
+
+
+# --------------------------------------------------------------------------
 # runner
 # --------------------------------------------------------------------------
 
@@ -1196,14 +2031,23 @@ def run(update_stamps=False):
     stamp_findings, stamp_state = check_cache_stamps(files, cfg)
     findings += stamp_findings
     findings += check_lab_registry(files, cfg)
+    findings += check_lab_page(files, cfg)
+    findings += check_content_security_policy(files, cfg)
     findings += check_git_identities(cfg)
     findings += check_meta(files, cfg)
+    findings += check_ko_page(files, cfg)
+    findings += check_search_metadata(files, cfg)
+    findings += check_canonical_hreflang(files, cfg)
+    findings += check_structured_data(files, cfg)
+    findings += check_sitemap(files, cfg)
+    findings += check_bookshelf_switch(files, cfg)
+    findings += check_cv_record_ids(files, cfg)
     findings += check_font_preload_drift(files, cfg)
     findings += check_unreferenced_assets(files, cfg)
     findings += check_publication_roles(files, cfg)
     findings += check_bilingual_pairs(files, cfg)
     findings += check_award_consistency(files, cfg)
-    findings += check_library_source_alignment(files, cfg)
+    findings += check_cv_counters(files, cfg)
     findings += check_toggled_classes_are_styled(files, cfg)
 
     if update_stamps:

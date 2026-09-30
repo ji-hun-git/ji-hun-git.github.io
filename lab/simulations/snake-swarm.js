@@ -6,7 +6,7 @@
  * "Snake-like Growth" classic-inspired template.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const COLORS = [
   { body: "rgba(52,211,153,0.92)", head: "rgba(110,231,183,1)" },
@@ -257,6 +257,15 @@ export function mountSnakeSwarm(refs) {
       order: (v) => `${Math.round(v * 100)}%`,
       spread: (v) => `${Math.round(v * 100)}%`
     },
+    controlFormat: {
+      count: (v) => {
+        const g = clamp(Math.round(v / 9), 16, 40);
+        return `${g}×${g}`;
+      },
+      speed: (v) => `every ${clamp(Math.round(11 / Math.max(0.2, v)), 2, 26)} frames`,
+      turbulence: (v) => `±${(v * 3).toFixed(1)}`,
+      attraction: (v) => `weight ${(0.6 + v * 2.4).toFixed(2)}`
+    },
     presets: {
       solo: { count: 170, speed: 1.9, turbulence: 0.1, attraction: 0.45, trails: false },
       duel: { count: 200, speed: 2.0, turbulence: 0.12, attraction: 0.5, trails: false },
@@ -279,7 +288,7 @@ export function mountSnakeSwarm(refs) {
       for (let i = 0; i < n; i++) w.snakes.push(spawnSnake(api, i));
       w.food = [];
       for (let i = 0; i < Math.max(2, n); i++) w.food.push(placeFood(api));
-      api.log(`${api.state.variation} · ${n} snake${n > 1 ? "s" : ""} on a ${w.G}×${w.G} board${w.torus ? " (wrap)" : ""}.`);
+      api.log(`${api.variationLabel()} · ${n} snake${n > 1 ? "s" : ""} on a ${w.G}×${w.G} board${w.torus ? " (wrap)" : ""}.`);
     },
     step,
     draw

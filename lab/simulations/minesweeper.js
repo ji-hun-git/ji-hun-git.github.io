@@ -7,7 +7,7 @@
  * possible it takes the least-risky guess. A counterpart to Wumpus World.
  */
 
-import { createSimHarness, clamp } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp } from "./_shared.js?v=115-20260930a";
 
 const NUM_COLORS = ["", "#7dd3fc", "#6ee7b3", "#fbbf24", "#f472b6", "#a78bfa", "#5fa0e0", "#f87171", "#cbd5e1"];
 
@@ -156,8 +156,8 @@ export function mountMinesweeper(refs) {
     if (best < 0) return;
     const caution = api.state.attraction;
     if (bestP > 0.6 && caution > 0.7) {
-      // too risky for a cautious agent - restart
-      api.log(`No safe move (min risk ${(bestP * 100) | 0}%) - new board.`);
+      // too risky for a cautious agent: abandon this board (not counted as a mine hit)
+      api.log(`No safe move (lowest risk ${(bestP * 100) | 0}%); abandoning the board.`);
       w.dead = true;
       w.deadCell = -1;
       return;
@@ -178,15 +178,19 @@ export function mountMinesweeper(refs) {
     }
     if (!deduce(api)) guess(api);
     if (w.dead) {
-      w.losses += 1;
-      api.log(`Hit a mine - solved ${w.revealed}/${w.W * w.H - w.mineCount} safe cells.`);
+      if (w.deadCell < 0) {
+        w.abandoned += 1;
+      } else {
+        w.losses += 1;
+        api.log(`Hit a mine after clearing ${w.revealed - 1}/${w.W * w.H - w.mineCount} safe cells.`);
+      }
       w.overT = clamp(Math.round(api.state.count / 6), 8, 50);
       return;
     }
     if (w.revealed >= w.W * w.H - w.mineCount) {
       w.won = true;
       w.winsCount += 1;
-      api.log(`Cleared the board! Win #${w.winsCount}.`);
+      api.log(`Cleared the board (win ${w.winsCount}).`);
       w.overT = clamp(Math.round(api.state.count / 6), 8, 50);
     }
   }
@@ -200,8 +204,9 @@ export function mountMinesweeper(refs) {
       tick(api);
     }
     const safeTotal = w.W * w.H - w.mineCount;
-    const games = w.winsCount + w.losses || 1;
-    api.push(clamp(w.revealed / safeTotal, 0, 1), clamp(w.winsCount / games, 0, 1), clamp(w.revealed / (w.W * w.H), 0, 1));
+    // Win rate: boards won out of boards finished (won, lost, or abandoned).
+    const games = w.winsCount + w.losses + w.abandoned || 1;
+    api.push(clamp(w.revealed / safeTotal, 0, 1), clamp(w.winsCount / games, 0, 1), clamp(w.flags / w.mineCount, 0, 1));
   }
 
   function draw(api) {
@@ -265,7 +270,7 @@ export function mountMinesweeper(refs) {
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText(`${api.state.variation} · wins ${w.winsCount} · losses ${w.losses} · guesses ${w.guesses}`, 14, 12);
+    ctx.fillText(`${api.variationLabel()} · wins ${w.winsCount} · losses ${w.losses}${w.abandoned ? ` · abandoned ${w.abandoned}` : ""} · guesses ${w.guesses}`, 14, 12);
   }
 
   function startGame(api) {
@@ -288,6 +293,17 @@ export function mountMinesweeper(refs) {
       order: (v) => `${Math.round(v * 100)}%`,
       spread: (v) => `${Math.round(v * 100)}%`
     },
+    // Mine density is used when a board is dealt, so moving it deals a new one.
+    resetOn: ["turbulence"],
+    controlFormat: {
+      count: (v, api) => {
+        const W = clamp(Math.round(v / 14), 9, 24);
+        return `${W}×${clamp(Math.round((W * api.h) / Math.max(1, api.w)), 7, 18)}`;
+      },
+      speed: (v) => `every ${clamp(Math.round(12 / Math.max(0.2, v)), 2, 28)} frames`,
+      turbulence: (v) => `${Math.round(clamp(0.1 + v * 0.16, 0.1, 0.28) * 100)}% mines`,
+      attraction: (v) => (v > 0.7 ? "quits above 60% risk" : "never quits")
+    },
     presets: {
       easy: { count: 150, speed: 1.8, turbulence: 0.18, attraction: 0.3, trails: true },
       medium: { count: 200, speed: 1.8, turbulence: 0.28, attraction: 0.3, trails: true },
@@ -302,9 +318,10 @@ export function mountMinesweeper(refs) {
       w.mineCount = Math.max(1, Math.round(w.W * w.H * density));
       w.winsCount = 0;
       w.losses = 0;
+      w.abandoned = 0;
       w.acc = 0;
       startGame(api);
-      api.log(`${api.state.variation} · ${w.W}×${w.H}, ${w.mineCount} mines · constraint solver.`);
+      api.log(`${api.variationLabel()} · ${w.W}×${w.H}, ${w.mineCount} mines · constraint solver.`);
     },
     step,
     draw

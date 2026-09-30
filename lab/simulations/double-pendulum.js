@@ -6,7 +6,7 @@
  * them apart. The chart's "divergence" line is the butterfly effect, measured.
  */
 
-import { createSimHarness, clamp, TAU } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, TAU } from "./_shared.js?v=115-20260930a";
 
 const G = 0.5;
 const L1 = 1;
@@ -30,6 +30,18 @@ export function mountDoublePendulum(refs) {
     return [a1, a2];
   }
 
+  // Total mechanical energy of one pendulum, with the potential measured so that
+  // hanging straight down is -(M1 + M2) G L1 - M2 G L2.
+  function energyOf(p) {
+    const kinetic =
+      0.5 * (M1 + M2) * L1 * L1 * p.w1 * p.w1 +
+      0.5 * M2 * L2 * L2 * p.w2 * p.w2 +
+      M2 * L1 * L2 * p.w1 * p.w2 * Math.cos(p.t1 - p.t2);
+    const potential = -(M1 + M2) * G * L1 * Math.cos(p.t1) - M2 * G * L2 * Math.cos(p.t2);
+    return kinetic + potential;
+  }
+  const E_MIN = -(M1 + M2) * G * L1 - M2 * G * L2;
+
   function step(api) {
     const w = api.custom;
     const sub = clamp(Math.round(api.state.speed * 3), 1, 8);
@@ -44,7 +56,8 @@ export function mountDoublePendulum(refs) {
         p.t2 += p.w2 * dt;
       }
     }
-    // metrics: tip spread (divergence), mean speed, energy
+    // metrics: mean speed, tip spread (divergence), and the energy left as a
+    // share of the starting energy (flat without damping, falling with it)
     let mx = 0, my = 0, n = w.pend.length;
     const tips = w.pend.map((p) => {
       const x = Math.sin(p.t1) * L1 + Math.sin(p.t2) * L2;
@@ -53,12 +66,14 @@ export function mountDoublePendulum(refs) {
       return { x, y };
     });
     mx /= n; my /= n;
-    let spread = 0, spd = 0;
+    let spread = 0, spd = 0, energy = 0;
     for (let i = 0; i < n; i++) {
       spread += Math.hypot(tips[i].x - mx, tips[i].y - my);
       spd += Math.abs(w.pend[i].w1) + Math.abs(w.pend[i].w2);
+      energy += energyOf(w.pend[i]);
     }
-    api.push(clamp(spd / n / 8, 0, 1), clamp(spread / n / 1.6, 0, 1), clamp((spread / n) / 2, 0, 1));
+    const energyLeft = (energy / n - E_MIN) / Math.max(1e-6, w.e0 - E_MIN);
+    api.push(clamp(spd / n / 8, 0, 1), clamp(spread / n / 1.6, 0, 1), clamp(energyLeft, 0, 1));
   }
 
   function draw(api) {
@@ -87,14 +102,23 @@ export function mountDoublePendulum(refs) {
     ctx.fillStyle = "rgba(245,245,247,0.9)";
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left"; ctx.textBaseline = "top";
-    ctx.fillText(`${w.pend.length} double pendulums - deterministic chaos`, 14, 12);
+    ctx.fillText(`${w.pend.length} double pendulums · deterministic chaos`, 14, 12);
   }
 
   return createSimHarness(refs, {
     seedDefault: 21,
     firstVariation: "fan",
     chartColors: ["rgba(96,165,250,0.95)", "rgba(244,114,182,0.95)", "rgba(167,139,250,0.95)"],
-    metricFormat: { energy: (v) => v.toFixed(2), order: (v) => v.toFixed(2), spread: (v) => v.toFixed(2) },
+    metricFormat: { energy: (v) => v.toFixed(2), order: (v) => v.toFixed(2), spread: (v) => `${Math.round(v * 100)}%` },
+    // The start spread only matters when the pendulums are placed, so moving it
+    // restarts them.
+    resetOn: ["turbulence"],
+    controlFormat: {
+      count: (v, api) => (api.state.variation === "pair" ? "2 (Pair)" : `${clamp(Math.round(v / 1.6), 40, 225)} pendulums`),
+      speed: (v) => `${clamp(Math.round(v * 3), 1, 8)} steps/frame`,
+      turbulence: (v) => `${(v * 0.5).toFixed(3)} rad`,
+      attraction: (v) => `${(v * 0.4).toFixed(2)}% per step`
+    },
     presets: {
       fan: { count: 120, speed: 1.6, turbulence: 0.04, attraction: 0.05, trails: true },
       pair: { count: 64, speed: 1.6, turbulence: 0.02, attraction: 0.02, trails: true },
@@ -103,7 +127,9 @@ export function mountDoublePendulum(refs) {
     },
     reset(api) {
       const w = api.custom;
-      const n = clamp(Math.round(api.state.count / 1.6), 40, 260);
+      // Pair is exactly two pendulums; the other modes take 40 to 225 from the
+      // slider (48 to 360).
+      const n = api.state.variation === "pair" ? 2 : clamp(Math.round(api.state.count / 1.6), 40, 225);
       const base = Math.PI * (0.6 + api.rand() * 0.5);
       w.pend = Array.from({ length: n }, (_, i) => ({
         t1: base + (i / n) * api.state.turbulence * 0.5 + (api.rand() - 0.5) * 0.001,
@@ -111,7 +137,9 @@ export function mountDoublePendulum(refs) {
         w1: 0,
         w2: 0
       }));
-      api.log(`${n} double pendulums, near-identical start (spread ${api.state.turbulence.toFixed(2)}).`);
+      w.e0 = w.pend.reduce((s, p) => s + energyOf(p), 0) / n;
+      // The same quantity and unit as the Start spread readout (controlFormat).
+      api.log(`${n} double pendulums, near-identical start (spread ${(api.state.turbulence * 0.5).toFixed(3)} rad).`);
     },
     step,
     draw

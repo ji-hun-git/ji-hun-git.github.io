@@ -6,7 +6,7 @@
  * binaries, and colliding clouds - depth-sorted with motion trails.
  */
 
-import { createSimHarness, clamp, project3d } from "./_shared.js?v=20260615-lab2";
+import { createSimHarness, clamp, project3d } from "./_shared.js?v=115-20260930a";
 
 const SOFT = 0.06; // softening length squared-ish, prevents singularities
 
@@ -93,6 +93,9 @@ export function mountNBody3d(refs) {
     const w = api.custom;
     const bodies = w.bodies;
     const dt = 0.4 + api.state.speed * 0.5;
+    // Gravity G follows its slider live (the starting velocities were set for
+    // the G at reset, so a large change bends or breaks the orbits).
+    w.G = 0.0006 + api.state.attraction * 0.0026;
     const G = w.G;
     const n = bodies.length;
 
@@ -187,7 +190,7 @@ export function mountNBody3d(refs) {
     ctx.font = "600 12px Inter, sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText(`${w.bodies.length} bodies · 3D gravity · ${api.state.variation}`, 14, 12);
+    ctx.fillText(`${w.bodies.length} bodies · 3D gravity · ${api.variationLabel()}`, 14, 12);
   }
 
   return createSimHarness(refs, {
@@ -199,6 +202,19 @@ export function mountNBody3d(refs) {
       order: (v) => v.toFixed(2),
       spread: (v) => v.toFixed(2)
     },
+    // Velocity spread sets the starting velocities, so moving it restarts the scene.
+    resetOn: ["turbulence"],
+    controlFormat: {
+      count: (v) => `${clamp(Math.round(v / 4), 24, 120)} bodies`,
+      speed: (v) => `dt ${(0.4 + v * 0.5).toFixed(2)}`,
+      turbulence: (v, api) => {
+        const mode = api.state.variation;
+        if (mode === "orbits") return `±${Math.round(v * 15)}% of orbital speed`;
+        if (mode === "cluster") return `±${(v * 0.01).toFixed(3)} per axis`;
+        return "not used";
+      },
+      attraction: (v) => `G ${(0.0006 + v * 0.0026).toFixed(4)}`
+    },
     presets: {
       orbits: { count: 200, speed: 1.4, turbulence: 0.25, attraction: 0.5, trails: true },
       cluster: { count: 240, speed: 1.2, turbulence: 0.4, attraction: 0.55, trails: true },
@@ -207,7 +223,7 @@ export function mountNBody3d(refs) {
     },
     reset(api) {
       build(api);
-      api.log(`${api.state.variation} · ${api.custom.bodies.length} bodies · G ${api.custom.G.toFixed(4)}.`);
+      api.log(`${api.variationLabel()} · ${api.custom.bodies.length} bodies · G ${api.custom.G.toFixed(4)}.`);
     },
     step,
     draw
