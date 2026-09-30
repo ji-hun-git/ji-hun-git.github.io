@@ -8,7 +8,7 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright, expect
-from run_browser import ROOT, serve, BOOKSHELF
+from run_browser import ROOT, serve, BOOKSHELF, open_all_sections
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--screenshots', type=Path)
@@ -163,6 +163,8 @@ try:
         page.on('request', lambda r: requested.append(r.url))
         page.goto(base + '/', wait_until='networkidle')
         assert page.evaluate('document.documentElement.dataset.bookshelf') == 'off'
+        # The CV opens folded: the KF-21 entry is in R&D, opened as a reader would.
+        open_all_sections(page)
         entry = page.locator('#cv-work-camouflage-effectiveness')
         entry.scroll_into_view_if_needed()
         assert not [u for u in requested if 'jet-flyby' in u], 'flyby loaded before any interaction'
@@ -199,6 +201,7 @@ try:
         page.on('pageerror', lambda e: errors.append(str(e)))
         page.on('request', lambda r: requested.append(r.url))
         page.goto(base + '/', wait_until='networkidle')
+        open_all_sections(page)
         page.mouse.move(720, 500)
         page.evaluate('''() => {
           const box = document.querySelector('#cv-work-camouflage-effectiveness').getBoundingClientRect();
@@ -216,6 +219,7 @@ try:
         context = browser.new_context(reduced_motion='reduce')
         page = context.new_page()
         page.goto(base + '/', wait_until='networkidle')
+        open_all_sections(page)
         entry = page.locator('#cv-work-camouflage-effectiveness')
         entry.hover()
         page.keyboard.press('Tab')
@@ -231,6 +235,7 @@ try:
         errors = []
         page.on('pageerror', lambda e: errors.append(str(e)))
         page.goto(base + '/', wait_until='networkidle')
+        open_all_sections(page)
         page.locator('#cv-work-camouflage-effectiveness').hover()
         page.wait_for_timeout(800)
         expect(page.locator('.kf21-flyby')).to_have_count(0)
@@ -244,6 +249,7 @@ try:
         page.goto(base + BOOKSHELF, wait_until='networkidle')
         page.goto(base + '/?view=cv', wait_until='networkidle')
         assert page.evaluate('[document.documentElement.dataset.bookshelf, document.documentElement.dataset.view]') == ['on', 'cv']
+        open_all_sections(page)
         page.locator('#cv-work-camouflage-effectiveness').hover()
         page.wait_for_function(FLYBY_SHOWN)
         page.wait_for_timeout(150)

@@ -171,46 +171,23 @@ html[data-view="cv"] body {
   margin-top: 16px;
   color: #4b585e;
 }
-.cv-index {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px 28px;
-  margin-top: 24px;
-}
-.cv-index a {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
-  color: #56616a;
-  min-height: 44px;
-}
-.cv-index strong {
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--ink-green);
-  font-variant-numeric: tabular-nums;
-}
-.cv-index a:hover span {
-  text-decoration: underline;
-}
+/* 40px below an open section and 16px above the next title (its button's
+   padding): 56px from one section's last entry to the next heading. */
 .content > section {
-  margin-bottom: 56px;
+  margin-bottom: 40px;
 }
+/* The toolkit's lower hairline is the upper rule of the section list below
+   it, so the first row is spaced like the others. */
 .caps {
   border-block: 1px solid var(--line);
   padding: 0;
-  margin-bottom: 40px;
+  margin-bottom: 0;
 }
 .caps summary {
   padding: 16px 0;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-}
-.caps summary:hover {
-  color: var(--accent);
 }
 .caps[open] {
   padding-bottom: 16px;
@@ -259,38 +236,64 @@ html[data-view="cv"] body {
   color: #99a196;
 }
 /* A heading with a link beside it (Publications and Google Scholar): the
-   pair shares the section's hairline, and the link stays out of the heading. */
+   pair shares the section's hairline, and the link stays out of the heading
+   and its button. */
 .section-head {
+  position: relative;
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 8px 16px;
+  column-gap: 16px;
   flex-wrap: wrap;
-  padding-bottom: 16px;
   border-bottom: 1px solid #cbd3d6;
 }
 .section-head .section-title {
-  padding-bottom: 0;
+  position: static;
+  flex: 1 1 auto;
   border-bottom: 0;
 }
 .section-title {
+  position: relative;
   font: 600 24px/1.3 var(--sans);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 12px;
-  padding-bottom: 16px;
   border-bottom: 1px solid #cbd3d6;
   margin-bottom: 0;
 }
-/* Tabular digits: every title starts at the same x after its number. */
+/* Each heading is a disclosure button (site.js folds the sections on load):
+   number and title on one baseline, and the whole row is its target. Without
+   scripts the sections stay open and the button reads as the plain title. */
+.section-toggle {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 16px 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  text-align: start;
+}
+.section-toggle:hover {
+  background: none;
+}
+.section-toggle:active {
+  transform: none;
+}
+html:not(.cv-folds) .section-toggle {
+  cursor: auto;
+}
+/* Tabular digits: every title starts at the same x after its number. A
+   title too long for the row wraps beside its number, not below it. */
 .section-title .num {
+  flex: none;
   font: 12px var(--sans);
   font-variant-numeric: tabular-nums;
   color: var(--meta-soft);
   margin-right: 0;
 }
 .title-aside {
+  position: relative;
+  z-index: 1;
   display: inline-block;
   min-height: 28px;
   margin-left: auto;
@@ -299,6 +302,146 @@ html[data-view="cv"] body {
 .title-aside:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+@media screen {
+  /* Until site.js has folded the sections (the <head> script sets this),
+     their contents stay out of the first paint. */
+  html.cv-folding .section-body {
+    display: none;
+  }
+  /* A link to a section or an entry (the <head> script adds cv-landing):
+     until site.js has opened the section it points into, the sections and
+     the footer keep their place unpainted, so the folded list is not drawn
+     and then pushed out of view. */
+  html.cv-folding.cv-landing .content > section,
+  html.cv-folding.cv-landing .site-footer {
+    visibility: hidden;
+  }
+  /* Folded, the five headings read as a numbered list of contents: each row
+     keeps its hairline, and no gap opens between the rows. */
+  html.cv-folding .content > section,
+  .content > section:has(> .section-body[hidden]) {
+    margin-bottom: 0;
+  }
+  /* Folded, the last row's hairline closes the list: the footer adds no
+     second rule (two hairlines never stack). */
+  html.cv-folding .site-footer,
+  .content > section:last-of-type:has(> .section-body[hidden]) + .site-footer {
+    border-top: 0;
+    padding-top: 0;
+  }
+  /* The headings look like disclosures once site.js has wired them
+     (cv-folds), and already while the <head> script holds them folded
+     (cv-folding), so the first paint matches. A page whose site.js never
+     runs keeps plain titles: no mark, no pointer. */
+  html:is(.cv-folds, .cv-folding) .section-toggle {
+    padding-right: 32px;
+  }
+  /* The disclosure mark at the row's right end: a chevron drawn with two
+     borders, pointing down while the section is folded and up while it is
+     open. It has no text, so screen readers hear aria-expanded alone.
+     "Methods and tools" carries the same mark in the same column. */
+  html:is(.cv-folds, .cv-folding) .section-toggle::after,
+  .caps summary::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    margin-top: -7px;
+    border: solid var(--meta-soft);
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+  }
+  /* On the title's first line (16px padding and half the 1.3 line), also
+     when a long title wraps. */
+  html:is(.cv-folds, .cv-folding) .section-toggle::after {
+    top: calc(16px + 0.65em);
+  }
+  html.cv-folds .section-toggle[aria-expanded="true"]::after,
+  .caps[open] summary::after {
+    margin-top: -1px;
+    transform: rotate(-135deg);
+  }
+  .caps summary {
+    position: relative;
+    list-style: none;
+    padding-right: 32px;
+  }
+  .caps summary::-webkit-details-marker {
+    display: none;
+  }
+  /* Publications: the button covers the row; the Scholar link lies above
+     it, beside its title (the column gap), and the row's end belongs to the
+     chevron alone. On the narrowest phones the link wraps to the left edge. */
+  .section-head .section-title {
+    flex: 0 1 auto;
+  }
+  .title-aside {
+    margin-left: 0;
+  }
+  html:is(.cv-folds, .cv-folding) .section-head {
+    padding-right: 32px;
+  }
+  html:is(.cv-folds, .cv-folding) .section-head .section-toggle {
+    padding-right: 0;
+  }
+  html.cv-folds .section-head .section-toggle::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  /* A link that wraps under the title on the narrowest phones keeps clear
+     of the hairline; on one line this stays inside the row. */
+  html:is(.cv-folds, .cv-folding) .section-head .title-aside {
+    padding-bottom: 8px;
+  }
+  html.cv-folds .section-head .section-toggle:focus-visible {
+    outline: none;
+  }
+  html.cv-folds .section-head .section-toggle:focus-visible::before {
+    outline: 2px solid #32634a;
+    outline-offset: 4px;
+  }
+}
+/* Phones: a narrower chevron column keeps "Research and development" on one
+   line from 390px. */
+@media screen and (max-width: 760px) {
+  html:is(.cv-folds, .cv-folding) .section-toggle,
+  html:is(.cv-folds, .cv-folding) .section-head,
+  .caps summary {
+    padding-right: 24px;
+  }
+  html:is(.cv-folds, .cv-folding) .section-toggle::after,
+  .caps summary::after {
+    right: 4px;
+  }
+}
+/* Hover colours only where a pointer hovers: after a tap on a touch screen
+   :hover sticks, and the row would look selected. */
+@media screen and (hover: hover) {
+  html.cv-folds .section-toggle:hover,
+  .caps summary:hover {
+    color: var(--accent);
+  }
+  html.cv-folds .section-toggle:hover::after,
+  .caps summary:hover::after {
+    border-color: var(--accent);
+  }
+}
+@media (forced-colors: active) {
+  html:is(.cv-folds, .cv-folding) .section-toggle::after,
+  html.cv-folds .section-toggle:hover::after,
+  .caps summary::after,
+  .caps summary:hover::after {
+    border-color: ButtonText;
+  }
+  /* The Publications row's ring takes the system colour, like every other
+     focus ring on the page. */
+  html.cv-folds .section-head .section-toggle:focus-visible::before {
+    outline-color: Highlight;
+  }
 }
 .items {
   display: block;
@@ -624,6 +767,7 @@ body.ko .pub-group-n::after {
 }
 .site-footer {
   border-top: 1px solid var(--line);
+  margin-top: 56px;
   padding-top: 24px;
   display: flex;
   flex-wrap: wrap;
@@ -749,15 +893,6 @@ body.reader .pub-value {
   }
   .cv-introduction {
     font-size: 16px;
-  }
-  .cv-index {
-    gap: 20px;
-  }
-  .cv-index a {
-    max-width: 100px;
-  }
-  .cv-index strong {
-    font-size: 24px;
   }
   .caps-row {
     /* Wide enough for the longest key ("Languages", 65px). */
@@ -966,6 +1101,17 @@ body.reader .pub-value {
     font-size: 18pt;
     break-after: avoid;
   }
+  /* site.css hides buttons on paper: a heading's button stays, as the
+     title. Every section prints: site.js opens them for printing, and a
+     print that sends it no event still shows the folded ones. */
+  .section-toggle {
+    display: flex !important;
+    padding: 0 0 16px;
+  }
+  .section-body[hidden] {
+    display: block !important;
+    content-visibility: visible !important;
+  }
   .title-aside {
     font-size: 8pt;
   }
@@ -1043,6 +1189,7 @@ body.reader .pub-value {
     break-after: avoid;
   }
   .site-footer {
+    margin-top: 20px;
     break-before: avoid;
   }
   .ft-contact a {

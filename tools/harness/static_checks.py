@@ -1000,52 +1000,91 @@ def check_award_consistency(files, cfg):
     return findings
 
 
-def cv_entry_counts(text):
-    """{"projects": n, "publications": n, "awards": n} entries on a CV page."""
-    def items(start_pattern, end_pattern):
-        start = re.search(start_pattern, text)
-        end = re.search(end_pattern, text[start.end():]) if start else None
-        if not (start and end):
-            return None
-        segment = text[start.end():start.end() + end.start()]
-        return sum(1 for tag in re.finditer(r"<div\b[^>]*>", segment)
-                   if "item" in (re.search(r'class="([^"]*)"', tag.group(0)) or [None, ""])[1].split())
-    return {
-        "projects": items(r'<section[^>]+id="projects"', r'<section[^>]+id="awards"'),
-        "publications": len(re.findall(r'class="pub-n"', text)),
-        "awards": items(r'<section[^>]+id="awards"', r'<section[^>]+id="education"'),
-    }
+CV_SECTIONS = ("projects", "awards", "education", "publications", "patents")
 
 
-def check_cv_counters(files, cfg):
-    """The overview counters (6 / 21 / 10) are the number of entries they link to.
+def closing_div(text, start):
+    """Index just past the </div> that closes the <div ...> opening at `start`."""
+    depth = 0
+    for m in re.finditer(r"<(/?)div\b[^>]*>", text[start:]):
+        depth += -1 if m.group(1) else 1
+        if depth == 0:
+            return start + m.end()
+    return None
 
-    Why: the three numbers at the top of the CV are the first facts a reader
-    sees, and nothing tied them to the lists below: adding or removing an entry
-    would leave a wrong count on the front page. (This replaces the old
-    library-source alignment check, whose inputs, work-designs.js and
-    work-content.js, no longer exist; check_cv_record_ids covers the bookshelf.)
+
+def check_cv_sections(files, cfg):
+    """The CV opens on its overview, and its five sections fold on the markup they need.
+
+    Why: the owner asked (Oct 2026) for the CV to open on its title and its
+    one-line introduction alone, and for the "6 R&D projects / 21
+    Publications / 10 Awards and selections" strip to go ("it is not even
+    big"). site.js folds each numbered section with the button in its
+    heading. That needs, per section, one <button type="button"
+    class="section-toggle" aria-controls="<id>-body"> as the content of its
+    <h2 class="section-title">, and everything after the heading inside
+    <div id="<id>-body">. The page ships every section open
+    (aria-expanded="true", no hidden attribute), so readers without scripts,
+    crawlers and a printout get the whole CV. (This replaces the check that
+    tied the counters to their sections.)
     """
     findings = []
     for page in CV_PAGES:
         if not (ROOT / page).is_file():
-            findings += cannot_run("cv-counters", page)
+            findings += cannot_run("cv-sections", page)
             continue
         text = read_text(page)
-        counts = cv_entry_counts(text)
-        for section, count in counts.items():
-            m = re.search(r'<a href="#%s"\s*><strong>(\d+)</strong' % section, text)
-            if not m or count is None:
-                findings.append(Finding(
-                    ERROR, "cv-counters", page, 0,
-                    "cannot find the %s counter or section" % section, ""))
-            elif int(m.group(1)) != count:
-                findings.append(Finding(
-                    ERROR, "cv-counters", page, line_of(text, m.start()),
-                    "the %s counter says %s but the section has %d entries"
-                    % (section, m.group(1), count),
-                    "update the number in .cv-index",
-                ))
+
+        def error(index, message, fix=""):
+            findings.append(Finding(ERROR, "cv-sections", page,
+                                    line_of(text, index) if index else 0, message, fix))
+
+        strip = re.search(r'class="[^"]*\bcv-index\b', text)
+        if strip:
+            error(strip.start(), "the overview's counter strip (.cv-index) is back",
+                  "the owner removed it: the overview is the title and one line")
+        overview = re.search(r'<header class="cv-overview">(.*?)</header>', text, re.S)
+        if not overview:
+            error(0, 'cannot find the CV overview (<header class="cv-overview">)')
+        elif re.search(r"<(?:nav|a|strong)\b", overview.group(1)):
+            error(overview.start(), "the CV overview holds links or figures again",
+                  "keep it to the eyebrow, the heading and the introduction")
+        for sid in CV_SECTIONS:
+            opening = re.search(r'<section\b[^>]*\bid="%s"[^>]*>' % sid, text)
+            close = text.find("</section>", opening.end()) if opening else -1
+            if close < 0:
+                error(0, "cannot find section #%s" % sid)
+                continue
+            at, section = opening.start(), text[opening.start():close]
+            toggles = [tag for tag in re.findall(r"<button\b[^>]*>", section)
+                       if "section-toggle" in tag_attrs(tag).get("class", "").split()]
+            if len(toggles) != 1:
+                error(at, "#%s has %d heading buttons, expected one" % (sid, len(toggles)))
+                continue
+            attrs = tag_attrs(toggles[0])
+            for name, want in (("type", "button"), ("aria-controls", sid + "-body"),
+                               ("aria-expanded", "true")):
+                if attrs.get(name) != want:
+                    error(at, "#%s's heading button has %s=%r, expected %r"
+                          % (sid, name, attrs.get(name), want),
+                          "the page ships open; site.js folds it" if name == "aria-expanded" else "")
+            if not re.search(r'<h2 class="section-title">\s*<button\b[^>]*>.*?</button>\s*</h2>',
+                             section, re.S):
+                error(at, '#%s: the button is not the whole content of its <h2 class="section-title">'
+                      % sid, "keep the heading a real h2 around the button")
+            body = re.search(r'<div\b[^>]*\bid="%s-body"[^>]*>' % sid, section)
+            if not body:
+                error(at, '#%s has no <div id="%s-body"> for its button to control' % (sid, sid))
+                continue
+            if "hidden" in tag_attrs(body.group(0)) or re.search(r"\shidden(?:[\s>=]|$)", body.group(0)):
+                error(at + body.start(), "#%s ships folded (a hidden attribute in the HTML)" % sid,
+                      "ship it open: readers without scripts and printouts need it; site.js folds it")
+            if re.search(r'class="(?:item|items|two-col|filter|pub-summary)[" ]',
+                         section[:body.start()]):
+                error(at, "#%s has content before its body, where folding cannot reach it" % sid)
+            end = closing_div(section, body.start())
+            if end is None or section[end:].strip():
+                error(at, "#%s has content after its body, where folding cannot reach it" % sid)
     return findings
 
 
@@ -2047,7 +2086,7 @@ def run(update_stamps=False):
     findings += check_publication_roles(files, cfg)
     findings += check_bilingual_pairs(files, cfg)
     findings += check_award_consistency(files, cfg)
-    findings += check_cv_counters(files, cfg)
+    findings += check_cv_sections(files, cfg)
     findings += check_toggled_classes_are_styled(files, cfg)
 
     if update_stamps:

@@ -126,6 +126,39 @@ def korean_only_findings(page, label):
              "detail": " | ".join(english[:3])}] if english else []
 
 
+CV_SECTIONS = ("projects", "awards", "education", "publications", "patents")
+
+# Every CV section open, with its button saying so (FOLDS_OPEN) -- a function,
+# not an expression string: see PAPERS_READY below.
+FOLDS_OPEN = """() => [...document.querySelectorAll('#cv-content .section-toggle')].every((b) =>
+  b.getAttribute('aria-expanded') === 'true' &&
+  !document.getElementById(b.getAttribute('aria-controls')).hasAttribute('hidden'))"""
+
+
+def open_all_sections(page, restore_scroll=True):
+    """Open every folded CV section the way a reader does: click its heading.
+
+    site.js folds the CV's five sections on load, so only the overview and the
+    five headings are visible. A suite that needs the whole CV (the text and
+    contrast audits, overflow at full length, the KF-21 entry, the year
+    filter) opens them here with the real toggles, so a toggle that stops
+    working fails those suites as well. Nothing happens where no CV is shown
+    (the bookshelf, the lab). Returns the number of sections it opened.
+    """
+    if not page.evaluate("() => Boolean(document.getElementById('cv-content')?.checkVisibility())"):
+        return 0
+    y = page.evaluate("() => scrollY")
+    opened = 0
+    for toggle in page.locator("#cv-content .section-toggle").all():
+        if toggle.get_attribute("aria-expanded") != "true":
+            toggle.click()
+            opened += 1
+    page.wait_for_function(FOLDS_OPEN, timeout=5000)
+    if restore_scroll:
+        page.evaluate("(y) => scrollTo({ top: y, behavior: 'instant' })", y)
+    return opened
+
+
 def audit_page(page, state, audit_src):
     """Run dom_audit.js in the page and return its report."""
     page.evaluate("window.__domAuditOpts = { settle: false };")
@@ -251,22 +284,419 @@ LANDED = """(id) => {
 }"""
 
 
+# Resolves once the page has not scrolled for three frames: a smooth scroll
+# (a section-nav click) has come to rest.
+SCROLL_SETTLED = """() => new Promise((done) => {
+  let last = scrollY, still = 0, frames = 0;
+  const tick = () => {
+    if (scrollY === last) still++;
+    else { still = 0; last = scrollY; }
+    if (still >= 3 || ++frames > 600) done(still >= 3);
+    else requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})"""
+
+
 def landed_on(page, anchor):
     """Wait for the page and its web fonts, then check #anchor's final place.
 
     Returns None when it landed, or where its top edge ended up. Checked after
-    the fonts because their late arrival rewraps the text above the target.
+    the fonts because their late arrival rewraps the text above the target,
+    and once the scroll has come to rest, so a smooth scroll that only passes
+    the target does not count.
     """
     page.wait_for_load_state("load")
     page.evaluate("""() => (document.fonts ? document.fonts.ready : Promise.resolve())
       .then(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))))""")
     try:
         page.wait_for_function(LANDED, arg=anchor, timeout=5000)
-        return None
+        page.evaluate(SCROLL_SETTLED)
+        if page.evaluate(LANDED, anchor):
+            return None
     except Exception:
-        top = page.evaluate("(id) => document.getElementById(id)?.getBoundingClientRect().top ?? null",
-                            anchor)
-        return "top at %s px" % (round(top, 1) if isinstance(top, (int, float)) else top)
+        pass
+    top = page.evaluate("(id) => document.getElementById(id)?.getBoundingClientRect().top ?? null",
+                        anchor)
+    return "top at %s px" % (round(top, 1) if isinstance(top, (int, float)) else top)
+
+
+FOLD_SUMMARY = """(anchor) => {
+  const target = anchor ? document.getElementById(anchor) : null;
+  return [...document.querySelectorAll('#cv-content .section-toggle')].map((b) => {
+    const section = b.closest('section');
+    const body = document.getElementById(b.getAttribute('aria-controls'));
+    return {
+      id: section.id,
+      expanded: b.getAttribute('aria-expanded') === 'true',
+      hidden: body.getAttribute('hidden'),
+      shown: body.getBoundingClientRect().height > 0,
+      holdsTarget: Boolean(target && section.contains(target)),
+    };
+  });
+}"""
+
+# The section-nav links marked as the current location, once site.js has had
+# two frames to follow the last scroll.
+NAV_CURRENT = """() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() =>
+  done([...document.querySelectorAll('.mobile-nav a[aria-current]')].map((a) => a.hash)))))"""
+
+# The page's layout-shift sum (CLS without session windows), from the start.
+LAYOUT_SHIFT_INIT = """window.__layoutShift = 0;
+try {
+  new PerformanceObserver((list) => {
+    for (const entry of list.getEntries())
+      if (!entry.hadRecentInput) window.__layoutShift += entry.value;
+  }).observe({ type: 'layout-shift', buffered: true });
+} catch (e) { window.__layoutShift = null; }"""
+
+# What a reader sees in the CV's main column: each visible element with text
+# of its own, by where it sits.
+MAIN_COLUMN = """() => {
+  const main = document.getElementById('cv-content');
+  const own = (el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+  const placed = { overview: [], caps: [], headings: [], footer: [], other: [] };
+  for (const el of main.querySelectorAll('*')) {
+    if (!own(el) || !el.checkVisibility() || el.closest('.pl-sr-only')) continue;
+    const where = el.closest('.cv-overview') ? 'overview'
+      : el.closest('details.caps > summary') ? 'caps'
+      : el.closest('.section-title, .section-head') ? 'headings'
+      : el.closest('.site-footer') ? 'footer' : 'other';
+    placed[where].push(el.textContent.replace(/\\s+/g, ' ').trim());
+  }
+  return {
+    placed,
+    rows: [...main.querySelectorAll('.section-toggle')].map((b) =>
+      Math.round(b.getBoundingClientRect().height)),
+    counters: document.querySelectorAll('.cv-index').length,
+    capsOpen: document.querySelector('details.caps').open,
+    items: [...main.querySelectorAll('.item')].filter((el) => el.checkVisibility()).length,
+  };
+}"""
+
+# The copy the owner wants alone on the landing, and the five headings.
+FOLDED_LANDING = {
+    "en": {
+        "overview": ["Curriculum vitae", "Human-centered AI",
+                     "I build and research interactive systems around humans and AI."],
+        "caps": ["Methods and tools"],
+        "titles": ["Research and development", "Awards and selections", "Education",
+                   "Publications", "Patents and certifications"],
+    },
+    "ko": {
+        "overview": ["이력서", "인간 중심 AI", "사람과 AI를 중심으로 인터랙티브 시스템을 만들고 연구합니다."],
+        "caps": ["방법과 도구"],
+        "titles": ["연구개발", "수상 및 선정", "학력", "논문", "특허 및 자격증"],
+    },
+}
+
+
+def check_section_folds(browser, base, findings):
+    """The CV opens on its overview, with five folded sections that open.
+
+    Why: the owner asked (Oct 2026) that the CV open on "Human-centered AI"
+    and its one-line introduction alone, every section folded, and the
+    overview's counter strip gone. Folding must not cost anything: each
+    heading is a real button (mouse, Enter, Space) whose aria-expanded tracks
+    its section; sections open independently; a shared link
+    (?view=cv#publications, #cv-work-<slug>, ?work=<slug> in
+    check_bookshelf_off), a section-nav click, a #fragment change and find in
+    page open what they point to and land on it; the printed CV is whole
+    (rebuild_checks.py counts its pages); without scripts nothing is folded;
+    ko.html behaves the same; and no width scrolls sideways.
+    """
+    def fail(where, message, detail=""):
+        findings.append({"level": "ERROR", "check": "section-folds", "state": "section-folds",
+                         "message": "%s: %s" % (where, message), "detail": detail})
+
+    def expect_open(where, page, wanted, anchor=None):
+        """Exactly the sections in `wanted` open, their buttons in step."""
+        for fold in page.evaluate(FOLD_SUMMARY, anchor):
+            want = fold["id"] in wanted
+            if (fold["expanded"], fold["shown"], fold["hidden"]) != (
+                    want, want, None if want else "until-found"):
+                fail(where, "#%s should be %s" % (fold["id"], "open" if want else "folded"),
+                     json.dumps(fold))
+
+    def toggle(page, sid):
+        return page.locator("#%s .section-toggle" % sid)
+
+    count = 0
+    errors = []
+
+    def new_page(ctx):
+        page = ctx.new_page()
+        page.on("pageerror", lambda e: errors.append(str(e)))
+        return page
+
+    # The landing: overview, the toolkit's summary and five folded headings.
+    for lang, path in (("en", "/"), ("ko", "/ko.html")):
+        for viewport, mobile in ((VIEWPORTS["desktop"], False), ({"width": 390, "height": 844}, True)):
+            where = "%s@%d" % (path, viewport["width"])
+            ctx = browser.new_context(viewport=viewport, is_mobile=mobile, has_touch=mobile)
+            page = new_page(ctx)
+            page.goto(base + path, wait_until="load")
+            expect_open(where, page, ())
+            seen = page.evaluate(MAIN_COLUMN)
+            want = FOLDED_LANDING[lang]
+            if seen["counters"]:
+                fail(where, "the overview's counter strip is back")
+            if seen["placed"]["overview"] != want["overview"]:
+                fail(where, "the overview shows %r" % seen["placed"]["overview"])
+            if seen["placed"]["caps"] != want["caps"] or seen["capsOpen"]:
+                fail(where, "Methods and tools is not one folded summary: %r"
+                     % seen["placed"]["caps"])
+            titles = [t for t in seen["placed"]["headings"] if t in want["titles"]]
+            if titles != want["titles"]:
+                fail(where, "the section headings read %r" % titles)
+            if seen["placed"]["other"] or seen["items"]:
+                fail(where, "%d entries and other text show before any section is opened"
+                     % seen["items"], " | ".join(seen["placed"]["other"][:4]))
+            if min(seen["rows"]) < 44:
+                fail(where, "a heading row is %dpx tall, under the 44px target" % min(seen["rows"]))
+            # A folded section is not where the reader is: scrolling the
+            # folded list (one wheel tick, then to the page's end) marks no
+            # section of the section nav as the current location.
+            page.mouse.move(viewport["width"] / 2, viewport["height"] / 2)
+            page.mouse.wheel(0, 120)
+            page.wait_for_timeout(250)
+            for at in ("after one wheel tick", "at the page's end"):
+                if at == "at the page's end":
+                    page.evaluate("() => scrollTo({ top: document.documentElement.scrollHeight,"
+                                  " behavior: 'instant' })")
+                current = page.evaluate(NAV_CURRENT)
+                if current:
+                    fail(where, "the section nav marks folded %s as current %s" % (current, at))
+            ctx.close()
+            count += 1
+
+    # Mouse, keyboard and the whole row; sections open independently.
+    for lang, path in (("en", "/"), ("ko", "/ko.html")):
+        ctx = browser.new_context(viewport=VIEWPORTS["desktop"])
+        page = new_page(ctx)
+        page.goto(base + path, wait_until="load")
+        toggle(page, "projects").click()
+        expect_open(path + " click R&D", page, ("projects",))
+        if not page.locator("#cv-work-inclusive-game-ai").is_visible():
+            fail(path, "the first R&D entry is not visible once R&D is open")
+        toggle(page, "publications").click()
+        expect_open(path + " click Publications", page, ("projects", "publications"))
+        toggle(page, "projects").click()
+        expect_open(path + " click R&D again", page, ("publications",))
+        toggle(page, "awards").focus()
+        page.keyboard.press("Enter")
+        expect_open(path + " Enter on Awards", page, ("publications", "awards"))
+        page.keyboard.press("Space")
+        expect_open(path + " Space on Awards", page, ("publications",))
+        if page.evaluate("() => document.activeElement?.closest('#awards .section-toggle') === null"):
+            fail(path, "the Awards button lost focus while it toggled")
+        # The far end of a row (the chevron) toggles too, and on the
+        # Publications row the Google Scholar link stays its own target.
+        heading = page.locator("#education .section-title")
+        box = heading.bounding_box()
+        heading.click(position={"x": box["width"] - 10, "y": box["height"] / 2})
+        expect_open(path + " click the end of the Education row", page, ("publications", "education"))
+        row = page.locator("#publications .section-head")
+        box = row.bounding_box()
+        row.click(position={"x": box["width"] - 10, "y": box["height"] / 2})
+        expect_open(path + " click the end of the Publications row", page, ("education",))
+        if not page.evaluate("""() => {
+              const link = document.querySelector('#publications .title-aside');
+              link.scrollIntoView({ block: 'center', behavior: 'instant' });
+              const r = link.getBoundingClientRect();
+              return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)?.closest('a') === link;
+            }"""):
+            fail(path, "the Google Scholar link is covered by the Publications button")
+        ctx.close()
+        count += 1
+
+    # Links: on load, a section-nav click (twice), an in-page #cv-work- link,
+    # a #fragment change, and a fragment into a folded section (beforematch).
+    ctx = browser.new_context(viewport=VIEWPORTS["desktop"])
+    page = new_page(ctx)
+    for path, anchor, section in (("/?view=cv#publications", "publications", "publications"),
+                                  ("/ko.html?view=cv#publications", "publications", "publications"),
+                                  ("/#cv-work-camouflage-effectiveness",
+                                   "cv-work-camouflage-effectiveness", "projects"),
+                                  ("/ko.html#cv-work-camouflage-effectiveness",
+                                   "cv-work-camouflage-effectiveness", "projects")):
+        page.goto(base + path, wait_until="load")
+        expect_open(path, page, (section,))
+        missed = landed_on(page, anchor)
+        if missed:
+            fail(path, "#%s was not scrolled into view" % anchor, missed)
+        count += 1
+    page.goto(base + "/", wait_until="load")
+    nav = page.locator('.mobile-nav a[href="#awards"]')
+    for attempt in ("the section nav", "the section nav again"):
+        nav.click()
+        expect_open("/ " + attempt, page, ("awards",))
+        missed = landed_on(page, "awards")
+        if missed:
+            fail("/ " + attempt, "#awards was not scrolled into view", missed)
+    page.evaluate("""() => {
+      const link = document.createElement('a');
+      link.id = 'fold-probe';
+      link.href = '#cv-work-camouflage-effectiveness';
+      link.textContent = 'KF-21';
+      document.querySelector('.cv-overview').append(link);
+    }""")
+    page.locator("#fold-probe").click()
+    expect_open("/ a #cv-work- link", page, ("awards", "projects"))
+    missed = landed_on(page, "cv-work-camouflage-effectiveness")
+    if missed:
+        fail("/ a #cv-work- link", "the KF-21 entry was not scrolled into view", missed)
+    page.evaluate("() => { location.hash = '#education'; }")
+    page.wait_for_function("() => document.querySelector('#education .section-toggle')"
+                           ".getAttribute('aria-expanded') === 'true'", timeout=5000)
+    expect_open("/ #education typed", page, ("awards", "projects", "education"))
+    if landed_on(page, "education"):
+        fail("/ #education typed", "#education was not scrolled into view")
+    toggle(page, "awards").click()
+    page.evaluate("""() => document.getElementById('awards-body')
+      .addEventListener('beforematch', () => { window.__beforematch = true; })""")
+    page.evaluate("() => { location.hash = '#cv-work-krafton-fde-challenge'; }")
+    page.wait_for_function("() => document.querySelector('#awards .section-toggle')"
+                           ".getAttribute('aria-expanded') === 'true'", timeout=5000)
+    expect_open("/ a fragment into folded Awards", page, ("awards", "projects", "education"))
+    if not page.evaluate("() => window.__beforematch === true"):
+        fail("/ a fragment into folded Awards", "the browser did not reveal it through beforematch")
+    if landed_on(page, "cv-work-krafton-fde-challenge"):
+        fail("/ a fragment into folded Awards", "the entry was not scrolled into view")
+    # Find in page: a text fragment is the browser's own search, with no
+    # #id and no hashchange. It reveals the folded entry (beforematch), and
+    # the button must follow.
+    for path, words in (("/", "Top%203%20Finalist"), ("/ko.html", "%EC%B5%9C%EC%A2%85%203%EC%9D%B8")):
+        page.close()  # a fresh load, not a same-page fragment change
+        page = new_page(ctx)
+        page.goto(base + path + "#:~:text=" + words, wait_until="load")
+        try:
+            page.wait_for_function("() => !document.getElementById('awards-body').hasAttribute('hidden')",
+                                   timeout=5000)
+        except Exception:
+            fail(path + " find in page", "the browser's search did not reveal the folded entry")
+        expect_open(path + " find in page", page, ("awards",))
+    ctx.close()
+    count += 7
+
+    # Printing: every section on paper, then the reader's own state again.
+    for path in ("/", "/ko.html"):
+        ctx = browser.new_context(viewport=VIEWPORTS["desktop"])
+        page = new_page(ctx)
+        page.goto(base + path, wait_until="load")
+        toggle(page, "publications").click()
+        page.emulate_media(media="print")
+        printed = page.evaluate("""() => ({
+          bodies: [...document.querySelectorAll('.section-body')]
+            .filter((b) => b.getBoundingClientRect().height > 0).length,
+          items: [...document.querySelectorAll('#cv-content .item')]
+            .filter((el) => el.checkVisibility()).length,
+          headings: [...document.querySelectorAll('.section-toggle')]
+            .filter((el) => el.checkVisibility()).length,
+        })""")
+        page.emulate_media(media="screen")
+        if printed != {"bodies": 5, "items": 43, "headings": 5}:
+            fail(path + " print", "folded sections do not print whole", json.dumps(printed))
+        expect_open(path + " after print media", page, ("publications",))
+        page.evaluate("() => dispatchEvent(new Event('beforeprint'))")
+        expect_open(path + " beforeprint", page, CV_SECTIONS)
+        page.evaluate("() => dispatchEvent(new Event('afterprint'))")
+        expect_open(path + " afterprint", page, ("publications",))
+        page.pdf(format="A4")
+        expect_open(path + " after page.pdf()", page, ("publications",))
+        ctx.close()
+        count += 1
+
+    # Without scripts nothing folds: every entry is there to read.
+    ctx = browser.new_context(viewport=VIEWPORTS["desktop"], java_script_enabled=False)
+    page = ctx.new_page()
+    for path in ("/", "/ko.html"):
+        page.goto(base + path, wait_until="load")
+        expect_open(path + " without JavaScript", page, CV_SECTIONS)
+        raw = page.evaluate("""() => ({
+          items: [...document.querySelectorAll('#cv-content .item')]
+            .filter((el) => el.checkVisibility()).length,
+          marks: [...document.querySelectorAll('.section-toggle')]
+            .filter((b) => !['none', 'normal'].includes(getComputedStyle(b, '::after').content)).length,
+        })""")
+        if raw != {"items": 43, "marks": 0}:
+            fail(path + " without JavaScript", "not every entry shows, or a fold mark is drawn",
+                 json.dumps(raw))
+        count += 1
+    ctx.close()
+
+    # site.js blocked or broken while the <head> script ran: the page shows
+    # every entry once it has loaded, and draws no control it cannot keep (no
+    # chevron, no pointer on the headings).
+    ctx = browser.new_context(viewport=VIEWPORTS["desktop"])
+    page = new_page(ctx)
+    page.route("**/assets/site.js*", lambda route: route.abort())
+    for path in ("/", "/ko.html#publications"):
+        page.goto(base + path, wait_until="load")
+        raw = page.evaluate("""() => ({
+          items: [...document.querySelectorAll('#cv-content .item')]
+            .filter((el) => el.checkVisibility({ visibilityProperty: true })).length,
+          marks: [...document.querySelectorAll('.section-toggle')]
+            .filter((b) => !['none', 'normal'].includes(getComputedStyle(b, '::after').content)).length,
+          pointer: [...document.querySelectorAll('.section-toggle')]
+            .filter((b) => getComputedStyle(b).cursor === 'pointer').length,
+        })""")
+        if raw != {"items": 43, "marks": 0, "pointer": 0}:
+            fail(path + " without site.js", "not every entry shows, or a dead fold control is drawn",
+                 json.dumps(raw))
+        count += 1
+    ctx.close()
+
+    # A shared deep link on a slow connection: until site.js has opened the
+    # section, the folded list is not drawn only to be pushed out of view.
+    # site.js is held back 1.2 s; the page must not shift, and must land.
+    for path, anchor in (("/#awards", "awards"), ("/?view=cv#publications", "publications")):
+        for viewport, mobile in ((VIEWPORTS["desktop"], False), ({"width": 390, "height": 844}, True)):
+            where = "%s@%d with site.js late" % (path, viewport["width"])
+            ctx = browser.new_context(viewport=viewport, is_mobile=mobile, has_touch=mobile)
+            page = new_page(ctx)
+            page.add_init_script(LAYOUT_SHIFT_INIT)
+            held = []
+            page.route("**/assets/site.js*", lambda route: held.append(route))
+            page.goto(base + path, wait_until="commit")
+            page.wait_for_timeout(1200)
+            chevrons_up = page.evaluate("""() => [...document.querySelectorAll('.section-toggle')]
+              .filter((b) => /^matrix\\(-0\\.7/.test(getComputedStyle(b, '::after').transform)).length""")
+            if chevrons_up:
+                fail(where, "%d heading(s) show an open chevron over a folded section" % chevrons_up)
+            for route in held:
+                route.continue_()
+            page.unroute("**/assets/site.js*")
+            missed = landed_on(page, anchor)
+            if missed:
+                fail(where, "#%s was not scrolled into view" % anchor, missed)
+            shift = page.evaluate("() => window.__layoutShift")
+            if shift is None or shift >= 0.01:
+                fail(where, "the page shifted (layout-shift sum %s) while the section opened"
+                     % (round(shift, 3) if isinstance(shift, (int, float)) else shift))
+            ctx.close()
+            count += 1
+
+    # No sideways scroll, folded or open.
+    for width in (320, 390, 1440):
+        for path in ("/", "/ko.html"):
+            mobile = width < 760
+            ctx = browser.new_context(viewport={"width": width, "height": 844 if mobile else 900},
+                                      is_mobile=mobile, has_touch=mobile)
+            page = new_page(ctx)
+            page.goto(base + path, wait_until="load")
+            page.evaluate("() => document.fonts.ready")
+            for state in ("folded", "open"):
+                if state == "open":
+                    open_all_sections(page)
+                wide = page.evaluate("() => document.documentElement.scrollWidth - innerWidth")
+                if wide > 0:
+                    fail("%s@%d %s" % (path, width, state), "the page scrolls sideways by %dpx" % wide)
+            ctx.close()
+            count += 1
+    for e in errors:
+        fail("page error", e[:160])
+    return count
 
 
 def check_bookshelf_off(browser, base, public, findings):
@@ -297,6 +727,8 @@ def check_bookshelf_off(browser, base, public, findings):
         (public + "/ko.html?view=library", None, "ko", "/ko.html"),
         (public + "/?work=gaia-design-principles&lang=ko",
          "cv-work-gaia-design-principles", "ko", "/ko.html"),
+        (public + "/?work=camouflage-effectiveness",
+         "cv-work-camouflage-effectiveness", "en", "/"),
         (public + "/?work=no-such-record", None, "en", "/"),
     ]
     for url, anchor, lang, canonical in cases:
@@ -334,6 +766,12 @@ def check_bookshelf_off(browser, base, public, findings):
                 urlsplit(u).path.rsplit("/", 1)[-1] for u in shelf_files))
         if "work=" in info["href"]:
             fail(state, "the ?work= link was not rewritten: %s" % info["href"])
+        # The link opens the section it points into, and only that one.
+        for fold in page.evaluate(FOLD_SUMMARY, anchor):
+            if fold["expanded"] != fold["holdsTarget"] or fold["hidden"] != (
+                    None if fold["expanded"] else "until-found"):
+                fail(state, "section #%s is %s" % (fold["id"], "open" if fold["expanded"] else "folded"),
+                     json.dumps(fold))
         if anchor:
             if not info["href"].endswith("#" + anchor):
                 fail(state, "expected to land on #%s, URL is %s" % (anchor, info["href"]))
@@ -631,6 +1069,9 @@ def run(states, viewports, headed=False):
                         page.locator('#langToggle').click()
                         page.wait_for_function("() => document.documentElement.lang === 'ko'")
                         page.wait_for_timeout(250)
+                    # The CV opens folded (check_section_folds covers that);
+                    # the audit measures all of it.
+                    open_all_sections(page)
 
                     report = audit_page(page, label, audit_src)
                     reports[label] = report
@@ -668,6 +1109,8 @@ def run(states, viewports, headed=False):
                     ctx.close()
             if any(s[0].startswith("home") for s in states):
                 reports["language-pages"] = {"counts": {"cases": check_language_pages(
+                    browser, base, findings)}}
+                reports["section-folds"] = {"counts": {"cases": check_section_folds(
                     browser, base, findings)}}
             browser.close()
             if not shelf_on and any(s[0].startswith("home") for s in states):
@@ -719,7 +1162,7 @@ def main():
             if "urls" in c:
                 print("   public URLs checked: %s" % c["urls"])
             elif "cases" in c:
-                print("   language page cases checked: %s" % c["cases"])
+                print("   cases checked: %s" % c["cases"])
             else:
                 print("   text measured: %-4s  h1: %-2s  main: %-2s  contrast+a11y errors: %s"
                       % (c.get("textNodesMeasured"), c.get("visibleH1"),

@@ -1,11 +1,12 @@
 """Responsive route and content regression checks for the bookshelf and CV."""
 import argparse
 import json
+import unicodedata
 from io import BytesIO
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
 from pypdf import PdfReader
-from run_browser import ROOT, serve, BOOKSHELF
+from run_browser import ROOT, serve, BOOKSHELF, open_all_sections
 from static_checks import bookshelf_enabled
 
 parser=argparse.ArgumentParser()
@@ -18,6 +19,19 @@ base=f'http://127.0.0.1:{port}'
 # (Korean) while the bookshelf is switched off, ?view=cv on each when it is on.
 public_cv={lang:page+('?view=cv' if bookshelf_enabled() else '') for lang,page in (('en','/'),('ko','/ko.html'))}
 results=[]
+# The headings and entry titles the printed CV must carry, in the page's
+# language (the sections are folded on screen when printing starts).
+PRINTED_TITLES='''() => {
+  const lang = document.documentElement.lang;
+  const text = (el) => {
+    const copy = (el.querySelector(`[lang="${lang}"]`) || el).cloneNode(true);
+    copy.querySelectorAll('.pl-sr-only').forEach((n) => n.remove());
+    return copy.textContent;
+  };
+  return [...document.querySelectorAll('#cv-content .section-toggle, #cv-content .item')].map((el) =>
+    text(el.matches('.item') ? el.querySelector('.cv-paper-heading, .item-title') : el));
+}'''
+flat=lambda value:''.join(unicodedata.normalize('NFKC',value).split())
 
 def check_cv(page,width,lang,shots=False):
     expect(page.locator('#cv-start')).to_be_visible()
@@ -26,13 +40,20 @@ def check_cv(page,width,lang,shots=False):
     expect(page.locator('#awards .items>.item')).to_have_count(10)
     expect(page.locator('#pubItems .item')).to_have_count(21)
     expect(page.locator('#pubItems .cv-paper-heading')).to_have_count(21)
+    # The CV opens on its overview, every section folded to its heading.
+    expect(page.locator('.cv-index')).to_have_count(0)
+    expect(page.locator('#cv-content .section-toggle[aria-expanded="false"]')).to_have_count(5)
+    expect(page.locator('#cv-content .item:visible')).to_have_count(0)
     expect(page.locator('.caps')).not_to_have_attribute('open','')
     page.locator('.caps > summary').click()
     expect(page.locator('.caps-row').first).to_be_visible()
     page.locator('.caps > summary').click()
+    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),(width,lang,'folded cv overflow')
+    if shots: page.screenshot(path=str(args.screenshots/f'cv-{width}-{lang}.png'),animations='disabled')
+    assert open_all_sections(page)==5,(width,lang,'sections did not open')
+    expect(page.locator('#cv-content .item:visible')).to_have_count(43)
     assert page.locator('#projects').inner_text().count('NYU\nNYU') == 0
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),(width,lang,'cv overflow')
-    if shots: page.screenshot(path=str(args.screenshots/f'cv-{width}-{lang}.png'),animations='disabled')
     page.locator('.mobile-nav a[href="#publications"]').click()
     page.locator('#pubFilter button[data-year="2026"]').click()
     assert page.locator('#pubItems .item:visible').count()<21
@@ -101,12 +122,19 @@ try:
             pdf_page.goto(base+path,wait_until='networkidle')
             pdf_page.emulate_media(media='print')
             reader=PdfReader(BytesIO(pdf_page.pdf(format='A4',print_background=True)))
-            flat=''.join(''.join(p.extract_text() or '' for p in reader.pages).split())
+            printed=flat(''.join(p.extract_text() or '' for p in reader.pages))
             for want in ('chaejihun@kaist.ac.kr','linkedin.com/in/jihun-chae-15457756','github.com/ji-hun-git',
                          'scholar.google.com/citations?user=OjxItRUAAAAJ','orcid.org/0009-0005-7425-3806'):
-                assert want in flat,(lang,'printed CV lacks',want)
+                assert want in printed,(lang,'printed CV lacks',want)
+            # Folded on screen, whole on paper: all five sections and all 43 entries.
+            titles=pdf_page.evaluate(PRINTED_TITLES)
+            assert len(titles)==48,(lang,len(titles))
+            missing=[title for title in titles if flat(title) not in printed]
+            assert not missing,(lang,'printed CV lacks',missing[:3])
             assert len(reader.pages)<=11,(lang,'printed CV has %d A4 pages'%len(reader.pages))
-            results.append({'print':lang,'a4Pages':len(reader.pages),'contacts':'pass'})
+            # Printing returns the page to how the reader left it.
+            expect(pdf_page.locator('#cv-content .section-toggle[aria-expanded="false"]')).to_have_count(5)
+            results.append({'print':lang,'a4Pages':len(reader.pages),'contacts':'pass','sections':5,'entries':43})
             pdf_page.close()
         browser.close()
     print(json.dumps(results,indent=2))

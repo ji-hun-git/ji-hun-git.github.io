@@ -39,7 +39,7 @@ class IntegrityGuardTests(unittest.TestCase):
 
     def test_the_unbroken_cv_passes(self):
         for check in (checks.check_award_consistency, checks.check_bilingual_pairs,
-                      checks.check_cv_record_ids, checks.check_cv_counters,
+                      checks.check_cv_record_ids, checks.check_cv_sections,
                       checks.check_publication_roles):
             self.assertEqual(self.errors(check), [], check.__name__)
 
@@ -52,9 +52,29 @@ class IntegrityGuardTests(unittest.TestCase):
         self.edit(checks.WORK_JS, 'ko: "접근 가능한 게임 AI"', 'ko: ""')
         self.assertTrue(self.errors(checks.check_bilingual_pairs))
 
-    def test_counter_that_no_longer_matches_its_section(self):
-        self.edit("index.html", "<strong>6</strong>", "<strong>7</strong>")
-        self.assertTrue(self.errors(checks.check_cv_counters))
+    def test_counter_strip_that_comes_back(self):
+        self.edit("index.html", '          </header>\n          <details class="caps">',
+                  '            <nav class="cv-index" aria-label="CV overview"><a href="#projects">'
+                  '<strong>6</strong>R&amp;D projects</a></nav>\n'
+                  '          </header>\n          <details class="caps">')
+        self.assertTrue(self.errors(checks.check_cv_sections))
+
+    def test_section_shipped_folded(self):
+        self.edit("ko.html", 'class="section-body" id="awards-body"',
+                  'class="section-body" hidden="until-found" id="awards-body"')
+        self.assertTrue(self.errors(checks.check_cv_sections))
+
+    def test_section_button_that_controls_nothing(self):
+        self.edit("index.html", 'aria-controls="patents-body"', 'aria-controls="patents"')
+        self.assertTrue(self.errors(checks.check_cv_sections))
+
+    def test_entry_outside_its_section_body(self):
+        self.edit("index.html", '            <div class="section-body" id="education-body">\n'
+                  '              <div class="items">',
+                  '            <div class="items"></div>\n'
+                  '            <div class="section-body" id="education-body">\n'
+                  '              <div class="items">')
+        self.assertTrue(self.errors(checks.check_cv_sections))
 
     def test_publication_without_an_author_role(self):
         self.edit("index.html", '<span class="pub-role"', '<span class="pub-rolex"')

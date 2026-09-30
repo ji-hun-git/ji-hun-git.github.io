@@ -59,7 +59,6 @@ KOREAN_ATTRIBUTES = (
     ("aria-label", "Jihun Chae home", "채지훈 홈"),
     ("aria-label", "Main navigation", "주 메뉴"),
     ("aria-label", "Sections", "이력서 항목"),
-    ("aria-label", "CV overview", "이력서 개요"),
     ("aria-label", "Filter publications by year", "연도별 논문 필터"),
     ("aria-label", "Reader mode", "읽기 모드"),
     ("title", "Reader mode", "읽기 모드"),

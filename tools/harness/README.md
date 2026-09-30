@@ -50,19 +50,43 @@ button rewrites the address between `/` and `/ko.html` while keeping the query
 and `#section`, that `/?lang=ko` and `/?view=cv#publications` still work, and
 that the Korean page's Simulations link (`laboratory.html?from=ko`) leads to a
 lab whose CV link returns to `/ko.html`.
+The CV opens on its overview: `site.js` folds the five numbered sections to
+their headings, each a button (`aria-expanded`, `aria-controls` its
+`<section>-body`) that hides the body with `hidden="until-found"`. The HTML
+ships them open, and `static_checks.py` checks that markup and that the
+overview's counter strip stays gone. `run_browser.py` checks the folded landing
+on both pages (only the overview, Methods and tools and the five headings, rows
+at least 44px tall), mouse, Enter and Space, sections opening independently,
+the far end of a row and the Google Scholar link beside the Publications
+heading, links that open their section and land on it (on load, the section
+nav, an in-page `#cv-work-` link, a typed `#fragment`, a fragment into a folded
+section through `beforematch`, and `?work=<slug>` on a public host), printing
+(every section on paper, then the reader's own state again), the page without
+JavaScript (nothing folded), the page with `site.js` blocked (every entry
+shown, no chevron or pointer on the headings), a deep link while `site.js`
+arrives late (no layout shift, and it still lands), no folded section marked
+current in the section nav, and sideways scroll at 320, 390 and 1440px, folded
+and open. Suites that need the whole CV visible (the audits, the year filter,
+the KF-21 entry) open the sections with `run_browser.open_all_sections`, which
+clicks the real headings. A folded section is out of the accessibility tree,
+and browser reader views (Firefox Reader View, Chrome's Reading mode) show
+only the sections that are open (the site's own reader mode keeps the folds
+too); printing and the page without JavaScript show every section.
 The jet suite also covers the KF-21 flyby on the CV at `/` (hover, keyboard
 focus, cooldown, reduced motion, no WebGL, one jet when the bookshelf is on, and
 no flyby when the page scrolls the entry under a resting pointer).
 `rebuild_checks.py` prints the CV to A4 in both languages and checks, with
-`pypdf`, that the paper copy spells out the email address and profile URLs and
-stays within 11 pages. With `--screenshots <directory>` it also writes viewport
+`pypdf`, that the paper copy spells out the email address and profile URLs,
+carries all five sections and all 43 entries although the page was folded when
+printing started, and stays within 11 pages. With `--screenshots <directory>` it also writes viewport
 screenshots and an A4 CV PDF. Keep those review artifacts outside the published
 repository.
 
 `python -m unittest discover` runs `test_integrity_guards.py`, which breaks the
-CV on purpose (a wrong award tier, an empty Korean half in the bookshelf data, a
-counter that no longer matches its section, a publication without an author
-role, a missing input file) and checks that `static_checks.py` fails, and
+CV on purpose (a wrong award tier, an empty Korean half in the bookshelf data,
+the overview's counter strip put back, a section shipped folded, a heading
+button that controls nothing, an entry outside its section's body, a
+publication without an author role, a missing input file) and checks that `static_checks.py` fails, and
 `test_diagnostic_privacy.py`, which keeps personal addresses out of reports.
 
 Every page that loads code or styles must declare a Content-Security-Policy,

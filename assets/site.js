@@ -104,7 +104,6 @@
       [".site-brand", "Jihun Chae home", "채지훈 홈"],
       [".site-navigation", "Main navigation", "주 메뉴"],
       [".mobile-nav", "Sections", "이력서 항목"],
-      [".cv-index", "CV overview", "이력서 개요"],
       ["#pubFilter", "Filter publications by year", "연도별 논문 필터"],
       ["#ttsToggle", "Reader mode", "읽기 모드"],
     ].forEach(([selector, en, korean]) => {
@@ -166,18 +165,124 @@
   reader.addEventListener("click", () =>
     setReader(!document.body.classList.contains("reader")),
   );
+  // The CV opens on its overview: each numbered section folds to its heading,
+  // whose button shows or hides the section's body. index.html ships them
+  // open, so the page is whole without scripts. hidden="until-found" lets the
+  // browser's find in page and #fragment links open a section themselves
+  // (beforematch); a browser that does not know the value hides it outright,
+  // and the link handling below opens the section instead.
+  const folds = [
+    ...document.querySelectorAll(".section-toggle[aria-controls]"),
+  ]
+    .map((button) => ({
+      button,
+      body: document.getElementById(button.getAttribute("aria-controls")),
+      section: button.closest("section"),
+    }))
+    .filter((fold) => fold.body && fold.section);
+  const isOpen = (fold) =>
+    fold.button.getAttribute("aria-expanded") === "true";
+  const setOpen = (fold, open) => {
+    fold.button.setAttribute("aria-expanded", String(open));
+    if (open) fold.body.removeAttribute("hidden");
+    else fold.body.setAttribute("hidden", "until-found");
+  };
+  const elementFor = (hash) => {
+    try {
+      return document.getElementById(decodeURIComponent(hash.slice(1)));
+    } catch {
+      return null; // a malformed #% fragment names nothing
+    }
+  };
+  // Opens the section that holds `target` (an entry, a heading or the section
+  // itself). True when it was folded, so the caller knows the layout moved.
+  const openFor = (target) => {
+    const fold = target && folds.find((f) => f.section.contains(target));
+    if (!fold || isOpen(fold)) return false;
+    setOpen(fold, true);
+    return true;
+  };
+  // The section nav marks the current section; a fold moves the sections
+  // without scrolling, so it asks for a fresh look (set further down).
+  let refreshNav = () => {};
+  {
+    // A link such as ?view=cv#publications or #cv-work-<slug> (?work=<slug>
+    // arrives as one) opens its section before the page lands on it below.
+    const target = elementFor(location.hash);
+    folds.forEach((fold) =>
+      setOpen(fold, Boolean(target && fold.section.contains(target))),
+    );
+  }
+  // The headings work as disclosures from here on: cv.css draws their
+  // chevrons, pointer and hover for html.cv-folds (and while the <head>
+  // script has them folded), not on a page whose site.js never ran.
+  if (folds.length) root.classList.add("cv-folds");
+  root.classList.remove("cv-folding", "cv-landing"); // see the <head> script
+  folds.forEach((fold) => {
+    fold.button.addEventListener("click", () => {
+      setOpen(fold, !isOpen(fold));
+      refreshNav();
+    });
+    // Find in page or a fragment reached a folded entry: the browser removes
+    // hidden itself; the button follows.
+    fold.body.addEventListener("beforematch", () => {
+      fold.button.setAttribute("aria-expanded", "true");
+      refreshNav();
+    });
+  });
+  // An in-page link (the section nav, a #cv-work-<slug> link) opens the
+  // section it points into before the browser follows it, so it lands as it
+  // always has. A section already open just scrolls.
+  document.addEventListener("click", (event) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    )
+      return;
+    const link =
+      event.target instanceof Element ? event.target.closest("a[href]") : null;
+    if (
+      !link?.hash ||
+      link.origin !== location.origin ||
+      link.pathname !== location.pathname ||
+      link.search !== location.search
+    )
+      return;
+    if (openFor(elementFor(link.hash))) refreshNav();
+  });
+  // Any other change of #fragment (typed, history): where the browser did not
+  // open the section itself (a section heading's own id, or no until-found),
+  // open it and land again.
+  addEventListener("hashchange", () => {
+    const target = elementFor(location.hash);
+    if (!openFor(target)) return;
+    target.scrollIntoView({ behavior: "instant" });
+    refreshNav();
+  });
   document
     .getElementById("printCV")
     ?.addEventListener("click", () => window.print());
+  // On paper the CV is whole: the toolkit and every section open for printing
+  // (the button or Ctrl+P) and return to how the reader left them afterwards.
+  // cv.css also prints folded sections, for a print that sends no events.
   const toolkit = document.querySelector("details.caps");
-  let toolkitWasOpen = false;
+  let beforePrint = null;
   window.addEventListener("beforeprint", () => {
-    if (!toolkit) return;
-    toolkitWasOpen = toolkit.open;
-    toolkit.open = true;
+    if (beforePrint) return;
+    beforePrint = { toolkit: toolkit?.open, folds: folds.map(isOpen) };
+    if (toolkit) toolkit.open = true;
+    folds.forEach((fold) => setOpen(fold, true));
   });
   window.addEventListener("afterprint", () => {
-    if (toolkit) toolkit.open = toolkitWasOpen;
+    if (!beforePrint) return;
+    if (toolkit) toolkit.open = beforePrint.toolkit;
+    folds.forEach((fold, i) => setOpen(fold, beforePrint.folds[i]));
+    beforePrint = null;
+    refreshNav();
   });
   // A link that opens a new tab says so to screen readers, and its "↗" (a
   // visual cue) is not read as part of its name. Only while the bookshelf is
@@ -341,16 +446,26 @@
     const updateCurrent = () => {
       pending = false;
       // At the very end of the page the last section is current, even when it
-      // is too short to reach the line the others cross (Patents).
+      // is too short to reach the line the others cross (Patents), while it
+      // is open. A page short enough not to scroll has no such end.
       const atEnd =
+        scrollY > 0 &&
+        !sections.at(-1)?.querySelector(".section-body[hidden]") &&
         innerHeight + scrollY >= document.documentElement.scrollHeight - 2;
-      const current = atEnd
+      const crossed = atEnd
         ? sections.at(-1)
         : sections
             .filter(
               (section) => section.getBoundingClientRect().top <= currentLine(),
             )
             .at(-1);
+      // A folded section is not where the reader is: only an open one is
+      // current.
+      const current = folds.some(
+        (fold) => fold.section === crossed && !isOpen(fold),
+      )
+        ? null
+        : crossed;
       nav.querySelectorAll("a").forEach((a) => {
         if (current && a.hash === "#" + current.id)
           a.setAttribute("aria-current", "location");
@@ -366,6 +481,7 @@
     addEventListener("scroll", schedule, { passive: true });
     addEventListener("resize", schedule, { passive: true });
     nav.addEventListener("click", schedule);
+    refreshNav = schedule;
     schedule();
   }
   document.querySelectorAll("img").forEach((img) => {

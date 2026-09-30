@@ -76,8 +76,9 @@ to `/ko.html` by the `<head>` script.
   the page shows. `static_checks.py` compares the name, role line, topics,
   education and profile links with the page, and `dateModified` with
   `<lastmod>` in `sitemap.xml` and with the footer's "Updated YYYY.MM" /
-  "YYYY.MM 갱신". When the content changes, update all three. The counters at the
-  top of the CV (6 / 21 / 10) are checked against the entries below them.
+  "YYYY.MM 갱신". When the content changes, update all three. The CV opens on
+  its overview (no counters): its five sections ship open in the HTML, for
+  crawlers and readers without scripts, and `site.js` folds them on load.
   Publications are not repeated as structured data: they are already on the
   page, and a second copy could drift from the pinned citations.
 
