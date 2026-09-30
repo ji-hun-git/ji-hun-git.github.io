@@ -1103,18 +1103,15 @@
       document.createTextNode(
         text(
           pair(
-            "I start where people get stuck, build the AI they need, ",
-            "사람들이 어디서 막히는지부터 살피고 필요한 AI를 만든 뒤, ",
+            "I build and research interactive systems around ",
+            "사람과 AI를 중심으로 ",
           ),
         ),
       ),
       node(
         "span",
         "catalog-statement-focus",
-        pair(
-          "and test with users and data whether it helps.",
-          "실제로 도움이 되는지 사용자와 데이터로 확인합니다.",
-        ),
+        pair("humans and AI.", "인터랙티브 시스템을 만들고 연구합니다."),
       ),
     );
     affiliation.textContent = text(

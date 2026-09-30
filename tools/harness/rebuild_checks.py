@@ -62,7 +62,7 @@ try:
                 expect(page.locator('.catalog-cv-link')).to_have_text('See the full CV ↗' if lang == 'en' else '전체 이력서 보기 ↗')
                 assert 'Always curious' not in page.locator('#work-library').inner_text()
                 if lang == 'en':
-                    expect(page.locator('.catalog-statement')).to_have_text('I start where people get stuck, build the AI they need, and test with users and data whether it helps.')
+                    expect(page.locator('.catalog-statement')).to_have_text('I build and research interactive systems around humans and AI.')
                 else:
                     expect(page.locator('.book-title').first).to_have_css('text-orientation', 'upright')
                 assert page.locator('.catalog-face-out').count() > 0

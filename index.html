@@ -9,7 +9,7 @@
          hash here; static_checks.py prints it. frame-ancestors cannot be set
          from a meta tag. -->
     <meta
-      content="default-src 'self'; script-src 'self' 'sha256-6AOD72iz4culoxw2KDh5kib6QY9VxgzDN3lI74f+feI='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'sha256-k07WYtkbiqK3Lf6H9yjT7E1KkMnOx8UUMmUPb+WAixU='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
       http-equiv="Content-Security-Policy"
     />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -207,8 +207,8 @@
       rel="stylesheet"
     />
 
-    <link href="assets/site.css?v=115-20260930b" rel="stylesheet" />
-    <link href="assets/cv.css?v=115-20260930b" rel="stylesheet" />
+    <link href="assets/site.css?v=115-20260930c" rel="stylesheet" />
+    <link href="assets/cv.css?v=115-20260930c" rel="stylesheet" />
     <!--
       Before switching the bookshelf back on: assets/project-library/work.js
       still holds older facts that the CV has since corrected against the
@@ -273,13 +273,13 @@
         }
         const style = document.createElement("link");
         style.rel = "stylesheet";
-        style.href = "assets/project-library/library.css?v=115-20260930b";
+        style.href = "assets/project-library/library.css?v=115-20260930c";
         style.setAttribute("blocking", "render");
         document.head.append(style);
         const scripts = [
-          "assets/project-library/work.js?v=115-20260930b",
-          "assets/project-library/project-icons.js?v=115-20260930b",
-          "assets/project-library/library.js?v=115-20260930b",
+          "assets/project-library/work.js?v=115-20260930c",
+          "assets/project-library/project-icons.js?v=115-20260930c",
+          "assets/project-library/library.js?v=115-20260930c",
         ];
         for (const src of scripts) {
           const hint = document.createElement("link");
@@ -505,15 +505,11 @@
             </h2>
             <p class="cv-introduction">
               <span lang="en"
-                >I start where people get stuck, build the AI they need, and
-                test with users and data whether it helps. At KAIST, I lead
-                field research and prototype development for GAIA, an AI
-                assistant designed with players with disabilities.</span
+                >I build and research interactive systems around humans and
+                AI.</span
               ><span lang="ko"
-                >사람들이 어디서 막히는지부터 살피고 필요한 AI를 만든 뒤,
-                실제로 도움이 되는지 사용자와 데이터로 확인합니다. KAIST에서는
-                장애인 플레이어와 함께 설계하는 AI 어시스턴트 GAIA의 현장
-                연구와 프로토타입 개발을 이끌고 있습니다.</span
+                >사람과 AI를 중심으로 인터랙티브 시스템을 만들고
+                연구합니다.</span
               >
             </p>
             <nav class="cv-index" aria-label="CV overview">
@@ -3066,6 +3062,6 @@
         </main>
       </div>
     </div>
-    <script defer="" src="assets/site.js?v=115-20260930b"></script>
+    <script defer="" src="assets/site.js?v=115-20260930c"></script>
   </body>
 </html>

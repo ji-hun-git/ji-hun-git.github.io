@@ -57,7 +57,7 @@ try:
             expect(page).not_to_have_url(re.compile('work='))
             page.locator('#langToggle').click()
             expect(page.locator('html')).to_have_attribute('lang','ko')
-            expect(page.locator('.catalog-statement')).to_contain_text('사람들이 어디서 막히는지')
+            expect(page.locator('.catalog-statement')).to_contain_text('사람과 AI')
             page.locator('[data-filter="project"]').click()
             expect(page.locator('.catalog-row')).to_have_count(6)
             if args.screenshots:
