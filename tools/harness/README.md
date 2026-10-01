@@ -48,8 +48,15 @@ generator leaves the English one out of the Korean page.
 (JavaScript disabled) and unchanged once `site.js` runs, that the language
 button rewrites the address between `/` and `/ko.html` while keeping the query
 and `#section`, that `/?lang=ko` and `/?view=cv#publications` still work, and
-that the Korean page's Simulations link (`laboratory.html?from=ko`) leads to a
-lab whose CV link returns to `/ko.html`.
+that no link leads to the Simulations page in either language.
+The Simulations page is switched off (`SIMULATIONS_ENABLED` in the `<head>` of
+`laboratory.html`). `static_checks.py` checks the switch, that no page or site
+script points at `laboratory.html` (an `href`, JSON-LD, a meta tag or any other
+place outside a comment), that the sitemap leaves it out and that it
+is `noindex` with its redirect in place; `run_browser.py` loads it under a
+non-local host name and checks that it goes on to the CV (`?from=ko` to
+`/ko.html`) without a history entry. On the local test server it keeps
+working, so the `lab` state and `lab_checks.py` still run.
 The CV opens on its overview: `site.js` folds the five numbered sections to
 their headings, each a button (`aria-expanded`, `aria-controls` its
 `<section>-body`) that hides the body with `hidden="until-found"`. The HTML
@@ -58,15 +65,36 @@ overview's counter strip stays gone. `run_browser.py` checks the folded landing
 on both pages (only the overview, Methods and tools and the five headings, rows
 at least 44px tall), mouse, Enter and Space, sections opening independently,
 the far end of a row and the Google Scholar link beside the Publications
-heading, links that open their section and land on it (on load, the section
-nav, an in-page `#cv-work-` link, a typed `#fragment`, a fragment into a folded
-section through `beforematch`, and `?work=<slug>` on a public host), printing
+heading, links that open their section and land on it (on load, an in-page
+`#awards` link clicked twice, an in-page `#cv-work-` link, a typed `#fragment`,
+a fragment into a folded section through `beforematch`, and `?work=<slug>` on a
+public host), printing
 (every section on paper, then the reader's own state again), the page without
 JavaScript (nothing folded), the page with `site.js` blocked (every entry
 shown, no chevron or pointer on the headings), a deep link while `site.js`
-arrives late (no layout shift, and it still lands), no folded section marked
-current in the section nav, and sideways scroll at 320, 390 and 1440px, folded
-and open. Suites that need the whole CV visible (the audits, the year filter,
+arrives late (no layout shift, and it still lands), the folded card hugging its
+content (as much space under the footer as above the overview), and sideways
+scroll at 320, 390 and 1440px, folded and open, and with the text enlarged in
+the browser (150% at 320, 360 and 390px, 200% at 390px), where the header's
+controls may take a row of their own but never overlap the brand. A link lands when its target's
+box is at `scroll-padding-top` plus its `scroll-margin-top` and its first line
+of text is 44-56px from the top of the window: sections, entries and papers
+share that line now that the sticky section bar is gone. A target too close to
+the end of the page (the last section, or its last entry, open alone) lands as
+far as the page scrolls: there it counts once the page is at its end and the
+target is in view.
+`run_browser.py` also checks the header and the type and spacing scales
+(`type-and-space`, at 1440, 900, 390 and 320px in both languages): the header
+holds only the brand, the language link and the reader-mode button, in one
+76px row, the two controls sharing one size, family, weight, colour, box and
+baseline; the reader-mode button is named by its words ("Reader mode" /
+"읽기 모드"), and pressed it shows an underline without a fill or a change of
+box; every visible text is in one of six sizes (13, 16, 18, 20, 24, 28px), two
+weights, the one font stack and the five colour roles, also in Reader mode;
+and every margin, padding and gap in the CV's columns is on the 4-point scale
+(13px, a 12px gap plus its hairline, is the one composite). `static_checks.py`
+checks the same in the source (`css-tokens`): no literal size, weight, leading
+or space in `site.css` or `cv.css`. Suites that need the whole CV visible (the audits, the year filter,
 the KF-21 entry) open the sections with `run_browser.open_all_sections`, which
 clicks the real headings. A folded section is out of the accessibility tree,
 and browser reader views (Firefox Reader View, Chrome's Reading mode) show
@@ -86,7 +114,10 @@ repository.
 CV on purpose (a wrong award tier, an empty Korean half in the bookshelf data,
 the overview's counter strip put back, a section shipped folded, a heading
 button that controls nothing, an entry outside its section's body, a
-publication without an author role, a missing input file) and checks that `static_checks.py` fails, and
+publication without an author role, a link to the switched-off Simulations
+page, the Simulations page back in the sitemap or without its `noindex`, an
+off-scale space or font size, a missing input file) and checks that
+`static_checks.py` fails, and
 `test_diagnostic_privacy.py`, which keeps personal addresses out of reports.
 
 Every page that loads code or styles must declare a Content-Security-Policy,

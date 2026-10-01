@@ -24,6 +24,11 @@ try:
             page.goto(base + BOOKSHELF, wait_until='networkidle')
             expect(page.locator('.catalog-row')).to_have_count(37)
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Horizontal overflow'
+            # The reader-mode button is named by its visible words alone, on the
+            # bookshelf as on the CV: no title tooltip, no aria-label.
+            reader_attrs = '(b) => [b.getAttribute("title"), b.getAttribute("aria-label")]'
+            assert page.get_by_role('button', name='Reader mode', exact=True).count() == 1, 'Reader mode is not named by its words'
+            assert page.locator('#ttsToggle').evaluate(reader_attrs) == [None, None], 'Reader mode has a title or aria-label'
             if args.screenshots:
                 page.screenshot(path=str(args.screenshots / f'library-{width}.png'), animations='disabled')
             page.locator('[data-filter="project"]').click()
@@ -58,6 +63,8 @@ try:
             page.locator('#langToggle').click()
             expect(page.locator('html')).to_have_attribute('lang','ko')
             expect(page.locator('.catalog-statement')).to_contain_text('사람과 AI')
+            assert page.get_by_role('button', name='읽기 모드', exact=True).count() == 1, 'Reader mode is not named by its Korean words'
+            assert page.locator('#ttsToggle').evaluate(reader_attrs) == [None, None], 'Reader mode has a title or aria-label'
             page.locator('[data-filter="project"]').click()
             expect(page.locator('.catalog-row')).to_have_count(6)
             if args.screenshots:

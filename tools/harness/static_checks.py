@@ -1173,6 +1173,15 @@ def check_git_identities(cfg):
     return findings
 
 
+def robots_noindex(text):
+    """True when a <meta name="robots"> asks for noindex, attributes in any order."""
+    for m in re.finditer(r"<meta\b[^>]*>", text, re.I):
+        attrs = {k.lower(): v for k, v in re.findall(r"""([\w:-]+)\s*=\s*["']([^"']*)["']""", m.group(0))}
+        if attrs.get("name", "").lower() == "robots" and "noindex" in attrs.get("content", "").lower():
+            return True
+    return False
+
+
 def check_meta(files, cfg):
     """Each page has the metadata a link preview and a search result need."""
     findings = []
@@ -1183,8 +1192,7 @@ def check_meta(files, cfg):
         text = read_text(rel)
         # A redirect stub has no audience of its own: it is noindex and bounces
         # in 0s, so social-preview metadata on it would never be read.
-        if re.search(r"""http-equiv=['"]refresh['"]""", text, re.I) or \
-                re.search(r"""name=['"]robots['"][^>]*noindex""", text, re.I):
+        if re.search(r"""http-equiv=['"]refresh['"]""", text, re.I) or robots_noindex(text):
             continue
         if "<title" not in text:
             findings.append(Finding(ERROR, "meta", rel, 1, "no <title>", ""))
@@ -1316,6 +1324,173 @@ def check_bookshelf_switch(files, cfg):
                 "page text still mentions the bookshelf %s" % off,
                 "point visitors to the CV",
             ))
+    return findings
+
+
+SIMULATIONS_SWITCH = re.compile(r"\bconst SIMULATIONS_ENABLED = (true|false);")
+LAB_PAGE = "laboratory.html"
+LAB_LINK = re.compile(r"(?:^|/)laboratory(?:\.html)?(?:[?#]|$)", re.I)
+# Any pointer to the Simulations page in a page's source, not only an href:
+# JSON-LD (url, relatedLink, sameAs), a meta content (og:see_also), a prefetch
+# link. The file name anywhere, a path ending in /laboratory, or a value that
+# starts with it. The bare word in prose is not a pointer (a lab's name may
+# appear in the CV).
+LAB_POINTER = re.compile(
+    r"laboratory\.html"
+    r"|/laboratory(?=[?#\"'\s)<]|$)"
+    r"|[\"'=]\s*(?:\./)?laboratory(?=[?#\"'])",
+    re.I | re.M)
+
+
+def check_simulations_switch(files, cfg):
+    """The Simulations page has one switch, and while it is off nothing leads to it.
+
+    Why: the owner asked (Oct 2026) to "remove Simulations tab (disable it for
+    now)". Like the bookshelf, it must come back by flipping one switch, so the
+    page and lab/ stay in the tree and keep working on a local server (the lab
+    suite runs there). While SIMULATIONS_ENABLED is false: no public page or
+    site script links to laboratory.html, the sitemap leaves it out, the page
+    asks search engines not to index it, and its head script sends visitors on
+    the public site to the CV.
+    """
+    findings = []
+    if not (ROOT / LAB_PAGE).is_file():
+        return cannot_run("simulations-switch", LAB_PAGE)
+    lab = read_text(LAB_PAGE)
+
+    def error(rel, line, message, fix=""):
+        findings.append(Finding(ERROR, "simulations-switch", rel, line, message, fix))
+
+    switches = SIMULATIONS_SWITCH.findall(lab)
+    if len(switches) != 1:
+        error(LAB_PAGE, 1, "expected one 'const SIMULATIONS_ENABLED = true|false;', found %d"
+              % len(switches), "keep the page behind the single switch in its <head> script")
+        return findings
+    if switches[0] == "true":
+        return findings
+    off = "while SIMULATIONS_ENABLED is false"
+    if not robots_noindex(lab):
+        error(LAB_PAGE, 1, "the page is not noindex %s" % off,
+              'add <meta content="noindex" name="robots" /> to its <head>')
+    head = re.search(r"<head\b[^>]*>(.*?)</head>", lab, re.I | re.S)
+    if not head or not re.search(r"SIMULATIONS_ENABLED.*?location\.replace\(", head.group(1), re.S):
+        error(LAB_PAGE, 1, "the <head> script does not send public visitors to the CV %s" % off,
+              "location.replace() the CV unless the host is local")
+    pages = {f for f in files if f.endswith(".html")}
+    pages |= {p for p in CV_PAGES + ("404.html",) if (ROOT / p).is_file()}
+    for rel in sorted(pages - {LAB_PAGE}):
+        text = read_text(rel)
+        # Comments are blanked (newlines kept, so line numbers hold); every
+        # other place in the source counts.
+        bare = re.sub(r"<!--.*?-->", lambda c: re.sub(r"[^\n]", " ", c.group(0)), text, flags=re.S)
+        for m in LAB_POINTER.finditer(bare):
+            line = line_of(text, m.start())
+            error(rel, line, "points at the Simulations page %s: %s"
+                  % (off, text.splitlines()[line - 1].strip()[:120]),
+                  "remove the link or reference; README.md says how to bring it back")
+    scripts = {f for f in files if f.startswith("assets/") and f.endswith(".js")}
+    scripts |= {"assets/site.js"} if (ROOT / "assets/site.js").is_file() else set()
+    for rel in sorted(scripts):
+        text = read_text(rel)
+        m = LAB_POINTER.search(text)
+        if m:
+            error(rel, line_of(text, m.start()), "a script still points at laboratory.html %s" % off,
+                  "remove it with the header link")
+    sitemap = ROOT / "sitemap.xml"
+    if sitemap.is_file():
+        text = read_text("sitemap.xml")
+        for m in re.finditer(r"<loc>([^<]*)</loc>", text):
+            if LAB_LINK.search(m.group(1).split("://")[-1]):
+                error("sitemap.xml", line_of(text, m.start()),
+                      "the sitemap lists %s %s" % (m.group(1), off), "drop its <url> entry")
+    return findings
+
+
+# Type and space come from the tokens in site.css :root (static: here; in the
+# browser: run_browser.check_type_and_space). Declarations of these
+# properties in the CV's stylesheets may use only tokens, keywords and the
+# hairline's 1px inside calc(); the exemptions are optical offsets and
+# dimensions, each named in the stylesheet where it stands.
+TOKEN_STYLESHEETS = ("assets/site.css", "assets/cv.css")
+SPACING_PROPERTY = re.compile(
+    r"^(?:(?:margin|padding)(?:-(?:top|right|bottom|left|block|inline)(?:-(?:start|end))?)?"
+    r"|gap|row-gap|column-gap|scroll-(?:padding|margin)(?:-(?:top|bottom|block|inline))?)$")
+SPACING_TOKEN = re.compile(r"var\(--(?:space-\d+|gutter|card-pad|entry-pad|section-gap)\)")
+TYPE_TOKEN = {
+    "font-size": re.compile(r"var\(--(?:fs-\d+|t-[a-z]+)\)"),
+    "font-weight": re.compile(r"var\(--fw-[a-z]+\)"),
+    "line-height": re.compile(r"var\(--(?:lh-[a-z]+|t-[a-z]+)\)"),
+}
+TOKEN_EXEMPT = {
+    ("assets/site.css", "font-weight", "100 900"),  # @font-face: the variable font's range
+    ("assets/cv.css", "margin", "15mm"),          # @page: the paper margin
+    ("assets/site.css", "margin", "-1px"),        # .pl-sr-only, the visually hidden pattern
+    ("assets/cv.css", "margin-top", "-7px"),      # chevron, optical centring
+    ("assets/cv.css", "margin-top", "-1px"),      # chevron pointing up, optical
+    ("assets/cv.css", "line-height", "32px"),     # contact link text centred in its 32px target
+    ("assets/cv.css", "font-size", "6pt"),        # printed monogram in its 16px circle
+}
+
+
+def css_declarations(text):
+    """[(property, value, index)] of every declaration outside comments."""
+    text = re.sub(r"/\*.*?\*/", lambda m: " " * len(m.group(0)), text, flags=re.S)
+    return [(m.group(1).lower(), " ".join(m.group(2).split()), m.start())
+            for m in re.finditer(r"(?<![\w-])([a-z-]+)\s*:\s*([^;{}]+);", text)]
+
+
+def check_css_tokens(files, cfg):
+    """Every space, size, weight and leading in the CV's stylesheets is a token.
+
+    Why: the owner asked why "everything look[s] so different" and for the
+    "golden rules for spacings" (Oct 2026). The audit found 12 font sizes, 4
+    weights, 11 line-heights and 26 spacing values, 16 of them off any 4/8
+    scale, each picked one element at a time. One scale in site.css :root
+    keeps the same relationship the same everywhere; a literal is how it
+    drifts again.
+    """
+    findings = []
+    for rel in TOKEN_STYLESHEETS:
+        if not (ROOT / rel).is_file():
+            findings += cannot_run("css-tokens", rel)
+            continue
+        text = read_text(rel)
+        for prop, value, at in css_declarations(text):
+            if prop.startswith("--") or (rel, prop, value) in TOKEN_EXEMPT:
+                continue
+            line = line_of(text, at)
+            if SPACING_PROPERTY.match(prop):
+                rest = SPACING_TOKEN.sub(" ", value)
+                rest = re.sub(r"calc\(|[()*+/]|(?<![\w.])-(?=[\s(v]|$)|\s-\s", " ", rest)
+                bad = [t for t in rest.split() if t not in ("0", "auto", "inherit", "1", "-1")
+                       and not (t == "1px" and "calc(" in value)]
+                if bad:
+                    findings.append(Finding(
+                        ERROR, "css-tokens", rel, line,
+                        "%s: %s is off the spacing scale (%s)" % (prop, value, ", ".join(bad)),
+                        "use var(--space-N) or a relationship token (--gutter, --card-pad, "
+                        "--entry-pad, --section-gap) from site.css :root",
+                    ))
+            elif prop in TYPE_TOKEN:
+                if value == "inherit":
+                    continue
+                if prop == "line-height" and re.fullmatch(
+                        r"calc\(var\(--t-[a-z]+\) \* var\(--lh-[a-z]+\)\)", value):
+                    continue
+                if not TYPE_TOKEN[prop].fullmatch(value):
+                    findings.append(Finding(
+                        ERROR, "css-tokens", rel, line,
+                        "%s: %s is not a type token" % (prop, value),
+                        "use the role tokens in site.css :root (--fs-*, --t-*, --fw-*, --lh-*)",
+                    ))
+            elif prop == "font" and value != "inherit":
+                if not re.fullmatch(r"var\(--fw-[a-z]+\) var\(--(?:fs-\d+|t-[a-z]+)\) / "
+                                    r"var\(--lh-[a-z]+\) var\(--sans\)", value):
+                    findings.append(Finding(
+                        ERROR, "css-tokens", rel, line,
+                        "font: %s does not use the type tokens" % value,
+                        "write it as var(--fw-*) var(--fs-*|--t-*) / var(--lh-*) var(--sans)",
+                    ))
     return findings
 
 
@@ -1460,7 +1635,7 @@ def page_lang(text):
 
 def is_indexable(text):
     return not (re.search(r"""http-equiv=['"]refresh['"]""", text, re.I)
-                or re.search(r"""name=['"]robots['"][^>]*noindex""", text, re.I))
+                or robots_noindex(text))
 
 
 def public_url(rel):
@@ -2080,6 +2255,8 @@ def run(update_stamps=False):
     findings += check_structured_data(files, cfg)
     findings += check_sitemap(files, cfg)
     findings += check_bookshelf_switch(files, cfg)
+    findings += check_simulations_switch(files, cfg)
+    findings += check_css_tokens(files, cfg)
     findings += check_cv_record_ids(files, cfg)
     findings += check_font_preload_drift(files, cfg)
     findings += check_unreferenced_assets(files, cfg)

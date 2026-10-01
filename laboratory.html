@@ -5,11 +5,33 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <!-- Only this site and the KaTeX/Geist CDN may supply code, styles and
-         fonts. frame-ancestors cannot be set from a meta tag. -->
+         fonts. The hash allows the inline <head> script below (the
+         Simulations switch): after editing it, put its new hash here;
+         static_checks.py prints it. frame-ancestors cannot be set from a meta
+         tag. -->
     <meta
-      content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'sha256-RyEwmUdZwfJiachEAVAaVBfGXlLWKlbFuGpwsUy2atg=' https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
       http-equiv="Content-Security-Policy"
     />
+    <!-- Switched off: kept out of search results while no page links here. -->
+    <meta content="noindex" name="robots" />
+    <script>
+      // SIMULATIONS_ENABLED is the one switch for this page. It is off for
+      // now: no page links here, sitemap.xml leaves it out, and a visit on
+      // the public site goes straight on to the CV (from the Korean CV,
+      // ?from=ko, to the Korean one). On localhost, 127.0.0.1 and [::1] the
+      // page keeps working, so it can be developed and tested
+      // (tools/harness/lab_checks.py). README.md says how to switch it on.
+      (() => {
+        const SIMULATIONS_ENABLED = false;
+        const local =
+          location.protocol === "file:" ||
+          ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+        if (SIMULATIONS_ENABLED || local) return;
+        const korean = new URLSearchParams(location.search).get("from") === "ko";
+        location.replace(korean ? "ko.html" : "./");
+      })();
+    </script>
     <title>Jihun Chae | Simulations</title>
     <meta
       content="Interactive simulations of AI agents, game AI, reinforcement learning, and physics in 2D and 3D, with equations for each. By Jihun Chae, KAIST."
@@ -48,7 +70,7 @@
       content="The Simulations page by Jihun Chae: a catalog of 28 simulations beside a gridworld figure and its controls"
       name="twitter:image:alt"
     />
-    <link href="assets/site.css?v=115-20260930b" rel="stylesheet" />
+    <link href="assets/site.css?v=117-20261001a" rel="stylesheet" />
 
     <!-- KaTeX (pinned, with integrity) is loaded by lab/lab.js after the page,
          so a slow CDN never blocks the simulations. -->
@@ -66,7 +88,7 @@
       type="image/png"
     />
     <link href="apple-touch-icon.png" rel="apple-touch-icon" />
-    <link href="lab/lab.css?v=115-20260930b" rel="stylesheet" />
+    <link href="lab/lab.css?v=117-20261001a" rel="stylesheet" />
   </head>
   <body>
     <a class="skip-link" href="#viewportMount">Skip to simulation</a>
@@ -131,6 +153,6 @@
         <span>Human-AI interaction · Game AI · Ludic AI</span>
       </footer>
     </div>
-    <script src="lab/lab.js?v=115-20260930b" type="module"></script>
+    <script src="lab/lab.js?v=117-20261001a" type="module"></script>
   </body>
 </html>

@@ -1090,12 +1090,8 @@
     const focusSelector = focused?.matches(".catalog-record")
       ? ".catalog-record"
       : ".catalog-volume";
-    document.getElementById("ttsToggle").title = text(
-      pair("Reader mode", "읽기 모드"),
-    );
-    document
-      .getElementById("ttsToggle")
-      .setAttribute("aria-label", text(pair("Reader mode", "읽기 모드")));
+    // The reader-mode button needs no title or label: its visible words, in
+    // the page's language (site.css), are its name.
     eyebrow.textContent = text(
       pair("A personal collection", "생각과 작업을 모은 곳"),
     );

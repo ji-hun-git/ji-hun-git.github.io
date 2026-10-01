@@ -48,20 +48,16 @@ HEAD_KEYS = ("title", "description", "image_alt", "site_name")
 # so that the raw page and the running page agree (the browser suite checks).
 BUTTON_IN_KOREAN = {"label": "English", "aria-label": "Read in English", "lang": "en-US",
                     "href": "./", "hreflang": "en"}
-# The header's Simulations link on the Korean page (and in assets/site.js).
-LAB_IN_KOREAN = "laboratory.html?from=ko"
-
 # English attribute text in the body and its Korean form on ko.html. The
 # aria-labels are the same pairs assets/site.js sets when the language changes;
 # keep the two lists in step. Every entry must still be found in index.html.
+# (The reader-mode button has none: its visible words are its name, and the
+# English ones are left out of ko.html like any other English twin.)
 KOREAN_ATTRIBUTES = (
     ("aria-label", "Profile", "프로필"),
     ("aria-label", "Jihun Chae home", "채지훈 홈"),
     ("aria-label", "Main navigation", "주 메뉴"),
-    ("aria-label", "Sections", "이력서 항목"),
     ("aria-label", "Filter publications by year", "연도별 논문 필터"),
-    ("aria-label", "Reader mode", "읽기 모드"),
-    ("title", "Reader mode", "읽기 모드"),
 )
 
 # JSON-LD knowsAbout topics in Korean, as the Korean page says them (each must
@@ -391,11 +387,6 @@ def build(text):
                        lambda t: '<span id="langLabel">%s</span>' % BUTTON_IN_KOREAN["label"])
     text = replace_tag(text, r'<a\b[^>]*?\sclass="site-brand"[^>]*>', "home link (.site-brand)",
                        lambda t: set_attr(t, "href", PAGE_URL["ko"].rsplit("/", 1)[1]))
-    # The Simulations page is English only; ?from=ko sends its CV links back
-    # to this page (lab/lab.js). site.js sets the same address on index.html
-    # while it shows Korean.
-    text = replace_tag(text, r'<a\b[^>]*?\sclass="lab-link"[^>]*>', "Simulations link (.lab-link)",
-                       lambda t: set_attr(t, "href", LAB_IN_KOREAN))
     text = korean_attributes(text)
     text = korean_only(text)
 

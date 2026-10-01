@@ -12,7 +12,8 @@ from pathlib import Path
 
 import static_checks as checks
 
-FILES = ("index.html", "ko.html", checks.WORK_JS)
+FILES = ("index.html", "ko.html", checks.WORK_JS, "laboratory.html", "404.html", "sitemap.xml",
+         *checks.TOKEN_STYLESHEETS)
 
 
 class IntegrityGuardTests(unittest.TestCase):
@@ -40,7 +41,8 @@ class IntegrityGuardTests(unittest.TestCase):
     def test_the_unbroken_cv_passes(self):
         for check in (checks.check_award_consistency, checks.check_bilingual_pairs,
                       checks.check_cv_record_ids, checks.check_cv_sections,
-                      checks.check_publication_roles):
+                      checks.check_publication_roles, checks.check_simulations_switch,
+                      checks.check_css_tokens):
             self.assertEqual(self.errors(check), [], check.__name__)
 
     def test_wrong_education40_award_tier(self):
@@ -79,6 +81,41 @@ class IntegrityGuardTests(unittest.TestCase):
     def test_publication_without_an_author_role(self):
         self.edit("index.html", '<span class="pub-role"', '<span class="pub-rolex"')
         self.assertTrue(self.errors(checks.check_publication_roles))
+
+    def test_simulations_link_put_back_while_switched_off(self):
+        self.edit("index.html", '<div class="site-controls">',
+                  '<a href="laboratory.html">Simulations</a><div class="site-controls">')
+        self.assertTrue(self.errors(checks.check_simulations_switch))
+
+    def test_simulations_page_named_in_structured_data(self):
+        # Not a link, but a pointer all the same: search engines follow it.
+        self.edit("index.html", '"@type": "ProfilePage",',
+                  '"@type": "ProfilePage",\n      "relatedLink": '
+                  '"https://ji-hun-git.github.io/laboratory.html",')
+        self.assertTrue(self.errors(checks.check_simulations_switch))
+
+    def test_simulations_page_named_in_a_meta_tag(self):
+        self.edit("ko.html", "</head>",
+                  '<meta content="https://ji-hun-git.github.io/laboratory" '
+                  'property="og:see_also" />\n  </head>')
+        self.assertTrue(self.errors(checks.check_simulations_switch))
+
+    def test_simulations_page_back_in_the_sitemap(self):
+        self.edit("sitemap.xml", "</urlset>",
+                  "  <url><loc>https://ji-hun-git.github.io/laboratory.html</loc>"
+                  "<lastmod>2026-10-01</lastmod></url>\n</urlset>")
+        self.assertTrue(self.errors(checks.check_simulations_switch))
+
+    def test_simulations_page_indexable_while_switched_off(self):
+        self.edit("laboratory.html", '<meta content="noindex" name="robots" />', "")
+        self.assertTrue(self.errors(checks.check_simulations_switch))
+
+    def test_off_scale_space_and_type(self):
+        self.edit("assets/cv.css", "margin-bottom: var(--space-3);", "margin-bottom: 14px;")
+        self.assertTrue(self.errors(checks.check_css_tokens))
+        self.edit("assets/cv.css", "margin-bottom: 14px;", "margin-bottom: var(--space-3);")
+        self.edit("assets/cv.css", "font-size: var(--fs-16);", "font-size: 15px;")
+        self.assertTrue(self.errors(checks.check_css_tokens))
 
     def test_missing_input_is_an_error_not_a_pass(self):
         (self.tmp / checks.WORK_JS).unlink()

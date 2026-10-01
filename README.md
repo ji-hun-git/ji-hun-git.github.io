@@ -4,7 +4,8 @@
 [Site checks](https://github.com/ji-hun-git/ji-hun-git.github.io/actions/workflows/site-checks.yml)
 
 A bilingual (English and Korean) CV of research and development projects,
-publications, and awards, with an interactive simulations lab.
+publications, and awards. An interactive simulations page is in the
+repository, switched off for now.
 
 ## Run
 
@@ -40,6 +41,58 @@ With the bookshelf on, a pinned local copy of Three.js loads on book interaction
 for the 3D opening sequence and the KF-21 flyby. Reduced motion, Reader mode, or
 unavailable WebGL use the standard reader directly.
 
+## Simulations (switched off)
+
+The Simulations page (`laboratory.html` and `lab/`) is switched off for now,
+the same way as the bookshelf. While it is off, no page links to it (the CV
+header holds the brand, the language link and Reader mode only), `sitemap.xml`
+leaves it out, the page carries `<meta name="robots" content="noindex">`, and
+on the public site its `<head>` script sends any visit straight on to the CV
+(`?from=ko`, the old link from the Korean CV, to `/ko.html`) with
+`location.replace()`. Its code stays in the repository.
+
+- To switch it back on, set `SIMULATIONS_ENABLED = true` in the inline script
+  in the `<head>` of `laboratory.html` (then put that script's new hash in the
+  page's Content-Security-Policy; `static_checks.py` prints it), remove its
+  robots `noindex`, add its `<url>` back to `sitemap.xml`, and put a header
+  link back in `index.html` (and the 404 page) before running
+  `python tools/build_ko_page.py`. On the Korean page the link should carry
+  `?from=ko` so the lab's CV links return to `/ko.html` (`lab/lab.js` reads it).
+- To work on it while it is off, serve the site locally and open
+  `http://localhost:8000/laboratory.html`. On `localhost`, `127.0.0.1` and
+  `[::1]` the page keeps working; `tools/harness/lab_checks.py` runs there.
+- `static_checks.py` fails while the switch is off if any page or site script
+  points at `laboratory.html` (a link, structured data or a meta tag; comments
+  do not count), if the sitemap lists it, or if it lost its `noindex` or its
+  redirect; `run_browser.py` loads it under a non-local host
+  name and checks that it lands on the CV in the right language.
+
+## Type and spacing
+
+Every size, weight, leading, text colour and space in `assets/site.css` and
+`assets/cv.css` comes from the tokens in `site.css` `:root`:
+
+- Type: one stack for both languages (`--sans`: Geist, then Pretendard for
+  Hangul), six sizes (`--fs-13`, `16`, `18`, `20`, `24`, `28`), two weights
+  (`--fw-regular` 400, `--fw-strong` 600) and named roles (`--t-section`,
+  `--t-entry`, `--t-citation`, `--t-lead`, `--t-body`) that step down one size
+  at 760px and below. Korean uses the same sizes with more leading
+  (`body.ko`); Reader mode sets body text one step up (`body.reader`); print
+  sets the same roles in points.
+- Colour roles for text: `--ink`, `--ink-soft`, `--meta`, `--accent`,
+  `--on-ink`.
+- Space: one 4-point scale (`--space-1` 4px to `--space-24` 96px) and four
+  relationship tokens redefined per breakpoint: `--gutter` (page margin =
+  column gutter), `--card-pad`, `--entry-pad` (entry to entry) and
+  `--section-gap`. The same relationship gets the same space everywhere: 8px
+  from a title to its meta line or a label to its list, 16px between the steps
+  of an entry, `--entry-pad` on both sides of the hairline between entries.
+
+`static_checks.py` fails on a literal size, weight, leading or space in either
+stylesheet (the few dimensions and optical offsets it allows are listed in its
+`TOKEN_EXEMPT`), and `run_browser.py` checks the rendered page against the
+same scales.
+
 ## Search engines
 
 The CV is published as two pages, one per language, so each can be found on its
@@ -70,8 +123,9 @@ to `/ko.html` by the `<head>` script.
   `python tools/build_favicons.py` (Pillow). Search results show a favicon only
   from a real image file, not from the SVG data URI the pages also carry.
 - Each page names itself as canonical and both list each other with `hreflang`
-  (`x-default` is `/`). `sitemap.xml` lists the three public pages (`/`,
-  `/ko.html`, `/laboratory.html`) and repeats the same language links.
+  (`x-default` is `/`). `sitemap.xml` lists the two public pages (`/` and
+  `/ko.html`; the Simulations page is switched off) and repeats the same
+  language links.
 - The structured data (JSON-LD: WebSite, ProfilePage, Person) must say only what
   the page shows. `static_checks.py` compares the name, role line, topics,
   education and profile links with the page, and `dateModified` with
@@ -117,7 +171,8 @@ One-time steps for the owner (they need your accounts, so nothing is automated):
 - `assets/project-library/`: bookshelf, record content, and project pictograms
   (loaded only while the bookshelf is on, apart from the KF-21 flyby).
 - `assets/vendor/three/`: Three.js 0.185.1 and its MIT license.
-- `laboratory.html`, `lab/`: simulations and their on-demand renderers.
+- `laboratory.html`, `lab/`: simulations and their on-demand renderers
+  (switched off: see Simulations above).
 - `favicon.ico`, `apple-touch-icon.png`, `assets/favicon-96.png`: site icons
   (`tools/build_favicons.py`).
 - `tools/`: image generation, the Korean page generator and regression checks.
@@ -131,10 +186,11 @@ changed assets. `main` is the production branch; feature branches are temporary.
 Every page that loads code or styles declares a policy in a
 `<meta http-equiv="Content-Security-Policy">` tag right after `<meta charset>`:
 code only from this site, styles and fonts also from the jsDelivr CDN (and, on
-the Simulations page, KaTeX from the same CDN). The inline `<head>` script of
-`index.html` is allowed by its SHA-256 hash, so editing that script, including a
-`?v=` stamp bump inside it, changes the hash: `static_checks.py` fails and prints
-the new value to put in the policy, then run `python tools/build_ko_page.py`.
+the Simulations page, KaTeX from the same CDN). The inline `<head>` scripts of
+`index.html` and `laboratory.html` are allowed by their SHA-256 hashes, so
+editing one, including a `?v=` stamp bump inside it, changes its hash:
+`static_checks.py` fails and prints the new value to put in that page's policy
+(for `index.html`, then run `python tools/build_ko_page.py`).
 GitHub Pages cannot send response headers, so `frame-ancestors` (framing) and
 `report-uri` (violation reports) are not available; a meta policy cannot set them.
 

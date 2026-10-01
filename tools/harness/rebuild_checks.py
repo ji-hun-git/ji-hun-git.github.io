@@ -54,11 +54,16 @@ def check_cv(page,width,lang,shots=False):
     expect(page.locator('#cv-content .item:visible')).to_have_count(43)
     assert page.locator('#projects').inner_text().count('NYU\nNYU') == 0
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),(width,lang,'cv overflow')
-    page.locator('.mobile-nav a[href="#publications"]').click()
+    # The sticky section bar is gone: nothing but the page's own scroll and
+    # links moves the reader.
+    expect(page.locator('.mobile-nav')).to_have_count(0)
     page.locator('#pubFilter button[data-year="2026"]').click()
     assert page.locator('#pubItems .item:visible').count()<21
     expect(page.locator('.pub-group:visible')).to_have_count(1)
-    expect(page.locator('.mobile-nav a[href="#publications"]')).to_have_attribute('aria-current','location')
+    # Filtering keeps the Publications heading in view, on the landing line
+    # (html's 32px scroll-padding-top).
+    top=page.evaluate("document.getElementById('publications').getBoundingClientRect().top")
+    assert abs(top-32)<=2,(width,lang,'publications heading after filtering at',top)
     assert page.locator('.cv-paper-heading').evaluate_all('els=>els.every(el=>el.scrollWidth<=el.clientWidth+1)'),(width,lang,'publication title overflow')
     page.emulate_media(media='print')
     expect(page.locator('#pubItems .item:visible')).to_have_count(21)

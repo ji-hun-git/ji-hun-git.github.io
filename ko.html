@@ -10,7 +10,7 @@
          hash here; static_checks.py prints it. frame-ancestors cannot be set
          from a meta tag. -->
     <meta
-      content="default-src 'self'; script-src 'self' 'sha256-5UZWknrgwK1ztxtQgmtPJkvblGLxcH1IyaSjku+ru5s='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'sha256-Y5lZ34C+CMMx5IPddb7lvxN6l7V9qA9LLhuhJGAvm8c='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
       http-equiv="Content-Security-Policy"
     />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -210,8 +210,8 @@
       rel="stylesheet"
     />
 
-    <link href="assets/site.css?v=116-20261001a" rel="stylesheet" />
-    <link href="assets/cv.css?v=116-20261001a" rel="stylesheet" />
+    <link href="assets/site.css?v=117-20261001a" rel="stylesheet" />
+    <link href="assets/cv.css?v=117-20261001a" rel="stylesheet" />
     <!--
       Before switching the bookshelf back on: assets/project-library/work.js
       still holds older facts that the CV has since corrected against the
@@ -227,9 +227,15 @@
       (() => {
         const BOOKSHELF_ENABLED = false;
         const root = document.documentElement;
-        // Controls that need a script (reader mode, print, the year filter)
-        // are shown only when scripts run: site.css keys on html.js.
+        // Controls that need a script (reader mode, the year filter) are
+        // shown only when scripts run: site.css keys on html.js.
         root.classList.add("js");
+        // Reader mode is remembered (site.js): set it before the first paint,
+        // so the photo does not disappear and the text rewrap after it.
+        try {
+          if (localStorage.getItem("reader-mode") === "1")
+            root.classList.add("reader");
+        } catch {}
         // site.js folds the CV's five sections as soon as it runs. Until then
         // cv.css keeps their contents out of the first paint, so the page
         // does not open long and then collapse. Should site.js never run, the
@@ -289,13 +295,13 @@
         }
         const style = document.createElement("link");
         style.rel = "stylesheet";
-        style.href = "assets/project-library/library.css?v=116-20261001a";
+        style.href = "assets/project-library/library.css?v=117-20261001a";
         style.setAttribute("blocking", "render");
         document.head.append(style);
         const scripts = [
-          "assets/project-library/work.js?v=116-20261001a",
-          "assets/project-library/project-icons.js?v=116-20261001a",
-          "assets/project-library/library.js?v=116-20261001a",
+          "assets/project-library/work.js?v=117-20261001a",
+          "assets/project-library/project-icons.js?v=117-20261001a",
+          "assets/project-library/library.js?v=117-20261001a",
         ];
         for (const src of scripts) {
           const hint = document.createElement("link");
@@ -327,18 +333,18 @@
       <a aria-label="채지훈 홈" class="site-brand" href="ko.html"
         >JC<span aria-hidden="true">.</span></a
       >
-      <nav aria-label="주 메뉴" class="site-navigation">
+      <!-- The bookshelf's two links; the nav shows only while it is on. -->
+      <nav
+        aria-label="주 메뉴"
+        class="site-navigation"
+        data-bookshelf-only=""
+      >
         <a class="library-return" data-bookshelf-only="" href="./"
           ><span lang="ko">책장</span></a
         >
         <a class="cv-link" data-bookshelf-only="" href="?view=cv"
           ><span lang="ko">전체 이력서</span
           ><span aria-hidden="true"> ↗</span></a
-        >
-        <!-- The Simulations page is in English: build_ko_page.py and site.js
-             add ?from=ko on the Korean page so its CV links lead back here. -->
-        <a class="lab-link" href="laboratory.html?from=ko" hreflang="en"
-          ><span lang="ko">시뮬레이션</span></a
         >
       </nav>
       <div class="site-controls">
@@ -350,17 +356,9 @@
           lang="en-US"
           ><span id="langLabel">English</span></a
         >
-        <button
-          aria-label="읽기 모드"
-          aria-pressed="false"
-          id="ttsToggle"
-          title="읽기 모드"
-          type="button"
-        >
-          ☷
-        </button>
-        <button data-view-only="cv" id="printCV" type="button">
-          <span lang="ko">인쇄 / PDF</span>
+        <!-- Its visible words are its name; aria-pressed says whether it is on. -->
+        <button aria-pressed="false" id="ttsToggle" type="button">
+          <span lang="ko">읽기 모드</span>
         </button>
       </div>
     </header>
@@ -381,23 +379,6 @@
       </div>
     </section>
     <div class="page" id="cv-start" tabindex="-1">
-      <nav aria-label="이력서 항목" class="mobile-nav">
-        <a href="#projects"
-          ><span lang="ko">연구개발</span></a
-        >
-        <a href="#awards"
-          ><span lang="ko">수상</span></a
-        >
-        <a href="#education"
-          ><span lang="ko">학력</span></a
-        >
-        <a href="#publications"
-          ><span lang="ko">논문</span></a
-        >
-        <a href="#patents"
-          ><span lang="ko">특허</span></a
-        >
-      </nav>
       <div class="layout">
         <aside aria-label="프로필" class="sidebar">
           <div class="profile-card" id="profileCard">
@@ -444,7 +425,20 @@
             <ul class="contact-list">
               <li class="contact-email">
                 <a href="mailto:chaejihun@kaist.ac.kr"
-                  ><span aria-hidden="true">✉</span> chaejihun@kaist.ac.kr</a
+                  ><svg
+                    aria-hidden="true"
+                    class="mail-icon"
+                    fill="none"
+                    focusable="false"
+                    height="13"
+                    stroke="currentColor"
+                    stroke-width="1.25"
+                    viewBox="0 0 16 16"
+                    width="13"
+                  >
+                    <rect height="9" rx="1" width="13" x="1.5" y="3.5" />
+                    <path d="M2 4.5l6 4.5 6-4.5" /></svg
+                  > chaejihun@kaist.ac.kr</a
                 >
               </li>
               <li>
@@ -2371,6 +2365,6 @@
         </main>
       </div>
     </div>
-    <script defer="" src="assets/site.js?v=116-20261001a"></script>
+    <script defer="" src="assets/site.js?v=117-20261001a"></script>
   </body>
 </html>

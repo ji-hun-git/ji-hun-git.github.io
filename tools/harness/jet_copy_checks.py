@@ -55,7 +55,15 @@ for item, expected in zip(education, EDUCATION):
     assert normalize(item.select_one('.item-meta [lang="en"]')) == meta_en, (title_en, 'meta')
     assert normalize(item.select_one('.item-meta [lang="ko"]')) == meta_ko, (title_ko, 'meta')
     assert normalize(item) == ' '.join(expected), ('#education .item', title_en)
-assert {a['href'] for a in old.select('a[href]')} <= {a['href'] for a in new.select('a[href]')}
+# Every link of the reference commit is still on the page, except the
+# navigation the owner removed (Oct 2026): the sticky section bar's five
+# in-page links and the header's Simulations link (switched off). The
+# headings' ids stay, so #projects ... #patents still land.
+REMOVED_NAVIGATION = {'#projects', '#awards', '#education', '#publications', '#patents',
+                      'laboratory.html'}
+assert {a['href'] for a in old.select('a[href]')} - REMOVED_NAVIGATION <= {a['href'] for a in new.select('a[href]')}
+assert all(new.select_one('[id="%s"]' % href[1:]) for href in REMOVED_NAVIGATION if href.startswith('#'))
+assert not new.select('a[href*="laboratory"]')
 assert len(new.select('.item')) == 43
 for before, after in zip(old.select('#pubItems .item-desc'), new.select('#pubItems .item-desc')):
     assert normalize(before) == normalize(after), 'Citation changed'

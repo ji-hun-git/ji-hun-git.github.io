@@ -270,9 +270,11 @@ BOOKSHELF_TRACES = """() => {
 PAPERS_READY = "() => document.querySelectorAll('.cv-paper-heading').length === 21"
 
 # A #fragment link lands its target where the CSS puts it: the root's
-# scroll-padding-top plus the target's own scroll-margin-top (84px for a CV
-# section). Subpixel layout leaves it a fraction either side of that line, so
-# the check allows 2px instead of testing against the line itself.
+# scroll-padding-top (32px) plus the target's own scroll-margin-top (cv.css
+# gives entries one that evens out their own top padding). Subpixel layout
+# leaves it a fraction either side of that line, so the check allows 2px
+# instead of testing against the line itself. A target too close to the end
+# of the page lands as far as the page scrolls: at the end, anywhere in view.
 LANDED = """(id) => {
   const el = document.getElementById(id);
   if (!el) return false;
@@ -280,12 +282,37 @@ LANDED = """(id) => {
   const land = px(getComputedStyle(document.documentElement).scrollPaddingTop) +
     px(getComputedStyle(el).scrollMarginTop);
   const top = el.getBoundingClientRect().top;
-  return top > -2 && top < land + 2;
+  const end = scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+  return top > -2 && (top < land + 2 || (end && top < innerHeight - 44));
 }"""
 
+# The page is scrolled as far as it goes.
+AT_END = "() => scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 2"
+
+
+# The top of the first line of text a reader sees in an element (the text's
+# own box, not its line box), or null.
+FIRST_TEXT_TOP = """(id) => {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, { acceptNode: (n) =>
+    n.textContent.trim() && n.parentElement.checkVisibility() &&
+    !n.parentElement.closest('.pl-sr-only, [aria-hidden="true"]')
+      ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP });
+  const node = walker.nextNode();
+  if (!node) return null;
+  const range = document.createRange();
+  range.selectNodeContents(node);
+  return range.getClientRects()[0]?.top ?? null;
+}"""
+
+# Where a landed section's, entry's or paper's first line of text must sit:
+# the same line for all of them, a comfortable distance from the top of the
+# window (the header is not sticky; it scrolls away). Measured 49-54px.
+LANDING_LINE = (44, 56)
 
 # Resolves once the page has not scrolled for three frames: a smooth scroll
-# (a section-nav click) has come to rest.
+# (an in-page link) has come to rest.
 SCROLL_SETTLED = """() => new Promise((done) => {
   let last = scrollY, still = 0, frames = 0;
   const tick = () => {
@@ -301,10 +328,11 @@ SCROLL_SETTLED = """() => new Promise((done) => {
 def landed_on(page, anchor):
     """Wait for the page and its web fonts, then check #anchor's final place.
 
-    Returns None when it landed, or where its top edge ended up. Checked after
-    the fonts because their late arrival rewraps the text above the target,
-    and once the scroll has come to rest, so a smooth scroll that only passes
-    the target does not count.
+    Returns None when it landed, or where its top edge (or its first line of
+    text, off the landing line) ended up. Checked after the fonts because
+    their late arrival rewraps the text above the target, and once the scroll
+    has come to rest, so a smooth scroll that only passes the target does not
+    count.
     """
     page.wait_for_load_state("load")
     page.evaluate("""() => (document.fonts ? document.fonts.ready : Promise.resolve())
@@ -313,7 +341,16 @@ def landed_on(page, anchor):
         page.wait_for_function(LANDED, arg=anchor, timeout=5000)
         page.evaluate(SCROLL_SETTLED)
         if page.evaluate(LANDED, anchor):
-            return None
+            text = page.evaluate(FIRST_TEXT_TOP, anchor)
+            low, high = LANDING_LINE
+            if isinstance(text, (int, float)) and low <= text <= high:
+                return None
+            # Near the end of the page the target cannot rise to the line.
+            if (isinstance(text, (int, float)) and text > high and page.evaluate(AT_END)
+                    and text < page.evaluate("() => innerHeight")):
+                return None
+            return "first line of text at %s px, off the %d-%d px landing line" % (
+                round(text, 1) if isinstance(text, (int, float)) else text, low, high)
     except Exception:
         pass
     top = page.evaluate("(id) => document.getElementById(id)?.getBoundingClientRect().top ?? null",
@@ -336,10 +373,29 @@ FOLD_SUMMARY = """(anchor) => {
   });
 }"""
 
-# The section-nav links marked as the current location, once site.js has had
-# two frames to follow the last scroll.
-NAV_CURRENT = """() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() =>
-  done([...document.querySelectorAll('.mobile-nav a[aria-current]')].map((a) => a.hash)))))"""
+# The CV card's insets around its content: the folded card hugs its content,
+# so the space under the footer equals the space above the overview.
+CARD_INSETS = """() => {
+  const card = document.getElementById('cv-content');
+  const cs = getComputedStyle(card);
+  const box = card.getBoundingClientRect();
+  const first = card.firstElementChild.getBoundingClientRect();
+  const last = card.querySelector('.site-footer').getBoundingClientRect();
+  return {
+    top: first.top - box.top - parseFloat(cs.borderTopWidth),
+    bottom: box.bottom - parseFloat(cs.borderBottomWidth) - last.bottom,
+  };
+}"""
+
+# An in-page link to `hash`, put in the overview the way an author would.
+IN_PAGE_LINK = """(hash) => {
+  const link = document.createElement('a');
+  link.id = 'link-probe-' + hash.slice(1);
+  link.href = hash;
+  link.textContent = hash;
+  document.querySelector('.cv-overview').append(link);
+  return link.id;
+}"""
 
 # The page's layout-shift sum (CLS without session windows), from the start.
 LAYOUT_SHIFT_INIT = """window.__layoutShift = 0;
@@ -400,7 +456,7 @@ def check_section_folds(browser, base, findings):
     heading is a real button (mouse, Enter, Space) whose aria-expanded tracks
     its section; sections open independently; a shared link
     (?view=cv#publications, #cv-work-<slug>, ?work=<slug> in
-    check_bookshelf_off), a section-nav click, a #fragment change and find in
+    check_bookshelf_off), an in-page link, a #fragment change and find in
     page open what they point to and land on it; the printed CV is whole
     (rebuild_checks.py counts its pages); without scripts nothing is folded;
     ko.html behaves the same; and no width scrolls sideways.
@@ -454,19 +510,15 @@ def check_section_folds(browser, base, findings):
                      % seen["items"], " | ".join(seen["placed"]["other"][:4]))
             if min(seen["rows"]) < 44:
                 fail(where, "a heading row is %dpx tall, under the 44px target" % min(seen["rows"]))
-            # A folded section is not where the reader is: scrolling the
-            # folded list (one wheel tick, then to the page's end) marks no
-            # section of the section nav as the current location.
-            page.mouse.move(viewport["width"] / 2, viewport["height"] / 2)
-            page.mouse.wheel(0, 120)
-            page.wait_for_timeout(250)
-            for at in ("after one wheel tick", "at the page's end"):
-                if at == "at the page's end":
-                    page.evaluate("() => scrollTo({ top: document.documentElement.scrollHeight,"
-                                  " behavior: 'instant' })")
-                current = page.evaluate(NAV_CURRENT)
-                if current:
-                    fail(where, "the section nav marks folded %s as current %s" % (current, at))
+            # The folded card hugs its content: no stretch to the sidebar's
+            # height, so the space under the footer is the space above the
+            # overview, whatever the language or the width.
+            insets = page.evaluate(CARD_INSETS)
+            if abs(insets["top"] - insets["bottom"]) > 1:
+                fail(where, "the folded card's insets are %.1fpx above and %.1fpx below"
+                     % (insets["top"], insets["bottom"]))
+            if page.locator(".mobile-nav").count():
+                fail(where, "the section bar is back")
             ctx.close()
             count += 1
 
@@ -510,8 +562,9 @@ def check_section_folds(browser, base, findings):
         ctx.close()
         count += 1
 
-    # Links: on load, a section-nav click (twice), an in-page #cv-work- link,
-    # a #fragment change, and a fragment into a folded section (beforematch).
+    # Links: on load, an in-page section link (twice), an in-page #cv-work-
+    # link, a #fragment change, and a fragment into a folded section
+    # (beforematch).
     ctx = browser.new_context(viewport=VIEWPORTS["desktop"])
     page = new_page(ctx)
     for path, anchor, section in (("/?view=cv#publications", "publications", "publications"),
@@ -527,21 +580,14 @@ def check_section_folds(browser, base, findings):
             fail(path, "#%s was not scrolled into view" % anchor, missed)
         count += 1
     page.goto(base + "/", wait_until="load")
-    nav = page.locator('.mobile-nav a[href="#awards"]')
-    for attempt in ("the section nav", "the section nav again"):
-        nav.click()
+    link = page.locator("#" + page.evaluate(IN_PAGE_LINK, "#awards"))
+    for attempt in ("a #awards link", "a #awards link again"):
+        link.click()
         expect_open("/ " + attempt, page, ("awards",))
         missed = landed_on(page, "awards")
         if missed:
             fail("/ " + attempt, "#awards was not scrolled into view", missed)
-    page.evaluate("""() => {
-      const link = document.createElement('a');
-      link.id = 'fold-probe';
-      link.href = '#cv-work-camouflage-effectiveness';
-      link.textContent = 'KF-21';
-      document.querySelector('.cv-overview').append(link);
-    }""")
-    page.locator("#fold-probe").click()
+    page.locator("#" + page.evaluate(IN_PAGE_LINK, "#cv-work-camouflage-effectiveness")).click()
     expect_open("/ a #cv-work- link", page, ("awards", "projects"))
     missed = landed_on(page, "cv-work-camouflage-effectiveness")
     if missed:
@@ -550,8 +596,9 @@ def check_section_folds(browser, base, findings):
     page.wait_for_function("() => document.querySelector('#education .section-toggle')"
                            ".getAttribute('aria-expanded') === 'true'", timeout=5000)
     expect_open("/ #education typed", page, ("awards", "projects", "education"))
-    if landed_on(page, "education"):
-        fail("/ #education typed", "#education was not scrolled into view")
+    missed = landed_on(page, "education")
+    if missed:
+        fail("/ #education typed", "#education was not scrolled into view", missed)
     toggle(page, "awards").click()
     page.evaluate("""() => document.getElementById('awards-body')
       .addEventListener('beforematch', () => { window.__beforematch = true; })""")
@@ -561,8 +608,9 @@ def check_section_folds(browser, base, findings):
     expect_open("/ a fragment into folded Awards", page, ("awards", "projects", "education"))
     if not page.evaluate("() => window.__beforematch === true"):
         fail("/ a fragment into folded Awards", "the browser did not reveal it through beforematch")
-    if landed_on(page, "cv-work-krafton-fde-challenge"):
-        fail("/ a fragment into folded Awards", "the entry was not scrolled into view")
+    missed = landed_on(page, "cv-work-krafton-fde-challenge")
+    if missed:
+        fail("/ a fragment into folded Awards", "the entry was not scrolled into view", missed)
     # Find in page: a text fragment is the browser's own search, with no
     # #id and no hashchange. It reveals the folded entry (beforematch), and
     # the button must follow.
@@ -677,21 +725,37 @@ def check_section_folds(browser, base, findings):
             ctx.close()
             count += 1
 
-    # No sideways scroll, folded or open.
-    for width in (320, 390, 1440):
+    # No sideways scroll, folded or open; also with the text enlarged in the
+    # browser (sizes are rem, so they follow the reader's default font size:
+    # WCAG 1.4.4), where the header's controls take a row of their own rather
+    # than overlap the brand.
+    for width, text in ((320, 100), (390, 100), (1440, 100), (320, 150), (360, 150),
+                        (390, 150), (390, 200)):
         for path in ("/", "/ko.html"):
             mobile = width < 760
             ctx = browser.new_context(viewport={"width": width, "height": 844 if mobile else 900},
                                       is_mobile=mobile, has_touch=mobile)
             page = new_page(ctx)
             page.goto(base + path, wait_until="load")
+            if text != 100:
+                page.evaluate("(pct) => { document.documentElement.style.fontSize = pct + '%'; }", text)
             page.evaluate("() => document.fonts.ready")
+            where = "%s@%d%s" % (path, width, "" if text == 100 else " text %d%%" % text)
             for state in ("folded", "open"):
                 if state == "open":
                     open_all_sections(page)
                 wide = page.evaluate("() => document.documentElement.scrollWidth - innerWidth")
                 if wide > 0:
-                    fail("%s@%d %s" % (path, width, state), "the page scrolls sideways by %dpx" % wide)
+                    fail("%s %s" % (where, state), "the page scrolls sideways by %dpx" % wide)
+            overlap = page.evaluate("""() => {
+              const box = (s) => document.querySelector(s).getBoundingClientRect();
+              const brand = box('.site-brand'), controls = box('.site-controls');
+              const header = box('.site-header');
+              const sameRow = brand.bottom > controls.top && controls.bottom > brand.top;
+              return (sameRow && brand.right > controls.left) || controls.right > header.right + 0.5;
+            }""")
+            if overlap:
+                fail(where, "the header's controls overlap the brand or leave the header")
             ctx.close()
             count += 1
     for e in errors:
@@ -822,6 +886,251 @@ def check_bookshelf_off(browser, base, public, findings):
                  ", ".join(urlsplit(u).path.rsplit("/", 1)[-1] for u in loaded))
         ctx.close()
     return len(cases) + len(flyby_cases)
+
+
+def check_simulations_off(browser, public, findings):
+    """With SIMULATIONS_ENABLED false, the Simulations page sends visitors to the CV.
+
+    Why: the owner asked to "remove Simulations tab (disable it for now)". An
+    old link or a search result can still reach /laboratory.html; on any host
+    but a local one it goes straight on to the CV (from the Korean CV,
+    ?from=ko, to the Korean page). On a local server it keeps working, which
+    the "lab" state and lab_checks.py rely on.
+    """
+    def fail(where, message, detail=""):
+        findings.append({"level": "ERROR", "check": "simulations-off", "state": "simulations-off",
+                         "message": "%s: %s" % (where, message), "detail": detail})
+
+    cases = (("/laboratory.html", "/", "en"), ("/laboratory.html?from=ko", "/ko.html", "ko"),
+             ("/laboratory.html#plinko", "/", "en"))
+    # A replaced page adds no history entry: as many entries as loading the
+    # CV itself in a new tab.
+    ctx = browser.new_context(viewport=VIEWPORTS["desktop"])
+    page = ctx.new_page()
+    page.goto(public + "/", wait_until="load")
+    entries = page.evaluate("() => history.length")
+    ctx.close()
+    for path, want, lang in cases:
+        ctx = browser.new_context(viewport=VIEWPORTS["desktop"])
+        page = ctx.new_page()
+        errors = []
+        page.on("pageerror", lambda e: errors.append(str(e)))
+        try:
+            page.goto(public + path, wait_until="commit")
+            page.wait_for_url(lambda url: "laboratory" not in url, timeout=10000)
+            page.wait_for_load_state("load")
+            page.wait_for_function(PAPERS_READY, timeout=10000)
+        except Exception as exc:
+            fail(path, "did not go on to the CV", str(exc)[:160])
+            ctx.close()
+            continue
+        if urlsplit(page.url).path != want:
+            fail(path, "went to %s, expected %s" % (urlsplit(page.url).path, want))
+        if page.evaluate("document.documentElement.lang") != lang:
+            fail(path, "the CV it went to is in %s, expected %s"
+                 % (page.evaluate("document.documentElement.lang"), lang))
+        if page.evaluate("() => history.length") != entries:
+            fail(path, "the redirect left the Simulations page in the history (use location.replace)",
+                 "%d entries, %d for the CV alone" % (page.evaluate("() => history.length"), entries))
+        for e in errors:
+            fail(path, "page error: " + e[:160])
+        ctx.close()
+    return len(cases)
+
+
+# The site header: what it holds, and how its text is set.
+HEADER_STATE = """() => {
+  const header = document.querySelector('.site-header');
+  const baseline = (el) => {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, { acceptNode: (n) =>
+      n.textContent.trim() && n.parentElement.checkVisibility()
+        ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP });
+    const node = walker.nextNode();
+    if (!node) return null;
+    const probe = document.createElement('span');
+    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    node.before(probe);
+    const y = probe.getBoundingClientRect().top;
+    probe.remove();
+    return Math.round(y * 10) / 10;
+  };
+  const items = [...header.querySelectorAll('a, button, input, select, [tabindex]')]
+    .filter((el) => el.checkVisibility())
+    .map((el) => {
+      const cs = getComputedStyle(el);
+      const box = el.getBoundingClientRect();
+      return { name: el.id || el.className, text: el.innerText.trim(), top: Math.round(box.top),
+               height: Math.round(box.height), width: box.width, baseline: baseline(el),
+               size: cs.fontSize, family: cs.fontFamily, weight: cs.fontWeight,
+               lineHeight: cs.lineHeight, color: cs.color, decoration: cs.textDecorationLine,
+               background: cs.backgroundColor };
+    });
+  const reader = document.getElementById('ttsToggle');
+  return {
+    height: Math.round(header.getBoundingClientRect().height),
+    items,
+    removed: ['#printCV', '.mobile-nav', '.lab-link', 'a[href*="laboratory"]']
+      .filter((s) => document.querySelector(s)),
+    reader: { title: reader.getAttribute('title'), label: reader.getAttribute('aria-label') },
+  };
+}"""
+
+# Every visible text in the header and the CV, against the type scale: six
+# sizes, two weights, one family, five colour roles (site.css :root).
+TYPE_SCALE = """() => {
+  const root = getComputedStyle(document.documentElement);
+  const rgb = (value) => {
+    const probe = document.createElement('i');
+    probe.style.color = value;
+    document.body.append(probe);
+    const out = getComputedStyle(probe).color;
+    probe.remove();
+    return out;
+  };
+  const colours = new Set(['--ink', '--ink-soft', '--meta', '--accent', '--on-ink']
+    .map((name) => rgb(root.getPropertyValue(name).trim())));
+  const sizes = new Set([13, 16, 18, 20, 24, 28]);
+  const weights = new Set(['400', '600']);
+  const family = getComputedStyle(document.body).fontFamily;
+  const own = (el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+  const bad = [];
+  let measured = 0;
+  for (const el of document.querySelectorAll('.site-header *, #cv-start *')) {
+    if (!own(el) || !el.checkVisibility() || el.closest('.pl-sr-only')) continue;
+    measured++;
+    const cs = getComputedStyle(el);
+    const problems = [];
+    if (!sizes.has(parseFloat(cs.fontSize))) problems.push('size ' + cs.fontSize);
+    if (!weights.has(cs.fontWeight)) problems.push('weight ' + cs.fontWeight);
+    if (cs.fontFamily !== family) problems.push('family ' + cs.fontFamily);
+    if (!colours.has(cs.color)) problems.push('colour ' + cs.color);
+    if (problems.length)
+      bad.push(el.tagName.toLowerCase() + (el.className ? '.' + el.className : '') + ' "' +
+        el.textContent.trim().slice(0, 24) + '": ' + problems.join(', '));
+  }
+  return { measured, bad };
+}"""
+
+# Every margin, padding and gap in the CV's two columns, against the 4-point
+# scale (site.css :root). 13 is a 12px gap plus its 1px hairline (the meta
+# row's separators); negative values give back a touch target's slack or
+# reach into a clipped margin.
+SPACE_SCALE = """() => {
+  const scale = new Set([0, 4, 8, 12, 13, 16, 20, 24, 32, 40, 48, 64, 96]);
+  const props = ['marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'paddingTop',
+                 'paddingRight', 'paddingBottom', 'paddingLeft', 'rowGap', 'columnGap'];
+  const bad = [];
+  let measured = 0;
+  for (const el of document.querySelectorAll('#cv-start .layout, #cv-start .layout *')) {
+    if (!el.checkVisibility() || el.closest('.pl-sr-only')) continue;
+    measured++;
+    const cs = getComputedStyle(el);
+    for (const prop of props) {
+      if (cs[prop] === 'normal') continue;
+      const px = Math.round(Math.abs(parseFloat(cs[prop])) * 100) / 100;
+      if (!scale.has(px))
+        bad.push(el.tagName.toLowerCase() +
+          (el.className ? '.' + String(el.className).split(' ')[0] : '') + ' ' + prop + ' ' + cs[prop]);
+    }
+  }
+  return { measured, bad: [...new Set(bad)] };
+}"""
+
+
+def check_type_and_space(browser, base, findings):
+    """The header, the type scale and the spacing scale hold in the browser.
+
+    Why: the owner asked (Oct 2026) to remove Simulations, Print / PDF and the
+    sticky section bar, to replace the reader-mode glyph with a word, and
+    "why do everything look so different" / "check the golden rules for
+    spacings". The header now holds the brand, the language link and the
+    reader-mode button alone, the two controls set alike (size, family,
+    weight, colour, box, baseline) in one 76px row. The reader-mode button is
+    named by its visible words and shows its pressed state with an underline,
+    not colour alone, without changing its box. Every visible text is on the
+    six-size, two-weight, one-family, five-colour scale, also in Reader mode;
+    every margin, padding and gap in the CV's columns is on the 4-point
+    scale. At 1440, 900, 390 and 320px, in both languages, every section and
+    the toolkit open.
+    """
+    def fail(where, message, detail=""):
+        findings.append({"level": "ERROR", "check": "type-and-space", "state": "type-and-space",
+                         "message": "%s: %s" % (where, message), "detail": detail})
+
+    names = {"en": "Reader mode", "ko": "읽기 모드"}
+    count = 0
+    for lang, path in (("en", "/"), ("ko", "/ko.html")):
+        for width in (1440, 900, 390, 320):
+            mobile = width < 760
+            where = "%s@%d" % (path, width)
+            ctx = browser.new_context(viewport={"width": width, "height": 844 if mobile else 900},
+                                      is_mobile=mobile, has_touch=mobile)
+            page = ctx.new_page()
+            page.goto(base + path, wait_until="load")
+            page.evaluate("() => document.fonts.ready")
+            state = page.evaluate(HEADER_STATE)
+            if state["removed"]:
+                fail(where, "removed controls are back: %s" % ", ".join(state["removed"]))
+            kinds = [item["name"] for item in state["items"]]
+            if kinds != ["site-brand", "langToggle", "ttsToggle"]:
+                fail(where, "the header holds %r, expected the brand, the language link "
+                     "and the reader-mode button" % kinds)
+            else:
+                brand, *controls = state["items"]
+                for key in ("size", "family", "weight", "lineHeight", "color", "height"):
+                    if len({c[key] for c in controls}) != 1:
+                        fail(where, "the header controls differ in %s: %s"
+                             % (key, [c[key] for c in controls]))
+                if brand["family"] != controls[0]["family"]:
+                    fail(where, "the brand is set in %s, the controls in %s"
+                         % (brand["family"], controls[0]["family"]))
+                baselines = [c["baseline"] for c in controls]
+                if None in baselines or max(baselines) - min(baselines) > 0.5:
+                    fail(where, "the header controls' text sits on different baselines: %s"
+                         % baselines)
+                if len({item["top"] for item in state["items"]}) != 1 or state["height"] != 76:
+                    fail(where, "the header is not one 76px row (%dpx; tops %s)"
+                         % (state["height"], [i["top"] for i in state["items"]]))
+            # The reader-mode button: its words are its name, and pressed it
+            # shows the header's underline (no fill, the same box).
+            if state["reader"]["title"] is not None or state["reader"]["label"] not in (None, names[lang]):
+                fail(where, "the reader-mode button has a title or a label other than its words",
+                     json.dumps(state["reader"], ensure_ascii=False))
+            button = page.get_by_role("button", name=names[lang], exact=True)
+            if button.count() != 1:
+                fail(where, "no button is named %r" % names[lang])
+            else:
+                before = next(i for i in state["items"] if i["name"] == "ttsToggle")
+                button.click()
+                page.mouse.move(1, 1)
+                after = next(i for i in page.evaluate(HEADER_STATE)["items"] if i["name"] == "ttsToggle")
+                pressed = page.evaluate("() => document.getElementById('ttsToggle').getAttribute('aria-pressed')")
+                if pressed != "true" or "underline" not in after["decoration"]:
+                    fail(where, "pressed, the reader-mode button shows no underline (aria-pressed=%s, %s)"
+                         % (pressed, after["decoration"]))
+                if after["background"] not in ("rgba(0, 0, 0, 0)", "transparent"):
+                    fail(where, "pressed, the reader-mode button is filled (%s)" % after["background"])
+                if (round(after["width"], 1), after["height"]) != (round(before["width"], 1), before["height"]):
+                    fail(where, "pressing the reader-mode button changed its box")
+            # The CV whole: every section and the toolkit open.
+            open_all_sections(page)
+            page.evaluate("() => { document.querySelector('details.caps').open = true; }")
+            page.mouse.move(1, 1)
+            for mode in ("reader mode", "standard"):
+                if mode == "standard" and button.count() == 1:
+                    button.click()
+                    page.mouse.move(1, 1)
+                typed = page.evaluate(TYPE_SCALE)
+                if typed["measured"] < 100 or typed["bad"]:
+                    fail("%s %s" % (where, mode), "%d of %d texts are off the type scale"
+                         % (len(typed["bad"]), typed["measured"]), " | ".join(typed["bad"][:5]))
+            spaced = page.evaluate(SPACE_SCALE)
+            if spaced["measured"] < 100 or spaced["bad"]:
+                fail(where, "%d spacing values are off the 4-point scale" % len(spaced["bad"]),
+                     " | ".join(spaced["bad"][:6]))
+            ctx.close()
+            count += 1
+    return count
 
 
 LANGUAGE_STATE = """() => {
@@ -974,32 +1283,21 @@ def check_language_pages(browser, base, findings):
         fail("/?view=cv#publications", "#publications was not scrolled into view", missed)
     count += 3
 
-    # The Simulations page is English only. From the Korean CV its link
-    # carries ?from=ko, and the lab's CV link then leads back to the Korean
-    # page, not to the English one.
-    lab_href = "document.querySelector('.lab-link')?.getAttribute('href')"
-    load("/ko.html")
-    if page.evaluate(lab_href) != "laboratory.html?from=ko":
-        fail("/ko.html", "the Simulations link is %r, expected 'laboratory.html?from=ko'"
-             % page.evaluate(lab_href))
-    load("/")
-    if page.evaluate(lab_href) != "laboratory.html":
-        fail("/", "the Simulations link is %r, expected 'laboratory.html'" % page.evaluate(lab_href))
-    toggle()
-    if page.evaluate(lab_href) != "laboratory.html?from=ko":
-        fail("toggle on /", "in Korean the Simulations link is %r, expected "
-             "'laboratory.html?from=ko'" % page.evaluate(lab_href))
-    load("/ko.html")
-    page.locator(".lab-link").click()
-    page.wait_for_url("**/laboratory.html?from=ko")
-    page.wait_for_function("() => document.querySelector('.lab-actions a')?.getAttribute('href')"
-                           ".startsWith('ko.html')")
-    page.locator(".lab-actions a").click()
-    page.wait_for_url("**/ko.html*")
-    page.wait_for_function(PAPERS_READY)
-    expect_lang("the lab's CV link after /ko.html", page.evaluate(LANGUAGE_STATE), "ko",
-                base + "/ko.html?view=cv")
-    count += 4
+    # The Simulations page is switched off (SIMULATIONS_ENABLED in
+    # laboratory.html): no link leads there, in either language, before or
+    # after a switch (check_simulations_off covers the page itself).
+    lab_links = """() => [...document.querySelectorAll('a[href*="laboratory"]')]
+      .map((a) => a.outerHTML.slice(0, 80))"""
+    for path in ("/", "/ko.html"):
+        load(path)
+        for state in ("as loaded", "after the language link"):
+            if state != "as loaded":
+                toggle()
+            found = page.evaluate(lab_links)
+            if found:
+                fail("%s %s" % (path, state), "links to the switched-off Simulations page",
+                     " | ".join(found))
+        count += 1
 
     # Markup details that belong to the same pages.
     details = page.evaluate("""() => ({
@@ -1112,6 +1410,8 @@ def run(states, viewports, headed=False):
                     browser, base, findings)}}
                 reports["section-folds"] = {"counts": {"cases": check_section_folds(
                     browser, base, findings)}}
+                reports["type-and-space"] = {"counts": {"cases": check_type_and_space(
+                    browser, base, findings)}}
             browser.close()
             if not shelf_on and any(s[0].startswith("home") for s in states):
                 # A second browser resolves a non-local host name to the local
@@ -1120,6 +1420,8 @@ def run(states, viewports, headed=False):
                     "--host-resolver-rules=MAP %s 127.0.0.1" % PUBLIC_TEST_HOST])
                 reports["bookshelf-off"] = {"counts": {"urls": check_bookshelf_off(
                     public, base, "http://%s:%d" % (PUBLIC_TEST_HOST, port), findings)}}
+                reports["simulations-off"] = {"counts": {"urls": check_simulations_off(
+                    public, "http://%s:%d" % (PUBLIC_TEST_HOST, port), findings)}}
                 public.close()
     finally:
         shutdown()

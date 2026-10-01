@@ -1,43 +1,47 @@
-:root {
-  --meta: #5a666d;
-  --meta-soft: #62717a;
-  --ink-green: #233b32;
-}
+/* The CV. Every size, weight, leading, colour and space comes from the tokens
+   in site.css :root; the literals left here are dimensions (hit targets,
+   column and photo widths), hairline colours and optical offsets, each said
+   so where it stands. */
 html[data-view="cv"] body {
   background: #f0f2f3;
 }
+/* One frame for the header (site.css) and the CV: the page margin equals the
+   column gutter at every width. */
 #cv-start {
-  width: min(1200px, calc(100% - 64px));
+  width: min(1200px, calc(100% - 2 * var(--gutter)));
   margin: 0 auto;
 }
+/* Columns: 224px sidebar | gutter | card. */
 .layout {
   display: grid;
   grid-template-columns: 224px minmax(0, 1fr);
-  gap: 32px;
-  padding: 32px 0 64px;
+  gap: var(--gutter);
+  padding: var(--space-8) 0 var(--space-16);
 }
 .sidebar {
   min-width: 0;
 }
+/* The photo's top is level with the card's top edge. */
 .profile-card {
   position: sticky;
-  top: 94px;
-  padding-top: 8px;
+  top: var(--space-8);
 }
-/* Short windows cannot hold the whole card below its 94px offset (it is
-   about 800px tall in the 224px column, 864px in the 190px one): there it
-   scrolls with the page instead of sticking, so Focus, the contacts and
-   "Get in touch" all stay reachable and nothing is hidden. */
-@media (min-width: 761px) and (max-height: 899px),
-  (min-width: 761px) and (max-width: 1000px) and (max-height: 969px) {
+/* Short windows cannot hold the whole card below its 32px offset (it is
+   715px tall in the 224px column and 810px in the 190px one, measured in
+   English; Korean is shorter): there it scrolls with the page instead of
+   sticking, so Focus, the contacts and "Get in touch" all stay reachable and
+   nothing is hidden. Each limit is the card's height plus 32px above and
+   below. */
+@media (min-width: 761px) and (max-height: 779px),
+  (min-width: 761px) and (max-width: 1000px) and (max-height: 874px) {
   .profile-card {
     position: static;
   }
 }
 .profile-image {
-  width: 96px;
+  width: 96px; /* dimension */
   aspect-ratio: 572/735;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-4);
   box-shadow: 0 2px 8px #26323a12;
   border-radius: 6px;
 }
@@ -51,130 +55,125 @@ html[data-view="cv"] body {
 .image-unavailable {
   background: var(--line);
 }
+/* Display: the page's h1. */
 .name {
-  font: 600 28px/1.2 var(--sans);
-  margin-bottom: 12px;
+  font: var(--fw-strong) var(--fs-28) / var(--lh-heading) var(--sans);
+  margin-bottom: var(--space-3);
 }
+/* Body, short measure. */
 .role {
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: var(--fs-16);
+  line-height: var(--lh-text);
   text-wrap: balance;
 }
+/* Meta. */
+.org,
+.side-list,
+.contact-list {
+  font-size: var(--fs-13);
+  line-height: var(--lh-text);
+  color: var(--meta);
+}
 .org {
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 12px;
+  margin-top: var(--space-3);
 }
 .divider {
   border-top: 1px solid var(--line);
-  margin: 24px 0;
+  margin: var(--space-6) 0;
+}
+/* Label. */
+.side-label,
+.p-label,
+.cv-eyebrow {
+  font-size: var(--fs-13);
+  font-weight: var(--fw-strong);
+  line-height: var(--lh-title);
+  color: var(--meta);
 }
 .side-label {
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--muted);
+  margin-bottom: var(--space-2);
 }
 .side-list {
-  font-size: 13px;
-  color: var(--muted);
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
+/* The 32px targets keep their text in the middle; the list gives back the
+   half of the slack that sits above the first row and below the last, so
+   the space around the dividers reads the same as elsewhere. */
 .contact-list {
   list-style: none;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
-  font-size: 13px;
+  gap: 0 var(--space-4);
+  margin-block: calc(-1 * var(--space-1));
 }
 .contact-list a {
   display: inline-block;
-  min-height: 32px;
+  min-height: 32px; /* hit target */
+  line-height: 32px; /* the text centred in its target */
+  color: var(--ink);
+}
+.contact-list a:hover {
+  color: var(--accent);
+}
+/* The envelope before the address: drawn in the text's colour at the text's
+   size (an optical offset sets it on the baseline), not a glyph from the
+   system's symbol font. */
+.mail-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+/* "Get in touch" already holds 13px of its 44px row above its text. */
+.divider:has(+ .button) {
+  margin-bottom: var(--space-3);
 }
 .button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 44px;
-  font-size: 14px;
+  min-height: 44px; /* hit target */
+  font-size: var(--fs-16);
+  line-height: var(--lh-text);
   border-bottom: 1px solid var(--ink);
 }
-.mobile-nav {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 28px;
-  background: #f0f2f3;
-  border-bottom: 1px solid var(--line);
-  padding: 12px 0;
-  font-size: 13px;
-}
-/* A short label sits in the middle of its 28px box, so the visible gaps
-   between labels stay even (Korean labels can be narrower than the box). */
-.mobile-nav a {
-  min-width: 28px;
-  min-height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  color: #535c63;
-}
-.mobile-nav a:hover {
-  color: var(--ink-green);
-}
-.mobile-nav a[aria-current] {
-  color: var(--ink-green);
-  font-weight: 600;
-}
-.mobile-nav a[aria-current]::after {
-  content: "";
-  position: absolute;
-  bottom: -13px;
-  inset-inline: 0;
-  height: 2px;
-  background: #365f51;
-}
+/* The card hugs its content, so its bottom inset equals its top inset. */
 .content {
   min-width: 0;
+  align-self: start;
   background: #ffffff;
-  padding: 36px 44px 44px;
+  padding: var(--card-pad);
   border: 1px solid #e1e5e7;
   box-shadow:
     0 4px 18px #26323a06,
     0 1px 2px #26323a05;
 }
+/* Overview: the kicker hugs its title, the lede follows, and the group
+   stands clear of the toolkit below. */
 .cv-overview {
-  padding-bottom: 24px;
+  padding-bottom: var(--space-8);
 }
 .cv-eyebrow {
-  font-size: 12px;
-  font-weight: 500;
-  color: #5d696e;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-2);
 }
-/* The page's h1 is the name in the sidebar (28px): the overview heading does
-   not outrank it. */
+/* Display: the page's h1 is the name in the sidebar, at the same size; the
+   overview heading does not outrank it. */
 .cv-overview h2 {
-  font: 600 28px/1.3 var(--sans);
+  font: var(--fw-strong) var(--fs-28) / var(--lh-heading) var(--sans);
   text-wrap: balance;
 }
+/* Lead. */
 .cv-introduction {
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: var(--t-lead);
+  line-height: var(--lh-text);
   max-width: 48ch;
-  margin-top: 16px;
-  color: #4b585e;
+  margin-top: var(--space-4);
+  color: var(--ink-soft);
 }
-/* 40px below an open section and 16px above the next title (its button's
-   padding): 56px from one section's last entry to the next heading. */
+/* Below an open section, then the next title's own 16px row padding. */
 .content > section {
-  margin-bottom: 40px;
+  margin-bottom: var(--section-gap);
 }
 /* The toolkit's lower hairline is the upper rule of the section list below
    it, so the first row is spaced like the others. */
@@ -183,26 +182,39 @@ html[data-view="cv"] body {
   padding: 0;
   margin-bottom: 0;
 }
+/* Subhead. */
 .caps summary {
-  padding: 16px 0;
-  font-size: 14px;
-  font-weight: 500;
+  padding: var(--space-4) 0;
+  font-size: var(--fs-16);
+  font-weight: var(--fw-strong);
+  line-height: var(--lh-title);
   cursor: pointer;
 }
+/* The last row sits as far above the closing hairline as the next title
+   sits below it. */
 .caps[open] {
-  padding-bottom: 16px;
+  padding-bottom: var(--space-2);
 }
 .caps-row {
   display: grid;
-  grid-template-columns: 70px minmax(0, 1fr);
+  /* dimension: 80px at the default text size, fits "Languages" (69px) and
+     "and devices" (76px), the widest words of the keys at 13px/600, at every
+     width; rem, so it grows with text enlarged in the browser */
+  grid-template-columns: 5rem minmax(0, 1fr);
   align-items: baseline;
-  gap: 14px;
-  padding: 8px 0;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+/* The first row sits as close to its summary as the rows sit to each other. */
+.caps summary + .caps-row {
+  padding-top: 0;
 }
 .caps .k {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--fs-13);
+  font-weight: var(--fw-strong);
+  line-height: var(--lh-title);
   color: var(--accent);
+  text-wrap: balance;
 }
 /* Each row is a list, so screen readers hear the items apart; the dots
    between them are drawn here and have no text alternative. An item that is
@@ -213,25 +225,26 @@ html[data-view="cv"] body {
 .caps .v {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 0 0 -20px;
+  margin: 0 0 0 calc(-1 * var(--space-5));
   padding: 0;
   list-style: none;
-  font-size: 13px;
-  color: #525e64;
-  clip-path: inset(-4px 0 -4px 20px);
+  font-size: var(--fs-13);
+  line-height: var(--lh-text);
+  color: var(--meta);
+  clip-path: inset(-4px 0 -4px var(--space-5));
 }
 /* The dot sits in the item's own 20px left padding, so an item that wraps
    inside itself keeps its second line clear of the clipped strip. */
 .caps .v li {
   position: relative;
-  padding-left: 20px;
+  padding-left: var(--space-5);
 }
 .caps .v li::before {
   content: "·";
   content: "·" / "";
   position: absolute;
   left: 0;
-  width: 20px;
+  width: var(--space-5);
   text-align: center;
   color: #99a196;
 }
@@ -242,7 +255,7 @@ html[data-view="cv"] body {
   position: relative;
   display: flex;
   align-items: baseline;
-  column-gap: 16px;
+  column-gap: var(--space-4);
   flex-wrap: wrap;
   border-bottom: 1px solid #cbd3d6;
 }
@@ -251,9 +264,10 @@ html[data-view="cv"] body {
   flex: 1 1 auto;
   border-bottom: 0;
 }
+/* Section title. */
 .section-title {
   position: relative;
-  font: 600 24px/1.3 var(--sans);
+  font: var(--fw-strong) var(--t-section) / var(--lh-heading) var(--sans);
   border-bottom: 1px solid #cbd3d6;
   margin-bottom: 0;
 }
@@ -263,11 +277,11 @@ html[data-view="cv"] body {
 .section-toggle {
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  gap: var(--space-3);
   width: 100%;
-  min-height: 44px;
+  min-height: 44px; /* hit target */
   margin: 0;
-  padding: 16px 0;
+  padding: var(--space-4) 0;
   border: 0;
   border-radius: 0;
   background: none;
@@ -282,26 +296,29 @@ html[data-view="cv"] body {
 html:not(.cv-folds) .section-toggle {
   cursor: auto;
 }
-/* Tabular digits: every title starts at the same x after its number. A
-   title too long for the row wraps beside its number, not below it. */
+/* Meta: tabular digits, so every title starts at the same x after its
+   number. A title too long for the row wraps beside its number, not below. */
 .section-title .num {
   flex: none;
-  font: 12px var(--sans);
+  font: var(--fw-regular) var(--fs-13) / var(--lh-text) var(--sans);
   font-variant-numeric: tabular-nums;
-  color: var(--meta-soft);
+  color: var(--meta);
   margin-right: 0;
 }
+/* Control: "Google Scholar" in a 28px target. */
 .title-aside {
   position: relative;
   z-index: 1;
-  display: inline-block;
-  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  column-gap: var(--space-1); /* the space before "↗", which flex collapses */
+  min-height: 28px; /* hit target */
   margin-left: auto;
-  font: 13px/28px var(--sans);
+  font: var(--fw-regular) var(--fs-13) / var(--lh-control) var(--sans);
 }
 .title-aside:hover {
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: var(--space-1);
 }
 @media screen {
   /* Until site.js has folded the sections (the <head> script sets this),
@@ -333,31 +350,33 @@ html:not(.cv-folds) .section-toggle {
   /* The headings look like disclosures once site.js has wired them
      (cv-folds), and already while the <head> script holds them folded
      (cv-folding), so the first paint matches. A page whose site.js never
-     runs keeps plain titles: no mark, no pointer. */
+     runs keeps plain titles: no mark, no pointer. The row's end is the
+     chevron's 32px column. */
   html:is(.cv-folds, .cv-folding) .section-toggle {
-    padding-right: 32px;
+    padding-right: var(--space-8);
   }
   /* The disclosure mark at the row's right end: a chevron drawn with two
      borders, pointing down while the section is folded and up while it is
      open. It has no text, so screen readers hear aria-expanded alone.
-     "Methods and tools" carries the same mark in the same column. */
+     "Methods and tools" carries the same mark in the same column. The 8px
+     box and its -7px / -1px nudges are optical, not spacing. */
   html:is(.cv-folds, .cv-folding) .section-toggle::after,
   .caps summary::after {
     content: "";
     position: absolute;
     top: 50%;
-    right: 8px;
+    right: var(--space-2);
     width: 8px;
     height: 8px;
     margin-top: -7px;
-    border: solid var(--meta-soft);
+    border: solid var(--meta);
     border-width: 0 1.5px 1.5px 0;
     transform: rotate(45deg);
   }
-  /* On the title's first line (16px padding and half the 1.3 line), also
-     when a long title wraps. */
+  /* On the title's first line (the row's padding and half the 1.3 line),
+     also when a long title wraps. */
   html:is(.cv-folds, .cv-folding) .section-toggle::after {
-    top: calc(16px + 0.65em);
+    top: calc(var(--space-4) + 0.65em);
   }
   html.cv-folds .section-toggle[aria-expanded="true"]::after,
   .caps[open] summary::after {
@@ -367,7 +386,7 @@ html:not(.cv-folds) .section-toggle {
   .caps summary {
     position: relative;
     list-style: none;
-    padding-right: 32px;
+    padding-right: var(--space-8);
   }
   .caps summary::-webkit-details-marker {
     display: none;
@@ -382,7 +401,7 @@ html:not(.cv-folds) .section-toggle {
     margin-left: 0;
   }
   html:is(.cv-folds, .cv-folding) .section-head {
-    padding-right: 32px;
+    padding-right: var(--space-8);
   }
   html:is(.cv-folds, .cv-folding) .section-head .section-toggle {
     padding-right: 0;
@@ -392,10 +411,12 @@ html:not(.cv-folds) .section-toggle {
     position: absolute;
     inset: 0;
   }
-  /* A link that wraps under the title on the narrowest phones keeps clear
-     of the hairline; on one line this stays inside the row. */
+  /* A link that wraps under the title on the narrowest phones sits closer
+     to its title than to the hairline; on one line this stays inside the
+     row. */
   html:is(.cv-folds, .cv-folding) .section-head .title-aside {
-    padding-bottom: 8px;
+    margin-top: calc(-1 * var(--space-2));
+    padding-bottom: var(--space-2);
   }
   html.cv-folds .section-head .section-toggle:focus-visible {
     outline: none;
@@ -405,17 +426,16 @@ html:not(.cv-folds) .section-toggle {
     outline-offset: 4px;
   }
 }
-/* Phones: a narrower chevron column keeps "Research and development" on one
-   line from 390px. */
+/* Phones: a narrower chevron column. */
 @media screen and (max-width: 760px) {
   html:is(.cv-folds, .cv-folding) .section-toggle,
   html:is(.cv-folds, .cv-folding) .section-head,
   .caps summary {
-    padding-right: 24px;
+    padding-right: var(--space-6);
   }
   html:is(.cv-folds, .cv-folding) .section-toggle::after,
   .caps summary::after {
-    right: 4px;
+    right: var(--space-1);
   }
 }
 /* Hover colours only where a pointer hovers: after a tap on a touch screen
@@ -446,109 +466,112 @@ html:not(.cv-folds) .section-toggle {
 .items {
   display: block;
 }
+/* Entry, hairline, entry: the same space on both sides of the rule. The
+   first entry sits under its heading's hairline like the heading's own row. */
 .item {
-  padding: 30px 0;
+  padding: var(--entry-pad) 0;
   border-bottom: 1px solid var(--line);
   min-width: 0;
 }
 .item:first-child {
-  padding-top: 20px;
+  padding-top: var(--space-4);
+}
+/* A link to an entry lands its title on the same line as a link to a
+   section (html's scroll-padding-top plus the entry's own top padding): the
+   margin takes back the difference between the entry's padding and a
+   heading row's. */
+.item {
+  scroll-margin-top: calc(var(--space-4) - var(--entry-pad));
+}
+.item:first-child,
+#education .item {
+  scroll-margin-top: 0;
 }
 /* An entry is focused only as a link's landing place (it is no Tab stop):
    no ring around the whole entry then. */
 .item[tabindex="-1"]:focus {
   outline: none;
 }
+/* Entry title: every h3, in every section. */
 .item-title {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.45;
+  font-size: var(--t-entry);
+  font-weight: var(--fw-strong);
+  line-height: var(--lh-title);
   text-wrap: pretty;
 }
 .item-title a:hover {
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: var(--space-1);
 }
 .item-title a {
   display: inline-block;
-  min-height: 28px;
+  min-height: 24px; /* hit target: WCAG 2.5.8, never taller than the title's line */
 }
 /* One entry anatomy everywhere: title, meta row, text, partner row. The
    title and its meta row sit close (8px); every later step is 16px, and the
    partner row adds its own 16px above the dashed hairline. */
 .item-meta {
-  font-size: 13px;
+  font-size: var(--fs-13);
+  line-height: var(--lh-text);
   color: var(--meta);
-  margin: 8px 0 16px;
-  line-height: 1.7;
+  margin: var(--space-2) 0 var(--space-4);
 }
-/* The measure holds English prose to about 60-75 characters per line
-   (measured at 1440 and 1024: median 70, 90th percentile 75). */
+/* Body. The measure holds English prose to about 60-75 characters a line. */
 .item-desc,
 .pub-value {
-  font-size: 16px;
-  line-height: 1.75;
-  margin-top: 16px;
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  margin-top: var(--space-4);
   max-width: 35em;
 }
-/* A publication's summary follows its citation as plain muted text, set off
+/* A publication's summary follows its citation as plain soft text, set off
    by the same dashed hairline as an entry's partner row (no box, no bar). */
 .pub-value {
-  max-width: 34em;
-  color: #46535b;
-  padding-top: 16px;
+  color: var(--ink-soft);
+  padding-top: var(--space-4);
   border-top: 1px dashed #e0e5e6;
-  font-size: 15px;
-}
-/* Hangul needs more leading than Latin at the same size. */
-body.ko .item-desc:not(.cv-citation),
-body.ko .pub-value,
-body.ko .cv-introduction,
-body.ko .pub-summary {
-  line-height: 1.85;
 }
 .item-desc a,
 .pub-link {
   color: var(--accent);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--space-1);
 }
 .pub-link {
   display: inline-block;
-  padding: 4px 0;
-  min-height: 28px;
+  padding: var(--space-1) 0;
+  min-height: 28px; /* hit target */
 }
 .pub-link:hover {
   text-decoration-thickness: 2px;
 }
 .item strong {
-  font-weight: 600;
+  font-weight: var(--fw-strong);
 }
 .partners {
-  margin-top: 16px;
-  padding-top: 16px;
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
   border-top: 1px dashed #e0e5e6;
 }
 .p-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 .p-set {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
+  gap: var(--space-2) var(--space-4);
 }
+/* Meta, in ink: the partner's name. */
 .p-chip {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   max-width: 100%;
-  font-size: 13px;
-  line-height: 1.45;
-  min-height: 32px;
+  font-size: var(--fs-13);
+  line-height: var(--lh-text);
+  color: var(--ink);
+  min-height: 32px; /* hit target */
   overflow-wrap: anywhere;
 }
 /* Every mark is one 24px square (the files are square with their padding
@@ -573,8 +596,8 @@ body.ko .pub-summary {
   place-items: center;
   border: 1px solid #d3d8d9;
   border-radius: 50%;
-  font: 600 11px/1 var(--sans);
-  color: var(--muted);
+  font: var(--fw-strong) var(--fs-13) / var(--lh-control) var(--sans);
+  color: var(--meta);
 }
 .p-chip[data-m]:has(.p-logo:not([hidden]))::before {
   content: none;
@@ -582,65 +605,78 @@ body.ko .pub-summary {
 .cv-meta-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 14px;
-  /* Every part carries a left hairline; the row reaches 15px into the
-     margin and clips it, so a part that starts a wrapped line shows none. */
-  margin-left: -15px;
-  clip-path: inset(-4px 0 -4px 15px);
+  gap: var(--space-1) var(--space-3);
+  /* Every part carries a left hairline; the row reaches its gap plus the
+     1px rule into the margin and clips it, so a part that starts a wrapped
+     line shows none. */
+  margin-left: calc(-1 * (var(--space-3) + 1px));
+  clip-path: inset(-4px 0 -4px calc(var(--space-3) + 1px));
 }
 .cv-date {
   flex-basis: 100%;
-  margin-left: 15px;
-  font-size: 13px;
+  margin-left: calc(var(--space-3) + 1px);
   font-variant-numeric: tabular-nums;
-  color: #416957;
+  color: var(--accent);
 }
 .cv-meta-part {
   border-left: 1px solid #d8dfe1;
-  padding-left: 14px;
+  padding-left: var(--space-3);
 }
+/* The role, last in the row, in ink: the same weight as the rest. */
 .cv-meta-part:last-child:not(:first-child) {
-  font-weight: 500;
-  color: #384b55;
+  color: var(--ink);
 }
 .filter {
   display: flex;
-  gap: 6px;
+  gap: var(--space-2);
   flex-wrap: wrap;
-  margin: 16px 0;
+  margin: var(--space-4) 0;
 }
+/* Control. */
 .filter button {
-  font-size: 12px;
-  min-height: 40px;
-  padding: 8px 12px;
+  font: var(--fw-regular) var(--fs-13) / var(--lh-control) var(--sans);
+  font-variant-numeric: tabular-nums;
+  min-height: 40px; /* hit target */
+  padding: var(--space-2) var(--space-3);
 }
 .filter button.active {
   background: var(--ink);
-  color: white;
+  color: var(--on-ink);
+}
+/* Meta: paper numbers, year counts, the summary line, venues and roles. */
+.pub-n,
+.pub-group-n,
+.pub-summary,
+.venue,
+.pub-role,
+.pub-tag,
+.cv-authors,
+.cv-citation-detail,
+.cv-publication-links {
+  font-size: var(--fs-13);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-text);
+  color: var(--meta);
 }
 .pub-n {
-  font-size: 12px;
-  color: var(--muted);
-  margin-right: 8px;
+  margin-right: var(--space-2);
+  font-variant-numeric: tabular-nums;
 }
+/* The summary leads straight into the first year: the year's own 32px. */
 .pub-summary {
-  font-size: 13px;
-  color: #59666d;
-  line-height: 1.7;
-  padding-bottom: 20px;
+  padding-bottom: 0;
 }
+/* A year is a group label: well clear of the group above, close to its own
+   papers. Entry title, tabular. */
 .pub-group-title {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 0 10px;
-  font-size: 18px;
-  font-weight: 500;
-}
-.pub-group-n {
-  font-size: 12px;
-  font-weight: 400;
-  color: #65747b;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-8) 0 var(--space-2);
+  font-size: var(--t-entry);
+  font-weight: var(--fw-strong);
+  line-height: var(--lh-title);
+  font-variant-numeric: tabular-nums;
 }
 .pub-group-n::after {
   content: " publications";
@@ -651,146 +687,140 @@ body.ko .pub-group-n::after {
 .pub-group:has(.item):not(:has(.item:not(.hidden))) {
   display: none;
 }
+.pub-group-title + .item {
+  padding-top: var(--space-2);
+  scroll-margin-top: var(--space-2);
+}
 .cv-citation {
   position: relative;
   max-width: none;
   margin-top: 0;
+  font-size: var(--fs-13);
+  line-height: var(--lh-text);
 }
 .cv-citation > .pub-n {
   display: block;
-  margin-bottom: 8px;
-  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--space-2);
 }
-/* Wide screens hang the entry number in the card's 44px gutter, level with
-   the first line of the paper title. */
+/* Wide screens hang the entry number in the card's inset, 12px left of the
+   text, on the first line of the paper title: its line box is the title's,
+   so the two share a baseline (top is an optical nudge, not spacing). */
 @media (min-width: 1001px) {
   .cv-citation > .pub-n {
     position: absolute;
-    right: calc(100% + 14px);
-    top: 5px;
+    right: calc(100% + var(--space-3));
+    top: 2px;
     margin: 0;
+    line-height: calc(var(--t-citation) * var(--lh-title));
   }
 }
-/* Selected by class: the heading element is h3 or h4 (papers nest under
-   their year), so the margins are set here rather than left to the UA. */
+/* Citation title: the paper's h4. Selected by class: the heading element is
+   h3 or h4 (papers nest under their year), so the margins are set here rather
+   than left to the UA. */
 .cv-paper-heading {
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.5;
-  margin: 0 0 10px;
+  font-size: var(--t-citation);
+  font-weight: var(--fw-strong);
+  line-height: var(--lh-title);
+  margin: 0 0 var(--space-2);
 }
 .cv-paper-heading .paper-title {
   font: inherit;
 }
 .cv-paper-heading a {
-  color: var(--ink-green);
+  color: var(--ink);
   text-decoration: none;
   display: inline-block;
-  min-height: 28px;
+  min-height: 24px; /* hit target: WCAG 2.5.8, never taller than the title's line */
 }
 .cv-paper-heading a:hover {
+  color: var(--accent);
   text-decoration: underline;
+  text-underline-offset: var(--space-1);
 }
+/* Citation lines sit close together. */
 .cv-authors,
 .cv-citation-detail {
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--meta);
-  margin-top: 6px;
+  margin-top: var(--space-1);
 }
 .pub-author-me {
-  font-weight: 600;
-  color: #303d43;
+  font-weight: var(--fw-strong);
+  color: var(--ink);
 }
+/* A citation with or without a link button keeps the same row height. */
 .cv-publication-links {
   display: flex;
-  gap: 8px 14px;
+  gap: var(--space-2) var(--space-4);
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 12px;
-  font-size: 13px;
+  margin-top: var(--space-3);
+  min-height: 28px; /* hit target row */
+}
+.cv-publication-links .pub-link {
+  color: var(--accent);
 }
 /* Education entries are a title and one meta line, so they sit closer
-   together than the long entries; the dots stay centred on the titles. */
+   together than the long entries; the dots stay centred on the titles' first
+   line (7px dot: the row's padding plus half the title's line, minus 3.5). */
 #education .item {
   position: relative;
-  padding-block: 16px;
-  padding-left: 22px;
+  padding-block: var(--space-4);
+  padding-left: var(--space-6);
   border-left: 1px solid #d6e0dc;
   border-bottom: 0;
 }
-#education .item:first-child {
-  padding-top: 20px;
-}
 #education .item .item-meta {
-  margin: 6px 0 0;
+  margin: var(--space-2) 0 0;
 }
 #education .item::before {
   content: "";
   position: absolute;
-  top: 26px;
+  top: calc(var(--space-4) + var(--t-entry) * var(--lh-title) / 2 - 3.5px);
   left: -4px;
   width: 7px;
   height: 7px;
   background: #728f81;
   border-radius: 50%;
 }
-#education .item:first-child::before {
-  top: 30px;
-}
-#education .item-title {
-  font-size: 18px;
-}
-.paper-title {
-  font-size: 17px;
-  font-weight: 550;
-  line-height: 1.6;
-}
-.venue {
-  color: var(--muted);
-}
-/* The author role and tag are plain text: link green is for links only. */
-.pub-role {
-  font-size: 13px;
-  color: var(--meta);
-}
 .pub-tag {
   display: inline;
-  font-size: 13px;
-  color: var(--meta);
-  margin-right: 6px;
+  margin-right: var(--space-2);
 }
 /* The footer's hairline closes the page; the last entry above it drops its
    own, so the two never stack. */
 .content > section:last-of-type .item:last-child {
   border-bottom: 0;
 }
+/* Meta. */
 .site-footer {
   border-top: 1px solid var(--line);
-  margin-top: 56px;
-  padding-top: 24px;
+  margin-top: var(--space-12);
+  padding-top: var(--space-4);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px 20px;
-  color: var(--muted);
-  font-size: 13px;
+  gap: var(--space-2) var(--space-4);
+  color: var(--meta);
+  font-size: var(--fs-13);
+  line-height: var(--lh-text);
 }
-/* The contact line runs above the other two on a line of its own. */
+/* The contact line runs above the other two on a line of its own. Its 44px
+   targets hold about 10px below their text: the row gives that back, so the
+   next line sits as close as the line after it. */
 .ft-contact {
   flex-basis: 100%;
+  margin-bottom: calc(-1 * var(--space-2));
 }
 /* A full-size touch target, like every other control on the page. */
 .ft-contact a {
   color: var(--ink);
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 44px; /* hit target */
 }
 .ft-contact a:hover {
   color: var(--accent);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--space-1);
 }
 .profile-image {
   overflow: hidden;
@@ -802,20 +832,12 @@ body.ko .pub-group-n::after {
 .profile-image img {
   transform: scale(1.14);
 }
-body.reader .profile-image {
+.reader .profile-image {
   display: none;
-}
-body.reader .item-desc,
-body.reader .pub-value {
-  font-size: 17px;
 }
 @media (max-width: 1000px) {
   .layout {
     grid-template-columns: 190px minmax(0, 1fr);
-    gap: 24px;
-  }
-  .content {
-    padding: 30px 28px;
   }
 }
 @media (max-width: 760px) {
@@ -824,26 +846,22 @@ body.reader .pub-value {
   }
   .layout {
     display: block;
-    padding-top: 28px;
+    padding-top: var(--space-6);
   }
   .profile-card {
     position: static;
     display: flow-root;
-    padding: 0;
   }
   .profile-image {
     float: right;
-    width: 100px;
-    margin: 0 0 20px 20px;
-  }
-  .name {
-    font-size: 32px;
+    width: 100px; /* dimension */
+    margin: 0 0 var(--space-4) var(--space-4);
   }
   .role {
     max-width: 330px;
   }
   .sidebar {
-    padding: 0 24px 30px;
+    padding: 0 var(--gutter) var(--space-8);
   }
   .sidebar .divider,
   .sidebar .side-label,
@@ -853,168 +871,97 @@ body.reader .pub-value {
   .org {
     max-width: 330px;
   }
-  /* Fixed columns: the row count no longer depends on which font has
-     loaded, so the page below does not jump when Pretendard arrives. The
-     four profile links share one row from 360px up (they need 270px). */
+  /* The address has the first row to itself; the four profile links share
+     the next one from 360px up (they need 270px of 312px, with room to spare
+     in either font, so the row count does not change when the web font
+     arrives). Larger text wraps them, and breaks the address, instead of
+     scrolling the page sideways. */
   .contact-list {
     clear: both;
-    padding-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(4, max-content);
+    padding-top: var(--space-6);
+    margin-block: 0;
   }
-  /* The address is wider than a column: it has the first row to itself. */
   .contact-list .contact-email {
-    grid-column: 1 / -1;
+    flex-basis: 100%;
+  }
+  .contact-list .contact-email a {
+    overflow-wrap: anywhere;
   }
   .sidebar .button {
     max-width: 300px;
-  }
-  .mobile-nav {
-    font-size: 12px;
-    gap: 4px 22px;
-    padding-inline: 24px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-  }
-  .mobile-nav a {
-    flex: none;
-    min-height: 40px;
-  }
-  /* The current-section bar sits on the hairline, as on desktop. */
-  .mobile-nav a[aria-current]::after {
-    bottom: -12px;
+    margin-top: var(--space-4);
   }
   .content {
-    padding: 28px 24px;
+    padding: var(--space-8) var(--gutter);
     border-inline: 0;
-  }
-  .cv-overview h2 {
-    font-size: 28px;
-  }
-  .cv-introduction {
-    font-size: 16px;
-  }
-  .caps-row {
-    /* Wide enough for the longest key ("Languages", 65px). */
-    grid-template-columns: 66px minmax(0, 1fr);
-    gap: 12px;
-  }
-  .section-title {
-    font-size: 22px;
-  }
-  .item-title {
-    font-size: 18px;
-  }
-  .item-desc,
-  .pub-value {
-    font-size: 15px;
-  }
-  .cv-citation {
-    font-size: 13px;
-  }
-  .cv-paper-heading {
-    font-size: 16px;
-  }
-  .item {
-    padding-block: 24px;
   }
   .site-footer {
     flex-direction: column;
-    gap: 8px;
-    padding: 24px 0 0;
-  }
-  .p-set {
-    gap: 10px 14px;
-  }
-}
-/* The section bar fits all five sections on the narrowest phones, and it
-   stops sticking where a short (landscape or zoomed) window needs the room. */
-@media (max-width: 380px) {
-  .mobile-nav {
-    gap: 4px 12px;
-    padding-inline: 16px;
-    scroll-padding-inline: 16px;
-  }
-  /* The Korean labels are shorter: they keep wider, even gaps. */
-  body.ko .mobile-nav {
-    gap: 4px 22px;
-  }
-}
-/* At 340px and below the five English labels fit only with tighter gaps. */
-@media (max-width: 340px) {
-  body:not(.ko) .mobile-nav {
-    gap: 4px 9px;
-    padding-inline: 12px;
-  }
-}
-@media (max-height: 420px) {
-  .mobile-nav {
-    position: static;
+    gap: var(--space-2);
   }
 }
 /* Small phones: a smaller photo leaves room for the name on one line. */
 @media (max-width: 360px) {
   .profile-image {
-    width: 76px;
-    margin: 0 0 16px 16px;
-  }
-  .name {
-    font-size: 28px;
+    width: 76px; /* dimension */
   }
 }
+/* Below 360px three profile links fit a row: the fourth always starts the
+   next one, whichever font has loaded. */
 @media (max-width: 359px) {
-  .contact-list {
-    grid-template-columns: repeat(3, max-content);
+  .contact-list li:last-child {
+    flex-basis: 100%;
   }
 }
+/* Paper: the same roles and tokens (site.css sets their print values) in
+   compact steps; touch targets and their compensations do not apply. */
 @media print {
   .cv-paper-heading,
   #education .item-title {
-    font-size: 10pt;
-    margin-bottom: 5px;
+    margin-bottom: var(--space-1);
   }
   .cv-paper-heading a {
     display: inline;
     min-height: 0;
   }
-  .cv-authors,
-  .cv-citation-detail,
-  .cv-date {
-    font-size: 8pt;
-  }
   .cv-publication-links {
-    margin-top: 5px;
-    gap: 4px 10px;
+    margin-top: var(--space-1);
+    gap: var(--space-1) var(--space-2);
+    min-height: 0;
   }
   /* On paper the number runs in at the start of the title line. */
   .cv-citation > .pub-n {
     float: left;
-    margin: 0 6px 0 0;
+    margin: 0 var(--space-1) 0 0;
     line-height: inherit;
   }
   .item-desc,
   .pub-value {
     max-width: none;
-    line-height: 1.6;
   }
-  .item-meta {
-    margin: 6px 0 8px;
+  .role {
+    line-height: var(--lh-body);
+  }
+  .item-meta,
+  #education .item .item-meta {
+    margin: var(--space-1) 0 var(--space-2);
+  }
+  #education .item .item-meta {
+    margin-bottom: 0;
   }
   .caps-row {
-    padding: 4px 0;
+    padding: var(--space-1) 0;
   }
   .partners {
-    margin-top: 10px;
+    margin-top: var(--space-2);
     padding-top: 0;
     border: 0;
   }
   .pub-summary {
-    padding-bottom: 8px;
-    font-size: 8pt;
+    padding-bottom: var(--space-2);
   }
   .pub-group-title {
-    padding-top: 10px;
-    font-size: 12pt;
+    padding: var(--space-2) 0;
     break-after: avoid;
   }
   html[data-view="cv"] body {
@@ -1029,10 +976,10 @@ body.reader .pub-value {
     display: none;
   }
   .caps {
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
   }
   .caps summary {
-    padding: 10px 0;
+    padding: var(--space-2) 0;
     list-style: none;
   }
   .caps summary::-webkit-details-marker {
@@ -1049,11 +996,11 @@ body.reader .pub-value {
     width: 100%;
     margin: 0;
   }
-  .mobile-nav {
-    display: none;
-  }
   .layout {
     display: block;
+    padding: 0;
+  }
+  .sidebar {
     padding: 0;
   }
   .profile-card {
@@ -1062,15 +1009,8 @@ body.reader .pub-value {
   }
   .profile-image {
     float: right;
-    width: 90px;
-    margin: 0 0 10px 20px;
-  }
-  .name {
-    font-size: 26pt;
-  }
-  .role,
-  .org {
-    font-size: 10pt;
+    width: 90px; /* dimension */
+    margin: 0 0 var(--space-2) var(--space-4);
   }
   .sidebar .divider,
   .sidebar .side-list,
@@ -1080,25 +1020,26 @@ body.reader .pub-value {
   }
   .contact-list {
     display: flex;
-    gap: 4px 16px;
-    margin: 12px 0;
+    gap: var(--space-1) var(--space-4);
+    margin: var(--space-3) 0;
+    padding-top: 0;
   }
   .contact-list a {
     min-height: 0;
+    line-height: inherit;
   }
   /* Paper cannot follow a link: print where each one leads. */
   .contact-list a[data-print]::after {
     content: " (" attr(data-print) ")";
   }
   .content > section {
-    margin: 20px 0;
+    margin: var(--space-5) 0;
   }
   .caps {
     break-inside: avoid;
   }
   .section-title,
   .section-head {
-    font-size: 18pt;
     break-after: avoid;
   }
   /* site.css hides buttons on paper: a heading's button stays, as the
@@ -1106,39 +1047,29 @@ body.reader .pub-value {
      print that sends it no event still shows the folded ones. */
   .section-toggle {
     display: flex !important;
-    padding: 0 0 16px;
+    padding: 0 0 var(--space-3);
   }
   .section-body[hidden] {
     display: block !important;
     content-visibility: visible !important;
   }
-  .title-aside {
-    font-size: 8pt;
-  }
-  .item {
+  .item,
+  .item:first-child,
+  .pub-group-title + .item,
+  #education .item {
     break-inside: avoid;
-    padding: 12px 0;
+    padding-block: var(--space-3);
   }
-  .item-desc,
-  .pub-value,
-  .paper-title,
-  .item-title {
-    font-size: 10pt;
-  }
-  .item-meta,
-  .p-chip,
-  .caps .v {
-    font-size: 8pt;
-  }
-  .pub-role,
-  .pub-tag {
-    font-size: 9pt;
+  #education .item::before {
+    top: calc(var(--space-3) + var(--t-entry) * var(--lh-title) / 2 - 3.5px);
   }
   /* Muted greys wash out on paper: print them darker (9.8:1 on white).
      Dates keep their green, which already prints at 6.2:1. */
   .item-meta,
   .cv-authors,
   .cv-citation-detail,
+  .pub-role,
+  .pub-tag,
   .pub-summary,
   .caps .v,
   .pub-value,
@@ -1162,11 +1093,9 @@ body.reader .pub-value {
     width: 16px;
     height: 16px;
   }
+  /* The monogram inside its 16px circle: decorative (alt=""). */
   .p-chip[data-m]::before {
-    font-size: 8px;
-  }
-  .site-footer {
-    font-size: 8pt;
+    font-size: 6pt;
   }
   .profile-image img {
     filter: grayscale(1);
@@ -1174,10 +1103,6 @@ body.reader .pub-value {
   /* A soft shadow prints as a grey halo. */
   .profile-image {
     box-shadow: none;
-  }
-  /* The role and links set in the size of the author role beside them. */
-  .cv-publication-links {
-    font-size: 9pt;
   }
   /* Keep "04 Publications" with the first papers: the year filter (its
      buttons are hidden on paper) no longer sits between the heading and the
@@ -1189,8 +1114,12 @@ body.reader .pub-value {
     break-after: avoid;
   }
   .site-footer {
-    margin-top: 20px;
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
     break-before: avoid;
+  }
+  .ft-contact {
+    margin-bottom: 0;
   }
   .ft-contact a {
     min-height: 0;
