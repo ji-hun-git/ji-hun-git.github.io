@@ -55,7 +55,7 @@ BUTTON_IN_KOREAN = {"label": "English", "aria-label": "Read in English", "lang":
 # English ones are left out of ko.html like any other English twin.)
 KOREAN_ATTRIBUTES = (
     ("aria-label", "Profile", "프로필"),
-    ("aria-label", "Jihun Chae home", "채지훈 홈"),
+    ("aria-label", "JC, Jihun Chae home", "JC, 채지훈 홈"),
     ("aria-label", "Main navigation", "주 메뉴"),
     ("aria-label", "Filter publications by year", "연도별 논문 필터"),
 )

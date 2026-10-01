@@ -725,12 +725,15 @@ def check_section_folds(browser, base, findings):
             ctx.close()
             count += 1
 
-    # No sideways scroll, folded or open; also with the text enlarged in the
+    # No sideways scroll, folded or open (Methods and tools too: its longest
+    # items have no break opportunity); also with the text enlarged in the
     # browser (sizes are rem, so they follow the reader's default font size:
     # WCAG 1.4.4), where the header's controls take a row of their own rather
-    # than overlap the brand.
+    # than overlap the brand. In two columns the enlarged address breaks
+    # inside the sidebar instead of running into the card.
     for width, text in ((320, 100), (390, 100), (1440, 100), (320, 150), (360, 150),
-                        (390, 150), (390, 200)):
+                        (390, 150), (320, 200), (360, 200), (390, 200), (900, 150),
+                        (900, 200), (1440, 200)):
         for path in ("/", "/ko.html"):
             mobile = width < 760
             ctx = browser.new_context(viewport={"width": width, "height": 844 if mobile else 900},
@@ -744,9 +747,19 @@ def check_section_folds(browser, base, findings):
             for state in ("folded", "open"):
                 if state == "open":
                     open_all_sections(page)
+                    page.evaluate("() => { document.querySelector('details.caps').open = true; }")
                 wide = page.evaluate("() => document.documentElement.scrollWidth - innerWidth")
                 if wide > 0:
                     fail("%s %s" % (where, state), "the page scrolls sideways by %dpx" % wide)
+            if not mobile:
+                spill = page.evaluate("""() => {
+                  const column = document.querySelector('.sidebar').getBoundingClientRect();
+                  return Math.max(...[...document.querySelectorAll('.sidebar a')]
+                    .filter((a) => a.checkVisibility())
+                    .map((a) => a.getBoundingClientRect().right - column.right));
+                }""")
+                if spill > 0.5:
+                    fail(where, "a sidebar link runs %.1fpx out of its column" % spill)
             overlap = page.evaluate("""() => {
               const box = (s) => document.querySelector(s).getBoundingClientRect();
               const brand = box('.site-brand'), controls = box('.site-controls');
@@ -756,6 +769,41 @@ def check_section_folds(browser, base, findings):
             }""")
             if overlap:
                 fail(where, "the header's controls overlap the brand or leave the header")
+            ctx.close()
+            count += 1
+
+    # A larger default text size in the browser's settings (not zoom, and not
+    # the page's own font-size above: only this one reaches media queries)
+    # makes the sticky card taller than some windows. With every section
+    # open, "Get in touch" must come fully into view within the first
+    # window-height of scroll, not only at the end of the page: the card
+    # either sticks whole or scrolls with the page (cv.css). The last two
+    # windows are just taller than a limit written in em alone would allow.
+    for width, height, size in ((1440, 900, 20), (1440, 900, 24), (900, 900, 20),
+                                (900, 900, 24), (1920, 1080, 20), (1920, 1200, 24),
+                                (1440, 1500, 28)):
+        for path in ("/", "/ko.html"):
+            ctx = browser.new_context(viewport={"width": width, "height": height})
+            page = new_page(ctx)
+            cdp = ctx.new_cdp_session(page)
+            cdp.send("Page.setFontSizes", {"fontSizes": {"standard": size, "fixed": 13}})
+            page.goto(base + path, wait_until="load")
+            page.evaluate("() => document.fonts.ready")
+            open_all_sections(page)
+            where = "%s@%dx%d default text %dpx" % (path, width, height, size)
+            seen = page.evaluate("""async () => {
+              const cta = document.getElementById('ctaButton');
+              for (let y = 0; y <= innerHeight; y += 25) {
+                scrollTo({ top: y, behavior: 'instant' });
+                await new Promise(requestAnimationFrame);
+                const r = cta.getBoundingClientRect();
+                if (r.height > 0 && r.top >= 0 && r.bottom <= innerHeight) return y;
+              }
+              return null;
+            }""")
+            if seen is None:
+                fail(where, "\"Get in touch\" stays out of view for the first window-height "
+                     "of scroll (the sticky card is taller than the window)")
             ctx.close()
             count += 1
     for e in errors:
@@ -1037,6 +1085,48 @@ SPACE_SCALE = """() => {
 }"""
 
 
+# The sidebar's type, by tier (cv.css): the name at --fs-28; the role and the
+# school at --fs-16; below the first hairline the Focus label and list, the
+# contacts and "Get in touch" at --fs-13. The token values are read from the
+# page, so the check follows the browser's text size.
+SIDEBAR_TYPE = """() => {
+  const size = (value) => {
+    const probe = document.createElement('i');
+    probe.style.fontSize = value;
+    document.body.append(probe);
+    const out = getComputedStyle(probe).fontSize;
+    probe.remove();
+    return out;
+  };
+  const tiers = {
+    name: { size: size('var(--fs-28)'), parts: ['.name'] },
+    identity: { size: size('var(--fs-16)'), parts: ['.role', '.org'] },
+    'lists and actions': { size: size('var(--fs-13)'),
+      parts: ['.side-label', '.side-list > div', '.contact-list a', '.button'] },
+  };
+  const own = (el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+  const bad = [];
+  let measured = 0;
+  // Every visible text in the sidebar is in a tier, at the tier's size.
+  for (const el of document.querySelectorAll('.sidebar *')) {
+    if (!own(el) || !el.checkVisibility() || el.closest('.pl-sr-only')) continue;
+    measured++;
+    const text = el.tagName.toLowerCase() + ' "' + el.textContent.trim().slice(0, 20) + '"';
+    const tier = Object.entries(tiers).find(([, { parts }]) =>
+      parts.some((part) => el.closest('.sidebar ' + part)));
+    if (!tier) {
+      bad.push(text + ' is in no tier');
+      continue;
+    }
+    const [name, { size: want }] = tier;
+    const got = getComputedStyle(el).fontSize;
+    if (got !== want) bad.push(text + ' is ' + got + ', its tier (' + name + ') is ' + want);
+  }
+  if (measured < 8) bad.push('only ' + measured + ' texts found in the sidebar');
+  return bad;
+}"""
+
+
 def check_type_and_space(browser, base, findings):
     """The header, the type scale and the spacing scale hold in the browser.
 
@@ -1051,7 +1141,10 @@ def check_type_and_space(browser, base, findings):
     six-size, two-weight, one-family, five-colour scale, also in Reader mode;
     every margin, padding and gap in the CV's columns is on the 4-point
     scale. At 1440, 900, 390 and 320px, in both languages, every section and
-    the toolkit open.
+    the toolkit open. The owner then saw "the sidebar font sizes still look
+    different" (Oct 2026): under the name the sidebar has two tiers, the role
+    and the school at 16 and everything below the first hairline at 13, and
+    no text outside them.
     """
     def fail(where, message, detail=""):
         findings.append({"level": "ERROR", "check": "type-and-space", "state": "type-and-space",
@@ -1069,6 +1162,10 @@ def check_type_and_space(browser, base, findings):
             page.goto(base + path, wait_until="load")
             page.evaluate("() => document.fonts.ready")
             state = page.evaluate(HEADER_STATE)
+            sidebar = page.evaluate(SIDEBAR_TYPE)
+            if sidebar:
+                fail(where, "the sidebar mixes sizes within a tier (28 name; 16 role and "
+                     "school; 13 Focus, contacts and Get in touch)", " | ".join(sidebar[:5]))
             if state["removed"]:
                 fail(where, "removed controls are back: %s" % ", ".join(state["removed"]))
             kinds = [item["name"] for item in state["items"]]

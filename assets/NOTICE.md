@@ -50,12 +50,20 @@ text monogram instead of a logo file.
 ## Other assets
 
 Project pictograms and technology category symbols are original vector drawings.
-Profile images are supplied portfolio photography. The image build script creates
-CV display and structured-data derivatives from the retained master. The
-link-preview card (`profile/jihun-chae-card.jpg`) is a browser rendering of the
-site's own type and colours around that photograph, made by
-`tools/build_og_card.py`. The bookshelf social image is a browser rendering of the
-site's own design and content.
+
+Profile photograph: Sihyunhada Moment, a portrait photo studio (named in the
+delivered file's caption), credited there as "기록가 박수연". Cropped for
+layout, not retouched.
+
+Profile images are supplied portfolio photography. The master
+(`profile/jihun-chae-master.jpg`) is kept as delivered, with the studio's
+credit, signature and caption. `tools/build-profile-images.py` makes the CV
+display and structured-data images from a crop of it that leaves those marks
+out; nothing in the photograph is retouched. The link-preview card
+(`profile/jihun-chae-card.jpg`) is a browser rendering of the site's own type
+and colours around a tighter crop of the same photograph, made by
+`tools/build_og_card.py`. The bookshelf social image is a browser rendering of
+the site's own design and content.
 
 The 3D book and jet renderers use Three.js 0.185.1, Copyright 2010-2026 Three.js Authors,
 under the MIT license in `vendor/three/LICENSE`. The two minified distribution

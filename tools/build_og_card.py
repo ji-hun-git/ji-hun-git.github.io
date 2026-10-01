@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import base64
 import io
+import runpy
 import tempfile
 from pathlib import Path
 
@@ -31,9 +32,10 @@ OUT = ROOT / "assets" / "profile" / "jihun-chae-card.jpg"
 W, H = 1200, 630
 
 # The portrait crop, in master pixels (the master is 1200 x 1543). It keeps
-# head, neck and collar with room above the hair, and leaves out the
-# photographer's marks in the top corners (x 106-261 and 953-1097, y 52-95)
-# and the caption along the bottom.
+# head, neck and collar with room above the hair, between the photographer's
+# marks in the top corners, and above the caption along the bottom. The
+# marks are measured once, in tools/build-profile-images.py (MARKS); the
+# card is not written if this crop would include any of them.
 CROP = (272, 36, 944, 900)
 
 # The CV's tokens (assets/site.css, assets/cv.css).
@@ -118,6 +120,10 @@ h1 span {{ font-family: "Pretendard Variable", sans-serif; }}
 
 
 def portrait() -> str:
+    profile = runpy.run_path(str(ROOT / "tools" / "build-profile-images.py"))
+    inside = profile["clear_of_marks"](CROP)
+    if inside:
+        raise SystemExit(f"the crop {CROP} includes the photographer's {', '.join(inside)}")
     src = ImageOps.exif_transpose(Image.open(MASTER)).convert("RGB")
     crop = src.crop(CROP)
     # Twice the displayed size, so the browser downsamples a sharp source.

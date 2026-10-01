@@ -74,9 +74,16 @@ JavaScript (nothing folded), the page with `site.js` blocked (every entry
 shown, no chevron or pointer on the headings), a deep link while `site.js`
 arrives late (no layout shift, and it still lands), the folded card hugging its
 content (as much space under the footer as above the overview), and sideways
-scroll at 320, 390 and 1440px, folded and open, and with the text enlarged in
-the browser (150% at 320, 360 and 390px, 200% at 390px), where the header's
-controls may take a row of their own but never overlap the brand. A link lands when its target's
+scroll at 320, 390 and 1440px, folded and open (Methods and tools open too),
+and with the text enlarged in the browser (150% at 320, 360, 390 and 900px,
+200% at 320, 360, 390, 900 and 1440px), where the header's controls may take a
+row of their own but never overlap the brand, and in two columns no sidebar
+link runs out of its column. With a larger default text size in the
+browser's settings (20, 24 and 28px through Chrome's `Page.setFontSizes`,
+the only enlargement media queries see, at 1440x900, 900x900, 1920x1080,
+1920x1200 and 1440x1500) and every section open, "Get in touch" comes into
+view within the first window-height of scroll: the sticky profile card never
+holds it below the fold. A link lands when its target's
 box is at `scroll-padding-top` plus its `scroll-margin-top` and its first line
 of text is 44-56px from the top of the window: sections, entries and papers
 share that line now that the sticky section bar is gone. A target too close to
@@ -91,6 +98,9 @@ baseline; the reader-mode button is named by its words ("Reader mode" /
 "읽기 모드"), and pressed it shows an underline without a fill or a change of
 box; every visible text is in one of six sizes (13, 16, 18, 20, 24, 28px), two
 weights, the one font stack and the five colour roles, also in Reader mode;
+the sidebar's text is in three tiers, each at one size (the name at 28; the
+role and the school at 16; the Focus label and list, the contacts and "Get in
+touch" at 13), and in no other;
 and every margin, padding and gap in the CV's columns is on the 4-point scale
 (13px, a 12px gap plus its hairline, is the one composite). `static_checks.py`
 checks the same in the source (`css-tokens`): no literal size, weight, leading

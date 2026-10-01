@@ -1,10 +1,8 @@
 /* The CV. Every size, weight, leading, colour and space comes from the tokens
    in site.css :root; the literals left here are dimensions (hit targets,
    column and photo widths), hairline colours and optical offsets, each said
-   so where it stands. */
-html[data-view="cv"] body {
-  background: #f0f2f3;
-}
+   so where it stands. The page's cool grey ground is in site.css, which
+   the 404 page shares. */
 /* One frame for the header (site.css) and the CV: the page margin equals the
    column gutter at every width. */
 #cv-start {
@@ -27,13 +25,21 @@ html[data-view="cv"] body {
   top: var(--space-8);
 }
 /* Short windows cannot hold the whole card below its 32px offset (it is
-   715px tall in the 224px column and 810px in the 190px one, measured in
+   715px tall in the 224px column and 806px in the 190px one, measured in
    English; Korean is shorter): there it scrolls with the page instead of
    sticking, so Focus, the contacts and "Get in touch" all stay reachable and
    nothing is hidden. Each limit is the card's height plus 32px above and
-   below. */
+   below (the second keeps 4px to spare): 779px and 874px at the 16px default
+   text size. A larger default text size makes the card taller, faster than
+   its text (the column does not widen, so lines wrap), so the second pair
+   adds 24px (28px in the 190px column) for each px of text size above 16:
+   a media query's em is the browser's text size, not the page's. That keeps
+   the whole card in the window up to 32px text; at 16px both pairs are the
+   same limits, and a smaller text size keeps the first. */
 @media (min-width: 761px) and (max-height: 779px),
-  (min-width: 761px) and (max-width: 1000px) and (max-height: 874px) {
+  (min-width: 761px) and (max-width: 1000px) and (max-height: 874px),
+  (min-width: 761px) and (max-height: calc(72.6875em - 384px)),
+  (min-width: 761px) and (max-width: 1000px) and (max-height: calc(82.625em - 448px)) {
   .profile-card {
     position: static;
   }
@@ -55,6 +61,12 @@ html[data-view="cv"] body {
 .image-unavailable {
   background: var(--line);
 }
+/* The sidebar in two sizes under the name, and the first hairline is the
+   step: above it, who he is, at the body size (16); below it, the lists and
+   the actions, at the meta size (13), the size of every other control on the
+   page. Ink for what names or acts (name, role, contacts, "Get in touch"),
+   ink-soft for what describes (the school, the Focus items), meta only for
+   the label. */
 /* Display: the page's h1. */
 .name {
   font: var(--fw-strong) var(--fs-28) / var(--lh-heading) var(--sans);
@@ -66,16 +78,14 @@ html[data-view="cv"] body {
   line-height: var(--lh-text);
   text-wrap: balance;
 }
-/* Meta. */
-.org,
-.side-list,
-.contact-list {
-  font-size: var(--fs-13);
-  line-height: var(--lh-text);
-  color: var(--meta);
-}
+/* Body, in ink-soft: the school, one block with the role, 8px below it so
+   the two lines that start with KAIST read as two facts. */
 .org {
-  margin-top: var(--space-3);
+  font-size: var(--fs-16);
+  line-height: var(--lh-text);
+  color: var(--ink-soft);
+  margin-top: var(--space-2);
+  text-wrap: balance;
 }
 .divider {
   border-top: 1px solid var(--line);
@@ -93,26 +103,42 @@ html[data-view="cv"] body {
 .side-label {
   margin-bottom: var(--space-2);
 }
+/* Meta. The Focus items and the contacts share one row rhythm: each row is
+   its line of text with 4px above and below, and each list gives back the
+   4px above its first row and below its last, so the space around the
+   dividers reads the same as elsewhere. */
+.side-list,
+.contact-list {
+  font-size: var(--fs-13);
+  line-height: var(--lh-text);
+  margin-block: calc(-1 * var(--space-1));
+}
 .side-list {
   display: grid;
-  gap: var(--space-2);
+  color: var(--ink-soft);
 }
-/* The 32px targets keep their text in the middle; the list gives back the
-   half of the slack that sits above the first row and below the last, so
-   the space around the dividers reads the same as elsewhere. */
+.side-list > div {
+  padding-block: var(--space-1);
+  text-wrap: balance;
+}
 .contact-list {
   list-style: none;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0 var(--space-4);
-  margin-block: calc(-1 * var(--space-1));
 }
+/* Each contact is a 29px target (WCAG 2.5.8: at least 24). */
 .contact-list a {
   display: inline-block;
-  min-height: 32px; /* hit target */
-  line-height: 32px; /* the text centred in its target */
+  padding-block: var(--space-1);
+  vertical-align: top;
   color: var(--ink);
+}
+/* Text enlarged in the browser grows the address but not the column: it
+   breaks inside the column instead of running into the card. */
+.contact-list .contact-email a {
+  overflow-wrap: anywhere;
 }
 .contact-list a:hover {
   color: var(--accent);
@@ -125,16 +151,20 @@ html[data-view="cv"] body {
   height: 1em;
   vertical-align: -0.125em;
 }
-/* "Get in touch" already holds 13px of its 44px row above its text. */
+/* "Get in touch" already holds about 12px of its 44px row above its line of
+   text: with this 12px the line starts about 24px under the hairline. */
 .divider:has(+ .button) {
   margin-bottom: var(--space-3);
 }
+/* Control, the sidebar's one primary action: the controls' 13px, in the
+   strong weight, on its own 44px row over a full-width ink rule. */
 .button {
   display: flex;
   justify-content: space-between;
   align-items: center;
   min-height: 44px; /* hit target */
-  font-size: var(--fs-16);
+  font-size: var(--fs-13);
+  font-weight: var(--fw-strong);
   line-height: var(--lh-text);
   border-bottom: 1px solid var(--ink);
 }
@@ -163,22 +193,24 @@ html[data-view="cv"] body {
   font: var(--fw-strong) var(--fs-28) / var(--lh-heading) var(--sans);
   text-wrap: balance;
 }
-/* Lead. */
+/* Lead. Balanced, so its last line never holds one word alone. */
 .cv-introduction {
   font-size: var(--t-lead);
   line-height: var(--lh-text);
   max-width: 48ch;
   margin-top: var(--space-4);
   color: var(--ink-soft);
+  text-wrap: balance;
 }
 /* Below an open section, then the next title's own 16px row padding. */
 .content > section {
   margin-bottom: var(--section-gap);
 }
 /* The toolkit's lower hairline is the upper rule of the section list below
-   it, so the first row is spaced like the others. */
+   it, so the first row is spaced like the others; both are the section
+   rules' colour, so the folded list reads as seven like rules. */
 .caps {
-  border-block: 1px solid var(--line);
+  border-block: 1px solid #cbd3d6;
   padding: 0;
   margin-bottom: 0;
 }
@@ -234,10 +266,13 @@ html[data-view="cv"] body {
   clip-path: inset(-4px 0 -4px var(--space-5));
 }
 /* The dot sits in the item's own 20px left padding, so an item that wraps
-   inside itself keeps its second line clear of the clipped strip. */
+   inside itself keeps its second line clear of the clipped strip. An item
+   with no break opportunity (OCR(RapidOCR)) still breaks when enlarged text
+   makes it wider than the line, instead of being clipped. */
 .caps .v li {
   position: relative;
   padding-left: var(--space-5);
+  overflow-wrap: anywhere;
 }
 .caps .v li::before {
   content: "·";
@@ -295,6 +330,12 @@ html[data-view="cv"] body {
 }
 html:not(.cv-folds) .section-toggle {
   cursor: auto;
+}
+/* The title may shrink and wrap beside its number when enlarged text makes
+   a word wider than the row. */
+.section-toggle > span:not(.num) {
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 /* Meta: tabular digits, so every title starts at the same x after its
    number. A title too long for the row wraps beside its number, not below. */
@@ -457,6 +498,11 @@ html:not(.cv-folds) .section-toggle {
   .caps summary:hover::after {
     border-color: ButtonText;
   }
+  /* "Methods and tools" is a disclosure like the five section rows (buttons),
+     not a link: the same system colour. */
+  .caps summary {
+    color: ButtonText;
+  }
   /* The Publications row's ring takes the system colour, like every other
      focus ring on the page. */
   html.cv-folds .section-head .section-toggle:focus-visible::before {
@@ -492,12 +538,14 @@ html:not(.cv-folds) .section-toggle {
 .item[tabindex="-1"]:focus {
   outline: none;
 }
-/* Entry title: every h3, in every section. */
+/* Entry title: every h3, in every section. Balanced, so no word is left
+   alone on its last line at any width ("pretty" still left one at common
+   widths: the Golden Tewak and AI-900 titles between 370 and 830px). */
 .item-title {
   font-size: var(--t-entry);
   font-weight: var(--fw-strong);
   line-height: var(--lh-title);
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 .item-title a:hover {
   text-decoration: underline;
@@ -525,11 +573,18 @@ html:not(.cv-folds) .section-toggle {
   max-width: 35em;
 }
 /* A publication's summary follows its citation as plain soft text, set off
-   by the same dashed hairline as an entry's partner row (no box, no bar). */
+   by the same dashed hairline as an entry's partner row (no box, no bar):
+   the rule runs the entry's full width like the partner row's, and the text
+   inside keeps the body measure. */
 .pub-value {
   color: var(--ink-soft);
   padding-top: var(--space-4);
   border-top: 1px dashed #e0e5e6;
+  max-width: none;
+}
+.pub-value > span {
+  display: block;
+  max-width: 35em;
 }
 .item-desc a,
 .pub-link {
@@ -625,6 +680,15 @@ html:not(.cv-folds) .section-toggle {
 /* The role, last in the row, in ink: the same weight as the rest. */
 .cv-meta-part:last-child:not(:first-child) {
   color: var(--ink);
+}
+/* In Education the degree, the first part after the date, is the one in
+   ink (the M.S. line ends with its advisor instead); the rest follow the
+   meta line's colour, which print darkens. */
+#education .cv-meta-part {
+  color: var(--ink);
+}
+#education .cv-meta-part + .cv-meta-part {
+  color: inherit;
 }
 .filter {
   display: flex;
@@ -722,6 +786,7 @@ body.ko .pub-group-n::after {
   font-weight: var(--fw-strong);
   line-height: var(--lh-title);
   margin: 0 0 var(--space-2);
+  text-wrap: balance; /* like .item-title: no word alone on the last line */
 }
 .cv-paper-heading .paper-title {
   font: inherit;
@@ -829,9 +894,6 @@ body.ko .pub-group-n::after {
   display: block;
   height: 100%;
 }
-.profile-image img {
-  transform: scale(1.14);
-}
 .reader .profile-image {
   display: none;
 }
@@ -868,8 +930,10 @@ body.ko .pub-group-n::after {
   .sidebar .side-list {
     display: none !important;
   }
+  /* In em, so the school breaks after "Graduate School" at every phone width
+     and text size, not inside it beside the photo. */
   .org {
-    max-width: 330px;
+    max-width: 15em;
   }
   /* The address has the first row to itself; the four profile links share
      the next one from 360px up (they need 270px of 312px, with room to spare
@@ -884,11 +948,8 @@ body.ko .pub-group-n::after {
   .contact-list .contact-email {
     flex-basis: 100%;
   }
-  .contact-list .contact-email a {
-    overflow-wrap: anywhere;
-  }
+  /* Its rule runs to the column's edge, like the photo's and the card's. */
   .sidebar .button {
-    max-width: 300px;
     margin-top: var(--space-4);
   }
   .content {
@@ -929,6 +990,12 @@ body.ko .pub-group-n::after {
     gap: var(--space-1) var(--space-2);
     min-height: 0;
   }
+  /* Without the screen's hit target every citation's role row is one line,
+     with or without links. */
+  .pub-link {
+    padding: 0;
+    min-height: 0;
+  }
   /* On paper the number runs in at the start of the title line. */
   .cv-citation > .pub-n {
     float: left;
@@ -936,10 +1003,12 @@ body.ko .pub-group-n::after {
     line-height: inherit;
   }
   .item-desc,
-  .pub-value {
+  .pub-value,
+  .pub-value > span {
     max-width: none;
   }
-  .role {
+  .role,
+  .org {
     line-height: var(--lh-body);
   }
   .item-meta,
@@ -963,9 +1032,6 @@ body.ko .pub-group-n::after {
   .pub-group-title {
     padding: var(--space-2) 0;
     break-after: avoid;
-  }
-  html[data-view="cv"] body {
-    background: white;
   }
   .content {
     padding: 0;
@@ -1024,9 +1090,9 @@ body.ko .pub-group-n::after {
     margin: var(--space-3) 0;
     padding-top: 0;
   }
+  /* The screen's 4px rows would open the paper's address lines. */
   .contact-list a {
-    min-height: 0;
-    line-height: inherit;
+    padding-block: 0;
   }
   /* Paper cannot follow a link: print where each one leads. */
   .contact-list a[data-print]::after {
@@ -1060,8 +1126,17 @@ body.ko .pub-group-n::after {
     break-inside: avoid;
     padding-block: var(--space-3);
   }
+  /* The rail sits on the paper's left edge: the list steps in by half a dot
+     so the dots are whole, and they print although "Background graphics"
+     is off by default (without it they would paint as white gaps in the
+     rail). */
+  #education .items {
+    padding-left: var(--space-1);
+  }
   #education .item::before {
     top: calc(var(--space-3) + var(--t-entry) * var(--lh-title) / 2 - 3.5px);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
   /* Muted greys wash out on paper: print them darker (9.8:1 on white).
      Dates keep their green, which already prints at 6.2:1. */

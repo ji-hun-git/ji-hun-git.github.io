@@ -1427,7 +1427,6 @@ TOKEN_EXEMPT = {
     ("assets/site.css", "margin", "-1px"),        # .pl-sr-only, the visually hidden pattern
     ("assets/cv.css", "margin-top", "-7px"),      # chevron, optical centring
     ("assets/cv.css", "margin-top", "-1px"),      # chevron pointing up, optical
-    ("assets/cv.css", "line-height", "32px"),     # contact link text centred in its 32px target
     ("assets/cv.css", "font-size", "6pt"),        # printed monogram in its 16px circle
 }
 

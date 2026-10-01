@@ -76,7 +76,11 @@
   const language = document.getElementById("langToggle");
   const reader = document.getElementById("ttsToggle");
   // Screen-reader text for links that open a new tab (see markNewTabLinks).
+  // It carries its own language: it sits inside citations marked English, and
+  // a screen reader would read the Korean cue in an English voice. Region
+  // subtags on purpose: site.css hides [lang="en"] or [lang="ko"].
   const newTab = { en: " (new tab)", ko: " (새 탭)" };
+  const cueLang = (ko) => (ko ? "ko-KR" : "en-US");
   // The link always points at the other language, with this page's query and
   // #section, so opening it in a new tab lands in the same place.
   const pointLink = () => {
@@ -103,7 +107,8 @@
     // the page's language, are its name.
     [
       [".sidebar", "Profile", "프로필"],
-      [".site-brand", "Jihun Chae home", "채지훈 홈"],
+      // The name starts with the visible "JC", so saying it finds the link.
+      [".site-brand", "JC, Jihun Chae home", "JC, 채지훈 홈"],
       [".site-navigation", "Main navigation", "주 메뉴"],
       ["#pubFilter", "Filter publications by year", "연도별 논문 필터"],
     ].forEach(([selector, en, korean]) => {
@@ -118,6 +123,7 @@
         ?.setAttribute("href", ko ? "ko.html" : "./");
     document.querySelectorAll(".new-tab").forEach((cue) => {
       cue.textContent = newTab[ko ? "ko" : "en"];
+      cue.lang = cueLang(ko);
     });
     writeAddress(ko);
     pointLink();
@@ -270,6 +276,20 @@
     folds.forEach((fold, i) => setOpen(fold, beforePrint.folds[i]));
     beforePrint = null;
   });
+  // The partner marks are lazy, so they stay out of the first load; a print
+  // made before they scrolled into view would show empty slots (a print does
+  // not wait for lazy images). Once the page has loaded, fetch the rest (27
+  // small files, cached across both pages).
+  addEventListener(
+    "load",
+    () =>
+      document
+        .querySelectorAll('img.p-logo[loading="lazy"]')
+        .forEach((img) => {
+          img.loading = "eager";
+        }),
+    { once: true },
+  );
   // A link that opens a new tab says so to screen readers, and its "↗" (a
   // visual cue) is not read as part of its name. Only while the bookshelf is
   // off: library.js reads these links' text for its own labels.
@@ -292,6 +312,7 @@
       const cue = document.createElement("span");
       cue.className = "pl-sr-only new-tab";
       cue.textContent = newTab[root.lang === "ko" ? "ko" : "en"];
+      cue.lang = cueLang(root.lang === "ko");
       link.append(cue);
     });
   }

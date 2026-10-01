@@ -75,10 +75,14 @@ Every size, weight, leading, text colour and space in `assets/site.css` and
 - Type: one stack for both languages (`--sans`: Geist, then Pretendard for
   Hangul), six sizes (`--fs-13`, `16`, `18`, `20`, `24`, `28`), two weights
   (`--fw-regular` 400, `--fw-strong` 600) and named roles (`--t-section`,
-  `--t-entry`, `--t-citation`, `--t-lead`, `--t-body`) that step down one size
-  at 760px and below. Korean uses the same sizes with more leading
-  (`body.ko`); Reader mode sets body text one step up (`body.reader`); print
-  sets the same roles in points.
+  `--t-entry`, `--t-citation`, `--t-lead`, `--t-body`); the four above body
+  step down one size at 760px and below, and `--t-body` stays 16px. Korean
+  uses the same sizes with more leading (`body.ko`); Reader mode sets body
+  text one step up (`body.reader`); print sets the same roles in points.
+- The sidebar uses three of the sizes: the name at 28; the role and the school
+  at 16 (body); below the first hairline, the Focus label and list, the
+  contacts and "Get in touch" at 13, the size of every other control.
+  `run_browser.py` checks it at every width, in both languages.
 - Colour roles for text: `--ink`, `--ink-soft`, `--meta`, `--accent`,
   `--on-ink`.
 - Space: one 4-point scale (`--space-1` 4px to `--space-24` 96px) and four

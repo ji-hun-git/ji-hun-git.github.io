@@ -40,7 +40,7 @@
   --lh-title: 1.4;
   --lh-text: 1.6; /* short lines: lead, meta, role */
   --lh-body: 1.75; /* paragraphs */
-  /* Roles whose size steps down one size on phones (below). */
+  /* Roles; all but --t-body step down one size on phones (below). */
   --t-section: var(--fs-24);
   --t-entry: var(--fs-20);
   --t-citation: var(--fs-18);
@@ -115,6 +115,11 @@ body {
   background: var(--paper);
   color: var(--ink);
   font: var(--fw-regular) var(--fs-16) / var(--lh-text) var(--sans);
+}
+/* The CV's cool grey ground (its theme-color), on the CV pages and the 404
+   page, which carry data-view="cv". */
+html[data-view="cv"] body {
+  background: #f0f2f3;
 }
 h1,
 h2,
@@ -206,7 +211,8 @@ body.ko {
   gap: var(--space-2) var(--space-8);
   padding-block: var(--space-4);
 }
-/* On the CV the header spans the same 1200px frame as #cv-start (cv.css). */
+/* On the CV (and the 404 page) the header spans the same 1200px frame as
+   #cv-start (cv.css). */
 html[data-view="cv"] .site-header {
   width: min(1200px, calc(100% - 2 * var(--gutter)));
 }
@@ -256,6 +262,11 @@ html[data-view="cv"] .site-header {
 /* On a row of their own, the controls keep to the far end. */
 html:not([data-bookshelf="on"]) .site-controls {
   margin-left: auto;
+}
+/* The last control's padding hangs past the frame, so its words end on the
+   card's edge as the brand's start on it. */
+.site-controls > :last-child {
+  margin-right: calc(-1 * var(--space-3));
 }
 /* The language control is a link to the other language's page; it looks and
    responds exactly like the reader-mode button beside it. */
@@ -359,6 +370,9 @@ html[data-view="library"] .library-return {
   .site-controls button {
     padding: var(--space-2);
   }
+  .site-controls > :last-child {
+    margin-right: calc(-1 * var(--space-2));
+  }
   .site-brand {
     min-width: 38px;
   }
@@ -381,9 +395,10 @@ html[data-view="library"] .library-return {
     color: HighlightText;
   }
 }
-/* The 404 text starts on the header brand's edge, at a 680px measure. */
+/* The 404 text starts on the header brand's edge, at a 680px measure, in
+   the CV's 1200px frame. */
 .error-page {
-  width: min(var(--frame), calc(100% - 2 * var(--gutter)));
+  width: min(1200px, calc(100% - 2 * var(--gutter)));
   margin: var(--space-24) auto;
 }
 .error-page > * {
@@ -397,13 +412,25 @@ html[data-view="library"] .library-return {
   line-height: var(--lh-text);
   margin-bottom: var(--space-6);
 }
-.error-page > a {
-  display: inline-flex;
-  align-items: center;
-  column-gap: var(--space-1); /* the space before "→", which flex collapses */
-  min-height: 44px;
+/* Both links are underlined (the Korean one sits inside its sentence, in
+   the sentence's colour), and the underline runs on under the space and the
+   arrow. */
+.error-page a {
   text-decoration: underline;
   text-underline-offset: var(--space-1);
+}
+.error-page > a {
+  display: inline-block;
+  min-height: 44px;
+  padding-block: var(--space-2);
+}
+/* The Korean line breaks between words, and its link never splits. */
+.error-page :lang(ko) {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.error-page p a {
+  white-space: nowrap;
 }
 @media print {
   /* Paper takes the same roles in points, in both languages: the Korean
@@ -426,7 +453,8 @@ html[data-view="library"] .library-return {
     --lh-text: 1.45;
     --lh-body: 1.5;
   }
-  body {
+  body,
+  html[data-view="cv"] body {
     background: white;
     color: black;
   }
