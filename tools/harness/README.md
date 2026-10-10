@@ -57,12 +57,12 @@ is `noindex` with its redirect in place; `run_browser.py` loads it under a
 non-local host name and checks that it goes on to the CV (`?from=ko` to
 `/ko.html`) without a history entry. On the local test server it keeps
 working, so the `lab` state and `lab_checks.py` still run.
-The CV opens on its overview: `site.js` folds the five numbered sections to
-their headings, each a button (`aria-expanded`, `aria-controls` its
+The CV opens with Research and development and Awards open (`LANDING_OPEN` in
+`site.js`); `site.js` folds the other three numbered sections to their headings, each a button (`aria-expanded`, `aria-controls` its
 `<section>-body`) that hides the body with `hidden="until-found"`. The HTML
 ships them open, and `static_checks.py` checks that markup and that the
-overview's counter strip stays gone. `run_browser.py` checks the folded landing
-on both pages (only the overview, Methods and tools and the five headings, rows
+overview's counter strip stays gone. `run_browser.py` checks the landing
+on both pages (the overview, Methods and tools, R&D and Awards open, rows
 at least 44px tall), mouse, Enter and Space, sections opening independently,
 the far end of a row and the Google Scholar link beside the Publications
 heading, links that open their section and land on it (on load, an in-page

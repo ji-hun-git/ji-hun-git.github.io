@@ -168,8 +168,9 @@
   reader.addEventListener("click", () =>
     setReader(!document.body.classList.contains("reader")),
   );
-  // The CV opens on its overview: each numbered section folds to its heading,
-  // whose button shows or hides the section's body. index.html ships them
+  // The CV opens with Research and development and Awards open (LANDING_OPEN)
+  // and the other numbered sections folded to their headings; each heading's
+  // button shows or hides the section's body. index.html ships them
   // open, so the page is whole without scripts. hidden="until-found" lets the
   // browser's find in page and #fragment links open a section themselves
   // (beforematch); a browser that does not know the value hides it outright,
@@ -183,6 +184,7 @@
       section: button.closest("section"),
     }))
     .filter((fold) => fold.body && fold.section);
+  const LANDING_OPEN = new Set(["projects", "awards"]);
   const isOpen = (fold) =>
     fold.button.getAttribute("aria-expanded") === "true";
   const setOpen = (fold, open) => {
@@ -207,10 +209,14 @@
   };
   {
     // A link such as ?view=cv#publications or #cv-work-<slug> (?work=<slug>
-    // arrives as one) opens its section before the page lands on it below.
+    // arrives as one) opens its section too, before the page lands on it below.
     const target = elementFor(location.hash);
     folds.forEach((fold) =>
-      setOpen(fold, Boolean(target && fold.section.contains(target))),
+      setOpen(
+        fold,
+        LANDING_OPEN.has(fold.section.id) ||
+          Boolean(target && fold.section.contains(target)),
+      ),
     );
   }
   // The headings work as disclosures from here on: cv.css draws their

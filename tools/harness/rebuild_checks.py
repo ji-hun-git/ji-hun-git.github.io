@@ -40,17 +40,17 @@ def check_cv(page,width,lang,shots=False):
     expect(page.locator('#awards .items>.item')).to_have_count(10)
     expect(page.locator('#pubItems .item')).to_have_count(21)
     expect(page.locator('#pubItems .cv-paper-heading')).to_have_count(21)
-    # The CV opens on its overview, every section folded to its heading.
+    # The CV opens with R&D and Awards open, the other three sections folded.
     expect(page.locator('.cv-index')).to_have_count(0)
-    expect(page.locator('#cv-content .section-toggle[aria-expanded="false"]')).to_have_count(5)
-    expect(page.locator('#cv-content .item:visible')).to_have_count(0)
+    expect(page.locator('#cv-content .section-toggle[aria-expanded="false"]')).to_have_count(3)
+    expect(page.locator('#cv-content .item:visible')).to_have_count(16)
     expect(page.locator('.caps')).not_to_have_attribute('open','')
     page.locator('.caps > summary').click()
     expect(page.locator('.caps-row').first).to_be_visible()
     page.locator('.caps > summary').click()
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),(width,lang,'folded cv overflow')
     if shots: page.screenshot(path=str(args.screenshots/f'cv-{width}-{lang}.png'),animations='disabled')
-    assert open_all_sections(page)==5,(width,lang,'sections did not open')
+    assert open_all_sections(page)==3,(width,lang,'sections did not open')
     expect(page.locator('#cv-content .item:visible')).to_have_count(43)
     assert page.locator('#projects').inner_text().count('NYU\nNYU') == 0
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),(width,lang,'cv overflow')
@@ -138,7 +138,7 @@ try:
             assert not missing,(lang,'printed CV lacks',missing[:3])
             assert len(reader.pages)<=11,(lang,'printed CV has %d A4 pages'%len(reader.pages))
             # Printing returns the page to how the reader left it.
-            expect(pdf_page.locator('#cv-content .section-toggle[aria-expanded="false"]')).to_have_count(5)
+            expect(pdf_page.locator('#cv-content .section-toggle[aria-expanded="false"]')).to_have_count(3)
             results.append({'print':lang,'a4Pages':len(reader.pages),'contacts':'pass','sections':5,'entries':43})
             pdf_page.close()
         browser.close()

@@ -364,7 +364,7 @@ html:not(.cv-folds) .section-toggle {
 @media screen {
   /* Until site.js has folded the sections (the <head> script sets this),
      their contents stay out of the first paint. */
-  html.cv-folding .section-body {
+  html.cv-folding .section-body:not(#projects-body, #awards-body) {
     display: none;
   }
   /* A link to a section or an entry (the <head> script adds cv-landing):
@@ -377,7 +377,7 @@ html:not(.cv-folds) .section-toggle {
   }
   /* Folded, the five headings read as a numbered list of contents: each row
      keeps its hairline, and no gap opens between the rows. */
-  html.cv-folding .content > section,
+  html.cv-folding .content > section:not(#projects, #awards),
   .content > section:has(> .section-body[hidden]) {
     margin-bottom: 0;
   }
@@ -420,6 +420,7 @@ html:not(.cv-folds) .section-toggle {
     top: calc(var(--space-4) + 0.65em);
   }
   html.cv-folds .section-toggle[aria-expanded="true"]::after,
+  html.cv-folding:not(.cv-folds) :is(#projects, #awards) .section-toggle::after,
   .caps[open] summary::after {
     margin-top: -1px;
     transform: rotate(-135deg);

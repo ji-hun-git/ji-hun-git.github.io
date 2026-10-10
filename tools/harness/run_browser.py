@@ -127,6 +127,9 @@ def korean_only_findings(page, label):
 
 
 CV_SECTIONS = ("projects", "awards", "education", "publications", "patents")
+# The sections the CV opens with (site.js LANDING_OPEN); the rest are folded.
+LANDING_OPEN = ("projects", "awards")
+LANDING_ITEMS = 16  # 6 in Research and development, 10 in Awards
 
 # Every CV section open, with its button saying so (FOLDS_OPEN) -- a function,
 # not an expression string: see PAPERS_READY below.
@@ -430,7 +433,7 @@ MAIN_COLUMN = """() => {
   };
 }"""
 
-# The copy the owner wants alone on the landing, and the five headings.
+# The overview copy above the sections, and the five headings.
 FOLDED_LANDING = {
     "en": {
         "overview": ["Curriculum vitae", "Human-centered AI",
@@ -448,11 +451,12 @@ FOLDED_LANDING = {
 
 
 def check_section_folds(browser, base, findings):
-    """The CV opens on its overview, with five folded sections that open.
+    """The CV opens with R&D and Awards open and the other three sections folded.
 
-    Why: the owner asked (Oct 2026) that the CV open on "Human-centered AI"
-    and its one-line introduction alone, every section folded, and the
-    overview's counter strip gone. Folding must not cost anything: each
+    Why: the owner first asked (Oct 2026) for every section folded, then (11
+    Oct 2026) for Research and development and Awards to open on landing, so a
+    visitor sees the main work without a click; the overview's counter strip
+    stays gone. Folding must not cost anything: each
     heading is a real button (mouse, Enter, Space) whose aria-expanded tracks
     its section; sections open independently; a shared link
     (?view=cv#publications, #cv-work-<slug>, ?work=<slug> in
@@ -485,14 +489,15 @@ def check_section_folds(browser, base, findings):
         page.on("pageerror", lambda e: errors.append(str(e)))
         return page
 
-    # The landing: overview, the toolkit's summary and five folded headings.
+    # The landing: overview, the toolkit's summary, R&D and Awards open, and
+    # the other three sections folded.
     for lang, path in (("en", "/"), ("ko", "/ko.html")):
         for viewport, mobile in ((VIEWPORTS["desktop"], False), ({"width": 390, "height": 844}, True)):
             where = "%s@%d" % (path, viewport["width"])
             ctx = browser.new_context(viewport=viewport, is_mobile=mobile, has_touch=mobile)
             page = new_page(ctx)
             page.goto(base + path, wait_until="load")
-            expect_open(where, page, ())
+            expect_open(where, page, LANDING_OPEN)
             seen = page.evaluate(MAIN_COLUMN)
             want = FOLDED_LANDING[lang]
             if seen["counters"]:
@@ -505,9 +510,9 @@ def check_section_folds(browser, base, findings):
             titles = [t for t in seen["placed"]["headings"] if t in want["titles"]]
             if titles != want["titles"]:
                 fail(where, "the section headings read %r" % titles)
-            if seen["placed"]["other"] or seen["items"]:
-                fail(where, "%d entries and other text show before any section is opened"
-                     % seen["items"], " | ".join(seen["placed"]["other"][:4]))
+            if seen["items"] != LANDING_ITEMS:
+                fail(where, "%d entries show on landing, not the %d of R&D and Awards"
+                     % (seen["items"], LANDING_ITEMS))
             if min(seen["rows"]) < 44:
                 fail(where, "a heading row is %dpx tall, under the 44px target" % min(seen["rows"]))
             # The folded card hugs its content: no stretch to the sidebar's
@@ -527,19 +532,21 @@ def check_section_folds(browser, base, findings):
         ctx = browser.new_context(viewport=VIEWPORTS["desktop"])
         page = new_page(ctx)
         page.goto(base + path, wait_until="load")
-        toggle(page, "projects").click()
-        expect_open(path + " click R&D", page, ("projects",))
         if not page.locator("#cv-work-inclusive-game-ai").is_visible():
-            fail(path, "the first R&D entry is not visible once R&D is open")
-        toggle(page, "publications").click()
-        expect_open(path + " click Publications", page, ("projects", "publications"))
+            fail(path, "the first R&D entry is not visible on landing")
         toggle(page, "projects").click()
-        expect_open(path + " click R&D again", page, ("publications",))
+        expect_open(path + " click R&D", page, ("awards",))
+        toggle(page, "projects").click()
+        expect_open(path + " click R&D again", page, ("projects", "awards"))
+        toggle(page, "publications").click()
+        expect_open(path + " click Publications", page, ("projects", "awards", "publications"))
+        toggle(page, "projects").click()
+        expect_open(path + " fold R&D", page, ("awards", "publications"))
         toggle(page, "awards").focus()
         page.keyboard.press("Enter")
-        expect_open(path + " Enter on Awards", page, ("publications", "awards"))
+        expect_open(path + " Enter on Awards", page, ("publications",))
         page.keyboard.press("Space")
-        expect_open(path + " Space on Awards", page, ("publications",))
+        expect_open(path + " Space on Awards", page, ("publications", "awards"))
         if page.evaluate("() => document.activeElement?.closest('#awards .section-toggle') === null"):
             fail(path, "the Awards button lost focus while it toggled")
         # The far end of a row (the chevron) toggles too, and on the
@@ -547,11 +554,12 @@ def check_section_folds(browser, base, findings):
         heading = page.locator("#education .section-title")
         box = heading.bounding_box()
         heading.click(position={"x": box["width"] - 10, "y": box["height"] / 2})
-        expect_open(path + " click the end of the Education row", page, ("publications", "education"))
+        expect_open(path + " click the end of the Education row", page,
+                    ("publications", "awards", "education"))
         row = page.locator("#publications .section-head")
         box = row.bounding_box()
         row.click(position={"x": box["width"] - 10, "y": box["height"] / 2})
-        expect_open(path + " click the end of the Publications row", page, ("education",))
+        expect_open(path + " click the end of the Publications row", page, ("awards", "education"))
         if not page.evaluate("""() => {
               const link = document.querySelector('#publications .title-aside');
               link.scrollIntoView({ block: 'center', behavior: 'instant' });
@@ -574,7 +582,7 @@ def check_section_folds(browser, base, findings):
                                   ("/ko.html#cv-work-camouflage-effectiveness",
                                    "cv-work-camouflage-effectiveness", "projects")):
         page.goto(base + path, wait_until="load")
-        expect_open(path, page, (section,))
+        expect_open(path, page, LANDING_OPEN + (section,))
         missed = landed_on(page, anchor)
         if missed:
             fail(path, "#%s was not scrolled into view" % anchor, missed)
@@ -583,7 +591,7 @@ def check_section_folds(browser, base, findings):
     link = page.locator("#" + page.evaluate(IN_PAGE_LINK, "#awards"))
     for attempt in ("a #awards link", "a #awards link again"):
         link.click()
-        expect_open("/ " + attempt, page, ("awards",))
+        expect_open("/ " + attempt, page, LANDING_OPEN)
         missed = landed_on(page, "awards")
         if missed:
             fail("/ " + attempt, "#awards was not scrolled into view", missed)
@@ -613,17 +621,17 @@ def check_section_folds(browser, base, findings):
         fail("/ a fragment into folded Awards", "the entry was not scrolled into view", missed)
     # Find in page: a text fragment is the browser's own search, with no
     # #id and no hashchange. It reveals the folded entry (beforematch), and
-    # the button must follow.
-    for path, words in (("/", "Top%203%20Finalist"), ("/ko.html", "Top%203%20%EC%9D%B4%EB%82%B4%20%EC%84%A0%EC%A0%95")):
+    # the button must follow. Publications is folded on landing.
+    for path in ("/", "/ko.html"):
         page.close()  # a fresh load, not a same-page fragment change
         page = new_page(ctx)
-        page.goto(base + path + "#:~:text=" + words, wait_until="load")
+        page.goto(base + path + "#:~:text=Toward%20Ludic%20AI", wait_until="load")
         try:
-            page.wait_for_function("() => !document.getElementById('awards-body').hasAttribute('hidden')",
+            page.wait_for_function("() => !document.getElementById('publications-body').hasAttribute('hidden')",
                                    timeout=5000)
         except Exception:
             fail(path + " find in page", "the browser's search did not reveal the folded entry")
-        expect_open(path + " find in page", page, ("awards",))
+        expect_open(path + " find in page", page, LANDING_OPEN + ("publications",))
     ctx.close()
     count += 7
 
@@ -645,13 +653,13 @@ def check_section_folds(browser, base, findings):
         page.emulate_media(media="screen")
         if printed != {"bodies": 5, "items": 43, "headings": 5}:
             fail(path + " print", "folded sections do not print whole", json.dumps(printed))
-        expect_open(path + " after print media", page, ("publications",))
+        expect_open(path + " after print media", page, LANDING_OPEN + ("publications",))
         page.evaluate("() => dispatchEvent(new Event('beforeprint'))")
         expect_open(path + " beforeprint", page, CV_SECTIONS)
         page.evaluate("() => dispatchEvent(new Event('afterprint'))")
-        expect_open(path + " afterprint", page, ("publications",))
+        expect_open(path + " afterprint", page, LANDING_OPEN + ("publications",))
         page.pdf(format="A4")
-        expect_open(path + " after page.pdf()", page, ("publications",))
+        expect_open(path + " after page.pdf()", page, LANDING_OPEN + ("publications",))
         ctx.close()
         count += 1
 
@@ -708,8 +716,10 @@ def check_section_folds(browser, base, findings):
             page.route("**/assets/site.js*", lambda route: held.append(route))
             page.goto(base + path, wait_until="commit")
             page.wait_for_timeout(1200)
-            chevrons_up = page.evaluate("""() => [...document.querySelectorAll('.section-toggle')]
-              .filter((b) => /^matrix\\(-0\\.7/.test(getComputedStyle(b, '::after').transform)).length""")
+            chevrons_up = page.evaluate("""(open) => [...document.querySelectorAll('.section-toggle')]
+              .filter((b) => !open.includes(b.closest('section').id))
+              .filter((b) => /^matrix\\(-0\\.7/.test(getComputedStyle(b, '::after').transform)).length""",
+                                        list(LANDING_OPEN))
             if chevrons_up:
                 fail(where, "%d heading(s) show an open chevron over a folded section" % chevrons_up)
             for route in held:
@@ -878,9 +888,10 @@ def check_bookshelf_off(browser, base, public, findings):
                 urlsplit(u).path.rsplit("/", 1)[-1] for u in shelf_files))
         if "work=" in info["href"]:
             fail(state, "the ?work= link was not rewritten: %s" % info["href"])
-        # The link opens the section it points into, and only that one.
+        # The link opens the section it points into, besides R&D and Awards.
         for fold in page.evaluate(FOLD_SUMMARY, anchor):
-            if fold["expanded"] != fold["holdsTarget"] or fold["hidden"] != (
+            want = fold["holdsTarget"] or fold["id"] in LANDING_OPEN
+            if fold["expanded"] != want or fold["hidden"] != (
                     None if fold["expanded"] else "until-found"):
                 fail(state, "section #%s is %s" % (fold["id"], "open" if fold["expanded"] else "folded"),
                      json.dumps(fold))

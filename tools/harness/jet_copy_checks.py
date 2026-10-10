@@ -24,8 +24,14 @@ baseline = subprocess.check_output(['git', 'show', '2654b89:index.html'], cwd=RO
 old = BeautifulSoup(baseline, 'html.parser')
 new = BeautifulSoup((ROOT / 'index.html').read_text(encoding='utf-8'), 'html.parser')
 normalize = lambda el: ' '.join(el.get_text(' ', strip=True).split())
+# Edits the owner made to a venue line since the baseline (2026-10-11: the
+# preprint label reads "(Preprint)", without "not peer reviewed").
+VENUE_EDITS = {'Research Square [Preprint; not peer reviewed].': 'Research Square (Preprint).'}
 for selector in ['.paper-title', '.pub-role', '.venue', '#patents .item']:
-    assert [normalize(e) for e in old.select(selector)] == [normalize(e) for e in new.select(selector)], selector
+    before = [normalize(e) for e in old.select(selector)]
+    if selector == '.venue':
+        before = [VENUE_EDITS.get(v, v) for v in before]
+    assert before == [normalize(e) for e in new.select(selector)], selector
 # Education is pinned to the owner's own CV (supplied 2026-09-30), which dated
 # each degree and corrected two of them (B.Eng. dual degrees, not "B.A.";
 # undergraduate studies at Ateneo, not a degree). Exact text, both languages:
@@ -65,8 +71,13 @@ assert {a['href'] for a in old.select('a[href]')} - REMOVED_NAVIGATION <= {a['hr
 assert all(new.select_one('[id="%s"]' % href[1:]) for href in REMOVED_NAVIGATION if href.startswith('#'))
 assert not new.select('a[href*="laboratory"]')
 assert len(new.select('.item')) == 43
+# The same venue edit, and the eArticle link labelled "Article" like the rest.
+CITATION_EDITS = dict(VENUE_EDITS, **{'eArticle ↗': 'Article ↗'})
 for before, after in zip(old.select('#pubItems .item-desc'), new.select('#pubItems .item-desc')):
-    assert normalize(before) == normalize(after), 'Citation changed'
+    was = normalize(before)
+    for a, b in CITATION_EDITS.items():
+        was = was.replace(a, b)
+    assert was == normalize(after), 'Citation changed'
 solo = normalize(new.select_one('#awards .item'))
 assert 'Solo' in solo and '개인 참가' in solo and '단독' in solo
 assert not re.search(r'\bteams?\b|3팀|25개 팀', solo, re.I)

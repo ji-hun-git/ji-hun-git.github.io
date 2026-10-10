@@ -72,6 +72,13 @@ KNOWS_ABOUT_KO = {
     "Retrieval-augmented generation": "검색 증강 생성",
     "Extended reality": "확장현실",
     "Data validation": "데이터 검증",
+    "Participatory design": "참여형 설계",
+    "Inclusive design": "포용적 디자인",
+    "Multimodal interfaces": "멀티모달 인터페이스",
+    "Speech recognition": "음성 인식",
+    "Anomaly detection": "이상 탐지",
+    "Thematic analysis": "주제 분석",
+    "Usability studies": "사용성 평가",
 }
 
 VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
