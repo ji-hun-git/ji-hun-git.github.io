@@ -434,13 +434,13 @@ MAIN_COLUMN = """() => {
 FOLDED_LANDING = {
     "en": {
         "overview": ["Curriculum vitae", "Human-centered AI",
-                     "I build and research interactive systems around humans and AI."],
+                     "Building and researching interactive systems that connect people and AI."],
         "caps": ["Methods and tools"],
         "titles": ["Research and development", "Awards and selections", "Education",
                    "Publications", "Patents and certifications"],
     },
     "ko": {
-        "overview": ["이력서", "인간 중심 AI", "사람과 AI를 중심으로 인터랙티브 시스템을 만들고 연구합니다."],
+        "overview": ["이력서", "인간 중심 AI", "사람과 AI를 잇는 인터랙티브 시스템 연구·개발"],
         "caps": ["방법과 도구"],
         "titles": ["연구개발", "수상 및 선정", "학력", "논문", "특허 및 자격증"],
     },
