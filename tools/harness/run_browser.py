@@ -614,7 +614,7 @@ def check_section_folds(browser, base, findings):
     # Find in page: a text fragment is the browser's own search, with no
     # #id and no hashchange. It reveals the folded entry (beforematch), and
     # the button must follow.
-    for path, words in (("/", "Top%203%20Finalist"), ("/ko.html", "%EC%B5%9C%EC%A2%85%203%EC%9D%B8")):
+    for path, words in (("/", "Top%203%20Finalist"), ("/ko.html", "Top%203%20%EC%84%A0%EC%A0%95")):
         page.close()  # a fresh load, not a same-page fragment change
         page = new_page(ctx)
         page.goto(base + path + "#:~:text=" + words, wait_until="load")

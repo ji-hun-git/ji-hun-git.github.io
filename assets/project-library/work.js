@@ -2164,7 +2164,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
       sourceIndex: 0,
       shortTitle: {
         en: "Top 3 Solo Finalist",
-        ko: "개인 참가 최종 3인",
+        ko: "개인 참가 Top 3",
       },
       category: {
         en: "AI Product Challenge",
@@ -2184,8 +2184,8 @@ window.PROJECT_LIBRARY_DESIGNS = {
           ko: "4시간 이내에 단독 개발하고 블라인드 심사를 위해 제출한 AI 애플리케이션입니다.",
         },
         evidence: {
-          en: "Competing solo, I was selected as one of three finalists from approximately 25 entries.",
-          ko: "개인으로 참가해 약 25개 출품작 가운데 최종 3인에 선정되었습니다.",
+          en: "Placed in the top 3 as a solo entrant.",
+          ko: "개인 참가로 Top 3 선정.",
         },
       },
       palette: "award",
@@ -2196,12 +2196,12 @@ window.PROJECT_LIBRARY_DESIGNS = {
       spineVenue: "FDE",
       awardName: {
         en: "KRAFTON Cofathon: AI Native Battlegrounds | Top 3 Solo Finalist",
-        ko: "KRAFTON 코파톤: AI Native Battlegrounds | 개인 참가 최종 3인",
+        ko: "KRAFTON 코파톤: AI Native Battlegrounds | 개인 참가 Top 3",
       },
       editorial: {
         verifiedResult: {
-          en: "I competed solo and was selected as one of three finalists from approximately 25 entries. I built a working AI application and prepared the blind-review submission in under four hours.",
-          ko: "개인으로 참가해 약 25개 출품작 가운데 최종 3인에 선정되었습니다. 4시간 이내에 AI 애플리케이션을 단독 개발하고 블라인드 심사용 제출물을 완성했습니다.",
+          en: "Placed in the top 3 as a solo entrant. I built a working AI application and prepared the blind-review submission in under four hours.",
+          ko: "개인 참가로 Top 3 선정. 4시간 이내에 AI 애플리케이션을 단독 개발하고 블라인드 심사용 제출물을 완성했습니다.",
         },
         selectionContext: {
           en: "The one-day final covered requirements discovery, implementation, verification, and submission. The event offered prizes and a recruiting fast-track.",
