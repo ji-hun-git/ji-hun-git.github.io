@@ -68,7 +68,7 @@ assert len(new.select('.item')) == 43
 for before, after in zip(old.select('#pubItems .item-desc'), new.select('#pubItems .item-desc')):
     assert normalize(before) == normalize(after), 'Citation changed'
 solo = normalize(new.select_one('#awards .item'))
-assert 'Solo' in solo and '개인 참가' in solo and '혼자' in solo
+assert 'Solo' in solo and '개인 참가' in solo and '단독' in solo
 assert not re.search(r'\bteams?\b|3팀|25개 팀', solo, re.I)
 assert len(new.select('.pub-value [lang="en"]')) == 21
 assert len(new.select('.pub-value [lang="ko"]')) == 21
