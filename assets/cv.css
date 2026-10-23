@@ -45,18 +45,23 @@
   }
 }
 .profile-image {
-  width: 96px; /* dimension */
-  aspect-ratio: 572/735;
+  width: 108px;
+  aspect-ratio: 3 / 4;
   margin-bottom: var(--space-4);
-  box-shadow: 0 2px 8px #26323a12;
-  border-radius: 6px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 10px 28px rgba(0, 0, 0, 0.55);
 }
 .profile-image img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 3px;
+  object-position: center 18%;
+  border-radius: 0;
 }
 .image-unavailable {
   background: var(--line);
@@ -70,6 +75,7 @@
 /* Display: the page's h1. */
 .name {
   font: var(--fw-strong) var(--fs-28) / var(--lh-heading) var(--sans);
+  letter-spacing: -0.022em;
   margin-bottom: var(--space-3);
 }
 /* Body, short measure. */
@@ -172,12 +178,12 @@
 .content {
   min-width: 0;
   align-self: start;
-  background: #ffffff;
+  background: var(--card);
   padding: var(--card-pad);
-  border: 1px solid #e1e5e7;
+  border: 1px solid var(--line);
   box-shadow:
-    0 4px 18px #26323a06,
-    0 1px 2px #26323a05;
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 18px 48px rgba(0, 0, 0, 0.55);
 }
 /* Overview: the kicker hugs its title, the lede follows, and the group
    stands clear of the toolkit below. */
@@ -210,7 +216,7 @@
    it, so the first row is spaced like the others; both are the section
    rules' colour, so the folded list reads as seven like rules. */
 .caps {
-  border-block: 1px solid #cbd3d6;
+  border-block: 1px solid var(--line);
   padding: 0;
   margin-bottom: 0;
 }
@@ -281,7 +287,7 @@
   left: 0;
   width: var(--space-5);
   text-align: center;
-  color: #99a196;
+  color: var(--meta);
 }
 /* A heading with a link beside it (Publications and Google Scholar): the
    pair shares the section's hairline, and the link stays out of the heading
@@ -292,7 +298,7 @@
   align-items: baseline;
   column-gap: var(--space-4);
   flex-wrap: wrap;
-  border-bottom: 1px solid #cbd3d6;
+  border-bottom: 1px solid var(--line);
 }
 .section-head .section-title {
   position: static;
@@ -303,7 +309,8 @@
 .section-title {
   position: relative;
   font: var(--fw-strong) var(--t-section) / var(--lh-heading) var(--sans);
-  border-bottom: 1px solid #cbd3d6;
+  letter-spacing: -0.02em;
+  border-bottom: 1px solid var(--line);
   margin-bottom: 0;
 }
 /* Each heading is a disclosure button (site.js folds the sections on load):
@@ -318,6 +325,8 @@
   margin: 0;
   padding: var(--space-4) 0;
   border: 0;
+  color: inherit;
+  background: transparent;
   border-radius: 0;
   background: none;
   text-align: start;
@@ -465,7 +474,7 @@ html:not(.cv-folds) .section-toggle {
     outline: none;
   }
   html.cv-folds .section-head .section-toggle:focus-visible::before {
-    outline: 2px solid #32634a;
+    outline: 2px solid rgba(255, 255, 255, 0.55);
     outline-offset: 4px;
   }
 }
@@ -581,7 +590,7 @@ html:not(.cv-folds) .section-toggle {
 .pub-value {
   color: var(--ink-soft);
   padding-top: var(--space-4);
-  border-top: 1px dashed #e0e5e6;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
   max-width: none;
 }
 .pub-value > span {
@@ -608,7 +617,7 @@ html:not(.cv-folds) .section-toggle {
 .partners {
   margin-top: var(--space-4);
   padding-top: var(--space-4);
-  border-top: 1px dashed #e0e5e6;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
 }
 .p-label {
   display: block;
@@ -651,7 +660,7 @@ html:not(.cv-folds) .section-toggle {
   content: attr(data-m) / "";
   display: inline-grid;
   place-items: center;
-  border: 1px solid #d3d8d9;
+  border: 1px solid var(--line);
   border-radius: 50%;
   font: var(--fw-strong) var(--fs-13) / var(--lh-control) var(--sans);
   color: var(--meta);
@@ -676,7 +685,7 @@ html:not(.cv-folds) .section-toggle {
   color: var(--accent);
 }
 .cv-meta-part {
-  border-left: 1px solid #d8dfe1;
+  border-left: 1px solid var(--line);
   padding-left: var(--space-3);
 }
 /* The role, last in the row, in ink: the same weight as the rest. */
@@ -832,7 +841,7 @@ body.ko .pub-group-n::after {
   position: relative;
   padding-block: var(--space-4);
   padding-left: var(--space-6);
-  border-left: 1px solid #d6e0dc;
+  border-left: 1px solid var(--line);
   border-bottom: 0;
 }
 #education .item .item-meta {
@@ -845,7 +854,7 @@ body.ko .pub-group-n::after {
   left: -4px;
   width: 7px;
   height: 7px;
-  background: #728f81;
+  background: var(--ink-soft);
   border-radius: 50%;
 }
 .pub-tag {

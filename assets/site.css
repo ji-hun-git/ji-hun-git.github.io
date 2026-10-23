@@ -9,27 +9,28 @@
    the rules below use these tokens, never literals (static_checks.py checks).
    404.html loads this file alone, so the tokens live here. */
 :root {
-  color-scheme: light;
-  /* Colour roles for text (contrast on the white card / the grey page). */
-  /* SpaceX-adjacent: near-black ground, silver ink, soft metallic line */
-  --ink: #f2f2f2;
-  --ink-soft: #b7b7b7;
-  --meta: #8c8c8c;
-  --accent: #e8e8e8;
-  --on-ink: #0a0a0a;
-  --paper: #0b0b0b;
-  --line: #2c2c2c;
-  --line-glow: rgba(255, 255, 255, 0.42);
+  color-scheme: dark;
+  /* Quiet SpaceX / Apple dark: black ground, bright readable ink */
+  --ink: #f5f5f7;
+  --ink-soft: #a1a1a6;
+  --meta: #86868b;
+  --accent: #f5f5f7;
+  --on-ink: #000000;
+  --paper: #000000;
+  --card: #111111;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-glow: rgba(255, 255, 255, 0.38);
   --line-dim: rgba(255, 255, 255, 0.08);
   /* The Simulations and bookshelf stylesheets still read these two. */
-  --muted: #666b68;
-  --display: Georgia, "Pretendard Variable", serif;
+  --muted: #86868b;
+  --display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue",
+    Geist, "Pretendard Variable", sans-serif;
   --frame: 1120px;
 
-  /* Type: one stack for both languages (Geist draws Latin and digits,
-     Pretendard draws Hangul), six sizes, two weights. Sizes are rem, so they
-     follow the reader's browser setting; they are px at the 16px default. */
-  --sans: Geist, "Pretendard Variable", Arial, sans-serif;
+  /* Type: SF/Helvetica first (Apple/SpaceX feel); Geist + Pretendard fallback.
+     Sizes are rem so they follow the reader setting. */
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
+    "Segoe UI", Geist, "Pretendard Variable", sans-serif;
   --fs-13: 0.8125rem;
   --fs-16: 1rem;
   --fs-18: 1.125rem;
@@ -118,11 +119,14 @@ body {
   background: var(--paper);
   color: var(--ink);
   font: var(--fw-regular) var(--fs-16) / var(--lh-text) var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
 }
 /* The CV's cool grey ground (its theme-color), on the CV pages and the 404
    page, which carry data-view="cv". */
 html[data-view="cv"] body {
-  background: #050505;
+  background: #000000;
 }
 h1,
 h2,
