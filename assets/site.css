@@ -11,13 +11,16 @@
 :root {
   color-scheme: light;
   /* Colour roles for text (contrast on the white card / the grey page). */
-  --ink: #272a29; /* 14.5:1 / 12.9:1 */
-  --ink-soft: #46535b; /* 7.9:1 / 7.1:1: lead and publication summaries */
-  --meta: #5a666d; /* 5.9:1 / 5.3:1: dates, venues, labels, counts */
-  --accent: #365f51; /* 7.2:1 / 6.4:1: links, dates, pressed controls */
-  --on-ink: #ffffff; /* text on an ink fill (the chosen year) */
-  --paper: #f6f5f3;
-  --line: #dedfdb;
+  /* SpaceX-adjacent: near-black ground, silver ink, soft metallic line */
+  --ink: #f2f2f2;
+  --ink-soft: #b7b7b7;
+  --meta: #8c8c8c;
+  --accent: #e8e8e8;
+  --on-ink: #0a0a0a;
+  --paper: #0b0b0b;
+  --line: #2c2c2c;
+  --line-glow: rgba(255, 255, 255, 0.42);
+  --line-dim: rgba(255, 255, 255, 0.08);
   /* The Simulations and bookshelf stylesheets still read these two. */
   --muted: #666b68;
   --display: Georgia, "Pretendard Variable", serif;
@@ -119,7 +122,7 @@ body {
 /* The CV's cool grey ground (its theme-color), on the CV pages and the 404
    page, which carry data-view="cv". */
 html[data-view="cv"] body {
-  background: #f0f2f3;
+  background: #050505;
 }
 h1,
 h2,
@@ -168,19 +171,19 @@ button {
    :hover sticks, and the button would look selected. */
 @media (hover: hover) {
   button:hover {
-    background: #e9ece8;
+    background: #1a1a1a;
   }
 }
 input {
   padding: var(--space-2) var(--space-3);
   min-height: 44px;
-  background: #fff;
+  background: #141414;
 }
 button:active {
   transform: translateY(1px);
 }
 :focus-visible {
-  outline: 2px solid #32634a;
+  outline: 2px solid #cfcfcf;
   outline-offset: 4px;
 }
 img {
@@ -283,7 +286,7 @@ html:not([data-bookshelf="on"]) .site-controls {
   .site-controls a:hover,
   .site-controls button:hover {
     color: var(--ink);
-    background: #e9ece8;
+    background: #1a1a1a;
   }
 }
 .site-controls a:active {
@@ -304,7 +307,7 @@ html:not([data-bookshelf="on"]) .site-controls {
   left: var(--space-4);
   transform: translateY(-150%);
   z-index: 100;
-  background: white;
+  background: #141414;
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--accent);
   font-size: var(--fs-16);
@@ -455,7 +458,7 @@ html[data-view="library"] .library-return {
   }
   body,
   html[data-view="cv"] body {
-    background: white;
+    background: #141414;
     color: black;
   }
   .site-header,

@@ -168,7 +168,7 @@
   reader.addEventListener("click", () =>
     setReader(!document.body.classList.contains("reader")),
   );
-  // The CV opens with Research and development and Awards open (LANDING_OPEN)
+  // The CV opens with all sections folded (LANDING_OPEN empty); hash links still open
   // and the other numbered sections folded to their headings; each heading's
   // button shows or hides the section's body. index.html ships them
   // open, so the page is whole without scripts. hidden="until-found" lets the
@@ -184,7 +184,7 @@
       section: button.closest("section"),
     }))
     .filter((fold) => fold.body && fold.section);
-  const LANDING_OPEN = new Set(["projects", "awards"]);
+  const LANDING_OPEN = new Set(); // all sections folded on landing
   const isOpen = (fold) =>
     fold.button.getAttribute("aria-expanded") === "true";
   const setOpen = (fold, open) => {

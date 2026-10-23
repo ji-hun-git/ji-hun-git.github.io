@@ -407,12 +407,13 @@ html:not(.cv-folds) .section-toggle {
     position: absolute;
     top: 50%;
     right: var(--space-2);
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     margin-top: -7px;
-    border: solid var(--meta);
-    border-width: 0 1.5px 1.5px 0;
+    border: solid #c5c5c5;
+    border-width: 0 2px 2px 0;
     transform: rotate(45deg);
+    opacity: 0.92;
   }
   /* On the title's first line (the row's padding and half the 1.3 line),
      also when a long title wraps. */
@@ -1203,4 +1204,67 @@ body.ko .pub-group-n::after {
   @page {
     margin: 15mm;
   }
+}
+
+
+/* Reflective hairlines: a soft specular along the rule (SpaceX metal edge) */
+.cv-card section,
+.cv-card .caps,
+.cv-card footer.site-foot,
+.cv-card .entry,
+.sidebar .role + .org,
+.toolkit {
+  border-image: none;
+}
+.cv-card > section,
+.cv-card .caps,
+.cv-card footer.site-foot {
+  border-top-color: transparent;
+  box-shadow: inset 0 1px 0 var(--line-dim);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--line-dim) 12%,
+    var(--line-glow) 48%,
+    rgba(255, 255, 255, 0.18) 52%,
+    var(--line-dim) 88%,
+    transparent 100%
+  );
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+.entry {
+  border-top-color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--line-dim) 18%,
+    rgba(255, 255, 255, 0.28) 50%,
+    var(--line-dim) 82%,
+    transparent 100%
+  );
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+.partner-row,
+.pub-row + .pub-row {
+  border-top-color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 20%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(255, 255, 255, 0.06) 80%,
+    transparent 100%
+  );
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+a.arrow-link .arrow,
+.arrow {
+  color: #d0d0d0;
+  opacity: 0.95;
 }

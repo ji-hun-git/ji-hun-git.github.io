@@ -11,12 +11,12 @@
   },
   "index.html": {
     "n_assets": 7,
-    "sha256": "fcfc23cbb4a29f98",
+    "sha256": "36e6daf4897a9523",
     "stamp": "120-20261011a"
   },
   "ko.html": {
     "n_assets": 7,
-    "sha256": "fcfc23cbb4a29f98",
+    "sha256": "36e6daf4897a9523",
     "stamp": "120-20261011a"
   },
   "lab/lab.js": {
@@ -166,7 +166,7 @@
   },
   "laboratory.html": {
     "n_assets": 3,
-    "sha256": "36ee56ab2137f744",
+    "sha256": "f44a9dd312a0e018",
     "stamp": "118-20261001a"
   }
 }
