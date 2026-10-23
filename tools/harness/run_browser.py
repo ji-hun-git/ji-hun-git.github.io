@@ -1180,9 +1180,9 @@ def check_type_and_space(browser, base, findings):
             if state["removed"]:
                 fail(where, "removed controls are back: %s" % ", ".join(state["removed"]))
             kinds = [item["name"] for item in state["items"]]
-            if kinds != ["site-brand", "langToggle", "ttsToggle"]:
+            if kinds != ["site-brand", "langToggle", "themeToggle", "ttsToggle"]:
                 fail(where, "the header holds %r, expected the brand, the language link "
-                     "and the reader-mode button" % kinds)
+                     "the theme button and the reader-mode button" % kinds)
             else:
                 brand, *controls = state["items"]
                 for key in ("size", "family", "weight", "lineHeight", "color", "height"):

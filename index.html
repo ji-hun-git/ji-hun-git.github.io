@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html data-bookshelf="off" data-view="cv" lang="en">
+<html data-bookshelf="off" data-theme="dark" data-view="cv" lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="google-site-verification" content="CVQFdB-B6LsjfVo0WrLt2wmF5lZfDeQjtmMWx0L7M3A" />
@@ -10,7 +10,7 @@
          hash here; static_checks.py prints it. frame-ancestors cannot be set
          from a meta tag. -->
     <meta
-      content="default-src 'self'; script-src 'self' 'sha256-ttG84QLDKQ3RcVNsfG4RkFZcVZxQ+1R/tb3DmLvlqHE='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'sha256-WQJB/5FvjX94ZCyt9PXQhrmluC0r5itPBJk8RtcUxZ8='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
       http-equiv="Content-Security-Policy"
     />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -238,6 +238,14 @@
           if (localStorage.getItem("reader-mode") === "1")
             root.classList.add("reader");
         } catch {}
+        try {
+          const saved = localStorage.getItem("color-theme");
+          const theme =
+            saved === "light" || saved === "dark" ? saved : "dark";
+          root.setAttribute("data-theme", theme);
+        } catch {
+          root.setAttribute("data-theme", "dark");
+        }
         // site.js folds the CV's five sections as soon as it runs. Until then
         // cv.css keeps their contents out of the first paint, so the page
         // does not open long and then collapse. Should site.js never run, the
@@ -360,6 +368,13 @@
           lang="ko-KR"
           ><span id="langLabel">한국어</span></a
         >
+        <!-- Theme: visible words are the mode you switch TO; aria-pressed is dark. -->
+        <button aria-pressed="true" id="themeToggle" type="button">
+          <span class="theme-to-light" lang="en">Bright</span
+          ><span class="theme-to-light" lang="ko">라이트</span
+          ><span class="theme-to-dark" lang="en">Night</span
+          ><span class="theme-to-dark" lang="ko">나이트</span>
+        </button>
         <!-- Its visible words are its name; aria-pressed says whether it is on. -->
         <button aria-pressed="false" id="ttsToggle" type="button">
           <span lang="en">Reader mode</span><span lang="ko">읽기 모드</span>

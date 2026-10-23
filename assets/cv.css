@@ -1277,3 +1277,16 @@ a.arrow-link .arrow,
   color: #d0d0d0;
   opacity: 0.95;
 }
+
+
+/* Partner marks: dark SVGs/PNGs need a bright plate in Night mode. */
+html[data-theme="dark"] .p-logo {
+  background: #f5f5f7;
+  border-radius: 4px;
+  padding: var(--space-1);
+  box-sizing: border-box;
+}
+html[data-theme="dark"] .p-chip[data-m]::before {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ink-soft);
+}

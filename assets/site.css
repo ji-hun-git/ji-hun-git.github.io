@@ -481,3 +481,31 @@ html[data-view="library"] .library-return {
     display: none !important;
   }
 }
+
+
+/* Bright mode: restore high-contrast paper CV; Night is the :root default. */
+html[data-theme="light"] {
+  color-scheme: light;
+  --ink: #272a29;
+  --ink-soft: #46535b;
+  --meta: #5a666d;
+  --accent: #365f51;
+  --on-ink: #ffffff;
+  --paper: #f6f5f3;
+  --card: #ffffff;
+  --line: #dedfdb;
+  --line-glow: rgba(39, 42, 41, 0.18);
+  --line-dim: rgba(39, 42, 41, 0.08);
+  --muted: #666b68;
+}
+html[data-theme="light"] body {
+  background: #f0f2f3;
+}
+html[data-theme="dark"] .theme-to-dark,
+html[data-theme="light"] .theme-to-light {
+  display: none;
+}
+html[data-theme="dark"] .theme-to-light,
+html[data-theme="light"] .theme-to-dark {
+  display: inline;
+}

@@ -168,6 +168,30 @@
   reader.addEventListener("click", () =>
     setReader(!document.body.classList.contains("reader")),
   );
+  const themeBtn = document.getElementById("themeToggle");
+  const setTheme = (theme) => {
+    const dark = theme !== "light";
+    root.setAttribute("data-theme", dark ? "dark" : "light");
+    if (themeBtn) themeBtn.setAttribute("aria-pressed", String(dark));
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", dark ? "#000000" : "#f0f2f3");
+    try {
+      localStorage.setItem("color-theme", dark ? "dark" : "light");
+    } catch {}
+  };
+  try {
+    const saved = localStorage.getItem("color-theme");
+    setTheme(saved === "light" || saved === "dark" ? saved : "dark");
+  } catch {
+    setTheme("dark");
+  }
+  if (themeBtn) {
+    themeBtn.addEventListener("click", () => {
+      const next =
+        root.getAttribute("data-theme") === "light" ? "dark" : "light";
+      setTheme(next);
+    });
+  }
   // The CV opens with all sections folded (LANDING_OPEN empty); hash links still open
   // and the other numbered sections folded to their headings; each heading's
   // button shows or hides the section's body. index.html ships them
