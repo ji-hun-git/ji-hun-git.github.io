@@ -2226,8 +2226,74 @@ window.PROJECT_LIBRARY_DESIGNS = {
       },
     },
     {
-      slug: "game-society-best-presentation",
+      slug: "icdr-2026-ai-hackathon",
       sourceIndex: 1,
+      shortTitle: {
+        en: "ICDR AI Hackathon",
+        ko: "ICDR AI 해커톤",
+      },
+      category: {
+        en: "Hackathon",
+        ko: "해커톤",
+      },
+      story: {
+        research: {
+          en: "An AI hackathon for accessibility solutions, held alongside ICDR 2026.",
+          ko: "ICDR 2026 병행 AI 해커톤에서 접근성 솔루션을 개발했습니다.",
+        },
+        design: {
+          en: "I focused on an AI-powered accessibility solution for people with disabilities.",
+          ko: "장애인을 위한 AI 기반 접근성 솔루션에 집중했습니다.",
+        },
+        artifact: {
+          en: "An AI-powered accessibility prototype developed for the KSCDR hackathon.",
+          ko: "KSCDR 해커톤용으로 개발한 AI 기반 접근성 프로토타입입니다.",
+        },
+        evidence: {
+          en: "Participated among 918 teams and 2,251+ participants.",
+          ko: "팀 918개, 참가자 2,251명 이상이 참여한 행사에 참가했습니다.",
+        },
+      },
+      palette: "award",
+      pattern: "plain",
+      height: "standard",
+      width: "regular",
+      mark: "AI",
+      spineVenue: "ICDR",
+      awardName: {
+        en: "AI Hackathon for People with Disabilities — ICDR 2026 (KSCDR), Riyadh",
+        ko: "장애인 AI 해커톤 — ICDR 2026 (KSCDR), 리야드",
+      },
+      editorial: {
+        verifiedResult: {
+          en: "Developed an AI-powered accessibility solution at KSCDR's AI Hackathon for People with Disabilities alongside ICDR 2026 (918 teams; 2,251+ participants).",
+          ko: "KSCDR AI Hackathon for People with Disabilities(ICDR 2026 병행)에서 장애인을 위한 AI 기반 접근성 솔루션을 개발했습니다.",
+        },
+        selectionContext: {
+          en: "Organized by the King Salman Center for Disability Research with Boeing Saudi Arabia as strategic sponsor.",
+          ko: "King Salman Center for Disability Research 주최, Boeing Saudi Arabia 전략 스폰서.",
+        },
+        challenge: {
+          en: "Build an AI accessibility solution under hackathon constraints for people with disabilities.",
+          ko: "해커톤 제약 안에서 장애인을 위한 AI 접근성 솔루션을 구현해야 했습니다.",
+        },
+        contribution: {
+          en: "Developed an AI-powered accessibility solution as a participant.",
+          ko: "참가자로서 AI 기반 접근성 솔루션을 개발했습니다.",
+        },
+        criteria: {
+          en: "Participation in a large international accessibility AI hackathon.",
+          ko: "대규모 국제 접근성 AI 해커톤 참가.",
+        },
+        validates: {
+          en: "Delivery of an accessibility-focused AI prototype in a competitive international setting.",
+          ko: "국제 경쟁 환경에서 접근성 중심 AI 프로토타입을 완성한 경험입니다.",
+        },
+      },
+    },
+    {
+      slug: "game-society-best-presentation",
+      sourceIndex: 2,
       shortTitle: {
         en: "Accessible AI Paper Award",
         ko: "접근성 AI 논문상",
@@ -2293,7 +2359,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     },
     {
       slug: "edu40-ta-excellence",
-      sourceIndex: 2,
+      sourceIndex: 3,
       shortTitle: {
         en: "Education4.0 Q First Place",
         ko: "Education4.0 Q 최우수상",
@@ -2359,7 +2425,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     },
     {
       slug: "asan-climate-tech-team",
-      sourceIndex: 3,
+      sourceIndex: 4,
       shortTitle: {
         en: "Climate-Tech Venture Selection",
         ko: "기후테크 창업팀 선정",
@@ -2425,7 +2491,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     },
     {
       slug: "pohang-media-facade-camp",
-      sourceIndex: 4,
+      sourceIndex: 5,
       shortTitle: {
         en: "Underwater Media Art",
         ko: "수중 미디어 아트",
@@ -2491,7 +2557,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     },
     {
       slug: "eye-tracking-vr-research-award",
-      sourceIndex: 5,
+      sourceIndex: 6,
       shortTitle: {
         en: "Eye-Tracking VR Excellence",
         ko: "시선 추적 VR 우수상",
@@ -2557,7 +2623,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     },
     {
       slug: "watchers-metaverse-excellence",
-      sourceIndex: 6,
+      sourceIndex: 7,
       shortTitle: {
         en: "Watchers VR Excellence",
         ko: "Watchers VR 우수상",
@@ -2623,7 +2689,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     },
     {
       slug: "esg-ar-encouragement-prize",
-      sourceIndex: 7,
+      sourceIndex: 8,
       shortTitle: {
         en: "Glean Startup Award",
         ko: "Glean 창업 수상",
@@ -2689,7 +2755,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     },
     {
       slug: "cynophobia-vr-research-award",
-      sourceIndex: 8,
+      sourceIndex: 9,
       shortTitle: {
         en: "VR Exposure Research Award",
         ko: "VR 노출 연구 수상",
@@ -2755,7 +2821,7 @@ window.PROJECT_LIBRARY_DESIGNS = {
     },
     {
       slug: "db-snubiz-startup-challenge",
-      sourceIndex: 9,
+      sourceIndex: 10,
       shortTitle: {
         en: "Top 14 Global Startup Finalist",
         ko: "글로벌 창업 본선 14팀",

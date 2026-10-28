@@ -4,14 +4,12 @@
     "Edit this file, not the script, when the site legitimately gains a new",
     "external origin or a new public contact address."
   ],
-
   "public_contacts": {
     "_comment": "Addresses that are SUPPOSED to be on a public professional site. Anything else that looks like an email is reported.",
     "emails": [
       "chaejihun@kaist.ac.kr"
     ]
   },
-
   "external_origins": {
     "_comment": [
       "Every non-local origin the SHIPPED pages may reference.",
@@ -41,7 +39,6 @@
       "schema.org"
     ]
   },
-
   "tracker_signatures": {
     "_comment": "Substrings that indicate an analytics/telemetry beacon. None of these belong on this site.",
     "patterns": [
@@ -61,7 +58,6 @@
       "doubleclick.net"
     ]
   },
-
   "git_identities": {
     "_comment": [
       "Author/committer identities allowed to appear in git history.",
@@ -74,7 +70,6 @@
       "noreply@github.com"
     ]
   },
-
   "stamped_files": {
     "_comment": [
       "Pages whose local asset links carry a ?v= cache stamp. The harness asserts",
@@ -94,7 +89,6 @@
       "assets/project-library/library.js"
     ]
   },
-
   "site_origin": {
     "_comment": [
       "The site's own public origin. Absolute URLs pointing here are resolved",
@@ -105,15 +99,14 @@
       "ji-hun-git.github.io"
     ]
   },
-
   "expected_unreferenced": {
     "_comment": "Files that are deliberately in the tree without being wired up. Each needs a reason.",
     "paths": {
-      "assets/profile/jihun-chae-master.jpg": "Master source image. tools/build-profile-images.py derives the shipped .jpg/.webp/-og.jpg from it, and tools/build_og_card.py renders the -card.jpg link preview around it.",
-      "assets/project-library/bookshelf-og.png": "Bookshelf link-preview image. Unused while BOOKSHELF_ENABLED is false in index.html; kept for when the bookshelf is switched back on."
+      "assets/project-library/bookshelf-og.png": "Bookshelf link-preview image. Unused while BOOKSHELF_ENABLED is false in index.html; kept for when the bookshelf is switched back on.",
+      "assets/og-card.jpg": "Text-only social preview (no portrait). Replaces profile/jihun-chae-card.jpg.",
+      "assets/profile/REMOVED.md": "Note that face portrait assets were removed from the public site."
     }
   },
-
   "ignore_paths": {
     "_comment": "Not part of the shipped site; excluded from reference and PII scans.",
     "prefixes": [

@@ -10,7 +10,7 @@
          hash here; static_checks.py prints it. frame-ancestors cannot be set
          from a meta tag. -->
     <meta
-      content="default-src 'self'; script-src 'self' 'sha256-WQJB/5FvjX94ZCyt9PXQhrmluC0r5itPBJk8RtcUxZ8='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'sha256-U2YN46lHXxIsEPr6UnWTixM2u9ywZ+F+ZUqyek9DEp8=' 'sha256-5wzELItRvx3Nz6zsNnMkEE/ZfPyF3bZqaMGIALS5A6s=' 'sha256-AVvsQD4fbEHXT55Y7D1oY0j+5KRyzs8894uD30QWufE='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
       http-equiv="Content-Security-Policy"
     />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -57,21 +57,21 @@
       name="twitter:description"
     />
     <meta
-      content="https://ji-hun-git.github.io/assets/profile/jihun-chae-card.jpg"
+      content="https://ji-hun-git.github.io/assets/og-card.jpg"
       property="og:image"
     />
     <meta content="1200" property="og:image:width" />
     <meta content="630" property="og:image:height" />
     <meta
-      content="Portrait of Jihun Chae with his name in English and Korean, and KAIST"
+      content="Jihun Chae · 채지훈 — KAIST, human-centered AI / HCI"
       property="og:image:alt"
     />
     <meta
-      content="https://ji-hun-git.github.io/assets/profile/jihun-chae-card.jpg"
+      content="https://ji-hun-git.github.io/assets/og-card.jpg"
       name="twitter:image"
     />
     <meta
-      content="Portrait of Jihun Chae with his name in English and Korean, and KAIST"
+      content="Jihun Chae · 채지훈 — KAIST, human-centered AI / HCI"
       name="twitter:image:alt"
     />
     <!--
@@ -86,7 +86,7 @@
       {
         "title": "채지훈(Jihun Chae) | KAIST · 인간 중심 AI / HCI",
         "description": "채지훈(Jihun Chae), KAIST 문화기술대학원. 인간 중심 AI / HCI — 게임 접근성(GAIA), 적응형 에이전트.",
-        "image_alt": "채지훈의 영문·한글 이름과 KAIST가 있는 프로필 카드",
+        "image_alt": "채지훈(Jihun Chae) · KAIST · 인간 중심 AI / HCI",
         "site_name": "채지훈"
 }
     </script>
@@ -185,7 +185,7 @@
               "Usability studies"
             ],
             "email": "mailto:chaejihun@kaist.ac.kr",
-            "image": "https://ji-hun-git.github.io/assets/profile/jihun-chae-og.jpg",
+            "image": "https://ji-hun-git.github.io/assets/og-card.jpg",
             "url": "https://ji-hun-git.github.io/",
             "sameAs": [
               "https://www.linkedin.com/in/jihun-chae-15457756/",
@@ -212,8 +212,8 @@
       rel="stylesheet"
     />
 
-    <link href="assets/site.css?v=120-20261011a" rel="stylesheet" />
-    <link href="assets/cv.css?v=120-20261011a" rel="stylesheet" />
+    <link href="assets/site.css?v=121-20261028a" rel="stylesheet" />
+    <link href="assets/cv.css?v=121-20261028a" rel="stylesheet" />
     <!--
       Before switching the bookshelf back on: assets/project-library/work.js
       still holds older facts that the CV has since corrected against the
@@ -233,7 +233,7 @@
         // shown only when scripts run: site.css keys on html.js.
         root.classList.add("js");
         // Reader mode is remembered (site.js): set it before the first paint,
-        // so the photo does not disappear and the text rewrap after it.
+        // so reader-mode classes apply before first paint.
         try {
           if (localStorage.getItem("reader-mode") === "1")
             root.classList.add("reader");
@@ -305,13 +305,13 @@
         }
         const style = document.createElement("link");
         style.rel = "stylesheet";
-        style.href = "assets/project-library/library.css?v=120-20261011a";
+        style.href = "assets/project-library/library.css?v=121-20261028a";
         style.setAttribute("blocking", "render");
         document.head.append(style);
         const scripts = [
-          "assets/project-library/work.js?v=120-20261011a",
-          "assets/project-library/project-icons.js?v=120-20261011a",
-          "assets/project-library/library.js?v=120-20261011a",
+          "assets/project-library/work.js?v=121-20261028a",
+          "assets/project-library/project-icons.js?v=121-20261028a",
+          "assets/project-library/library.js?v=121-20261028a",
         ];
         for (const src of scripts) {
           const hint = document.createElement("link");
@@ -401,22 +401,6 @@
       <div class="layout">
         <aside aria-label="Profile" class="sidebar">
           <div class="profile-card" id="profileCard">
-            <div class="profile-image">
-              <picture>
-                <source
-                  srcset="assets/profile/jihun-chae.webp"
-                  type="image/webp"
-                />
-                <img
-                  alt=""
-                  decoding="async"
-                  fetchpriority="high"
-                  height="735"
-                  src="assets/profile/jihun-chae.jpg"
-                  width="572"
-                />
-              </picture>
-            </div>
             <h1 class="name">
               <span lang="en">Jihun Chae</span><span lang="ko">채지훈</span>
             </h1>
@@ -1201,13 +1185,13 @@
                   </h3>
                   <div class="item-meta">
                     <span lang="en"
-                      >2026.10.11–13 | King Faisal Conference Center – InterContinental Hotel, Riyadh · 7th International Conference on Disability and Rehabilitation companion event</span
+                      >2026.10 | ICDR 2026 (KSCDR), Riyadh</span
                     ><span lang="ko"
-                      >2026.10.11–13 | King Faisal Conference Center – InterContinental Hotel, 리야드 · 제7회 국제 장애·재활 학회(ICDR) 병행 행사</span
+                      >2026.10 | ICDR 2026 (KSCDR), 리야드</span
                     >
                   </div>
-                  <p class="item-desc cv-summary" lang="en">Developed an AI-based accessibility solution in the King Salman Center for Disability Research hackathon on AI and robotics for persons with disabilities (tracks: everyday assistive technologies, health &amp; rehabilitation, education &amp; access to knowledge, Hajj &amp; Umrah), accompanying ICDR 2026 under the theme “Smart Innovation for Sustainable Impact.” Scale: 2,251+ participants / 918 teams.</p>
-                  <p class="item-desc cv-summary" lang="ko">King Salman Center for Disability Research 주최 AI·로보틱스 장애인 해커톤에서 접근성 중심 AI 솔루션을 개발. 트랙: 일상 보조기술, 건강·재활, 교육·지식 접근, 하지·움라. ICDR 2026 병행 행사(주제: Smart Innovation for Sustainable Impact). 규모: 참가자 2,251명 이상 / 팀 918개.</p>
+                  <p class="item-desc cv-summary" lang="en">Developed an AI-powered accessibility solution for people with disabilities at the King Salman Center for Disability Research's AI Hackathon for People with Disabilities, held alongside ICDR 2026 (918 teams; 2,251+ participants).</p>
+                  <p class="item-desc cv-summary" lang="ko">King Salman Center for Disability Research의 AI Hackathon for People with Disabilities(ICDR 2026 병행)에서 장애인을 위한 AI 기반 접근성 솔루션을 개발(팀 918개, 참가자 2,251명 이상).</p>
                   <div class="partners">
                     <span class="p-label"
                       ><span lang="en">Organizer and strategic sponsor</span
@@ -2893,6 +2877,6 @@
         </main>
       </div>
     </div>
-    <script defer="" src="assets/site.js?v=120-20261011a"></script>
+    <script defer="" src="assets/site.js?v=121-20261028a"></script>
   </body>
 </html>

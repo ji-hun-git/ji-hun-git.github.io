@@ -51,19 +51,11 @@ text monogram instead of a logo file.
 
 Project pictograms and technology category symbols are original vector drawings.
 
-Profile photograph: Sihyunhada Moment, a portrait photo studio (named in the
-delivered file's caption), credited there as "기록가 박수연". Cropped for
-layout, not retouched.
-
-Profile images are supplied portfolio photography. The master
-(`profile/jihun-chae-master.jpg`) is kept as delivered, with the studio's
-credit, signature and caption. `tools/build-profile-images.py` makes the CV
-display and structured-data images from a crop of it that leaves those marks
-out; nothing in the photograph is retouched. The link-preview card
-(`profile/jihun-chae-card.jpg`) is a browser rendering of the site's own type
-and colours around a tighter crop of the same photograph, made by
-`tools/build_og_card.py`. The bookshelf social image is a browser rendering of
-the site's own design and content.
+Profile photograph: removed from the public site (2026-10-28). The sidebar
+no longer shows a portrait. Social previews use the text-only card
+`assets/og-card.jpg` (name, role, KAIST). Favicons remain the "JC" monogram
+from `tools/build_favicons.py` (not a photograph). The bookshelf social image
+is a browser rendering of the site's own design and content.
 
 The 3D book and jet renderers use Three.js 0.185.1, Copyright 2010-2026 Three.js Authors,
 under the MIT license in `vendor/three/LICENSE`. The two minified distribution
