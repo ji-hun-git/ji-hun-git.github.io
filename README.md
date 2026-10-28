@@ -3,7 +3,7 @@
 [Website](https://ji-hun-git.github.io/) ·
 [Site checks](https://github.com/ji-hun-git/ji-hun-git.github.io/actions/workflows/site-checks.yml)
 
-A bilingual (English and Korean) CV of research and development projects,
+A bilingual (English and Korean) CV of research and projects,
 publications, and awards. An interactive simulations page is in the
 repository, switched off for now.
 
