@@ -28,7 +28,7 @@
   --frame: 1120px;
 
   /* Type: SF/Helvetica first (Apple/SpaceX feel); Geist + Pretendard fallback.
-     Sizes are rem so they follow the reader setting. */
+     Sizes are rem so they scale with root font size. */
   --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
     "Segoe UI", Geist, "Pretendard Variable", sans-serif;
   --fs-13: 0.8125rem;
@@ -93,12 +93,6 @@
 body.ko {
   --lh-body: 1.85;
   --lh-text: 1.7;
-}
-/* Reader mode: body text one step up. The <head> script sets the class on
-   <html> before the first paint (site.js keeps <html> and <body> in step),
-   so a remembered reader mode never reflows the page after it is drawn. */
-.reader {
-  --t-body: var(--fs-18);
 }
 * {
   box-sizing: border-box;
@@ -276,7 +270,7 @@ html:not([data-bookshelf="on"]) .site-controls {
   margin-right: calc(-1 * var(--space-3));
 }
 /* The language control is a link to the other language's page; it looks and
-   responds exactly like the reader-mode button beside it. */
+   matches the language control beside it. */
 .site-controls a,
 .site-controls button {
   padding: var(--space-2) var(--space-3);
@@ -296,9 +290,8 @@ html:not([data-bookshelf="on"]) .site-controls {
 .site-controls a:active {
   transform: translateY(1px);
 }
-/* Reader mode on: the header's "current" mark (accent and a 2px underline)
-   instead of a fill. The underline is the cue that does not rely on colour,
-   and it survives forced colours; the button's box does not change. */
+/* Theme toggle: the header's "current" mark (accent and a 2px underline)
+   follows the active theme. */
 .site-controls button[aria-pressed="true"],
 .site-controls button[aria-pressed="true"]:hover {
   color: var(--accent);
@@ -338,9 +331,8 @@ html:not([data-view="library"]) [data-view-only="library"],
 html:not([data-bookshelf="on"]) [data-bookshelf-only] {
   display: none;
 }
-/* Controls that need a script (reader mode, the year filter) are hidden when
+/* Controls that need a script (the year filter) are hidden when
    scripts do not run; the head script sets html.js first. */
-html:not(.js) #ttsToggle,
 html:not(.js) #pubFilter {
   display: none;
 }
@@ -352,11 +344,6 @@ html[data-view="library"] .library-return {
 }
 .hidden {
   display: none !important;
-}
-.reader * {
-  animation: none !important;
-  transition: none !important;
-  scroll-behavior: auto !important;
 }
 @media (max-width: 760px) {
   .site-header {
@@ -445,21 +432,6 @@ html[data-view="library"] .library-return {
   :root,
   body,
   body.ko,
-  .reader {
-    --fs-13: 8pt;
-    --fs-16: 10pt;
-    --fs-18: 10pt;
-    --fs-20: 11pt;
-    --fs-24: 14pt;
-    --fs-28: 22pt;
-    --t-section: 14pt;
-    --t-entry: 11pt;
-    --t-citation: 10pt;
-    --t-lead: 10pt;
-    --t-body: 10pt;
-    --lh-text: 1.45;
-    --lh-body: 1.5;
-  }
   body,
   html[data-view="cv"] body {
     background: #141414;

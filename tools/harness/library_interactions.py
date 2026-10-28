@@ -24,11 +24,9 @@ try:
             page.goto(base + BOOKSHELF, wait_until='networkidle')
             expect(page.locator('.catalog-row')).to_have_count(37)
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Horizontal overflow'
-            # The reader-mode button is named by its visible words alone, on the
-            # bookshelf as on the CV: no title tooltip, no aria-label.
-            reader_attrs = '(b) => [b.getAttribute("title"), b.getAttribute("aria-label")]'
-            assert page.get_by_role('button', name='Reader mode', exact=True).count() == 1, 'Reader mode is not named by its words'
-            assert page.locator('#ttsToggle').evaluate(reader_attrs) == [None, None], 'Reader mode has a title or aria-label'
+            # Reader mode was removed: button must not exist (EN or KO).
+            assert page.get_by_role('button', name='Reader mode', exact=True).count() == 0
+            assert page.locator('#ttsToggle').count() == 0
             if args.screenshots:
                 page.screenshot(path=str(args.screenshots / f'library-{width}.png'), animations='disabled')
             page.locator('[data-filter="project"]').click()
@@ -63,8 +61,8 @@ try:
             page.locator('#langToggle').click()
             expect(page.locator('html')).to_have_attribute('lang','ko')
             expect(page.locator('.catalog-statement')).to_contain_text('사람과 AI')
-            assert page.get_by_role('button', name='읽기 모드', exact=True).count() == 1, 'Reader mode is not named by its Korean words'
-            assert page.locator('#ttsToggle').evaluate(reader_attrs) == [None, None], 'Reader mode has a title or aria-label'
+            assert page.get_by_role('button', name='읽기 모드', exact=True).count() == 0, 'Reader mode was removed; Korean button must not exist'
+            assert page.locator('#ttsToggle').count() == 0
             page.locator('[data-filter="project"]').click()
             expect(page.locator('.catalog-row')).to_have_count(6)
             if args.screenshots:
@@ -77,14 +75,12 @@ try:
             page.keyboard.press('Escape')
             expect(page.locator('dialog')).not_to_be_visible()
             expect(page.locator('.catalog-volume[data-pl-book="data-quality-engine"]')).to_be_focused()
-            page.locator('#ttsToggle').click()
             expect(page.locator('.book-title').first).to_have_css('writing-mode','horizontal-tb')
             page.locator('.catalog-volume').first.click()
-            assert page.locator('dialog').evaluate('(el)=>el.getAnimations().length===0'), 'Reader mode animated'
+            assert page.locator('dialog').evaluate('(el)=>el.getAnimations().length===0'), 'Dialog animated unexpectedly'
             page.keyboard.press('Escape')
-            page.locator('#ttsToggle').click()
             assert not errors, errors
-            results.append({'viewport':width,'records':37,'filters':'pass','language':'pass','dialog':'pass','errors':errors})
+            results.append({'viewport':width,'records':37,'filters':'pass','language':'pass','dialog':'pass','readerModeRemoved':'pass','errors':errors})
             page.close()
         page=browser.new_page(viewport={'width':1280,'height':800}, reduced_motion='reduce')
         page.goto(base+'/?work=gaia-design-principles',wait_until='networkidle')
@@ -118,7 +114,7 @@ try:
             page.keyboard.press('Escape')
             expect(page).not_to_have_url(re.compile('work='))
         results.append({'deepLinks':'pass','reducedMotion':'pass','history':'pass','cvLink':'pass'})
-        results.append({'recordDetails':len(slugs),'keyboardFocus':'pass','readerMode':'pass'})
+        results.append({'recordDetails':len(slugs),'keyboardFocus':'pass','readerModeRemoved':'pass'})
         page=browser.new_page(viewport={'width':1280,'height':800})
         page.goto(base+BOOKSHELF,wait_until='networkidle')
         page.locator('[data-pl-book="inclusive-game-ai"]').click()

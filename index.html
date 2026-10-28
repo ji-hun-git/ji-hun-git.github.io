@@ -10,7 +10,7 @@
          hash here; static_checks.py prints it. frame-ancestors cannot be set
          from a meta tag. -->
     <meta
-      content="default-src 'self'; script-src 'self' 'sha256-U2YN46lHXxIsEPr6UnWTixM2u9ywZ+F+ZUqyek9DEp8=' 'sha256-5wzELItRvx3Nz6zsNnMkEE/ZfPyF3bZqaMGIALS5A6s=' 'sha256-AVvsQD4fbEHXT55Y7D1oY0j+5KRyzs8894uD30QWufE='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'sha256-U2YN46lHXxIsEPr6UnWTixM2u9ywZ+F+ZUqyek9DEp8=' 'sha256-5wzELItRvx3Nz6zsNnMkEE/ZfPyF3bZqaMGIALS5A6s=' 'sha256-4mlzdQ2P8544ggTg3FsyMeMtponJhSMm/FoQ2utnSxI='; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
       http-equiv="Content-Security-Policy"
     />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -212,8 +212,8 @@
       rel="stylesheet"
     />
 
-    <link href="assets/site.css?v=121-20261028a" rel="stylesheet" />
-    <link href="assets/cv.css?v=121-20261028a" rel="stylesheet" />
+    <link href="assets/site.css?v=123-20261028c" rel="stylesheet" />
+    <link href="assets/cv.css?v=123-20261028c" rel="stylesheet" />
     <!--
       Before switching the bookshelf back on: assets/project-library/work.js
       still holds older facts that the CV has since corrected against the
@@ -229,15 +229,9 @@
       (() => {
         const BOOKSHELF_ENABLED = false;
         const root = document.documentElement;
-        // Controls that need a script (reader mode, the year filter) are
+        // Controls that need a script (the year filter) are
         // shown only when scripts run: site.css keys on html.js.
         root.classList.add("js");
-        // Reader mode is remembered (site.js): set it before the first paint,
-        // so reader-mode classes apply before first paint.
-        try {
-          if (localStorage.getItem("reader-mode") === "1")
-            root.classList.add("reader");
-        } catch {}
         try {
           const saved = localStorage.getItem("color-theme");
           const theme =
@@ -305,13 +299,13 @@
         }
         const style = document.createElement("link");
         style.rel = "stylesheet";
-        style.href = "assets/project-library/library.css?v=121-20261028a";
+        style.href = "assets/project-library/library.css?v=123-20261028c";
         style.setAttribute("blocking", "render");
         document.head.append(style);
         const scripts = [
-          "assets/project-library/work.js?v=121-20261028a",
-          "assets/project-library/project-icons.js?v=121-20261028a",
-          "assets/project-library/library.js?v=121-20261028a",
+          "assets/project-library/work.js?v=123-20261028c",
+          "assets/project-library/project-icons.js?v=123-20261028c",
+          "assets/project-library/library.js?v=123-20261028c",
         ];
         for (const src of scripts) {
           const hint = document.createElement("link");
@@ -374,10 +368,6 @@
           ><span class="theme-to-light" lang="ko">라이트</span
           ><span class="theme-to-dark" lang="en">Night</span
           ><span class="theme-to-dark" lang="ko">나이트</span>
-        </button>
-        <!-- Its visible words are its name; aria-pressed says whether it is on. -->
-        <button aria-pressed="false" id="ttsToggle" type="button">
-          <span lang="en">Reader mode</span><span lang="ko">읽기 모드</span>
         </button>
       </div>
     </header>
@@ -2877,6 +2867,6 @@
         </main>
       </div>
     </div>
-    <script defer="" src="assets/site.js?v=121-20261028a"></script>
+    <script defer="" src="assets/site.js?v=123-20261028c"></script>
   </body>
 </html>

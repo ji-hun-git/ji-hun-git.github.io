@@ -1024,13 +1024,11 @@ HEADER_STATE = """() => {
                lineHeight: cs.lineHeight, color: cs.color, decoration: cs.textDecorationLine,
                background: cs.backgroundColor };
     });
-  const reader = document.getElementById('ttsToggle');
   return {
     height: Math.round(header.getBoundingClientRect().height),
     items,
-    removed: ['#printCV', '.mobile-nav', '.lab-link', 'a[href*="laboratory"]']
+    removed: ['#printCV', '.mobile-nav', '.lab-link', 'a[href*="laboratory"]', '#ttsToggle']
       .filter((s) => document.querySelector(s)),
-    reader: { title: reader.getAttribute('title'), label: reader.getAttribute('aria-label') },
   };
 }"""
 
@@ -1142,26 +1140,22 @@ def check_type_and_space(browser, base, findings):
     """The header, the type scale and the spacing scale hold in the browser.
 
     Why: the owner asked (Oct 2026) to remove Simulations, Print / PDF and the
-    sticky section bar, to replace the reader-mode glyph with a word, and
-    "why do everything look so different" / "check the golden rules for
-    spacings". The header now holds the brand, the language link and the
-    reader-mode button alone, the two controls set alike (size, family,
-    weight, colour, box, baseline) in one 76px row. The reader-mode button is
-    named by its visible words and shows its pressed state with an underline,
-    not colour alone, without changing its box. Every visible text is on the
-    six-size, two-weight, one-family, five-colour scale, also in Reader mode;
-    every margin, padding and gap in the CV's columns is on the 4-point
-    scale. At 1440, 900, 390 and 320px, in both languages, every section and
-    the toolkit open. The owner then saw "the sidebar font sizes still look
-    different" (Oct 2026): under the name the sidebar has two tiers, the role
-    and the school at 16 and everything below the first hairline at 13, and
-    no text outside them.
+    sticky section bar, later removed Reader mode entirely, and asked "why do
+    everything look so different" / "check the golden rules for spacings".
+    The header now holds the brand, the language link and the theme button,
+    the two controls set alike (size, family, weight, colour, box, baseline)
+    in one 76px row. Every visible text is on the six-size, two-weight,
+    one-family, five-colour scale; every margin, padding and gap in the CV's
+    columns is on the 4-point scale. At 1440, 900, 390 and 320px, in both
+    languages, every section and the toolkit open. The owner then saw "the
+    sidebar font sizes still look different" (Oct 2026): under the name the
+    sidebar has two tiers, the role and the school at 16 and everything below
+    the first hairline at 13, and no text outside them.
     """
     def fail(where, message, detail=""):
         findings.append({"level": "ERROR", "check": "type-and-space", "state": "type-and-space",
                          "message": "%s: %s" % (where, message), "detail": detail})
 
-    names = {"en": "Reader mode", "ko": "읽기 모드"}
     count = 0
     for lang, path in (("en", "/"), ("ko", "/ko.html")):
         for width in (1440, 900, 390, 320):
@@ -1180,9 +1174,9 @@ def check_type_and_space(browser, base, findings):
             if state["removed"]:
                 fail(where, "removed controls are back: %s" % ", ".join(state["removed"]))
             kinds = [item["name"] for item in state["items"]]
-            if kinds != ["site-brand", "langToggle", "themeToggle", "ttsToggle"]:
+            if kinds != ["site-brand", "langToggle", "themeToggle"]:
                 fail(where, "the header holds %r, expected the brand, the language link "
-                     "the theme button and the reader-mode button" % kinds)
+                     "and the theme button (Reader mode removed)" % kinds)
             else:
                 brand, *controls = state["items"]
                 for key in ("size", "family", "weight", "lineHeight", "color", "height"):
@@ -1199,39 +1193,20 @@ def check_type_and_space(browser, base, findings):
                 if len({item["top"] for item in state["items"]}) != 1 or state["height"] != 76:
                     fail(where, "the header is not one 76px row (%dpx; tops %s)"
                          % (state["height"], [i["top"] for i in state["items"]]))
-            # The reader-mode button: its words are its name, and pressed it
-            # shows the header's underline (no fill, the same box).
-            if state["reader"]["title"] is not None or state["reader"]["label"] not in (None, names[lang]):
-                fail(where, "the reader-mode button has a title or a label other than its words",
-                     json.dumps(state["reader"], ensure_ascii=False))
-            button = page.get_by_role("button", name=names[lang], exact=True)
-            if button.count() != 1:
-                fail(where, "no button is named %r" % names[lang])
-            else:
-                before = next(i for i in state["items"] if i["name"] == "ttsToggle")
-                button.click()
-                page.mouse.move(1, 1)
-                after = next(i for i in page.evaluate(HEADER_STATE)["items"] if i["name"] == "ttsToggle")
-                pressed = page.evaluate("() => document.getElementById('ttsToggle').getAttribute('aria-pressed')")
-                if pressed != "true" or "underline" not in after["decoration"]:
-                    fail(where, "pressed, the reader-mode button shows no underline (aria-pressed=%s, %s)"
-                         % (pressed, after["decoration"]))
-                if after["background"] not in ("rgba(0, 0, 0, 0)", "transparent"):
-                    fail(where, "pressed, the reader-mode button is filled (%s)" % after["background"])
-                if (round(after["width"], 1), after["height"]) != (round(before["width"], 1), before["height"]):
-                    fail(where, "pressing the reader-mode button changed its box")
+            # Reader mode must be gone.
+            if page.locator("#ttsToggle").count() != 0:
+                fail(where, "Reader mode (#ttsToggle) is still present")
+            for gone in ("Reader mode", "읽기 모드"):
+                if page.get_by_role("button", name=gone, exact=True).count() != 0:
+                    fail(where, "Reader mode button %r still present" % gone)
             # The CV whole: every section and the toolkit open.
             open_all_sections(page)
             page.evaluate("() => { document.querySelector('details.caps').open = true; }")
             page.mouse.move(1, 1)
-            for mode in ("reader mode", "standard"):
-                if mode == "standard" and button.count() == 1:
-                    button.click()
-                    page.mouse.move(1, 1)
-                typed = page.evaluate(TYPE_SCALE)
-                if typed["measured"] < 100 or typed["bad"]:
-                    fail("%s %s" % (where, mode), "%d of %d texts are off the type scale"
-                         % (len(typed["bad"]), typed["measured"]), " | ".join(typed["bad"][:5]))
+            typed = page.evaluate(TYPE_SCALE)
+            if typed["measured"] < 100 or typed["bad"]:
+                fail(where, "%d of %d texts are off the type scale"
+                     % (len(typed["bad"]), typed["measured"]), " | ".join(typed["bad"][:5]))
             spaced = page.evaluate(SPACE_SCALE)
             if spaced["measured"] < 100 or spaced["bad"]:
                 fail(where, "%d spacing values are off the 4-point scale" % len(spaced["bad"]),

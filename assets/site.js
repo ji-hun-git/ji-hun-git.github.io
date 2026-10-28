@@ -74,7 +74,6 @@
     }
   };
   const language = document.getElementById("langToggle");
-  const reader = document.getElementById("ttsToggle");
   // Screen-reader text for links that open a new tab (see markNewTabLinks).
   // It carries its own language: it sits inside citations marked English, and
   // a screen reader would read the Korean cue in an English voice. Region
@@ -103,8 +102,6 @@
     );
     const title = titles[ko ? "ko" : "en"];
     if (title) document.title = title;
-    // The reader-mode button needs no label here: its visible words, in
-    // the page's language, are its name.
     [
       [".sidebar", "Profile", "프로필"],
       // The name starts with the visible "JC", so saying it finds the link.
@@ -152,22 +149,6 @@
     event.preventDefault();
     setLanguage(root.lang !== "ko");
   });
-  const setReader = (on) => {
-    // The <head> script sets it on <html> first, before the first paint;
-    // <body> keeps it too, for the bookshelf code that reads it there.
-    root.classList.toggle("reader", on);
-    document.body.classList.toggle("reader", on);
-    reader.setAttribute("aria-pressed", String(on));
-    try {
-      localStorage.setItem("reader-mode", on ? "1" : "0");
-    } catch {}
-  };
-  try {
-    setReader(localStorage.getItem("reader-mode") === "1");
-  } catch {}
-  reader.addEventListener("click", () =>
-    setReader(!document.body.classList.contains("reader")),
-  );
   const themeBtn = document.getElementById("themeToggle");
   const setTheme = (theme) => {
     const dark = theme !== "light";
@@ -504,7 +485,6 @@
       lastFlight = -Infinity;
     const flightAllowed = () =>
       !motion.matches &&
-      !document.body.classList.contains("reader") &&
       !document.hidden;
     const stopFlyby = () => {
       jetEpoch++;

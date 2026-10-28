@@ -11,13 +11,13 @@
   },
   "index.html": {
     "n_assets": 7,
-    "sha256": "fb8024605ea5daa8",
-    "stamp": "121-20261028a"
+    "sha256": "a6a754110d58f921",
+    "stamp": "123-20261028c"
   },
   "ko.html": {
     "n_assets": 7,
-    "sha256": "fb8024605ea5daa8",
-    "stamp": "121-20261028a"
+    "sha256": "a6a754110d58f921",
+    "stamp": "123-20261028c"
   },
   "lab/lab.js": {
     "n_assets": 29,
@@ -166,7 +166,7 @@
   },
   "laboratory.html": {
     "n_assets": 3,
-    "sha256": "be85f9ff8922fc43",
-    "stamp": "118-20261001a"
+    "sha256": "fa99adc4abee9048",
+    "stamp": "123-20261028c"
   }
 }

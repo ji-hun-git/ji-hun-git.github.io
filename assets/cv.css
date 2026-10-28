@@ -905,9 +905,6 @@ body.ko .pub-group-n::after {
   display: block;
   height: 100%;
 }
-.reader .profile-image {
-  display: none;
-}
 @media (max-width: 1000px) {
   .layout {
     grid-template-columns: 190px minmax(0, 1fr);

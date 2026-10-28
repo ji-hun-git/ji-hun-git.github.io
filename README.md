@@ -22,7 +22,7 @@ now. While it is off, every URL shows the CV (`/?view=cv` keeps working), an old
 `assets/project-library/` is downloaded except the KF-21 flyby: `assets/site.js`
 loads `jet-flyby.js` (and Three.js) the first time a mouse pointer moves onto
 that CV entry (not when the page scrolls the entry under a resting pointer),
-never under reduced motion or in Reader mode. (The entry has no Tab
+never under reduced motion. (The entry has no Tab
 stop of its own, so keyboard users do not trigger it; a decoration does not get
 one.) Its code stays in the repository.
 
@@ -38,14 +38,13 @@ one.) Its code stays in the repository.
   bookshelf were on until the tab is closed. The browser suites use this URL.
 
 With the bookshelf on, a pinned local copy of Three.js loads on book interaction
-for the 3D opening sequence and the KF-21 flyby. Reduced motion, Reader mode, or
-unavailable WebGL use the standard reader directly.
+for the 3D opening sequence and the KF-21 flyby. Reduced motion or unavailable WebGL use the standard view directly.
 
 ## Simulations (switched off)
 
 The Simulations page (`laboratory.html` and `lab/`) is switched off for now,
 the same way as the bookshelf. While it is off, no page links to it (the CV
-header holds the brand, the language link and Reader mode only), `sitemap.xml`
+header holds the brand and the language link only), `sitemap.xml`
 leaves it out, the page carries `<meta name="robots" content="noindex">`, and
 on the public site its `<head>` script sends any visit straight on to the CV
 (`?from=ko`, the old link from the Korean CV, to `/ko.html`) with
@@ -77,8 +76,7 @@ Every size, weight, leading, text colour and space in `assets/site.css` and
   (`--fw-regular` 400, `--fw-strong` 600) and named roles (`--t-section`,
   `--t-entry`, `--t-citation`, `--t-lead`, `--t-body`); the four above body
   step down one size at 760px and below, and `--t-body` stays 16px. Korean
-  uses the same sizes with more leading (`body.ko`); Reader mode sets body
-  text one step up (`body.reader`); print sets the same roles in points.
+  uses the same sizes with more leading (`body.ko`); print sets the same roles in points.
 - The sidebar uses three of the sizes: the name at 28; the role and the school
   at 16 (body); below the first hairline, the Focus label and list, the
   contacts and "Get in touch" at 13, the size of every other control.

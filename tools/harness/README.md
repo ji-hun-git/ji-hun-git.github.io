@@ -92,24 +92,22 @@ far as the page scrolls: there it counts once the page is at its end and the
 target is in view.
 `run_browser.py` also checks the header and the type and spacing scales
 (`type-and-space`, at 1440, 900, 390 and 320px in both languages): the header
-holds only the brand, the language link and the reader-mode button, in one
-76px row, the two controls sharing one size, family, weight, colour, box and
-baseline; the reader-mode button is named by its words ("Reader mode" /
-"읽기 모드"), and pressed it shows an underline without a fill or a change of
-box; every visible text is in one of six sizes (13, 16, 18, 20, 24, 28px), two
-weights, the one font stack and the five colour roles, also in Reader mode;
-the sidebar's text is in three tiers, each at one size (the name at 28; the
-role and the school at 16; the Focus label and list, the contacts and "Get in
-touch" at 13), and in no other;
-and every margin, padding and gap in the CV's columns is on the 4-point scale
-(13px, a 12px gap plus its hairline, is the one composite). `static_checks.py`
-checks the same in the source (`css-tokens`): no literal size, weight, leading
-or space in `site.css` or `cv.css`. Suites that need the whole CV visible (the audits, the year filter,
-the KF-21 entry) open the sections with `run_browser.open_all_sections`, which
-clicks the real headings. A folded section is out of the accessibility tree,
-and browser reader views (Firefox Reader View, Chrome's Reading mode) show
-only the sections that are open (the site's own reader mode keeps the folds
-too); printing and the page without JavaScript show every section.
+holds the brand, the language link and the theme button, in one 76px row, the
+two controls sharing one size, family, weight, colour, box and baseline;
+Reader mode is gone (`#ttsToggle` must not exist); every visible text is in
+one of six sizes (13, 16, 18, 20, 24, 28px), two weights, the one font stack
+and the five colour roles; the sidebar's text is in three tiers, each at one
+size (the name at 28; the role and the school at 16; the Focus label and
+list, the contacts and "Get in touch" at 13), and in no other; and every
+margin, padding and gap in the CV's columns is on the 4-point scale (13px, a
+12px gap plus its hairline, is the one composite). `static_checks.py` checks
+the same in the source (`css-tokens`): no literal size, weight, leading or
+space in `site.css` or `cv.css`. Suites that need the whole CV visible (the
+audits, the year filter, the KF-21 entry) open the sections with
+`run_browser.open_all_sections`, which clicks the real headings. A folded
+section is out of the accessibility tree, and browser reader views (Firefox
+Reader View, Chrome's Reading mode) show only the sections that are open;
+printing and the page without JavaScript show every section.
 The jet suite also covers the KF-21 flyby on the CV at `/` (hover, keyboard
 focus, cooldown, reduced motion, no WebGL, one jet when the bookshelf is on, and
 no flyby when the page scrolls the entry under a resting pointer).
