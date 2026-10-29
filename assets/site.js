@@ -174,8 +174,15 @@
     } catch {}
   };
   try {
+    const askedTheme = params.get("theme");
     const saved = localStorage.getItem("color-theme");
-    setTheme(saved === "light" || saved === "dark" ? saved : "dark");
+    const initial =
+      askedTheme === "light" || askedTheme === "dark"
+        ? askedTheme
+        : saved === "light" || saved === "dark"
+          ? saved
+          : "dark";
+    setTheme(initial);
   } catch {
     setTheme("dark");
   }

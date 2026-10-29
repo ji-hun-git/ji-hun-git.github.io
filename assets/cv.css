@@ -74,9 +74,16 @@
    the label. */
 /* Display: the page's h1. */
 .name {
-  font: var(--fw-strong) var(--fs-28) / var(--lh-heading) var(--sans);
-  letter-spacing: -0.022em;
+  font: 700 var(--fs-28) / var(--lh-heading) var(--display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   margin-bottom: var(--space-2);
+}
+body.ko .name {
+  font-family: var(--sans);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  font-weight: var(--fw-strong);
 }
 /* Body, short measure. */
 .role {
@@ -105,6 +112,14 @@
   font-weight: var(--fw-strong);
   line-height: var(--lh-title);
   color: var(--meta);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label, 0.14em);
+}
+body.ko .side-label,
+body.ko .p-label,
+body.ko .cv-eyebrow {
+  text-transform: none;
+  letter-spacing: var(--track-label-ko, 0.06em);
 }
 .side-label {
   margin-bottom: var(--space-2);
@@ -196,8 +211,16 @@
 /* Display: the page's h1 is the name in the sidebar, at the same size; the
    overview heading does not outrank it. */
 .cv-overview h2 {
-  font: var(--fw-strong) var(--fs-28) / var(--lh-heading) var(--sans);
+  font: 700 var(--fs-28) / var(--lh-heading) var(--display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   text-wrap: balance;
+}
+body.ko .cv-overview h2 {
+  font-family: var(--sans);
+  text-transform: none;
+  letter-spacing: -0.015em;
+  font-weight: var(--fw-strong);
 }
 /* Lead. Balanced, so its last line never holds one word alone. */
 .cv-introduction {
@@ -222,11 +245,17 @@
 }
 /* Subhead. */
 .caps summary {
-  padding: var(--space-3) 0;
+  padding: var(--space-3) 0 var(--space-5);
   font-size: var(--fs-16);
   font-weight: var(--fw-strong);
   line-height: var(--lh-title);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
+}
+body.ko .caps summary {
+  text-transform: none;
+  letter-spacing: 0.02em;
 }
 /* The last row sits as far above the closing hairline as the next title
    sits below it. */
@@ -308,10 +337,19 @@
 /* Section title. */
 .section-title {
   position: relative;
-  font: var(--fw-strong) var(--t-section) / var(--lh-heading) var(--sans);
-  letter-spacing: -0.02em;
+  font: 700 var(--t-section) / var(--lh-heading) var(--display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   border-bottom: 1px solid var(--line);
   margin-bottom: 0;
+  /* Toggle carries the pad; keep 0 here so head+title don't double up */
+  padding-bottom: 0;
+}
+body.ko .section-title {
+  font-family: var(--sans);
+  text-transform: none;
+  letter-spacing: -0.015em;
+  font-weight: var(--fw-strong);
 }
 /* Each heading is a disclosure button (site.js folds the sections on load):
    number and title on one baseline, and the whole row is its target. Without
@@ -323,7 +361,8 @@
   width: 100%;
   min-height: 44px; /* hit target */
   margin: 0;
-  padding: var(--space-3) 0;
+  /* Extra bottom air so section nums/titles never kiss the hairline (Barlow) */
+  padding: var(--space-3) 0 var(--space-5);
   border: 0;
   color: inherit;
   background: transparent;
@@ -350,10 +389,16 @@ html:not(.cv-folds) .section-toggle {
    number. A title too long for the row wraps beside its number, not below. */
 .section-title .num {
   flex: none;
-  font: var(--fw-regular) var(--fs-13) / var(--lh-text) var(--sans);
+  font: 500 var(--fs-13) / var(--lh-control) var(--sans);
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: 0.06em;
   color: var(--meta);
   margin-right: 0;
+  /* Align to Condensed title baseline without dropping into the hairline */
+  position: relative;
+  top: -0.12em;
+  align-self: baseline;
 }
 /* Control: "Google Scholar" in a 28px target. */
 .title-aside {
@@ -530,6 +575,11 @@ html:not(.cv-folds) .section-toggle {
   border-bottom: 1px solid var(--line);
   min-width: 0;
 }
+/* Publications: a little more air under body/descenders before the hairline */
+#publications .item {
+  padding-bottom: calc(var(--entry-pad) + var(--space-1));
+}
+
 .item:first-child {
   padding-top: var(--space-3);
 }
@@ -735,6 +785,9 @@ html:not(.cv-folds) .section-toggle {
 .pub-n {
   margin-right: var(--space-2);
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: 0.02em;
+  line-height: 1;
 }
 /* The summary leads straight into the first year: the year's own 32px. */
 .pub-summary {
@@ -746,11 +799,24 @@ html:not(.cv-folds) .section-toggle {
   display: flex;
   align-items: baseline;
   gap: var(--space-3);
-  padding: var(--space-5) 0 var(--space-2);
+  /* Margin lifts the year box off the previous item hairline; pad keeps glyphs clear */
+  margin: var(--space-2) 0 0;
+  padding: var(--space-4) 0 var(--space-3);
+  font-family: var(--display);
   font-size: var(--t-entry);
-  font-weight: var(--fw-strong);
-  line-height: var(--lh-title);
+  font-weight: 700;
+  line-height: var(--lh-heading);
+  letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+body.ko .pub-group-title {
+  font-family: var(--sans);
+  letter-spacing: 0.02em;
+}
+.pub-group-n {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }
 .pub-group-n::after {
   content: " publications";
@@ -762,8 +828,8 @@ body.ko .pub-group-n::after {
   display: none;
 }
 .pub-group-title + .item {
-  padding-top: var(--space-2);
-  scroll-margin-top: var(--space-2);
+  padding-top: var(--space-3);
+  scroll-margin-top: var(--space-3);
 }
 .cv-citation {
   position: relative;
@@ -783,9 +849,18 @@ body.ko .pub-group-n::after {
   .cv-citation > .pub-n {
     position: absolute;
     right: calc(100% + var(--space-3));
-    top: 2px;
+    /* Align to paper title; stay inside item padding away from hairline above */
+    top: 0.05em;
     margin: 0;
     line-height: calc(var(--t-citation) * var(--lh-title));
+    padding-top: 0;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+  /* Extra top pad on pub items so hanging indices clear the divider above */
+  #publications .item,
+  #publications .pub-group-title + .item {
+    padding-top: calc(var(--entry-pad) + var(--space-2));
   }
 }
 /* Citation title: the paper's h4. Selected by class: the heading element is
@@ -1299,14 +1374,14 @@ html[data-theme="dark"] .p-chip[data-m]::before {
 .ft-contact a,
 .title-aside,
 .caps summary {
-  transition: color 0.3s ease, background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+  transition: color 0.3s ease, background-color 0.35s var(--ease-spacex, cubic-bezier(0.22, 1, 0.36, 1)),
     border-color 0.35s ease, box-shadow 0.35s ease, opacity 0.3s ease,
     transform 0.25s ease;
 }
 html:is(.cv-folds, .cv-folding) .section-toggle::after,
 .caps summary::after {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.25s ease, margin-top 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+  transition: transform 0.35s var(--ease-spacex, cubic-bezier(0.22, 1, 0.36, 1)),
+    border-color 0.25s ease, margin-top 0.35s var(--ease-spacex, cubic-bezier(0.22, 1, 0.36, 1)),
     opacity 0.25s ease;
 }
 .section-toggle {
@@ -1335,8 +1410,8 @@ html:is(.cv-folds, .cv-folding) .section-toggle::after,
 }
 /* Theme-aware paper / ink soft fade */
 .cv-card {
-  transition: background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+  transition: background-color 0.4s var(--ease-spacex, cubic-bezier(0.22, 1, 0.36, 1)),
+    color 0.4s var(--ease-spacex, cubic-bezier(0.22, 1, 0.36, 1)),
     border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
@@ -1431,5 +1506,20 @@ html:is(.cv-folds, .cv-folding) .section-toggle::after,
   }
   .contact-list {
     gap: var(--space-1) var(--space-3);
+  }
+}
+
+
+/* Theme-safe disclosure hover: never inherit global button fill (KO/EN light bug). */
+@media (hover: hover) {
+  button.section-toggle:hover,
+  button.filter:hover,
+  .filter button:hover {
+    background: var(--hover-fill);
+    color: var(--ink);
+  }
+  button.section-toggle:hover {
+    background: transparent;
+    color: var(--accent);
   }
 }
