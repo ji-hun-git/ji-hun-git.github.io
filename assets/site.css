@@ -40,10 +40,10 @@
   --fw-regular: 400;
   --fw-strong: 600;
   --lh-control: 1; /* a control's box height comes from its min-height */
-  --lh-heading: 1.25;
-  --lh-title: 1.32;
-  --lh-text: 1.45; /* short lines: lead, meta, role */
-  --lh-body: 1.55; /* paragraphs */
+  --lh-heading: 1.15;
+  --lh-title: 1.22;
+  --lh-text: 1.35; /* short lines: lead, meta, role — X/SpaceX density */
+  --lh-body: 1.4; /* paragraphs: tight, no dead leading */
   /* Roles; all but --t-body step down one size on phones (below). */
   --t-section: var(--fs-24);
   --t-entry: var(--fs-20);
@@ -64,14 +64,16 @@
   --space-16: 64px;
   --space-24: 96px;
   /* What a value is for, redefined per breakpoint (below). */
-  --gutter: var(--space-6); /* page margin = column gutter = phone inset */
-  --card-pad: var(--space-8); /* the CV card's inset */
-  --entry-pad: var(--space-5); /* entry, hairline, entry: each side */
-  --section-gap: var(--space-8); /* below an open section */
+  /* Density roles (X / SpaceX): tight gutters, little chrome, 4/8 rhythm. */
+  --gutter: var(--space-4); /* page margin = column gutter = phone inset */
+  --card-pad: var(--space-5); /* the CV card's inset */
+  --entry-pad: var(--space-2); /* entry, hairline, entry: each side */
+  --section-gap: var(--space-4); /* below an open section */
 }
 @media (max-width: 1000px) {
   :root {
-    --card-pad: var(--space-6);
+    --card-pad: var(--space-5);
+    --gutter: var(--space-4);
   }
 }
 /* One layout breakpoint for the header and the CV. Headings between body and
@@ -84,17 +86,17 @@
     --t-lead: var(--fs-16);
     --gutter: var(--space-4);
     --card-pad: var(--space-4);
-    --entry-pad: var(--space-4);
-    --section-gap: var(--space-6);
+    --entry-pad: var(--space-2);
+    --section-gap: var(--space-3);
   }
 }
 /* Narrow phones (320–430): keep gutters readable, kill sideways scroll. */
 @media (max-width: 430px) {
   :root {
-    --gutter: var(--space-4);
-    --card-pad: var(--space-4);
-    --entry-pad: var(--space-3);
-    --section-gap: var(--space-5);
+    --gutter: var(--space-3);
+    --card-pad: var(--space-3);
+    --entry-pad: var(--space-2);
+    --section-gap: var(--space-4);
     --t-section: var(--fs-18);
     --t-entry: var(--fs-16);
   }
@@ -107,8 +109,8 @@
 /* Korean: the same sizes, with more leading on the text roles. Set through
    the tokens, so it reaches every text role and never reaches print. */
 body.ko {
-  --lh-body: 1.65;
-  --lh-text: 1.55;
+  --lh-body: 1.5;
+  --lh-text: 1.42;
 }
 * {
   box-sizing: border-box;

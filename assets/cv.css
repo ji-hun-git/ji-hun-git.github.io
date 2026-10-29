@@ -9,12 +9,12 @@
   width: min(1200px, calc(100% - 2 * var(--gutter)));
   margin: 0 auto;
 }
-/* Columns: 224px sidebar | gutter | card. */
+/* Columns: 240px sidebar | gutter | card — balanced edges, no dead rail. */
 .layout {
   display: grid;
-  grid-template-columns: 224px minmax(0, 1fr);
+  grid-template-columns: 240px minmax(0, 1fr);
   gap: var(--gutter);
-  padding: var(--space-6) 0 var(--space-10);
+  padding: var(--space-3) 0 var(--space-6);
 }
 .sidebar {
   min-width: 0;
@@ -22,7 +22,7 @@
 /* The photo's top is level with the card's top edge. */
 .profile-card {
   position: sticky;
-  top: var(--space-8);
+  top: var(--space-4);
 }
 /* Short windows cannot hold the whole card below its 32px offset (it is
    715px tall in the 224px column and 806px in the 190px one, measured in
@@ -76,7 +76,7 @@
 .name {
   font: var(--fw-strong) var(--fs-28) / var(--lh-heading) var(--sans);
   letter-spacing: -0.022em;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 /* Body, short measure. */
 .role {
@@ -95,7 +95,7 @@
 }
 .divider {
   border-top: 1px solid var(--line);
-  margin: var(--space-4) 0;
+  margin: var(--space-3) 0;
 }
 /* Label. */
 .side-label,
@@ -183,12 +183,12 @@
   border: 1px solid var(--line);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.03),
-    0 18px 48px rgba(0, 0, 0, 0.55);
+    0 8px 24px rgba(0, 0, 0, 0.4);
 }
 /* Overview: the kicker hugs its title, the lede follows, and the group
    stands clear of the toolkit below. */
 .cv-overview {
-  padding-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
 }
 .cv-eyebrow {
   margin-bottom: var(--space-2);
@@ -203,8 +203,8 @@
 .cv-introduction {
   font-size: var(--t-lead);
   line-height: var(--lh-text);
-  max-width: 48ch;
-  margin-top: var(--space-4);
+  max-width: none;
+  margin-top: var(--space-2);
   color: var(--ink-soft);
   text-wrap: balance;
 }
@@ -222,7 +222,7 @@
 }
 /* Subhead. */
 .caps summary {
-  padding: var(--space-3) 0;
+  padding: var(--space-2) 0;
   font-size: var(--fs-16);
   font-weight: var(--fw-strong);
   line-height: var(--lh-title);
@@ -231,7 +231,7 @@
 /* The last row sits as far above the closing hairline as the next title
    sits below it. */
 .caps[open] {
-  padding-bottom: var(--space-2);
+  padding-bottom: var(--space-1);
 }
 .caps-row {
   display: grid;
@@ -240,8 +240,8 @@
      width; rem, so it grows with text enlarged in the browser */
   grid-template-columns: 5rem minmax(0, 1fr);
   align-items: baseline;
-  gap: var(--space-3);
-  padding: var(--space-2) 0;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-1) 0;
 }
 /* The first row sits as close to its summary as the rows sit to each other. */
 .caps summary + .caps-row {
@@ -323,7 +323,7 @@
   width: 100%;
   min-height: 44px; /* hit target */
   margin: 0;
-  padding: var(--space-3) 0;
+  padding: var(--space-2) 0;
   border: 0;
   color: inherit;
   background: transparent;
@@ -531,7 +531,7 @@ html:not(.cv-folds) .section-toggle {
   min-width: 0;
 }
 .item:first-child {
-  padding-top: var(--space-3);
+  padding-top: var(--space-2);
 }
 /* A link to an entry lands its title on the same line as a link to a
    section (html's scroll-padding-top plus the entry's own top padding): the
@@ -573,15 +573,15 @@ html:not(.cv-folds) .section-toggle {
   font-size: var(--fs-13);
   line-height: var(--lh-text);
   color: var(--meta);
-  margin: var(--space-1) 0 var(--space-2);
+  margin: var(--space-1) 0;
 }
 /* Body. The measure holds English prose to about 60-75 characters a line. */
 .item-desc,
 .pub-value {
   font-size: var(--t-body);
   line-height: var(--lh-body);
-  margin-top: var(--space-2);
-  max-width: 35em;
+  margin-top: var(--space-1);
+  max-width: none; /* X/SpaceX: fill the module; no orphan right strip */
 }
 /* A publication's summary follows its citation as plain soft text, set off
    by the same dashed hairline as an entry's partner row (no box, no bar):
@@ -595,7 +595,7 @@ html:not(.cv-folds) .section-toggle {
 }
 .pub-value > span {
   display: block;
-  max-width: 35em;
+  max-width: none;
 }
 .item-desc a,
 .pub-link {
@@ -615,8 +615,8 @@ html:not(.cv-folds) .section-toggle {
   font-weight: var(--fw-strong);
 }
 .partners {
-  margin-top: var(--space-2);
-  padding-top: var(--space-2);
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
   border-top: 1px dashed rgba(255, 255, 255, 0.12);
 }
 .p-label {
@@ -626,18 +626,18 @@ html:not(.cv-folds) .section-toggle {
 .p-set {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
+  gap: var(--space-1) var(--space-2);
 }
 /* Meta, in ink: the partner's name. */
 .p-chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   max-width: 100%;
   font-size: var(--fs-13);
   line-height: var(--lh-text);
   color: var(--ink);
-  min-height: 28px; /* compact; still tappable with surrounding padding */
+  min-height: 24px; /* compact; still tappable with surrounding padding */
   overflow-wrap: anywhere;
 }
 /* Partner marks: 18px square (was 24) to shrink entry height. */
@@ -746,7 +746,7 @@ html:not(.cv-folds) .section-toggle {
   display: flex;
   align-items: baseline;
   gap: var(--space-3);
-  padding: var(--space-8) 0 var(--space-2);
+  padding: var(--space-5) 0 var(--space-2);
   font-size: var(--t-entry);
   font-weight: var(--fw-strong);
   line-height: var(--lh-title);
@@ -868,8 +868,8 @@ body.ko .pub-group-n::after {
 /* Meta. */
 .site-footer {
   border-top: 1px solid var(--line);
-  margin-top: var(--space-12);
-  padding-top: var(--space-4);
+  margin-top: var(--space-6);
+  padding-top: var(--space-3);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -906,7 +906,7 @@ body.ko .pub-group-n::after {
 }
 @media (max-width: 1000px) {
   .layout {
-    grid-template-columns: 190px minmax(0, 1fr);
+    grid-template-columns: 200px minmax(0, 1fr);
   }
 }
 @media (max-width: 760px) {
@@ -915,7 +915,7 @@ body.ko .pub-group-n::after {
   }
   .layout {
     display: block;
-    padding-top: var(--space-6);
+    padding-top: var(--space-3);
   }
   .profile-card {
     position: static;
@@ -930,7 +930,7 @@ body.ko .pub-group-n::after {
     max-width: 330px;
   }
   .sidebar {
-    padding: 0 var(--gutter) var(--space-8);
+    padding: 0 var(--gutter) var(--space-3);
   }
   .sidebar .divider,
   .sidebar .side-label,
@@ -949,7 +949,7 @@ body.ko .pub-group-n::after {
      scrolling the page sideways. */
   .contact-list {
     clear: both;
-    padding-top: var(--space-6);
+    padding-top: var(--space-2);
     margin-block: 0;
   }
   .contact-list .contact-email {
@@ -957,10 +957,10 @@ body.ko .pub-group-n::after {
   }
   /* Its rule runs to the column's edge, like the photo's and the card's. */
   .sidebar .button {
-    margin-top: var(--space-4);
+    margin-top: var(--space-2);
   }
   .content {
-    padding: var(--space-8) var(--gutter);
+    padding: var(--card-pad) var(--gutter);
     border-inline: 0;
   }
   .site-footer {
