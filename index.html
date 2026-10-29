@@ -212,8 +212,8 @@
       rel="stylesheet"
     />
 
-    <link href="assets/site.css?v=123-20261028c" rel="stylesheet" />
-    <link href="assets/cv.css?v=123-20261028c" rel="stylesheet" />
+    <link href="assets/site.css?v=124-20261029a" rel="stylesheet" />
+    <link href="assets/cv.css?v=124-20261029a" rel="stylesheet" />
     <!--
       Before switching the bookshelf back on: assets/project-library/work.js
       still holds older facts that the CV has since corrected against the
@@ -299,13 +299,13 @@
         }
         const style = document.createElement("link");
         style.rel = "stylesheet";
-        style.href = "assets/project-library/library.css?v=123-20261028c";
+        style.href = "assets/project-library/library.css?v=124-20261029a";
         style.setAttribute("blocking", "render");
         document.head.append(style);
         const scripts = [
-          "assets/project-library/work.js?v=123-20261028c",
-          "assets/project-library/project-icons.js?v=123-20261028c",
-          "assets/project-library/library.js?v=123-20261028c",
+          "assets/project-library/work.js?v=124-20261029a",
+          "assets/project-library/project-icons.js?v=124-20261029a",
+          "assets/project-library/library.js?v=124-20261029a",
         ];
         for (const src of scripts) {
           const hint = document.createElement("link");
@@ -362,12 +362,12 @@
           lang="ko-KR"
           ><span id="langLabel">한국어</span></a
         >
-        <!-- Theme: visible words are the mode you switch TO; aria-pressed is dark. -->
-        <button aria-pressed="true" id="themeToggle" type="button">
-          <span class="theme-to-light" lang="en">Bright</span
-          ><span class="theme-to-light" lang="ko">라이트</span
-          ><span class="theme-to-dark" lang="en">Night</span
-          ><span class="theme-to-dark" lang="ko">나이트</span>
+        <!-- Theme: icon is the mode you switch TO; aria-pressed is dark. Bright yellow sun/moon. -->
+        <button aria-label="Toggle color theme" aria-pressed="true" id="themeToggle" title="Toggle Night / Bright" type="button">
+          <span class="theme-to-light" lang="en"><svg aria-hidden="true" class="theme-icon theme-icon-sun" viewBox="0 0 24 24" width="20" height="20" focusable="false"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 2.5v2.2"/><path d="M12 19.3v2.2"/><path d="M2.5 12h2.2"/><path d="M19.3 12h2.2"/><path d="M5.05 5.05l1.55 1.55"/><path d="M17.4 17.4l1.55 1.55"/><path d="M5.05 18.95l1.55-1.55"/><path d="M17.4 6.6l1.55-1.55"/></g></svg><span class="theme-label">Bright</span></span
+          ><span class="theme-to-light" lang="ko"><svg aria-hidden="true" class="theme-icon theme-icon-sun" viewBox="0 0 24 24" width="20" height="20" focusable="false"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 2.5v2.2"/><path d="M12 19.3v2.2"/><path d="M2.5 12h2.2"/><path d="M19.3 12h2.2"/><path d="M5.05 5.05l1.55 1.55"/><path d="M17.4 17.4l1.55 1.55"/><path d="M5.05 18.95l1.55-1.55"/><path d="M17.4 6.6l1.55-1.55"/></g></svg><span class="theme-label">라이트</span></span
+          ><span class="theme-to-dark" lang="en"><svg aria-hidden="true" class="theme-icon theme-icon-moon" viewBox="0 0 24 24" width="20" height="20" focusable="false"><path fill="currentColor" d="M19.5 14.2A7.8 7.8 0 0 1 9.8 4.5 8.2 8.2 0 1 0 19.5 14.2z"/></svg><span class="theme-label">Night</span></span
+          ><span class="theme-to-dark" lang="ko"><svg aria-hidden="true" class="theme-icon theme-icon-moon" viewBox="0 0 24 24" width="20" height="20" focusable="false"><path fill="currentColor" d="M19.5 14.2A7.8 7.8 0 0 1 9.8 4.5 8.2 8.2 0 1 0 19.5 14.2z"/></svg><span class="theme-label">나이트</span></span>
         </button>
       </div>
     </header>
@@ -498,7 +498,7 @@
               ><span lang="ko">이력서</span>
             </p>
             <h2>
-              <span lang="en">Human-centered AI</span
+              <span lang="en">Human-Centered AI</span
               ><span lang="ko">인간 중심 AI</span>
             </h2>
             <p class="cv-introduction">
@@ -511,7 +511,7 @@
           </header>
           <details class="caps">
             <summary id="capabilities-title">
-              <span lang="en">Methods and tools</span
+              <span lang="en">Methods and Tools</span
               ><span lang="ko">방법과 도구</span>
             </summary>
             <div class="caps-row">
@@ -1071,7 +1071,7 @@
                 type="button"
               >
                 <span aria-hidden="true" class="num">02</span
-                ><span lang="en">Awards and selections</span
+                ><span lang="en">Awards and Selections</span
                 ><span lang="ko">수상 및 선정</span>
               </button>
             </h2>
@@ -2772,7 +2772,7 @@
                 type="button"
               >
                 <span aria-hidden="true" class="num">05</span
-                ><span lang="en">Patents and certifications</span
+                ><span lang="en">Patents and Certifications</span
                 ><span lang="ko">특허 및 자격증</span>
               </button>
             </h2>
@@ -2867,6 +2867,6 @@
         </main>
       </div>
     </div>
-    <script defer="" src="assets/site.js?v=123-20261028c"></script>
+    <script defer="" src="assets/site.js?v=124-20261029a"></script>
   </body>
 </html>

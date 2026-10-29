@@ -150,10 +150,23 @@
     setLanguage(root.lang !== "ko");
   });
   const themeBtn = document.getElementById("themeToggle");
+  const reduceMotion = () =>
+    matchMedia("(prefers-reduced-motion: reduce)").matches;
   const setTheme = (theme) => {
     const dark = theme !== "light";
     root.setAttribute("data-theme", dark ? "dark" : "light");
-    if (themeBtn) themeBtn.setAttribute("aria-pressed", String(dark));
+    if (themeBtn) {
+      themeBtn.setAttribute("aria-pressed", String(dark));
+      const nextLabel = dark
+        ? root.lang === "ko"
+          ? "라이트 모드로 전환"
+          : "Switch to Bright mode"
+        : root.lang === "ko"
+          ? "나이트 모드로 전환"
+          : "Switch to Night mode";
+      themeBtn.setAttribute("aria-label", nextLabel);
+      themeBtn.setAttribute("title", nextLabel);
+    }
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", dark ? "#000000" : "#f0f2f3");
     try {
@@ -192,10 +205,73 @@
   const LANDING_OPEN = new Set(); // all sections folded on landing
   const isOpen = (fold) =>
     fold.button.getAttribute("aria-expanded") === "true";
-  const setOpen = (fold, open) => {
+  let foldsReady = false;
+  const clearBodyAnim = (body) => {
+    body.classList.remove("is-animating", "is-animating-in");
+    body.style.height = "";
+    body.style.opacity = "";
+    body.style.overflow = "";
+    body.style.transition = "";
+  };
+  const animateExpand = (body) => {
+    clearBodyAnim(body);
+    body.classList.add("is-animating", "is-animating-in");
+    body.style.overflow = "hidden";
+    body.style.height = "0px";
+    body.style.opacity = "0";
+    // Force layout, then ease open.
+    void body.offsetHeight;
+    const target = body.scrollHeight;
+    body.style.transition =
+      "height 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s ease";
+    body.style.height = target + "px";
+    body.style.opacity = "1";
+    body.classList.remove("is-animating-in");
+    const done = (event) => {
+      if (event && event.target !== body) return;
+      if (event && event.propertyName && event.propertyName !== "height") return;
+      body.removeEventListener("transitionend", done);
+      clearBodyAnim(body);
+    };
+    body.addEventListener("transitionend", done);
+  };
+  const animateCollapse = (body, after) => {
+    clearBodyAnim(body);
+    body.classList.add("is-animating");
+    body.style.overflow = "hidden";
+    body.style.height = body.scrollHeight + "px";
+    body.style.opacity = "1";
+    void body.offsetHeight;
+    body.style.transition =
+      "height 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.24s ease";
+    body.style.height = "0px";
+    body.style.opacity = "0";
+    const done = (event) => {
+      if (event && event.target !== body) return;
+      if (event && event.propertyName && event.propertyName !== "height") return;
+      body.removeEventListener("transitionend", done);
+      clearBodyAnim(body);
+      after();
+    };
+    body.addEventListener("transitionend", done);
+  };
+  const setOpen = (fold, open, opts = {}) => {
+    const animate = opts.animate ?? foldsReady;
+    const instant = opts.instant || reduceMotion() || !animate;
+    const currentlyOpen = isOpen(fold);
     fold.button.setAttribute("aria-expanded", String(open));
-    if (open) fold.body.removeAttribute("hidden");
-    else fold.body.setAttribute("hidden", "until-found");
+    if (open) {
+      fold.body.removeAttribute("hidden");
+      if (!instant && !currentlyOpen) animateExpand(fold.body);
+      else clearBodyAnim(fold.body);
+    } else if (!instant && currentlyOpen) {
+      animateCollapse(fold.body, () => {
+        fold.body.setAttribute("hidden", "until-found");
+      });
+    } else {
+      clearBodyAnim(fold.body);
+      fold.body.setAttribute("hidden", "until-found");
+    }
   };
   const elementFor = (hash) => {
     try {
@@ -229,6 +305,7 @@
   // script has them folded), not on a page whose site.js never ran.
   if (folds.length) root.classList.add("cv-folds");
   root.classList.remove("cv-folding", "cv-landing"); // see the <head> script
+  foldsReady = true;
   folds.forEach((fold) => {
     fold.button.addEventListener("click", () => setOpen(fold, !isOpen(fold)));
     // Find in page or a fragment reached a folded entry: the browser removes
@@ -279,12 +356,12 @@
     if (beforePrint) return;
     beforePrint = { toolkit: toolkit?.open, folds: folds.map(isOpen) };
     if (toolkit) toolkit.open = true;
-    folds.forEach((fold) => setOpen(fold, true));
+    folds.forEach((fold) => setOpen(fold, true, { instant: true }));
   });
   window.addEventListener("afterprint", () => {
     if (!beforePrint) return;
     if (toolkit) toolkit.open = beforePrint.toolkit;
-    folds.forEach((fold, i) => setOpen(fold, beforePrint.folds[i]));
+    folds.forEach((fold, i) => setOpen(fold, beforePrint.folds[i], { instant: true }));
     beforePrint = null;
   });
   // The partner marks are lazy, so they stay out of the first load; a print
