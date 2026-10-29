@@ -40,10 +40,10 @@
   --fw-regular: 400;
   --fw-strong: 600;
   --lh-control: 1; /* a control's box height comes from its min-height */
-  --lh-heading: 1.3;
-  --lh-title: 1.4;
-  --lh-text: 1.6; /* short lines: lead, meta, role */
-  --lh-body: 1.75; /* paragraphs */
+  --lh-heading: 1.25;
+  --lh-title: 1.32;
+  --lh-text: 1.45; /* short lines: lead, meta, role */
+  --lh-body: 1.55; /* paragraphs */
   /* Roles; all but --t-body step down one size on phones (below). */
   --t-section: var(--fs-24);
   --t-entry: var(--fs-20);
@@ -64,14 +64,14 @@
   --space-16: 64px;
   --space-24: 96px;
   /* What a value is for, redefined per breakpoint (below). */
-  --gutter: var(--space-8); /* page margin = column gutter = phone inset */
-  --card-pad: var(--space-12); /* the CV card's inset */
-  --entry-pad: var(--space-8); /* entry, hairline, entry: each side */
-  --section-gap: var(--space-12); /* below an open section */
+  --gutter: var(--space-6); /* page margin = column gutter = phone inset */
+  --card-pad: var(--space-8); /* the CV card's inset */
+  --entry-pad: var(--space-5); /* entry, hairline, entry: each side */
+  --section-gap: var(--space-8); /* below an open section */
 }
 @media (max-width: 1000px) {
   :root {
-    --card-pad: var(--space-8);
+    --card-pad: var(--space-6);
   }
 }
 /* One layout breakpoint for the header and the CV. Headings between body and
@@ -82,17 +82,33 @@
     --t-entry: var(--fs-18);
     --t-citation: var(--fs-16);
     --t-lead: var(--fs-16);
-    --gutter: var(--space-6);
-    --card-pad: var(--space-6);
-    --entry-pad: var(--space-6);
-    --section-gap: var(--space-10);
+    --gutter: var(--space-4);
+    --card-pad: var(--space-4);
+    --entry-pad: var(--space-4);
+    --section-gap: var(--space-6);
+  }
+}
+/* Narrow phones (320–430): keep gutters readable, kill sideways scroll. */
+@media (max-width: 430px) {
+  :root {
+    --gutter: var(--space-4);
+    --card-pad: var(--space-4);
+    --entry-pad: var(--space-3);
+    --section-gap: var(--space-5);
+    --t-section: var(--fs-18);
+    --t-entry: var(--fs-16);
+  }
+}
+@media (max-width: 320px) {
+  :root {
+    --gutter: var(--space-3);
   }
 }
 /* Korean: the same sizes, with more leading on the text roles. Set through
    the tokens, so it reaches every text role and never reaches print. */
 body.ko {
-  --lh-body: 1.85;
-  --lh-text: 1.7;
+  --lh-body: 1.65;
+  --lh-text: 1.55;
 }
 * {
   box-sizing: border-box;
@@ -569,5 +585,53 @@ html[data-theme="dark"] .theme-icon-sun {
     clip-path: inset(50%);
     white-space: nowrap;
     border: 0;
+  }
+}
+
+
+/* --- Density + mobile 320–430 (side quest) --- */
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+@media (max-width: 430px) {
+  .site-header {
+    width: min(var(--frame), calc(100% - 2 * var(--gutter)));
+    min-height: 56px;
+    gap: var(--space-2);
+  }
+  .site-brand {
+    font-size: var(--fs-13);
+    letter-spacing: -0.01em;
+  }
+  .site-controls {
+    gap: var(--space-1);
+    flex-shrink: 0;
+  }
+  .site-controls a,
+  .site-controls button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: var(--space-2);
+  }
+  #themeToggle .theme-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  .theme-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+@media (max-width: 360px) {
+  .site-controls > :last-child {
+    margin-right: 0;
   }
 }
