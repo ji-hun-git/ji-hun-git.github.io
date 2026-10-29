@@ -50,7 +50,7 @@
   margin-bottom: var(--space-4);
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid var(--line);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.04),
     0 10px 28px rgba(0, 0, 0, 0.55);
@@ -196,9 +196,8 @@ body.ko .cv-eyebrow {
   background: var(--card);
   padding: var(--card-pad);
   border: 1px solid var(--line);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--card-shadow);
+  border-radius: 2px;
 }
 /* Overview: the kicker hugs its title, the lede follows, and the group
    stands clear of the toolkit below. */
@@ -242,6 +241,7 @@ body.ko .cv-overview h2 {
   border-block: 1px solid var(--line);
   padding: 0;
   margin-bottom: 0;
+  background: color-mix(in srgb, var(--band) 55%, var(--card));
 }
 /* Subhead. */
 .caps summary {
@@ -328,11 +328,19 @@ body.ko .caps summary {
   column-gap: var(--space-4);
   flex-wrap: wrap;
   border-bottom: 1px solid var(--line);
+  background: var(--band);
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+  border-radius: 2px 2px 0 0;
 }
 .section-head .section-title {
   position: static;
   flex: 1 1 auto;
   border-bottom: 0;
+  background: transparent;
+  margin-inline: 0;
+  padding-inline: 0;
+  border-radius: 0;
 }
 /* Section title. */
 .section-title {
@@ -344,6 +352,10 @@ body.ko .caps summary {
   margin-bottom: 0;
   /* Toggle carries the pad; keep 0 here so head+title don't double up */
   padding-bottom: 0;
+  background: var(--band);
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+  border-radius: 2px 2px 0 0;
 }
 body.ko .section-title {
   font-family: var(--sans);
@@ -640,7 +652,7 @@ html:not(.cv-folds) .section-toggle {
 .pub-value {
   color: var(--ink-soft);
   padding-top: var(--space-3);
-  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+  border-top: 1px dashed var(--line-dim);
   max-width: none;
 }
 .pub-value > span {
@@ -667,7 +679,7 @@ html:not(.cv-folds) .section-toggle {
 .partners {
   margin-top: var(--space-2);
   padding-top: var(--space-2);
-  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+  border-top: 1px dashed var(--line-dim);
 }
 .p-label {
   display: block;
