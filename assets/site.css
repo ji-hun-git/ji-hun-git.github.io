@@ -68,7 +68,7 @@
   --display: "Barlow Condensed", Barlow, "Pretendard Variable", "Helvetica Neue",
     sans-serif;
   --frame: 1120px;
-  --ease-spacex: var(--ease-spacex); /* restrained, no bounce */
+  --ease-spacex: cubic-bezier(0.22, 1, 0.36, 1); /* restrained, no bounce */
   --hover-fill: #1a1a1a; /* control hover — theme-overridden in light */
   --control-bg: #141414;
 
